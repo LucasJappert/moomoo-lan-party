@@ -50,3 +50,17 @@ This project is open-source and available under the MIT License. See [LICENSE](L
 ---
 
 Built with ❤️ and cows by **Lucas Jappert** and the MooMoo LAN community.
+
+## 🖼️ Development Progress
+
+Below are screenshots and images showing the progress of MooMoo LAN Party over time. This section will be updated as new features and visuals are added.
+
+### 📅 2024-05-01
+
+![First Prototype Screenshot](images/image1.png)
+
+> Initial player movement and LAN connection working!
+
+---
+
+To add new screenshots, simply place them in the `images/` folder and update this section with the date and a short description.
