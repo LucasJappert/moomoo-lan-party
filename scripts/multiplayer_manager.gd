@@ -16,6 +16,7 @@ func become_host():
 
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
+	_add_player_to_game(1)
 
 func become_client():
 	print("become_client")
@@ -35,6 +36,8 @@ func _add_player_to_game(id):
 	var player = player_scene.instantiate()
 	player.peer_id = id
 	players_node.add_child(player)
+	print("Added player: " + str(id))
+	print("Total players: " + str(players_node.get_child_count()))
 
 func _remove_player_from_game(id):
 	var player = players_node.get_node(str(id))

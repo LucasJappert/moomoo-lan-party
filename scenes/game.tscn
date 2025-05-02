@@ -238,6 +238,7 @@ theme_override_font_sizes/font_size = 32
 text = "Join as Player"
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://bh6kvqaevp4x2")
 spawn_path = NodePath("../Players")
 
 [node name="Players" type="Node2D" parent="."]

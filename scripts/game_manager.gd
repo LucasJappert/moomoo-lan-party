@@ -1,12 +1,27 @@
 extends Node2D
 
+func _ready() -> void:
+    _set_screen_size()
+
+func _set_screen_size() -> void:
+    # Obtener tamaño del monitor principal (monitor 0)
+    var screen_size = DisplayServer.screen_get_size(0)
+
+    # Calcular nuevo tamaño: 50% del ancho, manteniendo aspecto 16:9 (648p aprox)
+    var new_width = int(screen_size.x * 0.5)
+    var new_height = int(new_width * 9.0 / 16.0) # mantener aspecto
+
+    DisplayServer.window_set_size(Vector2i(new_width, new_height))
+
+    # (Opcional) Centrar la ventana
+    var pos_x = int((screen_size.x - new_width) / 2)
+    var pos_y = int((screen_size.y - new_height) / 2)
+    DisplayServer.window_set_position(Vector2i(pos_x, pos_y))
 
 func _on_host_game_pressed() -> void:
-    print("Join as player")
     %MultiplayerHUD.hide()
     MultiplayerManager.become_host()
     
 func _on_join_as_player_pressed() -> void:
-    print("Host new game")
     %MultiplayerHUD.hide()
     MultiplayerManager.become_client()

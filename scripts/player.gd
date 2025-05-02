@@ -4,27 +4,34 @@ extends CharacterBody2D
 @export var speed: float = 300.0
 
 # Dirección de movimiento actual
-var direction: Vector2 = Vector2.ZERO
+@export var direction: Vector2 = Vector2.ZERO
 
-@export var peer_id = 0:
-	set(value):
-		peer_id = value
-		name = str(value)
+@export var peer_id := 1:
+	set(id):
+		peer_id = id
+		name = str(id)
+		%InputSynchronizer.set_multiplayer_authority(id)
+
+func _ready():
+	# No colisiona con su propia capa
+	collision_layer = 1
+	collision_mask = 2 # solo colisiona con obstáculos/enemigos, no con otros jugadores
+	print("############## is_server: ", multiplayer.is_server())
+	print(multiplayer.get_unique_id() == peer_id)
+	if multiplayer.get_unique_id() == peer_id:
+		$Camera2D.enabled = true
+		$Camera2D.make_current()
+	else:
+		$Camera2D.enabled = false
 	
 
 func _physics_process(_delta):
-	# Reiniciar dirección cada frame
-	direction = Vector2.ZERO
+	_try_apply_movement_from_input(_delta)
 
-	# Leer teclas específicas
-	if Input.is_key_pressed(Key.KEY_W): # Arriba
-		direction.y -= 1
-	if Input.is_key_pressed(Key.KEY_S): # Abajo
-		direction.y += 1
-	if Input.is_key_pressed(Key.KEY_A): # Izquierda
-		direction.x -= 1
-	if Input.is_key_pressed(Key.KEY_D): # Derecha
-		direction.x += 1
+func _try_apply_movement_from_input(_delta):
+	if not multiplayer.is_server(): return
+
+	direction = %InputSynchronizer.direction
 
 	# Normalizar dirección para evitar movimiento más rápido en diagonal
 	velocity = direction.normalized() * speed

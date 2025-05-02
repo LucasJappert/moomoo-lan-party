@@ -1,0 +1,34 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "GDScript: Instance 1",
+            "type": "godot",
+            "request": "launch",
+            "project": "${workspaceFolder}",
+            "debug_collisions": false,
+            "debug_paths": false,
+            "debug_navigation": false,
+            "port": 6007
+        },
+        {
+            "name": "GDScript: Instance 2",
+            "type": "godot",
+            "request": "launch",
+            "project": "${workspaceFolder}",
+            "debug_collisions": false,
+            "debug_paths": false,
+            "debug_navigation": false,
+            "port": 6008
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Launch: Both Instances",
+            "configurations": [
+                "GDScript: Instance 1",
+                "GDScript: Instance 2"
+            ]
+        }
+    ]
+}

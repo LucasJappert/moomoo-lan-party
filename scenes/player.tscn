@@ -1,13 +1,38 @@
-[gd_scene load_steps=4 format=3 uid="uid://bh6kvqaevp4x2"]
+[gd_scene load_steps=7 format=3 uid="uid://bh6kvqaevp4x2"]
 
 [ext_resource type="Texture2D" uid="uid://cjqujaa4l1uqc" path="res://icon.svg" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://dexl6e3ul1vtc" path="res://scripts/player.gd" id="1_g2els"]
+[ext_resource type="Script" uid="uid://c6fuinfxsetjw" path="res://scripts/input_synchronizer.gd" id="2_qhqgy"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qhqgy"]
+properties/0/path = NodePath(".:peer_id")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:position")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:direction")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_dqkch"]
+properties/0/path = NodePath("InputSynchronizer:direction")
+properties/0/spawn = true
+properties/0/replication_mode = 1
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_g2els"]
 radius = 192.252
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_g2els")
+
+[node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_qhqgy")
+
+[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="."]
+unique_name_in_owner = true
+replication_config = SubResource("SceneReplicationConfig_dqkch")
+script = ExtResource("2_qhqgy")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.625, 0.625)
@@ -18,3 +43,4 @@ scale = Vector2(0.203125, 0.203125)
 shape = SubResource("CircleShape2D_g2els")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+enabled = false
