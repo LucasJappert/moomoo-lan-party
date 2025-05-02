@@ -57,9 +57,9 @@ Below are screenshots and images showing the progress of MooMoo LAN Party over t
 
 ### 📅 2024-05-01
 
-![First Prototype Screenshot](images/image1.png)
-
 > Initial player movement and LAN connection working!
+
+![First Prototype Screenshot](images/image1.png)
 
 ---
 
