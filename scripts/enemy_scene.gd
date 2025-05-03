@@ -4,8 +4,6 @@ extends CharacterBody2D
 
 static var enemy_scene = preload("res://scenes/enemy_scene.tscn")
 var speed: float = 50
-var is_movement_paused := false
-var movement_pause_timer: Timer
 
 @export var id: int:
     set(id):
@@ -17,33 +15,15 @@ func _ready():
     collision_layer = 1
     collision_mask = 1
 
-    movement_pause_timer = Timer.new()
-    movement_pause_timer.one_shot = true
-    movement_pause_timer.wait_time = 2.0
-    add_child(movement_pause_timer)
-    movement_pause_timer.timeout.connect(_on_movement_pause_timer_timeout)
-
 func _process(_delta):
     if not is_multiplayer_authority():
         return
-
-    if is_movement_paused:
-        velocity = Vector2.ZERO
-        return move_and_slide()
 
     var direction_to_center = (GameManager.moomoo.position - position).normalized()
 
     velocity = direction_to_center * speed
 
     move_and_slide()
-    
-    if get_slide_collision_count() > 0 and movement_pause_timer.is_stopped():
-        is_movement_paused = true
-        print("MOVEMENT PAUSED")
-        movement_pause_timer.start()
-
-func _on_movement_pause_timer_timeout():
-    is_movement_paused = false
 
 
 static func spawn_enemy(moomoo_position = Vector2.ZERO):
