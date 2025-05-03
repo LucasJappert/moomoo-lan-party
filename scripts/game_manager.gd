@@ -2,13 +2,14 @@ extends Node2D
 
 const enemy_scene = preload("res://scenes/enemy_scene.tscn")
 var enemies_node # Just for the server
+var moomoo: Moomoo
 
 func _ready() -> void:
 	_set_screen_size()
 	enemies_node = get_tree().get_root().get_node("Game/Enemies")
 	# _create_random_enemies()
-	var moomoo_position = get_tree().get_root().get_node("Game/Moomoo").position
-	Enemy.spawn_enemy(moomoo_position)
+	moomoo = get_tree().get_root().get_node("Game/Moomoo")
+	Enemy.spawn_enemy(moomoo.position)
 
 func _set_screen_size() -> void:
 	# Obtener tamaño del monitor principal (monitor 0)

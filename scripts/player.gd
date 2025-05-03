@@ -24,7 +24,7 @@ func _process(_delta):
 func _physics_process(_delta):
 	_try_apply_movement_from_input(_delta)
 
-func _try_apply_movement_from_input(delta):
+func _try_apply_movement_from_input(_delta):
 	if not multiplayer.is_server():
 		return
 
