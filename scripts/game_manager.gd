@@ -1,7 +1,12 @@
 extends Node2D
 
+const enemy_scene = preload("res://scenes/enemy_scene.tscn")
+var enemies_node # Just for the server
+
 func _ready() -> void:
     _set_screen_size()
+    enemies_node = get_tree().get_root().get_node("Game/Enemies")
+    _create_random_enemies()
 
 func _set_screen_size() -> void:
     # Obtener tamaño del monitor principal (monitor 0)
@@ -25,3 +30,9 @@ func _on_host_game_pressed() -> void:
 func _on_join_as_player_pressed() -> void:
     %MultiplayerHUD.hide()
     MultiplayerManager.become_client()
+
+func _create_random_enemies() -> void:
+    for _i in range(10):
+        var enemy = enemy_scene.instantiate()
+        enemy.position = Vector2(randf_range(0, 1200), randf_range(0, 800))
+        enemies_node.add_child(enemy)

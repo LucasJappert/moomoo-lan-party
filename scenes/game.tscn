@@ -243,5 +243,10 @@ spawn_path = NodePath("../Players")
 
 [node name="Players" type="Node2D" parent="."]
 
+[node name="EnemiesSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("../Enemies")
+
+[node name="Enemies" type="Node2D" parent="."]
+
 [connection signal="pressed" from="MultiplayerHUD/Panel/VBoxContainer/HostGame" to="GameManager" method="_on_host_game_pressed"]
 [connection signal="pressed" from="MultiplayerHUD/Panel/VBoxContainer/JoinAsPlayer" to="GameManager" method="_on_join_as_player_pressed"]

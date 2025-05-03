@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="my-multiplayer-test-1"
+config/name="moomoo-lan-party"
 run/main_scene="uid://cwrqk21prcrn7"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"

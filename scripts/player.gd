@@ -16,8 +16,6 @@ func _ready():
 	# No colisiona con su propia capa
 	collision_layer = 1
 	collision_mask = 2 # solo colisiona con obstáculos/enemigos, no con otros jugadores
-	print("############## is_server: ", multiplayer.is_server())
-	print(multiplayer.get_unique_id() == peer_id)
 	if multiplayer.get_unique_id() == peer_id:
 		$Camera2D.enabled = true
 		$Camera2D.make_current()

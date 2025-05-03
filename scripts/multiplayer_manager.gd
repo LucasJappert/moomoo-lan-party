@@ -1,9 +1,10 @@
 extends Node
 
 const SERVER_PORT = 8080
+# const SERVER_IP = "192.168.0.3"
 const SERVER_IP = "127.0.0.1"
 
-const player_scene = preload("res://scenes/player.tscn")
+const player_scene = preload("res://scenes/player_scene.tscn")
 var players_node # Just for the server
 
 func become_host():
