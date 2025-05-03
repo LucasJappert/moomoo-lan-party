@@ -27,6 +27,8 @@ This project aims to recreate the spirit and fun of the original Warcraft III cu
 
 ## 👐 Contributing
 
+See also the [TODO list](TODO.md) for a breakdown of planned features and tasks.
+
 We welcome contributions! Whether it's bug fixes, feature suggestions, new heroes, or gameplay ideas — feel free to fork the repo and submit a pull request.
 
 1. Fork the project.
@@ -54,6 +56,12 @@ Built with ❤️ and cows by **Lucas Jappert** and the MooMoo LAN community.
 ## 🖼️ Development Progress
 
 Below are screenshots and images showing the progress of MooMoo LAN Party over time. This section will be updated as new features and visuals are added.
+
+### 📅 2024-05-03
+
+> Add first enemies and update some assets.
+
+![First Prototype Screenshot](images/image2.png)
 
 ### 📅 2024-05-01
 
