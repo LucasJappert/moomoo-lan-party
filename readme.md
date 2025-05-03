@@ -62,20 +62,20 @@ Below are screenshots and images showing the progress of MooMoo LAN Party over t
 > Sort all nodes (enemies, players, Moomoo) by Y position.
 > Implement wave-based enemy spawning system.
 
-![](images/image3.png)
+![](.images/image3.png)
 
 ### 📅 2024-05-03
 
 > Add first enemies and update some assets.
 
-![](images/image2.png)
+![](.images/image2.png)
 
 ### 📅 2024-05-01
 
 > Initial player movement and LAN connection working!
 
-![First Prototype Screenshot](images/image1.png)
+![](.images/image1.png)
 
 ---
 
-To add new screenshots, simply place them in the `images/` folder and update this section with the date and a short description.
+To add new screenshots, simply place them in the `.images/` folder and update this section with the date and a short description.
