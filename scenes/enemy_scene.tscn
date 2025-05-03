@@ -24,3 +24,13 @@ texture = ExtResource("1_io3nl")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 scale = Vector2(0.203125, 0.203125)
 shape = SubResource("CircleShape2D_lne1l")
+
+[node name="HUD" type="Node2D" parent="."]
+
+[node name="HealthBar" type="ProgressBar" parent="HUD"]
+offset_right = 4.0
+offset_bottom = 27.0
+
+[node name="Label" type="Label" parent="HUD"]
+offset_right = 40.0
+offset_bottom = 23.0
