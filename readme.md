@@ -59,9 +59,16 @@ Below are screenshots and images showing the progress of MooMoo LAN Party over t
 
 ### 📅 2024-05-03
 
+> Sort all nodes (enemies, players, Moomoo) by Y position.
+> Implement wave-based enemy spawning system.
+
+![](images/image3.png)
+
+### 📅 2024-05-03
+
 > Add first enemies and update some assets.
 
-![First Prototype Screenshot](images/image2.png)
+![](images/image2.png)
 
 ### 📅 2024-05-01
 

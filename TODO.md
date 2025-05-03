@@ -15,17 +15,19 @@ This file tracks upcoming features and tasks in development. Contributions are w
 
 ## 🔄 BASIC MULTIPLAYER SYNC
 
-- [ ] Set up a separate MultiplayerSpawner for enemies.
-- [ ] Control enemies only from the server (`is_multiplayer_authority()`).
-- [ ] Synchronize enemy state using MultiplayerSynchronizer (position, animation, HP).
-- [ ] Enable interpolation for smoother enemy movement.
+- [x] Set up a separate MultiplayerSpawner for enemies.
+- [x] Control enemies only from the server (`is_multiplayer_authority()`).
+- [x] Synchronize enemy state using MultiplayerSynchronizer (position, animation, HP).
+- [x] Enable interpolation for smoother enemy movement.
+- [x] Sort all nodes (enemies, players, Moomoo) by Y position.
 
 ---
 
 ## 👾 ENEMIES & WAVES
 
-- [ ] Create reusable `Enemy.tscn` scene.
-- [ ] Implement wave-based enemy spawning system.
+- [x] Create reusable `Enemy.tscn` scene.
+- [x] Implement wave-based enemy spawning system.
+- [ ] Move enemies using Godot's PathFinding2D.
 - [ ] Add basic AI (chase nearest player).
 - [ ] Handle collisions and damage between players and enemies.
 - [ ] Enemy death handling and cleanup.
