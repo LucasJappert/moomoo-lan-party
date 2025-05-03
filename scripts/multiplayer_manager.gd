@@ -40,6 +40,10 @@ func _add_player_to_game(id):
 	print("Added player: " + str(id))
 	print("Total players: " + str(players_node.get_child_count()))
 
+	if id == multiplayer.get_unique_id():
+		print("Added local player")
+		MyCamera.create_camera(player)
+
 func _remove_player_from_game(id):
 	var player = players_node.get_node(str(id))
 	if player == null:

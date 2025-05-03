@@ -9,28 +9,42 @@ properties/0/spawn = true
 properties/0/replication_mode = 1
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_lne1l"]
-radius = 192.252
+radius = 64.0
 
 [node name="Enemy" type="CharacterBody2D"]
+z_index = 2
+z_as_relative = false
 script = ExtResource("1_lne1l")
 
 [node name="EnemySynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_io3nl")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(0.625, 0.625)
-texture = ExtResource("1_io3nl")
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+z_index = 2
+z_as_relative = false
+position = Vector2(0, 27)
 scale = Vector2(0.203125, 0.203125)
 shape = SubResource("CircleShape2D_lne1l")
 
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = 2
+z_as_relative = false
+scale = Vector2(0.625, 0.625)
+texture = ExtResource("1_io3nl")
+
 [node name="HUD" type="Node2D" parent="."]
+z_index = 2
+z_as_relative = false
 
 [node name="HealthBar" type="ProgressBar" parent="HUD"]
-offset_right = 4.0
-offset_bottom = 27.0
+offset_left = -24.0
+offset_top = -40.0
+offset_right = 26.0
+offset_bottom = -33.0
+show_percentage = false
 
 [node name="Label" type="Label" parent="HUD"]
-offset_right = 40.0
-offset_bottom = 23.0
+offset_left = -20.0
+offset_top = 23.0
+offset_right = 20.0
+offset_bottom = 46.0
