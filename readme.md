@@ -62,6 +62,7 @@ Below are screenshots and images showing the progress of MooMoo LAN Party over t
 - Sort all nodes (enemies, players, Moomoo) by Y position.
 - Implement wave-based enemy spawning system.
 - Add Moomoo.
+- Zoom in and out using the mouse wheel.
 
 ![](.images/image3.png)
 
