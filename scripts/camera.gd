@@ -18,7 +18,7 @@ static func create_camera(my_player: Player):
 
 	my_player.add_child(new_camera)
 
-	new_camera.make_current() # We need to make it after player.add_child(camera)
+	new_camera.make_current()
 
 static func try_update_zoom(event: InputEvent):
 	if camera == null:

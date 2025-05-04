@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://2smlofmifmk"]
+[gd_scene load_steps=6 format=3 uid="uid://2smlofmifmk"]
 
 [ext_resource type="Texture2D" uid="uid://1fiupmgkejum" path="res://assets/monsters/1.png" id="1_io3nl"]
 [ext_resource type="Script" uid="uid://crmmhsx5pjp8f" path="res://scripts/enemy_scene.gd" id="1_lne1l"]
@@ -11,6 +11,9 @@ properties/0/replication_mode = 1
 [sub_resource type="CircleShape2D" id="CircleShape2D_lne1l"]
 radius = 64.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_8a8l7"]
+radius = 258.627
+
 [node name="Enemy" type="CharacterBody2D"]
 z_index = 2
 z_as_relative = false
@@ -22,19 +25,20 @@ replication_config = SubResource("SceneReplicationConfig_io3nl")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 z_index = 2
 z_as_relative = false
-position = Vector2(0, 27)
 scale = Vector2(0.203125, 0.203125)
 shape = SubResource("CircleShape2D_lne1l")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = 2
 z_as_relative = false
+position = Vector2(5.96046e-08, -27)
 scale = Vector2(0.625, 0.625)
 texture = ExtResource("1_io3nl")
 
 [node name="HUD" type="Node2D" parent="."]
 z_index = 2
 z_as_relative = false
+position = Vector2(-1, -31)
 
 [node name="HealthBar" type="ProgressBar" parent="HUD"]
 offset_left = -24.0
@@ -44,7 +48,26 @@ offset_bottom = -33.0
 show_percentage = false
 
 [node name="Label" type="Label" parent="HUD"]
-offset_left = -20.0
-offset_top = 23.0
-offset_right = 20.0
-offset_bottom = 46.0
+anchors_preset = -1
+offset_left = -33.0
+offset_top = 42.0
+offset_right = 35.0
+offset_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "sdsds"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+simplify_path = true
+radius = 32.0
+
+[node name="AreaVision" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaVision"]
+shape = SubResource("CircleShape2D_8a8l7")
+debug_color = Color(0.529412, 0.545098, 0.580392, 0)
+
+[connection signal="body_entered" from="AreaVision" to="." method="_on_area_vision_body_entered"]
+[connection signal="body_exited" from="AreaVision" to="." method="_on_area_vision_body_exited"]

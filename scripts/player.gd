@@ -2,7 +2,7 @@ class_name Player
 
 extends CharacterBody2D
 
-@export var speed: float = 300.0
+@export var speed: float = 200.0
 
 @export var direction: Vector2 = Vector2.ZERO
 
@@ -28,9 +28,8 @@ func _try_apply_movement_from_input(_delta):
 	if not multiplayer.is_server():
 		return
 
-	direction = %InputSynchronizer.direction
-
-	velocity = direction.normalized() * speed
+	# direction = %InputSynchronizer.direction
+	# velocity = direction.normalized() * speed
 
 	# # 🔍 First, we check if we can move WITHOUT physically affecting others
 	# var motion = velocity * delta
