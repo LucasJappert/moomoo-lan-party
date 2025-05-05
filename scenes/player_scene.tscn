@@ -21,7 +21,7 @@ properties/0/spawn = true
 properties/0/replication_mode = 1
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_g2els"]
-radius = 83.837
+radius = 16.0
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_rbmgg")
@@ -35,12 +35,10 @@ replication_config = SubResource("SceneReplicationConfig_dqkch")
 script = ExtResource("2_icjpm")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
-avoidance_enabled = true
-debug_enabled = true
+radius = 32.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 1.90735e-06)
-scale = Vector2(0.203125, 0.203125)
 shape = SubResource("CircleShape2D_g2els")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

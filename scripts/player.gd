@@ -3,6 +3,7 @@ class_name Player
 extends CharacterBody2D
 
 @export var speed: float = 200.0
+@onready var collision_shape = $CollisionShape2D
 
 @export var direction: Vector2 = Vector2.ZERO
 

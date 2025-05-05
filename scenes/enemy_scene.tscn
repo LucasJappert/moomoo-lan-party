@@ -9,7 +9,7 @@ properties/0/spawn = true
 properties/0/replication_mode = 1
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_lne1l"]
-radius = 64.0
+radius = 16.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8a8l7"]
 radius = 258.627
@@ -21,11 +21,10 @@ script = ExtResource("1_lne1l")
 replication_config = SubResource("SceneReplicationConfig_io3nl")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-scale = Vector2(0.203125, 0.203125)
 shape = SubResource("CircleShape2D_lne1l")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(5.96046e-08, -27)
+position = Vector2(1, -26)
 scale = Vector2(0.625, 0.625)
 texture = ExtResource("1_io3nl")
 
@@ -53,8 +52,8 @@ vertical_alignment = 1
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 simplify_path = true
-avoidance_enabled = true
-radius = 64.0
+radius = 32.0
+debug_enabled = true
 
 [node name="AreaVision" type="Area2D" parent="."]
 z_index = 2

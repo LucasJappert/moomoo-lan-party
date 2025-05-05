@@ -8,7 +8,6 @@ var moomoo: Moomoo
 func _ready() -> void:
 	_set_screen_size()
 	enemies_node = get_tree().get_root().get_node("Game/Enemies")
-	# _create_random_enemies()
 	moomoo = get_tree().get_root().get_node("Game/Moomoo")
 
 func _set_screen_size() -> void:
@@ -35,9 +34,3 @@ func _on_host_game_pressed() -> void:
 func _on_join_as_player_pressed() -> void:
 	%MultiplayerHUD.hide()
 	MultiplayerManager.become_client()
-
-func _create_random_enemies() -> void:
-	for _i in range(10):
-		var enemy = enemy_scene.instantiate()
-		enemy.position = Vector2(randf_range(0, 1200), randf_range(0, 800))
-		enemies_node.add_child(enemy)

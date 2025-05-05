@@ -25,9 +25,9 @@ func _ready():
 	collision_layer = 1
 	collision_mask = 1
 
-	nav_agent.radius = 32
-	nav_agent.target_desired_distance = 1
-	nav_agent.path_desired_distance = 32
+	# nav_agent.radius = 16
+	# nav_agent.target_desired_distance = 1
+	# nav_agent.path_desired_distance = 16
 	nav_agent.debug_enabled = true
 	vision_shape.shape.radius = vision_radius
 
@@ -45,7 +45,13 @@ func _physics_process(_delta):
 	if not is_multiplayer_authority():
 		return
 
-	if GameManager.players.size() == 0:
+	if GameManager.players.size() == 0 or target_node == null:
+		return
+
+	var distance_to_target = global_position.distance_to(target_node.global_position)
+	var acceptable_distance = collision_shape.shape.radius + target_node.collision_shape.shape.radius + 5
+	if distance_to_target <= acceptable_distance:
+		nav_agent.set_target_position(global_position)
 		return
 
 	if nav_agent.is_navigation_finished() == false:
@@ -94,8 +100,7 @@ func _update_nav_agent():
 
 static func spawn_enemy(moomoo_position = Vector2.ZERO):
 	var TILES_DISTANCE = 10
-	var ENEMIES_BY_ZONE = 2
-	return
+	var ENEMIES_BY_ZONE = 6
 
 	var counter = 0
 	for direction in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
