@@ -11,9 +11,9 @@ func _ready():
 		set_process(false)
 		set_physics_process(false)
 		
-	nav_agent.radius = 32
-	nav_agent.target_desired_distance = 32
-	nav_agent.path_desired_distance = 32
+	# nav_agent.radius = 32
+	# nav_agent.target_desired_distance = 2
+	# nav_agent.path_desired_distance = 1
 	nav_agent.max_speed = player.speed
 	direction = Vector2.ZERO
 	velocity = Vector2.ZERO

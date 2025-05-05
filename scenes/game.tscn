@@ -231,8 +231,6 @@ cache/0/32/0/scale = 1.0
 radius = 22.0
 
 [node name="Game" type="Node2D"]
-z_index = 1
-z_as_relative = false
 y_sort_enabled = true
 script = ExtResource("1_lbhrr")
 
@@ -295,26 +293,26 @@ spawn_path = NodePath("../Enemies")
 
 [node name="Enemies" type="Node2D" parent="."]
 z_index = 2
+z_as_relative = false
 y_sort_enabled = true
 
 [node name="Moomoo" type="StaticBody2D" parent="."]
 z_index = 2
-z_as_relative = false
-position = Vector2(551, 304)
+position = Vector2(553, 344)
 script = ExtResource("4_iywne")
 
-[node name="Sprite2D" type="Sprite2D" parent="Moomoo"]
-z_index = 2
-z_as_relative = false
-position = Vector2(3, 13)
-scale = Vector2(0.9375, 0.9375)
-texture = ExtResource("4_lbhrr")
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="Moomoo"]
+avoidance_enabled = true
+radius = 32.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Moomoo"]
-z_index = 2
-z_as_relative = false
-position = Vector2(-2, 54)
+position = Vector2(1, 2)
 shape = SubResource("CircleShape2D_iywne")
+
+[node name="Sprite2D" type="Sprite2D" parent="Moomoo"]
+position = Vector2(6, -39)
+scale = Vector2(0.9375, 0.9375)
+texture = ExtResource("4_lbhrr")
 
 [connection signal="pressed" from="MultiplayerHUD/Panel/VBoxContainer/HostGame" to="GameManager" method="_on_host_game_pressed"]
 [connection signal="pressed" from="MultiplayerHUD/Panel/VBoxContainer/JoinAsPlayer" to="GameManager" method="_on_join_as_player_pressed"]

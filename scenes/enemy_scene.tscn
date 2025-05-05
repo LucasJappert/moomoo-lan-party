@@ -15,29 +15,21 @@ radius = 64.0
 radius = 258.627
 
 [node name="Enemy" type="CharacterBody2D"]
-z_index = 2
-z_as_relative = false
 script = ExtResource("1_lne1l")
 
 [node name="EnemySynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_io3nl")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-z_index = 2
-z_as_relative = false
 scale = Vector2(0.203125, 0.203125)
 shape = SubResource("CircleShape2D_lne1l")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-z_index = 2
-z_as_relative = false
 position = Vector2(5.96046e-08, -27)
 scale = Vector2(0.625, 0.625)
 texture = ExtResource("1_io3nl")
 
 [node name="HUD" type="Node2D" parent="."]
-z_index = 2
-z_as_relative = false
 position = Vector2(-1, -31)
 
 [node name="HealthBar" type="ProgressBar" parent="HUD"]
@@ -61,11 +53,17 @@ vertical_alignment = 1
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 simplify_path = true
-radius = 32.0
+avoidance_enabled = true
+radius = 64.0
 
 [node name="AreaVision" type="Area2D" parent="."]
+z_index = 2
+z_as_relative = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AreaVision"]
+visible = false
+z_index = 2
+z_as_relative = false
 shape = SubResource("CircleShape2D_8a8l7")
 debug_color = Color(0.529412, 0.545098, 0.580392, 0)
 

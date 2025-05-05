@@ -37,6 +37,7 @@ func _add_player_to_game(id):
 	var player = player_scene.instantiate()
 	player.peer_id = id
 	players_node.add_child(player)
+	GameManager.players[id] = player
 	print("Added player: " + str(id))
 	print("Total players: " + str(players_node.get_child_count()))
 
@@ -45,6 +46,7 @@ func _add_player_to_game(id):
 		MyCamera.create_camera(player)
 
 func _remove_player_from_game(id):
+	GameManager.players.erase(id)
 	var player = players_node.get_node(str(id))
 	if player == null:
 		return
