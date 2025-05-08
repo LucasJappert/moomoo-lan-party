@@ -3,17 +3,18 @@ extends Node2D
 @onready var dynamic_nav_region: NavigationRegion2D = $DynamicObstacleRegion
 
 func _ready():
-	var timer := Timer.new()
-	timer.wait_time = 0.5
-	timer.one_shot = false
-	timer.autostart = true
-	add_child(timer)
-	timer.timeout.connect(_update_dynamic_navigation)
-	_update_dynamic_navigation() # Llamada inicial
-
+	# var timer := Timer.new()
+	# timer.wait_time = 0.5
+	# timer.one_shot = false
+	# timer.autostart = true
+	# add_child(timer)
+	# timer.timeout.connect(_update_dynamic_navigation)
+	# _update_dynamic_navigation()
+	pass
+	
 func _update_dynamic_navigation():
 	var geometry := NavigationMeshSourceGeometryData2D.new()
-	var obstacle_points := _add_moomoo_obstacle(geometry)
+	_add_moomoo_obstacle(geometry)
 	_add_enemies_obstacles(geometry)
 	_add_player_obstacle(geometry)
 
@@ -24,33 +25,28 @@ func _update_dynamic_navigation():
 	# Reasignamos (opcional)
 	dynamic_nav_region.navigation_polygon = base_poly
 
-	# Visualización de la navegación final
-	var debug_nav_poly: Polygon2D
-	if dynamic_nav_region.has_node("DebugNavArea"):
-		debug_nav_poly = dynamic_nav_region.get_node("DebugNavArea") as Polygon2D
-	else:
-		debug_nav_poly = Polygon2D.new()
-		debug_nav_poly.name = "DebugNavArea"
-		dynamic_nav_region.add_child(debug_nav_poly)
+	## Visualización de la navegación final
+	#var debug_nav_poly: Polygon2D
+	#debug_nav_poly = dynamic_nav_region.get_node("DebugNavArea") as Polygon2D
 
-	if base_poly.get_outline_count() > 0:
-		debug_nav_poly.polygon = base_poly.get_outline(0)
-	else:
-		debug_nav_poly.polygon = PackedVector2Array()
+	#if base_poly.get_outline_count() > 0:
+		#debug_nav_poly.polygon = base_poly.get_outline(0)
+	#else:
+		#debug_nav_poly.polygon = PackedVector2Array()
 
-	debug_nav_poly.color = Color(0, 1, 0, 0.3) # Verde semitransparente
+	#debug_nav_poly.color = Color(1, 1, 1, 0.5)
 
 	# Visualización de la obstrucción
-	var debug_obstacle_poly: Polygon2D
-	if dynamic_nav_region.has_node("DebugObstacle"):
-		debug_obstacle_poly = dynamic_nav_region.get_node("DebugObstacle") as Polygon2D
-	else:
-		debug_obstacle_poly = Polygon2D.new()
-		debug_obstacle_poly.name = "DebugObstacle"
-		dynamic_nav_region.add_child(debug_obstacle_poly)
+	# var debug_obstacle_poly: Polygon2D
+	# if dynamic_nav_region.has_node("DebugObstacle"):
+	# 	debug_obstacle_poly = dynamic_nav_region.get_node("DebugObstacle") as Polygon2D
+	# else:
+	# 	debug_obstacle_poly = Polygon2D.new()
+	# 	debug_obstacle_poly.name = "DebugObstacle"
+	# 	dynamic_nav_region.add_child(debug_obstacle_poly)
 
-	debug_obstacle_poly.polygon = obstacle_points
-	debug_obstacle_poly.color = Color(1, 0, 0, 0.3) # Rojo semitransparente  # Verde semitransparente
+	# debug_obstacle_poly.polygon = obstacle_points
+	# debug_obstacle_poly.color = Color(1, 0, 0, 0.3) # Rojo semitransparente  # Verde semitransparente
 
 func _add_moomoo_obstacle(geometry: NavigationMeshSourceGeometryData2D) -> PackedVector2Array:
 	var empty := PackedVector2Array()

@@ -9,7 +9,6 @@ static var _zoom_min := 0.5 # Minimum zoom
 static var _zoom_max := 3.0 # Maximum zoom
 
 static func create_camera(my_player: Player):
-	print("Creating camera")
 	var new_camera = Camera2D.new()
 	MyCamera.camera = new_camera
 
@@ -19,6 +18,7 @@ static func create_camera(my_player: Player):
 	my_player.add_child(new_camera)
 
 	new_camera.make_current()
+	print("Camera added to player: " + str(my_player.name))
 
 static func try_update_zoom(event: InputEvent):
 	if camera == null:

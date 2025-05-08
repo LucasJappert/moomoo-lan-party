@@ -20,9 +20,9 @@ func _set_screen_size() -> void:
 
 	DisplayServer.window_set_size(Vector2i(new_width, new_height))
 
-	# (Opcional) Centrar la ventana
-	var pos_x = int((screen_size.x - new_width) / 2)
-	var pos_y = int((screen_size.y - new_height) / 2)
+	# Posicionar abajo a la derecha
+	var pos_x = screen_size.x - new_width
+	var pos_y = screen_size.y - new_height
 	DisplayServer.window_set_position(Vector2i(pos_x, pos_y))
 
 func _on_host_game_pressed() -> void:

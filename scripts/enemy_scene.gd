@@ -48,29 +48,27 @@ func _physics_process(_delta):
 	if GameManager.players.size() == 0 or target_node == null:
 		return
 
-	var distance_to_target = global_position.distance_to(target_node.global_position)
-	var acceptable_distance = collision_shape.shape.radius + target_node.collision_shape.shape.radius + 5
-	if distance_to_target <= acceptable_distance:
-		nav_agent.set_target_position(global_position)
+	if nav_agent.is_navigation_finished():
 		return
 
-	if nav_agent.is_navigation_finished() == false:
-		var next_point = nav_agent.get_next_path_position()
-		var direction = (next_point - global_position).normalized()
-		velocity = direction * speed
-	else:
+	var distance_to_target = global_position.distance_to(target_node.global_position)
+	if distance_to_target <= _get_acceptable_distance():
+		nav_agent.set_target_position(global_position)
 		velocity = Vector2.ZERO
+		return
+
+	var next_point = nav_agent.get_next_path_position()
+	var direction = (next_point - global_position).normalized()
+	velocity = direction * speed
 
 	move_and_slide()
 	
 func _on_every_timer_500ms():
 	_update_nav_agent()
-		
 
 func _on_area_vision_body_entered(body: Node2D) -> void:
 	if body is Player:
 		_update_target()
-
 
 func _on_area_vision_body_exited(body: Node2D) -> void:
 	if body == target_node:
@@ -92,15 +90,21 @@ func _update_target():
 
 func _update_nav_agent():
 	if target_node == null:
-		nav_agent.set_target_position(GameManager.moomoo.global_position)
+		target_node = GameManager.moomoo
+
+	var distance_to_target = global_position.distance_to(target_node.global_position)
+	if distance_to_target <= _get_acceptable_distance():
 		return
 
-	if nav_agent.target_position != target_node.global_position:
-		nav_agent.set_target_position(target_node.global_position)
+	nav_agent.set_target_position(target_node.global_position)
+
+func _get_acceptable_distance():
+	return collision_shape.shape.radius + target_node.collision_shape.shape.radius + 5
 
 static func spawn_enemy(moomoo_position = Vector2.ZERO):
 	var TILES_DISTANCE = 10
 	var ENEMIES_BY_ZONE = 6
+	return
 
 	var counter = 0
 	for direction in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:

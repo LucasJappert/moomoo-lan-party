@@ -4,34 +4,33 @@ extends MultiplayerSynchronizer
 @onready var nav_agent: NavigationAgent2D = player.get_node("NavigationAgent2D")
 
 @export var direction: Vector2 = Vector2.ZERO
-@export var velocity: Vector2 = Vector2.ZERO
 
 func _ready():
 	if get_multiplayer_authority() != multiplayer.get_unique_id():
 		set_process(false)
 		set_physics_process(false)
-		
-	# nav_agent.radius = 32
-	# nav_agent.target_desired_distance = 2
-	# nav_agent.path_desired_distance = 1
-	nav_agent.max_speed = player.speed
-	direction = Vector2.ZERO
-	velocity = Vector2.ZERO
-
 
 func _physics_process(_delta: float):
-	if not is_multiplayer_authority():
-		return
 	if nav_agent.is_navigation_finished():
+		return
+
+	var distance_to_target = player.global_position.distance_to(nav_agent.target_position)
+	if distance_to_target <= player.collision_shape.shape.radius:
+		nav_agent.set_target_position(player.global_position)
 		player.velocity = Vector2.ZERO
-	else:
-		var next_point = nav_agent.get_next_path_position()
-		var dir = (next_point - player.global_position).normalized()
-		player.velocity = dir * player.speed
+		return
+	
+	var next_point = nav_agent.get_next_path_position()
+	var dir = (next_point - player.global_position).normalized()
+	player.velocity = dir * player.speed
 
 func _unhandled_input(event):
-	if not is_multiplayer_authority():
-		return
-
+	# print("is_multiplayer_authority(): " + str(is_multiplayer_authority()))
+	# if not is_multiplayer_authority():
+	# 	return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+		print("Right mouse button clicked. Player id: " + player.name)
+		print("is_multiplayer_authority(): " + str(is_multiplayer_authority()))
+		if multiplayer.get_unique_id() != get_multiplayer_authority():
+			return
 		nav_agent.set_target_position(player.get_global_mouse_position())

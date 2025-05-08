@@ -51,6 +51,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 36.0
 simplify_path = true
 radius = 32.0
 debug_enabled = true

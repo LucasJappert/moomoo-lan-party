@@ -6,6 +6,7 @@ extends CharacterBody2D
 @onready var collision_shape = $CollisionShape2D
 
 @export var direction: Vector2 = Vector2.ZERO
+var target_position: Vector2 = null
 
 @export var peer_id := 1:
 	set(id):
@@ -17,10 +18,11 @@ func _ready():
 	collision_layer = 1
 	collision_mask = 1
 
-	$HUD/Label.text = str(peer_id)
+	if peer_id == multiplayer.get_unique_id():
+		MyCamera.create_camera(self)
 	
 func _process(_delta):
-	$HUD/Label.text = "ID: " + str(peer_id)
+	$HUD/Label.text = "ID: " + str(peer_id) + "\nAuthority: " + str(is_multiplayer_authority()) + "\nPeer ID: " + str(peer_id)
 
 func _physics_process(_delta):
 	_try_apply_movement_from_input(_delta)
@@ -38,4 +40,5 @@ func _try_apply_movement_from_input(_delta):
 	# 	# There is a collision → WE DO NOT move
 	# 	return
 
+	if target_position != null:
 	move_and_slide()
