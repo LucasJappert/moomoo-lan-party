@@ -27,9 +27,8 @@ func initialize(_entity: Entity):
 	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
 func _process(_delta: float):
-	var global_position = entity.global_position
-	_health_bar.global_position = Vector2(global_position.x - _health_bar.size.x / 2, global_position.y - 40)
-
+	# var global_position = entity.global_position
+	# _health_bar.global_position = Vector2(global_position.x - _health_bar.size.x / 2, global_position.y - 40)
 	try_update_label()
 
 func try_update_label():

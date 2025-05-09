@@ -1,6 +1,5 @@
 extends Node2D
 
-const enemy_scene = preload("res://scenes/enemy_scene.tscn")
 var enemies_node # Just for the server
 var players: Dictionary[int, Player] = {}
 var moomoo: Moomoo

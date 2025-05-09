@@ -289,7 +289,7 @@ theme_override_font_sizes/font_size = 32
 text = "Join as Player"
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("uid://bh6kvqaevp4x2")
+_spawnable_scenes = PackedStringArray("res://scenes/player_scene.tscn")
 spawn_path = NodePath("../Players")
 
 [node name="Players" type="Node2D" parent="."]
@@ -297,7 +297,7 @@ z_index = 2
 y_sort_enabled = true
 
 [node name="EnemiesSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("uid://cj8vdyvtjs0ju")
+_spawnable_scenes = PackedStringArray("res://scenes/enemy_scene.tscn")
 spawn_path = NodePath("../Enemies")
 
 [node name="Enemies" type="Node2D" parent="."]

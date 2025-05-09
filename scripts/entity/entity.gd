@@ -13,6 +13,8 @@ extends CharacterBody2D
 
 func _ready():
 	print("_ready entity")
+	collision_layer = 1
+	collision_mask = 1
 	hud.initialize(self)
 
 func _process(delta: float) -> void:

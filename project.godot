@@ -29,6 +29,14 @@ window/size/viewport_height=720
 window/size/always_on_top=true
 window/stretch/mode="viewport"
 
+[file_customization]
+
+folder_colors={
+"res://assets/": "green",
+"res://scenes/": "purple",
+"res://scripts/": "blue"
+}
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

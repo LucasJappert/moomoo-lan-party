@@ -4,7 +4,7 @@ const SERVER_PORT = 8080
 # const SERVER_IP = "192.168.0.3"
 const SERVER_IP = "127.0.0.1"
 
-const player_scene = preload("res://scenes/player_scene.tscn")
+const player_scene = preload("res://scenes/entity/player_scene.tscn")
 var players_node # Just for the server
 
 func become_host():
@@ -35,7 +35,7 @@ func _on_peer_disconnected(id):
 
 func _add_player_to_game(id):
 	var player = player_scene.instantiate()
-	player.peer_id = id
+	player.id = id
 	players_node.add_child(player)
 	GameManager.players[id] = player
 	print("Added player: " + str(id))
