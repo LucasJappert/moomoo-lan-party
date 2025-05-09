@@ -1,5 +1,7 @@
 extends Node2D
 
+const ENEMIES_WAVES_CONTROLLER = preload("res://scripts/controllers/enemies_waves_controller.gd")
+
 var enemies_node # Just for the server
 var players: Dictionary[int, Player] = {}
 var moomoo: Moomoo
@@ -28,7 +30,7 @@ func _on_host_game_pressed() -> void:
 	%MultiplayerHUD.hide()
 	MultiplayerManager.become_host()
 	
-	Enemy.spawn_enemy(moomoo.position)
+	ENEMIES_WAVES_CONTROLLER.start_wave(1)
 	
 func _on_join_as_player_pressed() -> void:
 	%MultiplayerHUD.hide()

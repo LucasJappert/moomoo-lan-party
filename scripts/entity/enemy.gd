@@ -2,12 +2,13 @@ class_name Enemy
 
 extends Entity
 
-static var enemy_scene = preload("res://scenes/entity/enemy_scene.tscn")
+const ENEMY_SCENE = preload("res://scenes/entity/enemy_scene.tscn")
+
 @onready var nav_agent = $NavigationAgent2D
 @export var vision_radius: float = 400.0
 @onready var vision_area = $AreaVision
 @onready var vision_shape = $AreaVision/CollisionShape2D
-var speed: float = 100
+var enemy_type: String
 
 var target_position: Vector2 = Vector2.ZERO
 var timer_500ms: Timer
@@ -15,6 +16,7 @@ var target_node: Node2D = null
 
 func _ready():
 	super._ready()
+	mov_speed = 100
 
 	# nav_agent.radius = 16
 	# nav_agent.target_desired_distance = 1
@@ -29,6 +31,14 @@ func _ready():
 	add_child(timer_500ms)
 	timer_500ms.timeout.connect(_on_every_timer_500ms)
 
+func set_sprite():
+	$Sprite2D.texture = load("res://assets/enemies/" + enemy_type + ".png")
+
+static func get_instance(_enemy_type: String) -> Enemy:
+	var enemy: Enemy = ENEMY_SCENE.instantiate()
+	enemy.enemy_type = _enemy_type
+	enemy.set_sprite()
+	return enemy
 
 func _physics_process(_delta):
 	if not is_multiplayer_authority():
@@ -51,7 +61,7 @@ func _apply_movement():
 
 	var next_point = nav_agent.get_next_path_position()
 	var direction = (next_point - global_position).normalized()
-	velocity = direction * speed
+	velocity = direction * mov_speed
 
 	move_and_slide()
 	
@@ -88,18 +98,3 @@ func _get_nearest_player_inside_vision():
 func _get_acceptable_distance():
 	# return collision_shape.shape.radius + target_node.collision_shape.shape.radius + 5
 	return area_attack.shape.radius + target_node.collision_shape.shape.radius
-
-static func spawn_enemy(moomoo_position = Vector2.ZERO):
-	var TILES_DISTANCE = 10
-	var ENEMIES_BY_ZONE = 6
-	# return
-
-	var counter = 0
-	for direction in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
-		for i in range(ENEMIES_BY_ZONE):
-			counter += 1
-			var enemy = enemy_scene.instantiate()
-			enemy.id = counter
-			var random_noise = Vector2(randi_range(-64, 64), randi_range(-64, 64))
-			enemy.position = moomoo_position + direction * TILES_DISTANCE * 64 + random_noise
-			GameManager.enemies_node.add_child(enemy)

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c7v0lqb66uppf"
-path="res://.godot/imported/monsters_tileset.png-db3aa12163b735a97b9893b9fcc8b73e.ctex"
+uid="uid://dfbywu6sudbhf"
+path="res://.godot/imported/skeleton_archer.png-a1191ff0866dbb0d866c2646ba6f7c49.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/monsters/monsters_tileset.png"
-dest_files=["res://.godot/imported/monsters_tileset.png-db3aa12163b735a97b9893b9fcc8b73e.ctex"]
+source_file="res://assets/enemies/skeleton_archer.png"
+dest_files=["res://.godot/imported/skeleton_archer.png-a1191ff0866dbb0d866c2646ba6f7c49.ctex"]
 
 [params]
 

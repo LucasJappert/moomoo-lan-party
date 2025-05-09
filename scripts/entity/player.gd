@@ -2,7 +2,6 @@ class_name Player
 
 extends Entity
 
-@export var speed: float = 200.0
 @onready var nav_agent: NavigationAgent2D = $NavigationAgent2D
 
 @export var direction: Vector2 = Vector2.ZERO
@@ -10,6 +9,7 @@ var target_position = null
 
 func _ready():
 	super._ready()
+	mov_speed = 200
 	%InputSynchronizer.set_multiplayer_authority(id)
 
 	if id == multiplayer.get_unique_id():
@@ -36,6 +36,6 @@ func _try_apply_movement_from_input(_delta):
 
 	var next_point = nav_agent.get_next_path_position()
 	direction = (next_point - global_position).normalized()
-	velocity = direction * speed
+	velocity = direction * mov_speed
 
 	move_and_slide()

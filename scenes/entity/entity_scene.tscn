@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://dh82ovsrtutto"]
 
 [ext_resource type="Script" uid="uid://ki4w4rg4wu1r" path="res://scripts/entity/entity.gd" id="1_0bgvt"]
-[ext_resource type="Texture2D" uid="uid://1fiupmgkejum" path="res://assets/monsters/1.png" id="2_odnte"]
+[ext_resource type="Texture2D" uid="uid://1fiupmgkejum" path="res://assets/enemies/1.png" id="2_odnte"]
 [ext_resource type="Script" uid="uid://d3sm32sl44mdm" path="res://scripts/entity/hud.gd" id="3_wjrb4"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5ixpm"]
@@ -26,20 +26,14 @@ script = ExtResource("3_wjrb4")
 
 [node name="HealthBar" type="ProgressBar" parent="HUD"]
 offset_left = -31.0
-offset_top = -94.0
+offset_top = -71.0
 offset_right = 31.0
-offset_bottom = -67.0
+offset_bottom = -63.0
 show_percentage = false
 
 [node name="Label" type="Label" parent="HUD"]
 offset_right = 40.0
 offset_bottom = 23.0
-
-[node name="Panel" type="Panel" parent="HUD"]
-offset_left = -30.0
-offset_top = -110.0
-offset_right = 29.0
-offset_bottom = -97.0
 
 [node name="AreaAttack" type="Area2D" parent="."]
 

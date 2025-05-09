@@ -19,6 +19,8 @@ func initialize(_entity: Entity):
 		_health_bar.max_value = 100 # entity.combat.max_health
 		# _health_bar.value = entity.combat.current_health
 		_health_bar.value = randi() % 81 + 20
+		_health_bar.position.x = - _health_bar.size.x / 2
+		_health_bar.position.y = -80
 	
 
 	var lb_style = StyleBoxFlat.new()
