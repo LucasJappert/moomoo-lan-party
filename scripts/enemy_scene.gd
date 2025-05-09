@@ -61,9 +61,7 @@ func _on_every_timer_500ms():
 	_update_nav_agent()
 
 func _update_nav_agent():
-	var closest_player = _get_nearest_player_inside_vision()
-	if closest_player != null:
-		target_node = closest_player
+	target_node = _get_nearest_player_inside_vision()
 
 	if target_node == null:
 		target_node = GameManager.moomoo
