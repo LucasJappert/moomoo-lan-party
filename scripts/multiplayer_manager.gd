@@ -17,7 +17,7 @@ func become_host():
 
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
-	_add_player_to_game(1)
+	_add_player_to_game(multiplayer.get_unique_id())
 
 func become_client():
 	print("become_client")
@@ -37,14 +37,12 @@ func _add_player_to_game(id):
 	var player = player_scene.instantiate()
 	player.peer_id = id
 	players_node.add_child(player)
+	GameManager.players[id] = player
 	print("Added player: " + str(id))
 	print("Total players: " + str(players_node.get_child_count()))
 
-	if id == multiplayer.get_unique_id():
-		print("Added local player")
-		MyCamera.create_camera(player)
-
 func _remove_player_from_game(id):
+	GameManager.players.erase(id)
 	var player = players_node.get_node(str(id))
 	if player == null:
 		return

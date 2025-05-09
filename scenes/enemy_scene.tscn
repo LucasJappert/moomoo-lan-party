@@ -1,50 +1,40 @@
-[gd_scene load_steps=5 format=3 uid="uid://2smlofmifmk"]
+[gd_scene load_steps=5 format=3 uid="uid://cj8vdyvtjs0ju"]
 
-[ext_resource type="Texture2D" uid="uid://1fiupmgkejum" path="res://assets/monsters/1.png" id="1_io3nl"]
-[ext_resource type="Script" uid="uid://crmmhsx5pjp8f" path="res://scripts/enemy_scene.gd" id="1_lne1l"]
+[ext_resource type="PackedScene" uid="uid://dh82ovsrtutto" path="res://scenes/entity_scene.tscn" id="1_lne1l"]
+[ext_resource type="Script" uid="uid://crmmhsx5pjp8f" path="res://scripts/enemy_scene.gd" id="2_8a8l7"]
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_io3nl"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_xrr2a"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
+properties/1/path = NodePath(".:id")
+properties/1/spawn = true
+properties/1/replication_mode = 1
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_lne1l"]
-radius = 64.0
+[sub_resource type="CircleShape2D" id="CircleShape2D_l0aop"]
+radius = 258.627
 
-[node name="Enemy" type="CharacterBody2D"]
-z_index = 2
-z_as_relative = false
-script = ExtResource("1_lne1l")
+[node name="Enemy" instance=ExtResource("1_lne1l")]
+script = ExtResource("2_8a8l7")
+vision_radius = 400.0
 
-[node name="EnemySynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_io3nl")
+[node name="Sprite2D" parent="." index="1"]
+visible = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-z_index = 2
-z_as_relative = false
-position = Vector2(0, 27)
-scale = Vector2(0.203125, 0.203125)
-shape = SubResource("CircleShape2D_lne1l")
+[node name="EnemySynchronizer" type="MultiplayerSynchronizer" parent="." index="3"]
+replication_config = SubResource("SceneReplicationConfig_xrr2a")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-z_index = 2
-z_as_relative = false
-scale = Vector2(0.625, 0.625)
-texture = ExtResource("1_io3nl")
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." index="4"]
+path_desired_distance = 36.0
+simplify_path = true
+radius = 32.0
 
-[node name="HUD" type="Node2D" parent="."]
+[node name="AreaVision" type="Area2D" parent="." index="5"]
 z_index = 2
 z_as_relative = false
 
-[node name="HealthBar" type="ProgressBar" parent="HUD"]
-offset_left = -24.0
-offset_top = -40.0
-offset_right = 26.0
-offset_bottom = -33.0
-show_percentage = false
-
-[node name="Label" type="Label" parent="HUD"]
-offset_left = -20.0
-offset_top = 23.0
-offset_right = 20.0
-offset_bottom = 46.0
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaVision" index="0"]
+z_index = 2
+z_as_relative = false
+shape = SubResource("CircleShape2D_l0aop")
+debug_color = Color(100, 100, 100, 0)

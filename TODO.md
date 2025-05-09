@@ -1,3 +1,16 @@
+# 🧠 PATHFINDING STRATEGY – HIGH PRIORITY
+
+We must **improve the pathfinding logic** so that movement feels more natural and polished, similar to games like _Dota_.
+
+Currently, some path decisions feel rigid or too direct. We want to aim for smoother movement behavior, intelligent avoidance, and better collision handling when units crowd together.
+
+📌 **Reference Guide:**  
+[Pathfinding Guide for 2D Top-View Tiles in Godot 4.3 (by casraf.dev)](https://casraf.dev/2024/09/pathfinding-guide-for-2d-top-view-tiles-in-godot-4-3/)
+
+This guide provides advanced techniques such as flow fields, dynamic obstacle adjustments, and practical examples for top-down games.
+
+---
+
 # ✅ TODO List – MooMoo LAN Party
 
 This file tracks upcoming features and tasks in development. Contributions are welcome!
