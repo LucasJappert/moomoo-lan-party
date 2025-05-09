@@ -23,7 +23,8 @@ func _ready():
 		MyCamera.create_camera(self)
 	
 func _process(_delta):
-	$HUD/Label.text = "peer_id: " + str(peer_id) + "\nAuthority: " + str(is_multiplayer_authority()) + "\ntarget_position: " + str(target_position)
+	$HUD/Label.text = "peer_id: " + str(peer_id)
+	# $HUD/Label.text = "peer_id: " + str(peer_id) + "\nAuthority: " + str(is_multiplayer_authority()) + "\ntarget_position: " + str(target_position)
 
 func _physics_process(_delta):
 	_try_apply_movement_from_input(_delta)

@@ -17,7 +17,8 @@ func initialize(_entity: Entity):
 		_health_bar.add_theme_stylebox_override("fill", fg_style)
 
 		_health_bar.max_value = 100 # entity.combat.max_health
-		_health_bar.value = 20 # entity.combat.current_health
+		# _health_bar.value = entity.combat.current_health
+		_health_bar.value = randi() % 81 + 20
 	
 
 	var lb_style = StyleBoxFlat.new()

@@ -58,6 +58,15 @@ Built with ❤️ and cows by **Lucas Jappert** and the MooMoo LAN community.
 
 Below are screenshots and images showing the progress of MooMoo LAN Party over time. This section will be updated as new features and visuals are added.
 
+### 📅 2024-05-09
+
+- Add Entity reusable class (implemented on Enemies at the moment, rest to use it in Player).
+- Improve pathfinding on Enemies.
+- Use right click to move hte player.
+- Add HUD to Entity (health bar, label).
+
+![](.images/image4.png)
+
 ### 📅 2024-05-03
 
 - Sort all nodes (enemies, players, Moomoo) by Y position.
