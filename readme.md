@@ -1,7 +1,7 @@
 # MooMoo LAN Party 🐮
 
 Welcome to **MooMoo LAN Party**, a free and open-source multiplayer game inspired by the legendary _Moo Moo_ map from Warcraft III. This game is designed to be played over a local network (LAN), offering fast-paced cooperative action where teamwork and strategy are key to survival.
-[![](https://img.youtube.com/vi/JKrPTaYtr-A/0.jpg)](https://www.youtube.com/watch?v=JKrPTaYtr-A)
+[Moo Moo youtube video](https://www.youtube.com/watch?v=JKrPTaYtr-A)
 
 ## 🕹️ About the Game
 
