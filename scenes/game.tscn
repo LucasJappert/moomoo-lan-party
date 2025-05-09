@@ -297,7 +297,7 @@ z_index = 2
 y_sort_enabled = true
 
 [node name="EnemiesSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("uid://2smlofmifmk")
+_spawnable_scenes = PackedStringArray("uid://cj8vdyvtjs0ju")
 spawn_path = NodePath("../Enemies")
 
 [node name="Enemies" type="Node2D" parent="."]
