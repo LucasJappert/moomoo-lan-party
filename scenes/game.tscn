@@ -248,6 +248,7 @@ navigation_enabled = false
 navigation_polygon = SubResource("NavigationPolygon_p57ef")
 
 [node name="DebugNavArea" type="Polygon2D" parent="DynamicObstacleRegion"]
+color = Color(1, 1, 1, 0.411765)
 
 [node name="DebugObstacle" type="Polygon2D" parent="DynamicObstacleRegion"]
 

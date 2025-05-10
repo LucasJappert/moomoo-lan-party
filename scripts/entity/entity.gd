@@ -2,8 +2,6 @@ class_name Entity
 
 extends CharacterBody2D
 
-const CombatData = preload("res://scripts/models/combat_data.gd")
-
 @onready var hud = $HUD
 @onready var collision_shape = $CollisionShape2D
 @onready var area_attack = $AreaAttack/CollisionShape2D

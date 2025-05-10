@@ -2,8 +2,6 @@ class_name Skill
 
 enum Type {ACTIVE, PASSIVE}
 
-const SkillNames = preload("res://scripts/types/skill_names.gd")
-
 var name: String = ""
 var type: Type = Type.ACTIVE
 var cooldown: float = 0

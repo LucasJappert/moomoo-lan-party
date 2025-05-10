@@ -18,23 +18,23 @@ radius = 258.627
 script = ExtResource("2_4sfg8")
 vision_radius = 400.0
 
-[node name="Sprite2D" parent="." index="1"]
-visible = true
-
 [node name="EnemySynchronizer" type="MultiplayerSynchronizer" parent="." index="3"]
 replication_config = SubResource("SceneReplicationConfig_xrr2a")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." index="4"]
-path_desired_distance = 36.0
-simplify_path = true
-radius = 32.0
+debug_enabled = true
+debug_use_custom = true
 
 [node name="AreaVision" type="Area2D" parent="." index="5"]
 z_index = 2
 z_as_relative = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AreaVision" index="0"]
+visible = false
 z_index = 2
 z_as_relative = false
 shape = SubResource("CircleShape2D_l0aop")
 debug_color = Color(100, 100, 100, 0)
+
+[node name="CollisionShape2D" parent="AreaAttack" index="0"]
+visible = false

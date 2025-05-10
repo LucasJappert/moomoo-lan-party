@@ -1,6 +1,5 @@
 class_name CombatData
 
-const Skill = preload("res://scripts/models/skill.gd")
 const ArrackTypes = preload("res://scripts/types/attack_types.gd")
 
 var max_hp: int = 100
