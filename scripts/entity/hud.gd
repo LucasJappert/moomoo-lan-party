@@ -3,9 +3,12 @@ extends Node
 @onready var _health_bar: ProgressBar = $HealthBar
 @onready var _label: Label = $Label
 var entity: Entity
+var _is_moomoo = false
 
 func initialize(_entity: Entity):
 	entity = _entity
+	_is_moomoo = entity is Moomoo
+	print(entity is Moomoo)
 	if _health_bar:
 		_health_bar.size = Vector2(50, 5)
 		var bg_style = StyleBoxFlat.new()
@@ -34,8 +37,9 @@ func _process(_delta: float):
 	try_update_label()
 
 func try_update_label():
-	# _label.text = str(int(_health_bar.value))
-	# _label.text = str(int(entity.global_position.x)) + ", " + str(int(entity.global_position.y)) + ", " + str(int(entity.collision_shape.global_position.x)) + ", " + str(int(entity.collision_shape.global_position.y))
+	if _is_moomoo:
+		return
+
 	_label.text = entity.name
 	if not _label.text:
 		_label.visible = false

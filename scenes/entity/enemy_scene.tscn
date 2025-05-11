@@ -21,11 +21,7 @@ vision_radius = 400.0
 [node name="EnemySynchronizer" type="MultiplayerSynchronizer" parent="." index="3"]
 replication_config = SubResource("SceneReplicationConfig_xrr2a")
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." index="4"]
-debug_enabled = true
-debug_use_custom = true
-
-[node name="AreaVision" type="Area2D" parent="." index="5"]
+[node name="AreaVision" type="Area2D" parent="." index="4"]
 z_index = 2
 z_as_relative = false
 
@@ -35,6 +31,3 @@ z_index = 2
 z_as_relative = false
 shape = SubResource("CircleShape2D_l0aop")
 debug_color = Color(100, 100, 100, 0)
-
-[node name="CollisionShape2D" parent="AreaAttack" index="0"]
-visible = false

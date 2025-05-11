@@ -36,8 +36,10 @@ func _on_peer_disconnected(id):
 func _add_player_to_game(id):
 	var player = player_scene.instantiate()
 	player.id = id
+	player.global_position = Vector2(4 * 64 + 16, 4 * 64 + 16)
 	players_node.add_child(player)
 	GameManager.players[id] = player
+	AStarGridManager.set_cell_blocked_from_world(player.global_position, true)
 	print("Added player: " + str(id))
 	print("Total players: " + str(players_node.get_child_count()))
 

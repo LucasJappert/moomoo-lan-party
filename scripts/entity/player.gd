@@ -2,40 +2,22 @@ class_name Player
 
 extends Entity
 
-@onready var nav_agent: NavigationAgent2D = $NavigationAgent2D
-
-@export var direction: Vector2 = Vector2.ZERO
-var target_position = null
-
 func _ready():
 	super._ready()
 	mov_speed = 200
 	%InputSynchronizer.set_multiplayer_authority(id)
-
 	if id == multiplayer.get_unique_id():
 		MyCamera.create_camera(self)
-	
-func _process(_delta):
-	$HUD/Label.text = "peer_id: " + str(id)
-	# $HUD/Label.text = "peer_id: " + str(peer_id) + "\nAuthority: " + str(is_multiplayer_authority()) + "\ntarget_position: " + str(target_position)
 
-func _physics_process(_delta):
-	_try_apply_movement_from_input(_delta)
 
-func _try_apply_movement_from_input(_delta):
+func _unhandled_input(event):
+	print("_unhandled_input, id: " + name)
 	if not multiplayer.is_server():
 		return
 
-	if target_position != %InputSynchronizer.target_position:
-		print("Target position changed: " + str(target_position))
-		target_position = %InputSynchronizer.target_position
-		nav_agent.set_target_position(target_position)
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+		var mouse_pos = get_global_mouse_position()
+		var from_cell = AStarGridManager.world_to_cell(target_pos if target_pos != null else global_position)
+		var to_cell = AStarGridManager.world_to_cell(mouse_pos)
 
-	if nav_agent.is_navigation_finished():
-		return
-
-	var next_point = nav_agent.get_next_path_position()
-	direction = (next_point - global_position).normalized()
-	velocity = direction * mov_speed
-
-	move_and_slide()
+		current_path = AStarGridManager.find_path(from_cell, to_cell)

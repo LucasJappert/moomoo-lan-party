@@ -40,3 +40,6 @@ offset_bottom = 23.0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AreaAttack"]
 shape = SubResource("CircleShape2D_idfl5")
 debug_color = Color(0.977, 0, 0.407, 0.186)
+
+[node name="PathLine" type="Line2D" parent="."]
+default_color = Color(1, 1, 0, 1)
