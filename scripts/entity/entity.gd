@@ -52,11 +52,13 @@ func _server_move_along_path(_delta: float):
 			return
 
 		current_cell = AStarGridManager.world_to_cell(global_position)
-		AStarGridManager.set_cell_blocked(current_cell, false)
 		var next_target_cell = current_path[0]
+		if current_cell == next_target_cell:
+			current_path.remove_at(0)
 		# Return when next target cell is blocked
 		if AStarGridManager.astar_grid.is_point_solid(next_target_cell):
 			return
+		AStarGridManager.set_cell_blocked(current_cell, false)
 		AStarGridManager.set_cell_blocked(next_target_cell, true)
 		target_pos = AStarGridManager.cell_to_world(next_target_cell)
 		current_path.remove_at(0)
