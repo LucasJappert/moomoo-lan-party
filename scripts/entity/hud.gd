@@ -8,7 +8,6 @@ var _is_moomoo = false
 func initialize(_entity: Entity):
 	entity = _entity
 	_is_moomoo = entity is Moomoo
-	print(entity is Moomoo)
 	if _health_bar:
 		_health_bar.size = Vector2(50, 5)
 		var bg_style = StyleBoxFlat.new()

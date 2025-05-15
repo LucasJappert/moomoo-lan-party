@@ -7,11 +7,13 @@ extends CharacterBody2D
 @onready var area_attack = $AreaAttack
 @onready var area_attack_collision_shape = $AreaAttack/CollisionShape2D
 @onready var path_line: Line2D = $PathLine
-@export var id: int:
+var id := 0:
 	set(value):
 		id = value
-		name = str(id)
-var combat_data := CombatData.new()
+		name = str(value)
+		print("set(value): " + name + ". type: ")
+
+var combat_data: CombatData
 var mov_speed: float = 100.0
 var direction: Vector2 = Vector2.ZERO
 
@@ -22,21 +24,26 @@ var current_cell = null
 var target_pos = null
 
 func _ready():
-	print("_ready entity")
 	collision_layer = 1
 	collision_mask = 1
 	hud.initialize(self)
 
+func _server_verify_right_click_mouse_pos(_delta: float):
+	# Implemented in Player
+	pass
+
 func _process(delta: float) -> void:
 	hud._process(delta)
 
+	_server_verify_right_click_mouse_pos(delta)
+
 func _physics_process(delta):
+	_server_move_along_path(delta)
+
+func _server_move_along_path(_delta: float):
 	if not multiplayer.is_server():
 		return
 
-	move_along_path(delta)
-
-func move_along_path(_delta: float):
 	if is_target_entity_in_attack_area():
 		current_path = []
 
@@ -73,3 +80,5 @@ func is_target_entity_in_attack_area() -> bool:
 
 func die():
 	queue_free()
+
+# Corregir problema cuando se une otro jugador

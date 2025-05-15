@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=4 uid="uid://cwrqk21prcrn7"]
+[gd_scene load_steps=12 format=4 uid="uid://cwrqk21prcrn7"]
 
 [ext_resource type="Script" uid="uid://dkenf2aknhk7r" path="res://scripts/game.gd" id="1_lbhrr"]
 [ext_resource type="Texture2D" uid="uid://b6jnkm7kk6mgc" path="res://assets/grass-earth-64.png" id="1_uwrxv"]
@@ -59,11 +59,6 @@ texture_region_size = Vector2i(64, 64)
 tile_size = Vector2i(64, 64)
 navigation_layer_0/layers = 1
 sources/0 = SubResource("TileSetAtlasSource_yqjtg")
-
-[sub_resource type="NavigationPolygon" id="NavigationPolygon_p57ef"]
-vertices = PackedVector2Array(1729.05, 1107.08, -391.844, 1125.9, -369.141, -416.047, 1736.94, -428.93)
-polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(-379, -426, 1747, -439, 1739, 1117, -402, 1136)])
 
 [sub_resource type="SystemFont" id="SystemFont_p57ef"]
 
@@ -241,21 +236,17 @@ tile_map_data = PackedByteArray("AAAAAAAAAAAAAAMAAAAAAAoAAAAAAAMAAAATAAoAAAAAAAM
 tile_set = SubResource("TileSet_lnu2h")
 navigation_enabled = false
 
-[node name="DynamicObstacleRegion" type="NavigationRegion2D" parent="."]
-visible = false
-navigation_polygon = SubResource("NavigationPolygon_p57ef")
-
-[node name="DebugNavArea" type="Polygon2D" parent="DynamicObstacleRegion"]
-color = Color(1, 1, 1, 0.411765)
-
-[node name="DebugObstacle" type="Polygon2D" parent="DynamicObstacleRegion"]
-
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://scenes/player_scene.tscn")
+_spawnable_scenes = PackedStringArray("uid://bs7blwah20esy")
 spawn_path = NodePath("../Players")
+
+[node name="EnemiesSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://cj8vdyvtjs0ju")
+spawn_path = NodePath("../Enemies")
 
 [node name="Players" type="Node2D" parent="."]
 z_index = 2
+z_as_relative = false
 y_sort_enabled = true
 
 [node name="Enemies" type="Node2D" parent="."]
@@ -267,10 +258,6 @@ y_sort_enabled = true
 z_index = 2
 z_as_relative = false
 y_sort_enabled = true
-
-[node name="EnemiesSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://scenes/enemy_scene.tscn")
-spawn_path = NodePath("../Enemies")
 
 [node name="GridDebugger" type="Node2D" parent="."]
 script = ExtResource("6_p57ef")

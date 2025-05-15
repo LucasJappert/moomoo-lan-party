@@ -3,34 +3,35 @@
 [ext_resource type="PackedScene" uid="uid://dh82ovsrtutto" path="res://scenes/entity/entity_scene.tscn" id="1_wbrma"]
 [ext_resource type="Texture2D" uid="uid://b55rbh85p2cfw" path="res://assets/heros/1.png" id="2_uuy8k"]
 [ext_resource type="Script" uid="uid://q3chynnhllhm" path="res://scripts/entity/player.gd" id="2_ylf3p"]
-[ext_resource type="Script" uid="uid://c6fuinfxsetjw" path="res://scripts/input_synchronizer.gd" id="3_caynj"]
+[ext_resource type="Script" uid="uid://bnkb0n5ca0ndt" path="res://scripts/entity/input_synchronizer.gd" id="3_ylf3p"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_2y2wq"]
-properties/0/path = NodePath(".:peer_id")
+properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath(".:position")
+properties/1/path = NodePath(".:direction")
 properties/1/spawn = true
 properties/1/replication_mode = 1
-properties/2/path = NodePath(".:direction")
+properties/2/path = NodePath(".:player_id")
 properties/2/spawn = true
 properties/2/replication_mode = 1
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_mfnq8"]
-properties/0/path = NodePath("InputSynchronizer:target_position")
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_uyepr"]
+properties/0/path = NodePath("InputSynchronizer:right_click_mouse_pos")
 properties/0/spawn = true
 properties/0/replication_mode = 1
 
 [node name="Player" instance=ExtResource("1_wbrma")]
 script = ExtResource("2_ylf3p")
+player_id = 0
 
-[node name="Sprite2D" parent="." index="1"]
-texture = ExtResource("2_uuy8k")
-
-[node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="4"]
+[node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="0"]
 replication_config = SubResource("SceneReplicationConfig_2y2wq")
 
-[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="." index="5"]
+[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="." index="1"]
 unique_name_in_owner = true
-replication_config = SubResource("SceneReplicationConfig_mfnq8")
-script = ExtResource("3_caynj")
+replication_config = SubResource("SceneReplicationConfig_uyepr")
+script = ExtResource("3_ylf3p")
+
+[node name="Sprite2D" parent="." index="3"]
+texture = ExtResource("2_uuy8k")

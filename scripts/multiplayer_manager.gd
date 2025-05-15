@@ -35,12 +35,16 @@ func _on_peer_disconnected(id):
 
 func _add_player_to_game(id):
 	var player = player_scene.instantiate()
-	player.id = id
+	player.set_player_id(id)
 	player.global_position = Vector2(4 * 64 + 16, 4 * 64 + 16)
-	players_node.add_child(player)
+	players_node.add_child(player, true)
+
+	if multiplayer.is_server():
+		player.get_node("InputSynchronizer").set_multiplayer_authority(id) # 👈 Esto es clave
+
 	GameManager.players[id] = player
 	AStarGridManager.set_cell_blocked_from_world(player.global_position, true)
-	print("Added player: " + str(id))
+	print("Added player: " + player.name)
 	print("Total players: " + str(players_node.get_child_count()))
 
 func _remove_player_from_game(id):
