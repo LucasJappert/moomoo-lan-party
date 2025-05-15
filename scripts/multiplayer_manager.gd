@@ -4,12 +4,10 @@ const SERVER_PORT = 8080
 # const SERVER_IP = "192.168.0.3"
 const SERVER_IP = "127.0.0.1"
 
-const player_scene = preload("res://scenes/entity/player_scene.tscn")
-var players_node # Just for the server
+# const player_scene = preload("res://scenes/entity/player_scene.tscn")
 
 func become_host():
 	print("become_host")
-	players_node = get_tree().get_root().get_node("Game/Players")
 	var server = ENetMultiplayerPeer.new()
 	server.create_server(SERVER_PORT, 2)
 	print("Server running on port: " + str(SERVER_PORT))
@@ -34,22 +32,19 @@ func _on_peer_disconnected(id):
 	_remove_player_from_game(id)
 
 func _add_player_to_game(id):
-	var player = player_scene.instantiate()
-	player.set_player_id(id)
-	player.global_position = Vector2(4 * 64 + 16, 4 * 64 + 16)
-	players_node.add_child(player, true)
-
-	if multiplayer.is_server():
-		player.get_node("InputSynchronizer").set_multiplayer_authority(id) # 👈 Esto es clave
-
-	GameManager.players[id] = player
-	AStarGridManager.set_cell_blocked_from_world(player.global_position, true)
-	print("Added player: " + player.name)
-	print("Total players: " + str(players_node.get_child_count()))
+	var spawn_data = {
+		"player_id": id,
+	}
+	var main = get_tree().get_root().get_node("Main")
+	var new_player = main.player_spawner.spawn(spawn_data)
+	GameManager.players[id] = new_player
+	AStarGridManager.set_cell_blocked_from_world(new_player.global_position, true)
+	print("Added player: " + new_player.name)
+	print("Total players: " + str(GameManager.players_node.get_child_count()))
 
 func _remove_player_from_game(id):
 	GameManager.players.erase(id)
-	var player = players_node.get_node(str(id))
+	var player = GameManager.players_node.get_node(str(id))
 	if player == null:
 		return
 

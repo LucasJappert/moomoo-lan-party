@@ -8,6 +8,18 @@ static var _zoom_step := 0.1 # Amount of zoom per scroll
 static var _zoom_min := 0.5 # Minimum zoom
 static var _zoom_max := 3.0 # Maximum zoom
 
+static func set_screen_size():
+	var screen_size = DisplayServer.screen_get_size(0)
+
+	var new_width = int(screen_size.x * 0.4)
+	var new_height = int(new_width * 9.0 / 16.0)
+
+	DisplayServer.window_set_size(Vector2i(new_width, new_height))
+
+	var pos_x = screen_size.x - new_width
+	var pos_y = screen_size.y - new_height
+	DisplayServer.window_set_position(Vector2i(pos_x, pos_y))
+
 static func create_camera(my_player: Player):
 	var new_camera = Camera2D.new()
 	MyCamera.camera = new_camera

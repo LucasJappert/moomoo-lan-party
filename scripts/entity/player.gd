@@ -10,16 +10,6 @@ func set_player_id(value: int) -> void:
 	name = str(player_id)
 	print("set_player_id player id: " + str(player_id))
 
-func _enter_tree():
-	print("🌲 Player entered tree. player_id = ", player_id, " | my unique id = ", multiplayer.get_unique_id())
-	# if player_id == 0 && not multiplayer.is_server():
-	# 	set_player_id(multiplayer.get_unique_id())
-	# if multiplayer.is_server() or player_id == multiplayer.get_unique_id():
-	# 	if %InputSynchronizer and player_id != 0:
-	# 		%InputSynchronizer.set_multiplayer_authority(player_id)
-	# 		print("🟢 Autoridad seteada a InputSynchronizer: " + str(player_id))
-
-
 func _ready():
 	super._ready()
 	mov_speed = 200
