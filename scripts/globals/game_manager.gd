@@ -8,7 +8,7 @@ var moomoo_node
 var moomoo: Moomoo
 
 func _ready():
-	print("GameManager globals ready")
+	pass
 
 func add_enemy(enemy: Enemy) -> void:
 	enemies_nodes.add_child(enemy)

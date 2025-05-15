@@ -11,6 +11,3 @@ var attack_range: int = 0
 var attack_type := AttackTypes.MELEE
 var projectile_type: String = ""
 var skills: Array[Skill] = []
-
-func _init() -> void:
-	print("_init CombatData")

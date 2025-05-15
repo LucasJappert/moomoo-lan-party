@@ -7,7 +7,6 @@ const PLAYER_SCENE = preload("res://scenes/entity/player_scene.tscn")
 @onready var player_spawner = $PlayerSpawner
 
 func _ready() -> void:
-	print("GameManager ready")
 	MyCamera.set_screen_size()
 
 	call_deferred("_init_player_spawner")
@@ -35,7 +34,7 @@ func _on_host_game_pressed() -> void:
 	%MultiplayerHUD.hide()
 	MultiplayerManager.become_host()
 	
-	# ENEMIES_WAVES_CONTROLLER.start_wave(1)
+	ENEMIES_WAVES_CONTROLLER.start_wave(1)
 	
 func _on_join_as_player_pressed() -> void:
 	%MultiplayerHUD.hide()

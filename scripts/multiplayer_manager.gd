@@ -4,10 +4,7 @@ const SERVER_PORT = 8080
 # const SERVER_IP = "192.168.0.3"
 const SERVER_IP = "127.0.0.1"
 
-# const player_scene = preload("res://scenes/entity/player_scene.tscn")
-
 func become_host():
-	print("become_host")
 	var server = ENetMultiplayerPeer.new()
 	server.create_server(SERVER_PORT, 2)
 	print("Server running on port: " + str(SERVER_PORT))
@@ -18,7 +15,6 @@ func become_host():
 	_add_player_to_game(multiplayer.get_unique_id())
 
 func become_client():
-	print("become_client")
 	var client = ENetMultiplayerPeer.new()
 	client.create_client(SERVER_IP, SERVER_PORT)
 	multiplayer.multiplayer_peer = client

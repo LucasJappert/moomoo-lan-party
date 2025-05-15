@@ -8,7 +8,6 @@ var right_click_mouse_pos = null
 func set_player_id(value: int) -> void:
 	player_id = value
 	name = str(player_id)
-	print("set_player_id player id: " + str(player_id))
 
 func _ready():
 	super._ready()

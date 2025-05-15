@@ -7,13 +7,9 @@ extends CharacterBody2D
 @onready var area_attack = $AreaAttack
 @onready var area_attack_collision_shape = $AreaAttack/CollisionShape2D
 @onready var path_line: Line2D = $PathLine
-var id := 0:
-	set(value):
-		id = value
-		name = str(value)
-		print("set(value): " + name + ". type: ")
+var id: int = 0
 
-var combat_data: CombatData
+var combat_data = CombatData.new()
 var mov_speed: float = 100.0
 var direction: Vector2 = Vector2.ZERO
 
@@ -26,6 +22,7 @@ var target_pos = null
 func _ready():
 	collision_layer = 1
 	collision_mask = 1
+	name = str(id)
 	hud.initialize(self)
 
 func _server_verify_right_click_mouse_pos(_delta: float):
@@ -55,6 +52,7 @@ func _server_move_along_path(_delta: float):
 		var next_target_cell = current_path[0]
 		if current_cell == next_target_cell:
 			current_path.remove_at(0)
+
 		# Return when next target cell is blocked
 		if AStarGridManager.astar_grid.is_point_solid(next_target_cell):
 			return
