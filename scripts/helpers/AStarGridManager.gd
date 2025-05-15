@@ -33,9 +33,11 @@ func set_cell_blocked_from_world(pos: Vector2, blocked: bool):
 func find_path(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
 	if not astar_grid.is_in_boundsv(start) or not astar_grid.is_in_boundsv(end):
 		return []
-	var path = astar_grid.get_id_path(start, end, true)
-	if path.size() == 1 and path[0] == start:
+	var path: Array[Vector2i] = astar_grid.get_id_path(start, end, true)
+	if path.is_empty():
 		return []
+		
+	path.remove_at(0) # Remove start from path
 	return path
 
 func world_to_cell(pos: Vector2) -> Vector2i:

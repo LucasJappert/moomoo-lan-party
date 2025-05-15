@@ -3,7 +3,7 @@ class_name EnemiesWavesController
 static func start_wave(wave: int) -> void:
 	print("Wave " + str(wave) + " started!")
 
-	const TILES_DISTANCE = 10
+	const TILES_DISTANCE = 9
 	const ENEMIES_BY_ZONE = 6
 	var counter = 0
 	var moomoo_position = GameManager.moomoo.global_position
@@ -14,6 +14,6 @@ static func start_wave(wave: int) -> void:
 				counter += 1
 				var enemy: Enemy = EnemyFactory.get_skeleton_archer()
 				var random_noise = Vector2(randi_range(-64, 64), randi_range(-64, 64))
-				enemy.position = moomoo_position + direction * TILES_DISTANCE * 64 + random_noise
+				enemy.global_position = moomoo_position + direction * TILES_DISTANCE * 64 + random_noise
 				enemy.id = counter
 				GameManager.add_enemy(enemy)

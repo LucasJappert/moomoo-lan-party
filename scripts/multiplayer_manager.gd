@@ -29,7 +29,7 @@ func _on_peer_disconnected(id):
 
 func _add_player_to_game(id):
 	var spawn_data = {
-		"player_id": id,
+		"player_id": id
 	}
 	var main = get_tree().get_root().get_node("Main")
 	var new_player = main.player_spawner.spawn(spawn_data)

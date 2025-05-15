@@ -15,7 +15,6 @@ func _ready() -> void:
 	GameManager.moomoo_node = $Moomoo
 
 	GameManager.moomoo = MOOMOO_SCENE.instantiate()
-	GameManager.moomoo.global_position = Vector2(32 * 20 + 16, 32 * 11 + 16)
 	GameManager.moomoo_node.add_child(GameManager.moomoo)
 
 	AStarGridManager.set_cell_blocked_from_world(GameManager.moomoo.global_position, true)
@@ -25,8 +24,9 @@ func _init_player_spawner():
 
 func _spawn_custom(data: Dictionary) -> Node:
 	var player = PLAYER_SCENE.instantiate()
-	player.set_player_id(data["player_id"])
-	player.get_node("InputSynchronizer").set_multiplayer_authority(data["player_id"])
+	var player_id: int = data["player_id"]
+	player.set_player_id(player_id)
+	player.get_input_synchronizer().set_multiplayer_authority(player_id)
 	return player
 
 

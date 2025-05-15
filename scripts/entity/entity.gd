@@ -50,11 +50,11 @@ func _server_move_along_path(_delta: float):
 
 		current_cell = AStarGridManager.world_to_cell(global_position)
 		var next_target_cell = current_path[0]
-		if current_cell == next_target_cell:
-			current_path.remove_at(0)
 
-		# Return when next target cell is blocked
+		
 		if AStarGridManager.astar_grid.is_point_solid(next_target_cell):
+			 # Update the path and return when next target cell is blocked
+			_update_path()
 			return
 		AStarGridManager.set_cell_blocked(current_cell, false)
 		AStarGridManager.set_cell_blocked(next_target_cell, true)
@@ -77,6 +77,9 @@ func is_target_entity_in_attack_area() -> bool:
 
 	var result = area_attack.overlaps_body(target_entity)
 	return result
+
+func _update_path():
+	pass
 
 func die():
 	queue_free()
