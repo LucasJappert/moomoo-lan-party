@@ -17,6 +17,7 @@ func _ready():
 	mov_speed = 200
 	if player_id == multiplayer.get_unique_id():
 		MyCamera.create_camera(self)
+		MultiplayerManager.MY_PLAYER = self
 
 func _load_sprite():
 	sprite.frames = load("res://assets/heros/hero1.tres")

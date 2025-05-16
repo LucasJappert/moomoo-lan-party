@@ -4,6 +4,7 @@ extends Node2D
 @export var text_color: Color = Color(1, 1, 1)
 @export var font: Font
 @export var solid_cell_color: Color = Color(1, 0, 0, 0.5)
+var hovered_cell: Vector2i
 const _PRINT_COORDINATES := false
 const _DRAW_PATHS := false
 const _DRAW_SOLID_CELLS := false
@@ -14,10 +15,14 @@ func _ready():
 		set_physics_process(false)
 
 func _process(_delta):
+	if MultiplayerManager.MY_PLAYER != null:
+		hovered_cell = AStarGridManager.world_to_cell(MultiplayerManager.MY_PLAYER.get_global_mouse_position())
+		
 	queue_redraw()
 
+
 func _draw():
-	var tile_size := AStarGridManager.tile_size
+	var tile_size := MapConstants.TILE_SIZE
 
 	# Obtener el viewport en coordenadas globales
 	var canvas_transform := get_canvas_transform().affine_inverse()
@@ -46,6 +51,8 @@ func _draw():
 			_try_print_coordinates(pos, x, y)
 
 	_try_draw_paths()
+
+	_draw_hovered_cell()
 
 
 func clamp_to_region(cell: Vector2i) -> Vector2i:
@@ -82,3 +89,10 @@ func _try_draw_solid_cells(cell: Vector2i, pos: Vector2):
 	# Draw solid cells
 	if AStarGridManager.astar_grid.is_point_solid(cell):
 		draw_rect(Rect2(pos - AStarGridManager.tile_size / 2.0, AStarGridManager.tile_size), solid_cell_color, true)
+
+func _draw_hovered_cell():
+	if MultiplayerManager.MY_PLAYER == null:
+		return
+
+	var pos := AStarGridManager.cell_to_world(hovered_cell)
+	draw_rect(Rect2(pos - MapConstants.TILE_SIZE / 2.0, MapConstants.TILE_SIZE), Color(0, 0, 0, 0.2), true)

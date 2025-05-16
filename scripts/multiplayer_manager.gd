@@ -6,6 +6,7 @@ const SERVER_PORT = 8080
 # const SERVER_IP = "192.168.0.3"
 const SERVER_IP = "127.0.0.1"
 const HOSTED_GAME = true
+var MY_PLAYER: Player
 
 func become_host():
 	var server = ENetMultiplayerPeer.new()
