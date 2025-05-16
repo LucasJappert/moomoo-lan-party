@@ -11,7 +11,7 @@ var id: int = 0
 
 var combat_data = CombatData.new()
 var mov_speed: float = 100.0
-var direction: Vector2 = Vector2.ZERO
+@export var direction: Vector2 = Vector2.ZERO
 
 # Move this logic to a separate module
 var target_entity: Entity
@@ -28,7 +28,7 @@ var target_pos = null
 @rpc("any_peer")
 func rpc_set_state(state: EntityState.StateEnum) -> void:
 	current_state = state
-	EntityState._play_animation_for_state(self)
+	EntityState._play_animation(self)
 
 func _ready():
 	collision_layer = 1
@@ -54,6 +54,7 @@ func _process(_delta: float) -> void:
 
 func _physics_process(delta):
 	_server_move_along_path(delta)
+	AuxEntityClient._phisics_process(self, delta)
 
 func _server_move_along_path(_delta: float):
 	if not multiplayer.is_server():

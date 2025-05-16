@@ -15,18 +15,9 @@ static func _server_update(entity: Entity):
 	var new_state = StateEnum.WALK if is_moving else StateEnum.IDLE
 
 	if new_state != entity.current_state:
-		entity.current_state = new_state
-		
-		# Send the new state to all clients
-		for peer_id in entity.multiplayer.get_peers():
-			entity.rpc_id(peer_id, "rpc_set_state", new_state)
-			
+		_server_set_current_state(entity, new_state)
 
-static func _play_animation_for_state(entity: Entity) -> void:
-	if not entity.multiplayer or entity.multiplayer.is_server():
-		print("entity.multiplayer.is_server(): ", entity.multiplayer.is_server())
-		print("entity.multiplayer: ", entity.multiplayer)
-		return
+static func _play_animation(entity: Entity) -> void:
 	if not entity.sprite:
 		return
 
@@ -35,3 +26,13 @@ static func _play_animation_for_state(entity: Entity) -> void:
 			entity.sprite.play("idle")
 		StateEnum.WALK:
 			entity.sprite.play("walk")
+
+static func _server_set_current_state(entity: Entity, new_state: StateEnum) -> void:
+	entity.current_state = new_state
+	
+	if MultiplayerManager.HOSTED_GAME:
+		_play_animation(entity)
+
+	# We notify the new state to all clients
+	for peer_id in entity.multiplayer.get_peers():
+		entity.rpc_id(peer_id, "rpc_set_state", entity.current_state)

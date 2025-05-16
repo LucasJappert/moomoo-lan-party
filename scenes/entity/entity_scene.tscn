@@ -1,9 +1,17 @@
-[gd_scene load_steps=7 format=3 uid="uid://dh82ovsrtutto"]
+[gd_scene load_steps=8 format=3 uid="uid://dh82ovsrtutto"]
 
 [ext_resource type="Script" uid="uid://ki4w4rg4wu1r" path="res://scripts/entity/entity.gd" id="1_0bgvt"]
 [ext_resource type="Texture2D" uid="uid://1fiupmgkejum" path="res://assets/enemies/1.png" id="2_odnte"]
 [ext_resource type="Script" uid="uid://d3sm32sl44mdm" path="res://scripts/entity/hud.gd" id="3_wjrb4"]
 [ext_resource type="SpriteFrames" uid="uid://lg60fiptyxt4" path="res://assets/heros/hero1.tres" id="4_odnte"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_odnte"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:direction")
+properties/1/spawn = true
+properties/1/replication_mode = 1
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5ixpm"]
 radius = 16.0
@@ -13,6 +21,9 @@ radius = 32.0
 
 [node name="Entity" type="CharacterBody2D"]
 script = ExtResource("1_0bgvt")
+
+[node name="EntitySynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_odnte")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_5ixpm")

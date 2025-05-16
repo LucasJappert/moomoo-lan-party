@@ -2,6 +2,7 @@ class_name Enemy
 
 extends Entity
 
+#TODO: Move to EnemyFactory
 const ENEMY_SCENE = preload("res://scenes/entity/enemy_scene.tscn")
 
 @export var vision_radius: float = 400.0
@@ -13,7 +14,7 @@ var timer_500ms: Timer
 
 func _ready():
 	super._ready()
-	mov_speed = 100
+	mov_speed = 60
 	vision_shape.shape.radius = vision_radius
 	
 	$Sprite2D.texture = load("res://assets/enemies/" + enemy_type + ".png")
@@ -33,12 +34,6 @@ static func get_instance(_enemy_type: String) -> Enemy:
 	var enemy: Enemy = ENEMY_SCENE.instantiate()
 	enemy.enemy_type = _enemy_type
 	return enemy
-
-func _physics_process(_delta):
-	if not is_multiplayer_authority():
-		return
-
-	super._physics_process(_delta)
 	
 func _on_every_timer_500ms():
 	_try_set_current_path()

@@ -15,7 +15,7 @@ func initialize(_entity: Entity):
 		_health_bar.add_theme_stylebox_override("background", bg_style)
 		
 		var fg_style = StyleBoxFlat.new()
-		fg_style.bg_color = Color(0, 1, 0) # green foreground
+		fg_style.bg_color = Color(0, 0.6, 0) # green foreground
 		_health_bar.add_theme_stylebox_override("fill", fg_style)
 
 		_health_bar.max_value = 100 # entity.combat.max_health
