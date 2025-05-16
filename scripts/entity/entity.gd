@@ -27,7 +27,6 @@ var target_pos = null
 
 @rpc("any_peer")
 func rpc_set_state(state: EntityState.StateEnum) -> void:
-	print("rpc_set_state", state)
 	current_state = state
 	EntityState._play_animation_for_state(self)
 

@@ -1,7 +1,6 @@
 class_name EnemiesWavesController
 
 static func start_wave(wave: int) -> void:
-	return
 	print("Wave " + str(wave) + " started!")
 
 	const TILES_DISTANCE = 9

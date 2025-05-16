@@ -5,6 +5,8 @@ extends Node2D
 @export var font: Font
 @export var solid_cell_color: Color = Color(1, 0, 0, 0.5)
 const _PRINT_COORDINATES := false
+const _DRAW_PATHS := false
+const _DRAW_SOLID_CELLS := false
 
 func _ready():
 	if get_multiplayer_authority() != multiplayer.get_unique_id():
@@ -38,22 +40,12 @@ func _draw():
 			var pos := AStarGridManager.cell_to_world(cell)
 
 			draw_rect(Rect2(pos - tile_size / 2.0, tile_size), grid_color, false)
-			# Si está marcada como sólida, pintar el interior
-			if not AStarGridManager.astar_grid.is_in_boundsv(cell):
-				continue
-
-			if AStarGridManager.astar_grid.is_point_solid(cell):
-				draw_rect(Rect2(pos - tile_size / 2.0, tile_size), solid_cell_color, true)
+			
+			_try_draw_solid_cells(cell, pos)
 
 			_try_print_coordinates(pos, x, y)
 
-
-	for entity in GameManager.get_entities():
-		for cell in entity.current_path:
-			if AStarGridManager.astar_grid.is_in_boundsv(cell):
-				var pos := AStarGridManager.cell_to_world(cell)
-				draw_rect(Rect2(pos - tile_size / 2.0, tile_size), Color(1, 1, 0, 0.5), true)
-				draw_string(font, pos, "X")
+	_try_draw_paths()
 
 
 func clamp_to_region(cell: Vector2i) -> Vector2i:
@@ -69,3 +61,24 @@ func _try_print_coordinates(pos: Vector2, x: int, y: int):
 		var label := "%d,%d" % [x, y]
 		var text_size := font.get_string_size(label)
 		draw_string(font, pos - text_size / 2.0, label)
+
+func _try_draw_paths():
+	if not _DRAW_PATHS:
+		return
+
+	for entity in GameManager.get_entities():
+		for cell in entity.current_path:
+			if AStarGridManager.astar_grid.is_in_boundsv(cell):
+				var pos := AStarGridManager.cell_to_world(cell)
+				draw_rect(Rect2(pos - AStarGridManager.tile_size / 2.0, AStarGridManager.tile_size), Color(1, 1, 0, 0.5), true)
+				draw_string(font, pos, "X")
+
+func _try_draw_solid_cells(cell: Vector2i, pos: Vector2):
+	if not _DRAW_SOLID_CELLS:
+		return
+
+	if not AStarGridManager.astar_grid.is_in_boundsv(cell):
+		return
+	# Draw solid cells
+	if AStarGridManager.astar_grid.is_point_solid(cell):
+		draw_rect(Rect2(pos - AStarGridManager.tile_size / 2.0, AStarGridManager.tile_size), solid_cell_color, true)
