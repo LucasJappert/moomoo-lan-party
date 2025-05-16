@@ -18,6 +18,10 @@ func _ready():
 	if player_id == multiplayer.get_unique_id():
 		MyCamera.create_camera(self)
 
+func _load_sprite():
+	sprite.frames = load("res://assets/heros/hero1.tres")
+	pass
+
 func _server_verify_right_click_mouse_pos(_delta: float):
 	if right_click_mouse_pos != %InputSynchronizer.right_click_mouse_pos:
 		right_click_mouse_pos = %InputSynchronizer.right_click_mouse_pos

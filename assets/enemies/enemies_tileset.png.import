@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c7v0lqb66uppf"
-path="res://.godot/imported/monsters_tileset.png-0a423774de833bf01b94e7bbd1bbcd17.ctex"
+path="res://.godot/imported/enemies_tileset.png-c19e97d5c51a9bf92fa45adcc5ebf2e1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/enemies/monsters_tileset.png"
-dest_files=["res://.godot/imported/monsters_tileset.png-0a423774de833bf01b94e7bbd1bbcd17.ctex"]
+source_file="res://assets/enemies/enemies_tileset.png"
+dest_files=["res://.godot/imported/enemies_tileset.png-c19e97d5c51a9bf92fa45adcc5ebf2e1.ctex"]
 
 [params]
 

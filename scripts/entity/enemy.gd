@@ -25,6 +25,10 @@ func _ready():
 	add_child(timer_500ms)
 	timer_500ms.timeout.connect(_on_every_timer_500ms)
 
+func _load_sprite():
+	sprite.frames = load("res://assets/enemies/" + enemy_type + ".tres")
+	pass
+
 static func get_instance(_enemy_type: String) -> Enemy:
 	var enemy: Enemy = ENEMY_SCENE.instantiate()
 	enemy.enemy_type = _enemy_type

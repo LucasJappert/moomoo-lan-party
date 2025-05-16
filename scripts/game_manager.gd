@@ -16,7 +16,6 @@ func _ready() -> void:
 
 	GameManager.moomoo = MOOMOO_SCENE.instantiate()
 	GameManager.moomoo_node.add_child(GameManager.moomoo)
-
 	AStarGridManager.set_cell_blocked_from_world(GameManager.moomoo.global_position, true)
 
 func _init_player_spawner():
