@@ -40,7 +40,7 @@ static func get_orc() -> Enemy:
 	enemy.combat_data.attack_speed = 1.2
 	enemy.combat_data.attack_range = 0
 	enemy.combat_data.attack_type = AttackTypes.MELEE
-	enemy.combat_data.skills = [Skill.get_stun_charge()]
+	enemy.combat_data.skills.append(Skill.get_stun_charge())
 	return enemy
 
 static func get_fire_mage() -> Enemy:
@@ -55,7 +55,7 @@ static func get_fire_mage() -> Enemy:
 	enemy.combat_data.attack_range = 300
 	enemy.combat_data.attack_type = AttackTypes.RANGED
 	enemy.combat_data.projectile_type = ProjectileTypes.FIREBALL
-	enemy.combat_data.skills = [Skill.get_fireball()]
+	enemy.combat_data.skills.append(Skill.get_fireball())
 	return enemy
 
 static func get_ice_golem() -> Enemy:
