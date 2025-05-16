@@ -1,35 +1,39 @@
 extends Node2D
 
-const enemy_scene = preload("res://scenes/enemy_scene.tscn")
-var enemies_node # Just for the server
-var players: Dictionary[int, Player] = {}
-var moomoo: Moomoo
+const ENEMIES_WAVES_CONTROLLER = preload("res://scripts/controllers/enemies_waves_controller.gd")
+const MOOMOO_SCENE = preload("res://scenes/entity/moomoo_scene.tscn")
+const PLAYER_SCENE = preload("res://scenes/entity/player_scene.tscn")
+
+@onready var player_spawner = $PlayerSpawner
 
 func _ready() -> void:
-	_set_screen_size()
-	enemies_node = get_tree().get_root().get_node("Game/Enemies")
-	moomoo = get_tree().get_root().get_node("Game/Moomoo")
+	MyCamera.set_screen_size()
 
-func _set_screen_size() -> void:
-	# Obtener tamaño del monitor principal (monitor 0)
-	var screen_size = DisplayServer.screen_get_size(0)
+	call_deferred("_init_player_spawner")
+	GameManager.enemies_nodes = $Enemies
+	GameManager.players_node = $Players
+	GameManager.moomoo_node = $Moomoo
 
-	# Calcular nuevo tamaño: 50% del ancho, manteniendo aspecto 16:9 (648p aprox)
-	var new_width = int(screen_size.x * 0.4)
-	var new_height = int(new_width * 9.0 / 16.0) # mantener aspecto
+	GameManager.moomoo = MOOMOO_SCENE.instantiate()
+	GameManager.moomoo_node.add_child(GameManager.moomoo)
+	AStarGridManager.set_cell_blocked_from_world(GameManager.moomoo.global_position, true)
 
-	DisplayServer.window_set_size(Vector2i(new_width, new_height))
+func _init_player_spawner():
+	player_spawner.spawn_function = Callable(self, "_spawn_custom")
 
-	# Posicionar abajo a la derecha
-	var pos_x = screen_size.x - new_width
-	var pos_y = screen_size.y - new_height
-	DisplayServer.window_set_position(Vector2i(pos_x, pos_y))
+func _spawn_custom(data: Dictionary) -> Node:
+	var player = PLAYER_SCENE.instantiate()
+	var player_id: int = data["player_id"]
+	player.set_player_id(player_id)
+	player.get_input_synchronizer().set_multiplayer_authority(player_id)
+	return player
+
 
 func _on_host_game_pressed() -> void:
 	%MultiplayerHUD.hide()
 	MultiplayerManager.become_host()
 	
-	Enemy.spawn_enemy(moomoo.position)
+	ENEMIES_WAVES_CONTROLLER.start_wave(1)
 	
 func _on_join_as_player_pressed() -> void:
 	%MultiplayerHUD.hide()

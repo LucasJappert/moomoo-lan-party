@@ -1,0 +1,74 @@
+
+🧠 Diseño base para enemigos y jugadores (Moomoo)
+
+📦 Atributos comunes
+--------------------
+- max_hp: Vida máxima
+- current_hp: Vida actual
+- max_mana: Maná máximo
+- current_mana: Maná actual
+- physical_defense: Reduce daño físico recibido
+- magic_defense: Reduce daño mágico recibido
+- evasion: Probabilidad de esquivar (0 a 1)
+- crit_chance: Probabilidad de crítico (0 a 1)
+- crit_multiplier: Multiplicador de daño crítico (ej: 2.0 para +100%)
+- attack_speed: Ataques por segundo
+- attack_range: Rango de ataque en píxeles (0 para melee)
+- attack_type: "melee", "ranged", "magic"
+- projectile_type: (Opcional) "arrow", "fireball", etc.
+
+🧙‍♂️ Habilidades (Skills)
+--------------------------
+Tipo: Activa o Pasiva
+
+Estructura base:
+----------------
+class_name Skill
+extends Resource
+
+var name: String
+var description: String
+var cooldown: float
+var mana_cost: float
+var is_passive: bool
+var last_used_time: float = -999
+
+func can_use(current_time: float, current_mana: float) -> bool:
+    return not is_passive and current_mana >= mana_cost and current_time - last_used_time >= cooldown
+
+func use(target):
+    # lógica personalizada por habilidad
+    pass
+
+🔥 Ejemplos de habilidades
+--------------------------
+Fireball (activa):
+- Costo: 20 maná
+- Cooldown: 3s
+- Efecto: lanza un proyectil que hace daño mágico en área
+
+Berserker Rage (pasiva):
+- Aumenta el daño y velocidad de ataque si la vida baja de 30%
+
+🧱 Organización en Godot
+------------------------
+- Usar una clase base Entity.gd para players y enemigos
+- Composición: Entity -> Stats + Skills
+- Skills como Resource para que sean fácilmente instanciables y asignables en el editor
+
+🧪 Propuesta de primeros enemigos para la beta
+----------------------------------------------
+Enemigo          | Tipo   | Vida  | Ataque        | Defensa | Habilidad
+----------------|--------|-------|---------------|---------|----------
+Goblin          | melee  | baja  | normal        | baja    | ninguno
+Skeleton Archer | ranged | baja  | bajo          | muy baja| dispara flechas
+Orc             | melee  | media | fuerte        | media   | empuje con stun (cd 5s)
+Fire Mage       | magic  | baja  | alto (mágico) | baja    | lanza bolas de fuego (cd 4s)
+
+✅ Primera etapa recomendada
+----------------------------
+1. Sistema de atributos y cálculo de daño (ataque vs defensa, crítico, evasión)
+2. Sistema de proyectiles para enemigos ranged y mágicos
+3. Sistema básico de habilidades con cooldown y costo de maná
+4. Carga de enemigos desde JSON o escenas con stats definidos
+5. Implementar 3 o 4 enemigos para testeo balanceado

@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=3 uid="uid://dkipwvhrhwoqt"]
+
+[ext_resource type="Texture2D" uid="uid://7bivb8pijf4n" path="res://assets/bg-moomoo.png" id="1_4vrcr"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pswtb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a0vbq"]
+bg_color = Color(0, 0, 0, 0.552941)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="StartScreen" type="Node2D"]
+
+[node name="Panel" type="Panel" parent="."]
+offset_right = 1280.0
+offset_bottom = 720.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_pswtb")
+
+[node name="Bg-moomoo" type="Sprite2D" parent="Panel"]
+position = Vector2(639.779, 359.875)
+scale = Vector2(0.844439, 0.703369)
+texture = ExtResource("1_4vrcr")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = 488.0
+offset_top = 197.0
+offset_right = 737.0
+offset_bottom = 321.0
+
+[node name="ButtonCreateRoom" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_a0vbq")
+text = "CREATE ROOM"
+
+[node name="ButtonJoinRoom" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_a0vbq")
+text = "JOIN ROOM"

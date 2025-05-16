@@ -36,12 +36,18 @@ This file tracks upcoming features and tasks in development. Contributions are w
 
 ---
 
+## 🔄 ENTITY CLASS
+
+- [ ] Implement a state machine for the Entity class to handle different states (e.g. idle, moving, attacking, dead).
+
+---
+
 ## 👾 ENEMIES & WAVES
 
 - [x] Create reusable `Enemy.tscn` scene.
 - [x] Implement wave-based enemy spawning system.
-- [ ] Move enemies using Godot's PathFinding2D.
-- [ ] Add basic AI (chase nearest player).
+- [x] Move enemies using Godot's PathFinding2D.
+- [x] Add basic AI (chase nearest player, or move towards Moomoo if none are in range).
 - [ ] Handle collisions and damage between players and enemies.
 - [ ] Enemy death handling and cleanup.
 
