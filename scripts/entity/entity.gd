@@ -19,6 +19,7 @@ var target_position: Vector2 = Vector2.ZERO
 var current_path: Array[Vector2i] = []
 var current_cell = null
 var target_pos = null
+var movement_helper = MovementEntityHelper.new()
 
 @export var current_state: EntityState.StateEnum = EntityState.StateEnum.IDLE
 
@@ -36,72 +37,34 @@ func _ready():
 	name = str(id)
 	hud.initialize(self)
 	_load_sprite()
+	movement_helper.initialize(self)
+
+func _process(_delta: float) -> void:
+	_server_verify_right_click_mouse_pos(_delta)
+	EntityState._process(self)
+
+func _physics_process(_delta):
+	movement_helper._server_move_along_path(_delta)
+	_physics_process_server(_delta)
+
+func _physics_process_server(_delta: float) -> void:
+	if multiplayer.is_server() && not MultiplayerManager.HOSTED_GAME:
+		return
+	sprite.flip_h = direction.x < 0
+
 
 func _server_verify_right_click_mouse_pos(_delta: float):
 	# Implemented in Player
 	pass
 
 func _load_sprite():
+	# Implemented in Player and Enemy
 	pass
 
-func _process(_delta: float) -> void:
-	AuxEntityClient._process(self, _delta)
-	AuxEntityServer._process(self, _delta)
-	EntityState._update(self)
-	hud._process(_delta)
-
-	_server_verify_right_click_mouse_pos(_delta)
-
-func _physics_process(delta):
-	_server_move_along_path(delta)
-	AuxEntityClient._phisics_process(self, delta)
-
-func _server_move_along_path(_delta: float):
-	if not multiplayer.is_server():
-		return
-
-	if is_target_entity_in_attack_area():
-		current_path = []
-
-	if target_pos == null:
-		if current_path.is_empty():
-			return _stop_movement()
-
-		current_cell = AStarGridManager.world_to_cell(global_position)
-		var next_target_cell = current_path[0]
-
-		
-		if AStarGridManager.astar_grid.is_point_solid(next_target_cell):
-			 # Update the path and return when next target cell is blocked
-			_update_path()
-			return _stop_movement()
-		AStarGridManager.set_cell_blocked(current_cell, false)
-		AStarGridManager.set_cell_blocked(next_target_cell, true)
-		target_pos = AStarGridManager.cell_to_world(next_target_cell)
-		current_path.remove_at(0)
-
-	direction = (target_pos - global_position).normalized()
-	velocity = direction * mov_speed
-
-	global_position.x += velocity.x * _delta
-	global_position.y += velocity.y * _delta
-
-	if global_position.distance_to(target_pos) < 2:
-		global_position = target_pos
-		target_pos = null
-
-func is_target_entity_in_attack_area() -> bool:
-	if target_entity == null:
-		return false
-
-	var result = area_attack.overlaps_body(target_entity)
-	return result
-
-func _stop_movement():
-	velocity = Vector2.ZERO
-
 func _update_path():
+	# Implemented in Player and Enemy
 	pass
 
 func die():
+	# Implemented in Player and Enemy
 	queue_free()

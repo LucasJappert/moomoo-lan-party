@@ -45,7 +45,7 @@ func _try_set_current_path():
 	if target_entity == null:
 		return
 
-	if is_target_entity_in_attack_area():
+	if GlobalsEntityHelpers.is_target_entity_in_attack_area(self):
 		current_path = []
 		return
 

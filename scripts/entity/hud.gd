@@ -18,9 +18,9 @@ func initialize(_entity: Entity):
 		fg_style.bg_color = Color(0, 0.6, 0) # green foreground
 		_health_bar.add_theme_stylebox_override("fill", fg_style)
 
-		_health_bar.max_value = 100 # entity.combat.max_health
-		# _health_bar.value = entity.combat.current_health
-		_health_bar.value = randi() % 81 + 20
+		_health_bar.max_value = entity.combat_data.max_hp
+		_health_bar.value = entity.combat_data.current_hp
+		# _health_bar.value = randi() % 81 + 20
 		_health_bar.position.x = - _health_bar.size.x / 2
 		_health_bar.position.y = -80 if _is_moomoo else -60
 	
@@ -39,9 +39,7 @@ func try_update_label():
 	if not _label.visible:
 		return
 
-	# _label.text = entity.name
-	# _label.global_position.x = entity.collision_shape.global_position.x - _label.size.x / 2
-	# _label.global_position.y = entity.collision_shape.global_position.y + entity.collision_shape.shape.get_rect().size.y / 2
+	pass
 
 func increment_health_bar(value: int):
 	_health_bar.value += value

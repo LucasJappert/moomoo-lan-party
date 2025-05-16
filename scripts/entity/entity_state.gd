@@ -3,7 +3,7 @@ class_name EntityState
 enum StateEnum {IDLE, WALK}
 
 
-static func _update(entity: Entity) -> void:
+static func _process(entity: Entity) -> void:
 	_server_update(entity)
 
 static func _server_update(entity: Entity):
