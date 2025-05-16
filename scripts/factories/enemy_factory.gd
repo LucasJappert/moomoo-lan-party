@@ -144,3 +144,27 @@ static func get_exploder() -> Enemy:
 	enemy.combat_data.attack_type = AttackTypes.MELEE
 	enemy.combat_data.skills = [Skill.get_self_destruct()]
 	return enemy
+
+static func get_enemy_by_type(type: String) -> Enemy:
+	match type:
+		EnemyTypes.GOBLIN:
+			return get_goblin()
+		EnemyTypes.SKELETON_ARCHER:
+			return get_skeleton_archer()
+		EnemyTypes.ORC:
+			return get_orc()
+		EnemyTypes.FIRE_MAGE:
+			return get_fire_mage()
+		EnemyTypes.ICE_GOLEM:
+			return get_ice_golem()
+		EnemyTypes.BAT:
+			return get_bat()
+		EnemyTypes.DARK_PRIEST:
+			return get_dark_priest()
+		EnemyTypes.SLIME:
+			return get_slime()
+		EnemyTypes.GHOST:
+			return get_ghost()
+		EnemyTypes.EXPLODER:
+			return get_exploder()
+	return null

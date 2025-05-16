@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://ki4w4rg4wu1r" path="res://scripts/entity/entity.gd" id="1_0bgvt"]
 [ext_resource type="Texture2D" uid="uid://1fiupmgkejum" path="res://assets/enemies/1.png" id="2_odnte"]
 [ext_resource type="Script" uid="uid://d3sm32sl44mdm" path="res://scripts/entity/hud.gd" id="3_wjrb4"]
-[ext_resource type="SpriteFrames" uid="uid://lg60fiptyxt4" path="res://assets/heros/hero1.tres" id="4_odnte"]
+[ext_resource type="SpriteFrames" uid="uid://ccusg0tasqe8s" path="res://assets/enemies/fire_mage.tres" id="4_odnte"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_odnte"]
 properties/0/path = NodePath(".:position")
@@ -45,8 +45,15 @@ offset_bottom = -63.0
 show_percentage = false
 
 [node name="Label" type="Label" parent="HUD"]
-offset_right = 40.0
-offset_bottom = 23.0
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -27.0
+offset_top = 12.0
+offset_right = 27.0
+offset_bottom = 35.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="AreaAttack" type="Area2D" parent="."]
 

@@ -1,3 +1,4 @@
+extends RefCounted
 class_name CombatData
 
 var max_hp: int = 100
@@ -10,4 +11,4 @@ var attack_speed: float = 1.0
 var attack_range: int = 0
 var attack_type := AttackTypes.MELEE
 var projectile_type: String = ""
-var skills: Array[Skill] = []
+var skills = []

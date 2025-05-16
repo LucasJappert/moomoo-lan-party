@@ -16,8 +16,6 @@ func _ready():
 	super._ready()
 	mov_speed = 60
 	vision_shape.shape.radius = vision_radius
-	
-	$Sprite2D.texture = load("res://assets/enemies/" + enemy_type + ".png")
 
 	timer_500ms = Timer.new()
 	timer_500ms.wait_time = 0.5

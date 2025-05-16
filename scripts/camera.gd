@@ -6,7 +6,7 @@ static var camera: Camera2D # Store the camera
 static var _zoom_level := 1.3 # Initial zoom
 static var _zoom_step := 0.1 # Amount of zoom per scroll
 static var _zoom_min := 0.5 # Minimum zoom
-static var _zoom_max := 3.0 # Maximum zoom
+static var _zoom_max := 10.0 # Maximum zoom
 
 static func set_screen_size():
 	var screen_size = DisplayServer.screen_get_size(0)
