@@ -2,39 +2,47 @@ class_name Enemy
 
 extends Entity
 
-#TODO: Move to EnemyFactory
-const ENEMY_SCENE = preload("res://scenes/entity/enemy_scene.tscn")
-
-@export var vision_radius: float = 400.0
-@onready var vision_area = $AreaVision
-@onready var vision_shape = $AreaVision/CollisionShape2D
 @export var enemy_type: String
 
 var timer_500ms: Timer
 
 func _ready():
 	super._ready()
-	mov_speed = 60
-	vision_shape.shape.radius = vision_radius
 
+	EnemyFactory.set_combat_data_by_enemy_type(self)
+
+	# We need to update the radius of the attack area node here as it enters the scene
+	_set_area_attack_shape_radius()
+
+	mov_speed = 60
+
+	_ready_for_server()
+
+
+func _ready_for_server():
+	if not multiplayer.is_server():
+		return
 	timer_500ms = Timer.new()
 	timer_500ms.wait_time = 0.5
 	timer_500ms.one_shot = false
 	timer_500ms.autostart = true
-	add_child(timer_500ms)
 	timer_500ms.timeout.connect(_on_every_timer_500ms)
+	add_child(timer_500ms)
+
+	
+func set_enemy_type(_enemy_type: String) -> void:
+	enemy_type = _enemy_type
+	name = enemy_type
 
 func _load_sprite():
+	# TODO: Load this assets from a new module Resources
 	sprite.frames = load("res://assets/enemies/" + enemy_type + ".tres")
 	pass
 
-static func get_instance(_enemy_type: String) -> Enemy:
-	var enemy: Enemy = ENEMY_SCENE.instantiate()
-	enemy.enemy_type = _enemy_type
-	return enemy
-	
+
 func _on_every_timer_500ms():
 	_try_set_current_path()
+	combat_data._server_receive_damage(5)
 
 func _try_set_current_path():
 	target_entity = _get_nearest_player_inside_vision()
@@ -59,7 +67,7 @@ func _get_nearest_player_inside_vision():
 
 	for player in GameManager.players.values():
 		var dist = global_position.distance_to(player.global_position)
-		if dist > vision_radius:
+		if dist > area_vision_shape.shape.radius:
 			continue
 
 		if dist < closest_distance:
@@ -69,4 +77,4 @@ func _get_nearest_player_inside_vision():
 	return closest_player
 
 func _get_acceptable_distance():
-	return area_attack_collision_shape.shape.radius + target_entity.collision_shape.shape.radius
+	return area_attack_shape.shape.radius + target_entity.collision_shape.shape.radius

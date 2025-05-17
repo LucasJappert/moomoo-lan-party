@@ -1,20 +1,24 @@
-[gd_scene load_steps=8 format=3 uid="uid://dh82ovsrtutto"]
+[gd_scene load_steps=10 format=3 uid="uid://dh82ovsrtutto"]
 
 [ext_resource type="Script" uid="uid://ki4w4rg4wu1r" path="res://scripts/entity/entity.gd" id="1_0bgvt"]
 [ext_resource type="Texture2D" uid="uid://1fiupmgkejum" path="res://assets/enemies/1.png" id="2_odnte"]
 [ext_resource type="Script" uid="uid://d3sm32sl44mdm" path="res://scripts/entity/hud.gd" id="3_wjrb4"]
 [ext_resource type="SpriteFrames" uid="uid://ccusg0tasqe8s" path="res://assets/enemies/fire_mage.tres" id="4_odnte"]
+[ext_resource type="PackedScene" uid="uid://1myskyslafks" path="res://scenes/entity/combat_data/combat_data.tscn" id="5_wjrb4"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_odnte"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
-properties/0/replication_mode = 1
+properties/0/replication_mode = 2
 properties/1/path = NodePath(".:direction")
 properties/1/spawn = true
-properties/1/replication_mode = 1
+properties/1/replication_mode = 2
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5ixpm"]
 radius = 16.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wjrb4"]
+radius = 300.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_idfl5"]
 radius = 32.0
@@ -27,6 +31,7 @@ replication_config = SubResource("SceneReplicationConfig_odnte")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_5ixpm")
+debug_color = Color(0, 0.6, 0.7, 0.052)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 visible = false
@@ -45,7 +50,7 @@ offset_bottom = -63.0
 show_percentage = false
 
 [node name="Label" type="Label" parent="HUD"]
-anchors_preset = -1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -27.0
@@ -55,16 +60,21 @@ offset_bottom = 35.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="AreaVision" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaVision"]
+shape = SubResource("CircleShape2D_wjrb4")
+debug_color = Color(100, 98.907, 100, 0)
+
 [node name="AreaAttack" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AreaAttack"]
 shape = SubResource("CircleShape2D_idfl5")
-debug_color = Color(0.977, 0, 0.407, 0.186)
-
-[node name="PathLine" type="Line2D" parent="."]
-default_color = Color(1, 1, 0, 1)
+debug_color = Color(0.98, 0, 0.408, 0)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -24)
 sprite_frames = ExtResource("4_odnte")
 animation = &"walk"
+
+[node name="CombatData" parent="." instance=ExtResource("5_wjrb4")]

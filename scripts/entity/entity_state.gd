@@ -29,10 +29,6 @@ static func _play_animation(entity: Entity) -> void:
 
 static func _server_set_current_state(entity: Entity, new_state: StateEnum) -> void:
 	entity.current_state = new_state
-	
-	if MultiplayerManager.HOSTED_GAME:
-		_play_animation(entity)
 
 	# We notify the new state to all clients
-	for peer_id in entity.multiplayer.get_peers():
-		entity.rpc_id(peer_id, "rpc_set_state", entity.current_state)
+	entity.rpc("rpc_set_state", entity.current_state)

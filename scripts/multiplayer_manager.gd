@@ -16,6 +16,7 @@ func become_host():
 
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
+
 	_add_player_to_game(multiplayer.get_unique_id())
 
 func become_client():

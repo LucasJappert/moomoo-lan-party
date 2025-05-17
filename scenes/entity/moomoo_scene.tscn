@@ -11,6 +11,9 @@ script = ExtResource("2_xowpe")
 visible = true
 texture = ExtResource("2_pio5k")
 
+[node name="Label" parent="HUD" index="1"]
+anchors_preset = 15
+
 [node name="AnimatedSprite2D" parent="." index="6"]
 visible = false
 animation = &"idle"

@@ -8,7 +8,7 @@
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_2y2wq"]
 properties/0/path = NodePath(".:player_id")
 properties/0/spawn = true
-properties/0/replication_mode = 1
+properties/0/replication_mode = 2
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_uyepr"]
 properties/0/path = NodePath("InputSynchronizer:right_click_mouse_pos")
@@ -29,3 +29,7 @@ script = ExtResource("3_ylf3p")
 
 [node name="Sprite2D" parent="." index="4"]
 texture = ExtResource("2_uuy8k")
+
+[node name="Label" parent="HUD" index="1"]
+offset_top = 6.0
+offset_bottom = 29.0

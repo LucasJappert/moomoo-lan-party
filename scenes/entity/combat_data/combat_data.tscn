@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://1myskyslafks"]
+
+[ext_resource type="Script" uid="uid://bew2kc8hogsem" path="res://scripts/entity/combat_data/combat_data.gd" id="1_j6lkr"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_60tv1"]
+properties/0/path = NodePath(".:current_hp")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="CombatData" type="Node2D"]
+script = ExtResource("1_j6lkr")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_60tv1")
