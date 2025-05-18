@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://ki4w4rg4wu1r" path="res://scripts/entity/entity.gd" id="1_0bgvt"]
 [ext_resource type="Texture2D" uid="uid://1fiupmgkejum" path="res://assets/enemies/1.png" id="2_odnte"]
-[ext_resource type="Script" uid="uid://d3sm32sl44mdm" path="res://scripts/entity/hud.gd" id="3_wjrb4"]
+[ext_resource type="Script" uid="uid://d3sm32sl44mdm" path="res://scripts/entity/components/hud.gd" id="3_wjrb4"]
 [ext_resource type="SpriteFrames" uid="uid://ccusg0tasqe8s" path="res://assets/enemies/fire_mage.tres" id="4_odnte"]
 [ext_resource type="PackedScene" uid="uid://1myskyslafks" path="res://scenes/entity/combat_data/combat_data.tscn" id="5_wjrb4"]
 

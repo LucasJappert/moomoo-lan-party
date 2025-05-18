@@ -1,16 +1,14 @@
-[gd_scene load_steps=7 format=3 uid="uid://bs7blwah20esy"]
+[gd_scene load_steps=6 format=3 uid="uid://bs7blwah20esy"]
 
 [ext_resource type="PackedScene" uid="uid://dh82ovsrtutto" path="res://scenes/entity/entity_scene.tscn" id="1_wbrma"]
 [ext_resource type="Texture2D" uid="uid://b55rbh85p2cfw" path="res://assets/heros/1.png" id="2_uuy8k"]
-[ext_resource type="Script" uid="uid://q3chynnhllhm" path="res://scripts/entity/player.gd" id="2_ylf3p"]
-[ext_resource type="Script" uid="uid://bnkb0n5ca0ndt" path="res://scripts/entity/input_synchronizer.gd" id="3_ylf3p"]
+[ext_resource type="Script" uid="uid://q3chynnhllhm" path="res://scripts/entity/player/player.gd" id="2_ylf3p"]
+[ext_resource type="Script" uid="uid://dgo10xmu82ida" path="res://scripts/entity/player/client_inputs.gd" id="3_uyepr"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_2y2wq"]
 properties/0/path = NodePath(".:player_id")
 properties/0/spawn = true
 properties/0/replication_mode = 2
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_uyepr"]
 
 [node name="Player" instance=ExtResource("1_wbrma")]
 script = ExtResource("2_ylf3p")
@@ -19,10 +17,9 @@ player_id = 0
 [node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="0"]
 replication_config = SubResource("SceneReplicationConfig_2y2wq")
 
-[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="." index="1"]
+[node name="ClientInputs" type="Node2D" parent="." index="1"]
 unique_name_in_owner = true
-replication_config = SubResource("SceneReplicationConfig_uyepr")
-script = ExtResource("3_ylf3p")
+script = ExtResource("3_uyepr")
 
 [node name="Sprite2D" parent="." index="4"]
 texture = ExtResource("2_uuy8k")

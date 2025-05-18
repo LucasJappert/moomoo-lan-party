@@ -8,7 +8,8 @@ func set_player_id(value: int) -> void:
 	player_id = value
 	name = str(player_id)
 
-func get_input_synchronizer(): return %InputSynchronizer
+func get_client_inputs(): return %ClientInputs
+
 
 func _ready():
 	super._ready()
