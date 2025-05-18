@@ -12,7 +12,10 @@ visible = true
 texture = ExtResource("2_pio5k")
 
 [node name="Label" parent="HUD" index="1"]
-anchors_preset = 15
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
 
 [node name="AnimatedSprite2D" parent="." index="6"]
 visible = false

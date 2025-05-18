@@ -10,9 +10,10 @@ func _ready() -> void:
 	MyCamera.set_screen_size()
 
 	call_deferred("_init_player_spawner")
-	GameManager.enemies_nodes = $Enemies
+	GameManager.enemies_node = $Enemies
 	GameManager.players_node = $Players
 	GameManager.moomoo_node = $Moomoo
+	GameManager.projectiles_node = $Projectiles
 
 	GameManager.moomoo = MOOMOO_SCENE.instantiate()
 	GameManager.moomoo_node.add_child(GameManager.moomoo)

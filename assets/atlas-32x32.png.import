@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c7v0lqb66uppf"
-path="res://.godot/imported/enemies_tileset.png-c19e97d5c51a9bf92fa45adcc5ebf2e1.ctex"
+uid="uid://7b7g4oqduf7o"
+path="res://.godot/imported/atlas-32x32.png-59d921d24db98f98a7106673e7ef2488.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/enemies/enemies_tileset.png"
-dest_files=["res://.godot/imported/enemies_tileset.png-c19e97d5c51a9bf92fa45adcc5ebf2e1.ctex"]
+source_file="res://assets/atlas-32x32.png"
+dest_files=["res://.godot/imported/atlas-32x32.png-59d921d24db98f98a7106673e7ef2488.ctex"]
 
 [params]
 

@@ -26,14 +26,12 @@ var movement_helper = MovementEntityHelper.new()
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
-
 @rpc("authority", "call_local")
 func rpc_set_state(state: EntityState.StateEnum) -> void:
 	current_state = state
 	
 	if MultiplayerManager.HOSTED_GAME || not multiplayer.is_server():
 		EntityState._play_animation(self)
-	
 
 @rpc("authority", "call_local")
 func rpc_receive_damage(data: Dictionary):
@@ -41,7 +39,6 @@ func rpc_receive_damage(data: Dictionary):
 	print("⚔️ Damage received:", di.amount, "critical:", di.critical)
 	di.from_dict(data)
 	combat_data._global_receive_damage(di)
-
 
 @rpc("authority", "call_local")
 func rpc_die():
@@ -90,7 +87,7 @@ func _load_sprite():
 	# Implemented in Player and Enemy
 	pass
 
-func _update_path():
+func _update_path(_target_position: Vector2):
 	# Implemented in Player and Enemy
 	pass
 

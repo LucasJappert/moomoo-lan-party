@@ -42,7 +42,6 @@ func _load_sprite():
 
 func _on_every_timer_500ms():
 	_try_set_current_path()
-	combat_data._server_receive_damage(5)
 
 func _try_set_current_path():
 	target_entity = _get_nearest_player_inside_vision()
