@@ -18,8 +18,10 @@ func add_entity(entity: Entity) -> void:
 	entities[entity.name] = entity
 
 func remove_entity(entity: Entity) -> void:
-	entity.queue_free()
+	var current_cell = AStarGridManager.world_to_cell(entity.global_position)
+	AStarGridManager.set_cell_blocked(current_cell, false)
 	entities.erase(entity.name)
+	entity.queue_free()
 
 func get_players() -> Array[Entity]:
 	return entities.values().filter(func(e): return e is Player)

@@ -17,6 +17,12 @@ func _physics_process(delta: float) -> void:
 func _server_move(delta: float):
 	if not multiplayer.is_server():
 		return
+
+	if target_entity != null:
+		target_position = target_entity.projectile_zone.global_position
+		direction = (target_position - position)
+		rotation = direction.angle()
+
 	if direction != Vector2.ZERO:
 		position += direction.normalized() * speed * delta
 

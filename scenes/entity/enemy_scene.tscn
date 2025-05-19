@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cj8vdyvtjs0ju"]
+[gd_scene load_steps=6 format=3 uid="uid://cj8vdyvtjs0ju"]
 
 [ext_resource type="PackedScene" uid="uid://dh82ovsrtutto" path="res://scenes/entity/entity_scene.tscn" id="1_v8xvt"]
 [ext_resource type="Script" uid="uid://crmmhsx5pjp8f" path="res://scripts/entity/enemy.gd" id="2_4sfg8"]
@@ -13,6 +13,9 @@ properties/1/replication_mode = 2
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_l0aop"]
 radius = 258.627
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v8xvt"]
+bg_color = Color(0.395875, 0.0122566, 0.0839309, 1)
 
 [node name="Enemy" instance=ExtResource("1_v8xvt")]
 script = ExtResource("2_4sfg8")
@@ -31,6 +34,9 @@ debug_color = Color(100, 100, 100, 0)
 [node name="AreaVision2" type="Area2D" parent="." index="4"]
 z_index = 2
 z_as_relative = false
+
+[node name="CurrentBar" parent="HUD/MyHealthBar" index="1"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_v8xvt")
 
 [node name="Label" parent="HUD" index="2"]
 offset_left = 0.0

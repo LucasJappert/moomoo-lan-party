@@ -37,6 +37,14 @@ func _load_sprite():
 	sprite.frames = load("res://assets/enemies/" + enemy_type + ".tres")
 	pass
 
+func _process(_delta: float) -> void:
+	_server_process(_delta)
+
+func _server_process(_delta: float):
+	if not multiplayer.is_server():
+		return
+
+	combat_data._try_enemy_phisical_attack(_delta)
 
 func _on_every_timer_500ms():
 	_try_set_current_path()

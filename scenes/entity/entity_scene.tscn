@@ -101,14 +101,6 @@ offset_right = 31.0
 offset_bottom = -63.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_gchfm")
 
-[node name="HealthBar" type="ProgressBar" parent="HUD"]
-visible = false
-offset_left = -31.0
-offset_top = -71.0
-offset_right = 31.0
-offset_bottom = -63.0
-show_percentage = false
-
 [node name="Label" type="Label" parent="HUD"]
 anchors_preset = 15
 anchor_right = 1.0

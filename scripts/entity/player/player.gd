@@ -14,6 +14,8 @@ func _ready():
 	super._ready()
 	global_position = AStarGridManager.cell_to_world(Vector2i(0, 0))
 	mov_speed = 200
+	combat_data.max_hp = 5000
+	combat_data.current_hp = combat_data.max_hp
 	if player_id == multiplayer.get_unique_id():
 		MyCamera.create_camera(self)
 		MultiplayerManager.MY_PLAYER = self

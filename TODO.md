@@ -38,7 +38,7 @@ This file tracks upcoming features and tasks in development. Contributions are w
 
 ## 🔄 ENTITY CLASS
 
-- [ ] Implement a state machine for the Entity class to handle different states (e.g. idle, moving, attacking, dead).
+- [x] Implement a state machine for the Entity class to handle different states (e.g. idle, moving, attacking, dead).
 
 ---
 
@@ -48,14 +48,14 @@ This file tracks upcoming features and tasks in development. Contributions are w
 - [x] Implement wave-based enemy spawning system.
 - [x] Move enemies using Godot's PathFinding2D.
 - [x] Add basic AI (chase nearest player, or move towards Moomoo if none are in range).
-- [ ] Handle collisions and damage between players and enemies.
-- [ ] Enemy death handling and cleanup.
+- [x] Handle collisions and damage between players and enemies.
+- [x] Enemy death handling and cleanup.
 
 ---
 
 ## ⚔️ COMBAT & PROGRESSION
 
-- [ ] Add health system (`hp`) for players and enemies.
+- [x] Add health system (`hp`) for players and enemies.
 - [ ] Add player experience and leveling system.
 - [ ] Implement player abilities (Q, W, E, R).
 - [ ] Create shop system to buy items (UI + gold).
@@ -91,3 +91,9 @@ This file tracks upcoming features and tasks in development. Contributions are w
 ---
 
 Let’s build MooMoo LAN Party together! 🐮
+
+MY TODOs:
+
+- Mejorar el mapa agregando árboles, cercas, etc
+- Corregir movimientos en diagonal cuando en realidad no se deberia permitir si los tiles adyacentes estan bloqueados
+- Agregar objetos mobiles sobre el terreno como plantas, bichos, nubes, etc.

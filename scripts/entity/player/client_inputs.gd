@@ -19,8 +19,6 @@ func _unhandled_input(event):
 
 
 func _on_right_click(mouse_position: Vector2):
-	# if not is_instance_valid(AreaHovered.hovered_entity):
-	# 	return
 	if AreaHovered.hovered_entity is Enemy:
 		rpc_id(1, "try_to_attack", AreaHovered.hovered_entity.name)
 		return
@@ -37,4 +35,4 @@ func try_to_move(_target_cell: Vector2i):
 func try_to_attack(_target_entity_name: String):
 	var target_entity = GameManager.entities[_target_entity_name]
 	print("Implementing try_to_attack: ", target_entity)
-	Projectile.launch(player, target_entity, 25)
+	Projectile.launch(player, target_entity, 50)

@@ -38,7 +38,6 @@ func rpc_set_state(state: EntityState.StateEnum) -> void:
 @rpc("authority", "call_local")
 func rpc_receive_damage(data: Dictionary):
 	var di = DamageInfo.new()
-	print("⚔️ Damage received:", di.amount, "critical:", di.critical)
 	di.from_dict(data)
 	combat_data._global_receive_damage(di)
 
