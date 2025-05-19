@@ -7,19 +7,31 @@ const PROJECTILE_SCENE = preload("res://scenes/general_objects/projectile.tscn")
 @export var speed: float = 600.0
 var direction := Vector2.ZERO
 var target_position := Vector2.ZERO
+var origin_entity: Entity
+var target_entity: Entity
+var damage: int
 
 func _physics_process(delta: float) -> void:
+	_server_move(delta)
+
+func _server_move(delta: float):
+	if not multiplayer.is_server():
+		return
 	if direction != Vector2.ZERO:
 		position += direction.normalized() * speed * delta
 
 	if position.distance_to(target_position) < 10:
+		if target_entity != null:
+			target_entity.combat_data._server_receive_damage(damage)
 		queue_free()
 
-static func launch(start_pos: Vector2, target_pos: Vector2):
+static func launch(_origin_entity: Entity, _target_entity: Entity, _damage: int):
 	var projectile = PROJECTILE_SCENE.instantiate()
-	projectile.position = start_pos
-	print(start_pos, target_pos)
-	projectile.target_position = target_pos
-	projectile.direction = target_pos - start_pos
+	projectile.damage = _damage
+	projectile.origin_entity = _origin_entity
+	projectile.target_entity = _target_entity
+	projectile.position = _origin_entity.projectile_zone.global_position
+	projectile.target_position = _target_entity.projectile_zone.global_position
+	projectile.direction = (projectile.target_position - projectile.position).normalized()
 	projectile.rotation = projectile.direction.angle()
 	GameManager.add_projectile(projectile)

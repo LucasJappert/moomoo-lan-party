@@ -17,8 +17,7 @@ func _ready():
 	mov_speed = 60
 
 	_ready_for_server()
-
-
+	
 func _ready_for_server():
 	if not multiplayer.is_server():
 		return
@@ -32,7 +31,6 @@ func _ready_for_server():
 	
 func set_enemy_type(_enemy_type: String) -> void:
 	enemy_type = _enemy_type
-	name = enemy_type
 
 func _load_sprite():
 	# TODO: Load this assets from a new module Resources
@@ -64,7 +62,7 @@ func _get_nearest_player_inside_vision():
 	var closest_player: Node2D = null
 	var closest_distance := INF
 
-	for player in GameManager.players.values():
+	for player in GameManager.get_players():
 		var dist = global_position.distance_to(player.global_position)
 		if dist > area_vision_shape.shape.radius:
 			continue

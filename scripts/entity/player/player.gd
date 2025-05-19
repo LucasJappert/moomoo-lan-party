@@ -6,7 +6,6 @@ extends Entity
 
 func set_player_id(value: int) -> void:
 	player_id = value
-	name = str(player_id)
 
 func get_client_inputs(): return %ClientInputs
 
@@ -23,7 +22,6 @@ func _load_sprite():
 	sprite.frames = load("res://assets/heros/hero1.tres")
 	pass
 
-func _update_path(_click_position: Vector2):
+func _update_path(_target_cell: Vector2i):
 	var from_cell = AStarGridManager.world_to_cell(target_pos if target_pos != null else global_position)
-	var to_cell = AStarGridManager.world_to_cell(_click_position)
-	current_path = AStarGridManager.find_path(from_cell, to_cell)
+	current_path = AStarGridManager.find_path(from_cell, _target_cell)

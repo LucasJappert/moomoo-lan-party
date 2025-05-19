@@ -1,7 +1,7 @@
 class_name MovementEntityHelper
 var my_owner: Entity
 
-func initialize_on_ready(_entity: Entity):
+func set_my_owner(_entity: Entity):
 	my_owner = _entity
 
 func _server_move_along_path(_delta: float):

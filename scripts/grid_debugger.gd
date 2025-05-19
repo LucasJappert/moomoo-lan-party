@@ -73,7 +73,7 @@ func _try_draw_paths():
 	if not _DRAW_PATHS:
 		return
 
-	for entity in GameManager.get_entities():
+	for entity in GameManager.entities.values():
 		for cell in entity.current_path:
 			if AStarGridManager.astar_grid.is_in_boundsv(cell):
 				var pos := AStarGridManager.cell_to_world(cell)

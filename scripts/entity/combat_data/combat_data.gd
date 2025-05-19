@@ -20,7 +20,6 @@ var skills: Array[Skill] = []
 var my_owner: Entity
 
 func _ready() -> void:
-	print("CombatData authority: " + str(is_multiplayer_authority()))
 	pass
 
 func set_my_owner(_owner: Entity) -> void:
@@ -33,6 +32,7 @@ func _server_receive_damage(amount: int) -> void:
 	my_owner.rpc("rpc_receive_damage", damage_info.to_dict())
 
 	current_hp -= amount
+	print("Current hp: " + str(current_hp))
 	if current_hp <= 0:
 		current_hp = 0
 		my_owner.rpc("rpc_die")

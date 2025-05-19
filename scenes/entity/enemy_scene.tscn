@@ -21,19 +21,19 @@ enemy_type = ""
 [node name="EnemySynchronizer" type="MultiplayerSynchronizer" parent="." index="0"]
 replication_config = SubResource("SceneReplicationConfig_xrr2a")
 
-[node name="AreaVision2" type="Area2D" parent="." index="4"]
-z_index = 2
-z_as_relative = false
-
-[node name="Label" parent="HUD" index="1"]
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="AreaVision" index="0"]
 visible = false
 z_index = 2
 z_as_relative = false
 shape = SubResource("CircleShape2D_l0aop")
 debug_color = Color(100, 100, 100, 0)
+
+[node name="AreaVision2" type="Area2D" parent="." index="4"]
+z_index = 2
+z_as_relative = false
+
+[node name="Label" parent="HUD" index="2"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0

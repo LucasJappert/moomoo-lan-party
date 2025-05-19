@@ -8,6 +8,8 @@ extends CharacterBody2D
 @onready var area_attack_shape = $AreaAttack/CollisionShape2D
 @onready var area_vision = $AreaVision
 @onready var area_vision_shape = $AreaVision/CollisionShape2D
+@onready var area_hovered_shape = $AreaHovered/CollisionShape2D
+@onready var projectile_zone = $ProjectileZone/CollisionShape2D
 var id: int = 0
 
 @onready var combat_data: CombatData = $CombatData
@@ -48,17 +50,22 @@ func rpc_die():
 func _ready():
 	collision_layer = 1
 	collision_mask = 1
-	name = str(id)
-	_client_init()
-	movement_helper.initialize_on_ready(self)
-	hud.initialize_on_ready(self)
+	movement_helper.set_my_owner(self)
 	combat_data.set_my_owner(self)
+	area_attack_shape.shape = area_attack_shape.shape.duplicate() # to avoid changing the original shape
+	_client_init()
+	call_deferred("_post_ready")
+	if self is Enemy:
+		print("Enemy call_deferred")
+
+func _post_ready():
+	if self is Enemy:
+		print("Enemy _post_ready")
+	hud._post_ready(self)
 	
 
 func _set_area_attack_shape_radius() -> void:
-	const _MAR = CombatData.MIN_ATTACK_RANGE
-	var _radius = combat_data.attack_range if combat_data.attack_range > _MAR else _MAR
-	area_attack_shape.shape.radius = _radius
+	area_attack_shape.shape.radius = combat_data.attack_range
 
 func _process(_delta: float) -> void:
 	_server_verify_right_click_mouse_pos(_delta)
@@ -66,9 +73,9 @@ func _process(_delta: float) -> void:
 
 func _physics_process(_delta):
 	movement_helper._server_move_along_path(_delta)
-	_physics_process_server(_delta)
+	_client_physics_process(_delta)
 
-func _physics_process_server(_delta: float) -> void:
+func _client_physics_process(_delta: float) -> void:
 	if multiplayer.is_server() && not MultiplayerManager.HOSTED_GAME:
 		return
 	sprite.flip_h = direction.x < 0
@@ -87,10 +94,10 @@ func _load_sprite():
 	# Implemented in Player and Enemy
 	pass
 
-func _update_path(_target_position: Vector2):
+func _update_path(_target_cell: Vector2i):
 	# Implemented in Player and Enemy
 	pass
 
 func _global_die():
 	# Implemented in Player and Enemy
-	queue_free()
+	GameManager.remove_entity(self)

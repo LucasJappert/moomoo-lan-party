@@ -15,10 +15,6 @@ func _ready() -> void:
 	GameManager.moomoo_node = $Moomoo
 	GameManager.projectiles_node = $Projectiles
 
-	GameManager.moomoo = MOOMOO_SCENE.instantiate()
-	GameManager.moomoo_node.add_child(GameManager.moomoo)
-	AStarGridManager.set_cell_blocked_from_world(GameManager.moomoo.global_position, true)
-
 func _init_player_spawner():
 	player_spawner.spawn_function = Callable(self, "_spawn_custom")
 
@@ -33,9 +29,17 @@ func _spawn_custom(data: Dictionary) -> Node:
 func _on_host_game_pressed() -> void:
 	%MultiplayerHUD.hide()
 	MultiplayerManager.become_host()
+	_spawn_moomoo()
 	
 	ENEMIES_WAVES_CONTROLLER.start_wave(1)
 	
 func _on_join_as_player_pressed() -> void:
 	%MultiplayerHUD.hide()
 	MultiplayerManager.become_client()
+	_spawn_moomoo()
+
+
+func _spawn_moomoo() -> void:
+	GameManager.moomoo = MOOMOO_SCENE.instantiate()
+	GameManager.moomoo_node.add_child(GameManager.moomoo, true)
+	AStarGridManager.set_cell_blocked_from_world(GameManager.moomoo.global_position, true)

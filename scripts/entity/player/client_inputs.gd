@@ -10,21 +10,31 @@ func _ready():
 	
 func _unhandled_input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-		var right_click_mouse_pos = player.get_global_mouse_position()
-		rpc_id(1, "receive_right_click_position", right_click_mouse_pos)
+		var mouse_position = player.get_global_mouse_position()
+		_on_right_click(mouse_position)
 		
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		var left_click_mouse_pos = player.get_global_mouse_position()
-		print("Client left_click_mouse_pos: ", left_click_mouse_pos)
-		rpc_id(1, "receive_left_click_position", left_click_mouse_pos)
+		var mouse_position = player.get_global_mouse_position()
+		print("Client left_click_mouse_pos: ", mouse_position)
+
+
+func _on_right_click(mouse_position: Vector2):
+	# if not is_instance_valid(AreaHovered.hovered_entity):
+	# 	return
+	if AreaHovered.hovered_entity is Enemy:
+		rpc_id(1, "try_to_attack", AreaHovered.hovered_entity.name)
+		return
+
+	var _target_cell = AStarGridManager.world_to_cell(mouse_position)
+	rpc_id(1, "try_to_move", _target_cell)
 
 
 @rpc("authority", "call_local")
-func receive_right_click_position(_right_click_position: Vector2):
-	player._update_path(_right_click_position)
+func try_to_move(_target_cell: Vector2i):
+	player._update_path(_target_cell)
 
 @rpc("authority", "call_local")
-func receive_left_click_position(_left_click_position: Vector2):
-	var start_cell = AStarGridManager.world_to_cell(player.global_position)
-	var target_cell = AStarGridManager.world_to_cell(_left_click_position)
-	Projectile.launch(AStarGridManager.cell_to_world(start_cell), AStarGridManager.cell_to_world(target_cell))
+func try_to_attack(_target_entity_name: String):
+	var target_entity = GameManager.entities[_target_entity_name]
+	print("Implementing try_to_attack: ", target_entity)
+	Projectile.launch(player, target_entity, 25)

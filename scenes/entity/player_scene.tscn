@@ -21,9 +21,9 @@ replication_config = SubResource("SceneReplicationConfig_2y2wq")
 unique_name_in_owner = true
 script = ExtResource("3_uyepr")
 
-[node name="Sprite2D" parent="." index="4"]
+[node name="Sprite2D" parent="." index="5"]
 texture = ExtResource("2_uuy8k")
 
-[node name="Label" parent="HUD" index="1"]
+[node name="Label" parent="HUD" index="2"]
 offset_top = 6.0
 offset_bottom = 29.0
