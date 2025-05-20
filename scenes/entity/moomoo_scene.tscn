@@ -7,7 +7,7 @@
 [node name="Moomoo" instance=ExtResource("1_p27nx")]
 script = ExtResource("2_xowpe")
 
-[node name="Sprite2D" parent="." index="2"]
+[node name="Sprite2D" parent="." index="3"]
 visible = true
 texture = ExtResource("2_pio5k")
 

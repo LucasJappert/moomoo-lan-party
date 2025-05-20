@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://ppgdlw8ype7u"]
 
 [ext_resource type="Script" uid="uid://0vbog7rf1url" path="res://scripts/general_objects/projectile.gd" id="1_5icix"]
-[ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas-64x64.png" id="2_5icix"]
+[ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="2_5icix"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5icix"]
 properties/0/path = NodePath(".:position")

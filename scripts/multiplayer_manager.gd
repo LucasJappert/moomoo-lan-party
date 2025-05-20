@@ -42,7 +42,7 @@ func _add_player_to_game(id):
 	var main = get_tree().get_root().get_node("Main")
 	var new_player = main.player_spawner.spawn(spawn_data)
 	GameManager.add_entity(new_player)
-	AStarGridManager.set_cell_blocked_from_world(new_player.global_position, true)
+	MapManager.set_cell_blocked_from_world(new_player.global_position, true)
 	print("Added player: " + new_player.name)
 	print("Total players: " + str(GameManager.players_node.get_child_count()))
 

@@ -34,4 +34,5 @@ func _try_update_label():
 		return
 		
 	_label.text = my_owner.name
+	_label.text += " - " + str(MapManager.world_to_cell(my_owner.global_position))
 	pass

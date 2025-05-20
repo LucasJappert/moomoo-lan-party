@@ -62,9 +62,9 @@ func _try_set_current_path():
 		current_path = []
 		return
 
-	var from_cell = AStarGridManager.world_to_cell(target_pos if target_pos != null else global_position)
-	var to_cell = AStarGridManager.world_to_cell(target_entity.global_position)
-	current_path = AStarGridManager.find_path(from_cell, to_cell)
+	var from_cell = MapManager.world_to_cell(target_pos if target_pos != null else global_position)
+	var to_cell = MapManager.world_to_cell(target_entity.global_position)
+	current_path = MapManager.find_path(from_cell, to_cell)
 
 func _get_nearest_player_inside_vision():
 	var closest_player: Node2D = null

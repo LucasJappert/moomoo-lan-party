@@ -5,15 +5,17 @@ const MOOMOO_SCENE = preload("res://scenes/entity/moomoo_scene.tscn")
 const PLAYER_SCENE = preload("res://scenes/entity/player_scene.tscn")
 
 @onready var player_spawner = $PlayerSpawner
+@onready var terrain = $Terrain
 
 func _ready() -> void:
+	MapManager.initialize()
+
 	MyCamera.set_screen_size()
+	%MultiplayerHUD.show()
 
 	call_deferred("_init_player_spawner")
-	GameManager.enemies_node = $Enemies
-	GameManager.players_node = $Players
-	GameManager.moomoo_node = $Moomoo
-	GameManager.projectiles_node = $Projectiles
+
+	MyTree.spawn_trees()
 
 func _init_player_spawner():
 	player_spawner.spawn_function = Callable(self, "_spawn_custom")
@@ -42,4 +44,4 @@ func _on_join_as_player_pressed() -> void:
 func _spawn_moomoo() -> void:
 	GameManager.moomoo = MOOMOO_SCENE.instantiate()
 	GameManager.moomoo_node.add_child(GameManager.moomoo, true)
-	AStarGridManager.set_cell_blocked_from_world(GameManager.moomoo.global_position, true)
+	MapManager.set_cell_blocked_from_world(GameManager.moomoo.global_position, true)

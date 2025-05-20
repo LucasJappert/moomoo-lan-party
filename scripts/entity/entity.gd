@@ -10,6 +10,8 @@ extends CharacterBody2D
 @onready var area_vision_shape = $AreaVision/CollisionShape2D
 @onready var area_hovered_shape = $AreaHovered/CollisionShape2D
 @onready var projectile_zone = $ProjectileZone/CollisionShape2D
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+
 var id: int = 0
 
 @onready var combat_data: CombatData = $CombatData
@@ -26,7 +28,6 @@ var movement_helper = MovementEntityHelper.new()
 
 @export var current_state: EntityState.StateEnum = EntityState.StateEnum.IDLE
 
-@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 @rpc("authority", "call_local")
 func rpc_set_state(state: EntityState.StateEnum) -> void:

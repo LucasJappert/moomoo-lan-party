@@ -15,17 +15,17 @@ func _server_move_along_path(_delta: float):
 		if my_owner.current_path.is_empty():
 			return _stop_movement()
 
-		my_owner.current_cell = AStarGridManager.world_to_cell(my_owner.global_position)
+		my_owner.current_cell = MapManager.world_to_cell(my_owner.global_position)
 		var next_target_cell = my_owner.current_path[0]
 
 		
-		if AStarGridManager.astar_grid.is_point_solid(next_target_cell):
+		if MapManager._astar_grid.is_point_solid(next_target_cell):
 			 # Update the path and return when next target cell is blocked
 			my_owner._update_path(my_owner.current_path.back())
 			return _stop_movement()
-		AStarGridManager.set_cell_blocked(my_owner.current_cell, false)
-		AStarGridManager.set_cell_blocked(next_target_cell, true)
-		my_owner.target_pos = AStarGridManager.cell_to_world(next_target_cell)
+		MapManager.set_cell_blocked(my_owner.current_cell, false)
+		MapManager.set_cell_blocked(next_target_cell, true)
+		my_owner.target_pos = MapManager.cell_to_world(next_target_cell)
 		my_owner.current_path.remove_at(0)
 
 	my_owner.direction = (my_owner.target_pos - my_owner.global_position).normalized()

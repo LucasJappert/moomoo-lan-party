@@ -2,7 +2,7 @@ class_name CombatData
 
 extends Node
 
-const MIN_ATTACK_RANGE: int = int(MapConstants.TILE_SIZE.x)
+const MIN_ATTACK_RANGE: int = int(MapManager.TILE_SIZE.x)
 
 @export var max_hp: int = 100
 @export var current_hp: int = 100

@@ -12,7 +12,7 @@ func get_client_inputs(): return %ClientInputs
 
 func _ready():
 	super._ready()
-	global_position = AStarGridManager.cell_to_world(Vector2i(0, 0))
+	global_position = MapManager.cell_to_world(Vector2i(0, 0))
 	mov_speed = 200
 	combat_data.max_hp = 5000
 	combat_data.current_hp = combat_data.max_hp
@@ -25,5 +25,5 @@ func _load_sprite():
 	pass
 
 func _update_path(_target_cell: Vector2i):
-	var from_cell = AStarGridManager.world_to_cell(target_pos if target_pos != null else global_position)
-	current_path = AStarGridManager.find_path(from_cell, _target_cell)
+	var from_cell = MapManager.world_to_cell(target_pos if target_pos != null else global_position)
+	current_path = MapManager.find_path(from_cell, _target_cell)

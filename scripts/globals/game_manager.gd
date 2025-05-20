@@ -6,20 +6,32 @@ var players_node: Node2D
 var projectiles_node: Node2D
 var moomoo_node
 var moomoo: Moomoo
+var my_trees_node
+var terrain
 
 func _ready():
+	enemies_node = get_tree().root.get_node("Main/Enemies")
+	players_node = get_tree().root.get_node("Main/Players")
+	moomoo_node = get_tree().root.get_node("Main/Moomoo")
+	projectiles_node = get_tree().root.get_node("Main/Projectiles")
+	my_trees_node = get_tree().root.get_node("Main/MyTrees")
+	terrain = get_tree().root.get_node("Main/Terrain")
 	pass
 
 func add_enemy(enemy: Enemy) -> void:
 	enemies_node.add_child(enemy, true)
 	add_entity(enemy)
 
+func add_my_tree(my_tree: MyTree) -> void:
+	my_trees_node.add_child(my_tree)
+	MapManager.set_cell_blocked(MapManager.world_to_cell(my_tree.global_position), true)
+
 func add_entity(entity: Entity) -> void:
 	entities[entity.name] = entity
 
 func remove_entity(entity: Entity) -> void:
-	var current_cell = AStarGridManager.world_to_cell(entity.global_position)
-	AStarGridManager.set_cell_blocked(current_cell, false)
+	var current_cell = MapManager.world_to_cell(entity.global_position)
+	MapManager.set_cell_blocked(current_cell, false)
 	entities.erase(entity.name)
 	entity.queue_free()
 

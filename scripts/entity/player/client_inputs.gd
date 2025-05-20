@@ -23,7 +23,7 @@ func _on_right_click(mouse_position: Vector2):
 		rpc_id(1, "try_to_attack", AreaHovered.hovered_entity.name)
 		return
 
-	var _target_cell = AStarGridManager.world_to_cell(mouse_position)
+	var _target_cell = MapManager.world_to_cell(mouse_position)
 	rpc_id(1, "try_to_move", _target_cell)
 
 

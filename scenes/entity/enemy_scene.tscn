@@ -38,7 +38,7 @@ z_as_relative = false
 [node name="CurrentBar" parent="HUD/MyHealthBar" index="1"]
 theme_override_styles/panel = SubResource("StyleBoxFlat_v8xvt")
 
-[node name="Label" parent="HUD" index="2"]
+[node name="Label" parent="HUD" index="1"]
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 0.0
