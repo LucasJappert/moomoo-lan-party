@@ -38,7 +38,6 @@ func _server_receive_damage(amount: int) -> void:
 	my_owner.rpc("rpc_receive_damage", damage_info.to_dict())
 
 	current_hp -= amount
-	print("Current hp: " + str(current_hp))
 	if current_hp <= 0:
 		current_hp = 0
 		my_owner.rpc("rpc_die")
@@ -77,6 +76,5 @@ func can_physical_attack() -> bool:
 
 # endregion
 
-func _global_receive_damage(di: DamageInfo):
-	print("Recibimos daño por: " + str(di.amount))
+func _global_receive_damage(_di: DamageInfo):
 	pass

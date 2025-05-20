@@ -5,10 +5,11 @@ extends Node2D
 @export var font: Font
 @export var solid_cell_color: Color = Color(1, 0, 0, 0.5)
 var hovered_cell: Vector2i
-const _GRID_AVAILABLE := true
+const _GRID_AVAILABLE := false
 const _PRINT_COORDINATES := false
 const _DRAW_PATHS := false
 const _DRAW_SOLID_CELLS := false
+const _DRAW_MOUSE_HOVERED_CELL := true
 
 func _ready():
 	if get_multiplayer_authority() != multiplayer.get_unique_id():
@@ -23,6 +24,8 @@ func _process(_delta):
 
 
 func _draw():
+	_draw_hovered_cell()
+
 	if not _GRID_AVAILABLE:
 		return
 		
@@ -55,8 +58,6 @@ func _draw():
 			_try_print_coordinates(pos, x, y)
 
 	_try_draw_paths()
-
-	_draw_hovered_cell()
 
 
 func clamp_to_region(cell: Vector2i) -> Vector2i:

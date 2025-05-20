@@ -27,7 +27,14 @@ func add_my_tree(my_tree: MyTree) -> void:
 	MapManager.set_cell_blocked(MapManager.world_to_cell(my_tree.global_position), true)
 
 func add_entity(entity: Entity) -> void:
+	var safe_cell = MapManager.get_safe_cell(MapManager.world_to_cell(entity.global_position))
+	if safe_cell == null:
+		print("⚠️ No safe cell found for entity: " + entity.name)
+		return
+
+	entity.global_position = MapManager.cell_to_world(safe_cell)
 	entities[entity.name] = entity
+	MapManager.set_cell_blocked(safe_cell, true)
 
 func remove_entity(entity: Entity) -> void:
 	var current_cell = MapManager.world_to_cell(entity.global_position)

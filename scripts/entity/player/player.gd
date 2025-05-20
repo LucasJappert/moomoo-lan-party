@@ -12,7 +12,7 @@ func get_client_inputs(): return %ClientInputs
 
 func _ready():
 	super._ready()
-	global_position = MapManager.cell_to_world(Vector2i(0, 0))
+	global_position = MapManager.cell_to_world(MapManager.PLAYER_CELL_SPAWN)
 	mov_speed = 200
 	combat_data.max_hp = 5000
 	combat_data.current_hp = combat_data.max_hp

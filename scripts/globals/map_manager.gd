@@ -1,6 +1,7 @@
 class_name MapManager
 
 const TILE_SIZE: Vector2 = Vector2(32, 32)
+const PLAYER_CELL_SPAWN: Vector2i = Vector2i(20, 12)
 
 const grid_width: int = 56
 const grid_height: int = 44
@@ -14,7 +15,7 @@ static func initialize():
 	_astar_grid.cell_size = TILE_SIZE
 	_astar_grid.offset = Vector2(grid_origin.x * TILE_SIZE.x, grid_origin.y * TILE_SIZE.y) # ← 🔥 clave
 	_astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
-	_astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ALWAYS
+	_astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
 
 	_astar_grid.update()
 
@@ -49,3 +50,43 @@ static func set_cell_blocked(cell: Vector2i, blocked: bool):
 		
 static func set_cell_blocked_from_world(pos: Vector2, blocked: bool):
 	set_cell_blocked(world_to_cell(pos), blocked)
+
+static func is_cell_blocked(cell: Vector2i) -> bool:
+	return _astar_grid.is_point_solid(cell)
+
+static func get_safe_cell(cell: Vector2i):
+	const MAX_SEARCH_RADIUS: int = 4 # Maximum number of tiles to search outward
+
+	if not is_cell_blocked(cell):
+		return cell # The cell is already free
+
+	var visited: Dictionary = {}
+	visited[cell] = true
+
+	var queue: Array[Vector2i] = [cell]
+	var directions: Array[Vector2i] = [
+		Vector2i(0, -1), # Up
+		Vector2i(1, 0), # Right
+		Vector2i(0, 1), # Down
+		Vector2i(-1, 0) # Left
+	]
+
+	while not queue.is_empty():
+		var current: Vector2i = queue.pop_front()
+		
+		# Check distance from original cell
+		if abs(cell.x - current.x) + abs(cell.y - current.y) > MAX_SEARCH_RADIUS:
+			continue
+
+		for dir: Vector2i in directions:
+			var neighbor: Vector2i = current + dir
+			if neighbor in visited:
+				continue
+			visited[neighbor] = true
+
+			if not is_cell_blocked(neighbor):
+				return neighbor # Found a valid, unblocked cell
+
+			queue.append(neighbor) # Keep searching outward
+
+	return null # Fallback, no free cell found within radius

@@ -9,13 +9,17 @@ func _ready():
 		set_process_unhandled_input(false)
 	
 func _unhandled_input(event):
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-		var mouse_position = player.get_global_mouse_position()
-		_on_right_click(mouse_position)
-		
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		var mouse_position = player.get_global_mouse_position()
-		print("Client left_click_mouse_pos: ", mouse_position)
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_RIGHT:
+			var mouse_position = player.get_global_mouse_position()
+			_on_right_click(mouse_position)
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			var mouse_position = player.get_global_mouse_position()
+			print("Client left_click_mouse_pos: ", mouse_position)
+
+	# if event is InputEventMouseMotion:
+	# 	var mouse_position = player.get_global_mouse_position()
+	# 	MapManager.set_hovered_cell(MapManager.world_to_cell(mouse_position))
 
 
 func _on_right_click(mouse_position: Vector2):

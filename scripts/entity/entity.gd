@@ -55,12 +55,8 @@ func _ready():
 	area_attack_shape.shape = area_attack_shape.shape.duplicate() # to avoid changing the original shape
 	_client_init()
 	call_deferred("_post_ready")
-	if self is Enemy:
-		print("Enemy call_deferred")
 
 func _post_ready():
-	if self is Enemy:
-		print("Enemy _post_ready")
 	hud._post_ready(self)
 	
 
