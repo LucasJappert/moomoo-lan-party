@@ -233,6 +233,9 @@ tile_set = SubResource("TileSet_lnu2h")
 navigation_enabled = false
 
 [node name="Decorations" type="Node2D" parent="Terrain"]
+z_index = 1
+z_as_relative = false
+y_sort_enabled = true
 
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://bs7blwah20esy")

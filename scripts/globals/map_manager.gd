@@ -24,9 +24,6 @@ static func initialize():
 			var cell = Vector2i(x, y)
 			_astar_grid.set_point_solid(cell, false)
 
-	print("AStarGridManager ready")
-
-
 static func find_path(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
 	if not _astar_grid.is_in_boundsv(start) or not _astar_grid.is_in_boundsv(end):
 		return []
@@ -36,7 +33,6 @@ static func find_path(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
 		
 	path.remove_at(0) # Remove start from path
 	return path
-
 
 static func world_to_cell(pos: Vector2) -> Vector2i:
 	return Vector2i(floor(pos.x / TILE_SIZE.x), floor(pos.y / TILE_SIZE.y))
@@ -90,3 +86,42 @@ static func get_safe_cell(cell: Vector2i):
 			queue.append(neighbor) # Keep searching outward
 
 	return null # Fallback, no free cell found within radius
+
+
+static func get_grass_cells() -> Array[Vector2i]:
+	var grass_cell_type = Vector2i(0, 3)
+
+	var cells_32x32: Array[Vector2i] = _get_cells_with_atlas_coords(grass_cell_type)
+
+	return cells_32x32
+
+static func get_dirt_cells() -> Array[Vector2i]:
+	var dirt_cell_type = Vector2i(2, 1)
+
+	var cells_32x32: Array[Vector2i] = _get_cells_with_atlas_coords(dirt_cell_type)
+
+	return cells_32x32
+
+static func _get_cells_with_atlas_coords(target_coords: Vector2i) -> Array[Vector2i]:
+	var cells_64x64: Array[Vector2i] = []
+
+	var used_rect: Rect2i = GameManager.terrain.get_used_rect()
+	for y in range(used_rect.position.y, used_rect.position.y + used_rect.size.y):
+		for x in range(used_rect.position.x, used_rect.position.x + used_rect.size.x):
+			var cell = Vector2i(x, y)
+
+			if GameManager.terrain.get_cell_source_id(cell) == -1:
+				continue # empty cell
+
+			var coords = GameManager.terrain.get_cell_atlas_coords(cell)
+			if coords == target_coords:
+				cells_64x64.append(cell)
+
+	var cells_32x32: Array[Vector2i] = []
+	for cell in cells_64x64:
+		cells_32x32.append(Vector2i(cell.x * 2, cell.y * 2))
+		cells_32x32.append(Vector2i(cell.x * 2 + 1, cell.y * 2))
+		cells_32x32.append(Vector2i(cell.x * 2, cell.y * 2 + 1))
+		cells_32x32.append(Vector2i(cell.x * 2 + 1, cell.y * 2 + 1))
+
+	return cells_32x32

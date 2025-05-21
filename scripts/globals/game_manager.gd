@@ -50,3 +50,7 @@ func get_enemies() -> Array[Entity]:
 
 func add_projectile(projectile: Projectile) -> void:
 	projectiles_node.add_child(projectile, true)
+
+func add_decoration(sprite: Sprite2D) -> void:
+	var decorations = get_tree().root.get_node("Main/Terrain/Decorations")
+	decorations.add_child(sprite, true)

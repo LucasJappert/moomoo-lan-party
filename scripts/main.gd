@@ -17,6 +17,9 @@ func _ready() -> void:
 
 	MyTree.spawn_trees()
 
+	DecorationsFactory.add_random_decorations_over_grass_terrain()
+	DecorationsFactory.add_random_decorations_over_dirt_terrain()
+
 func _init_player_spawner():
 	player_spawner.spawn_function = Callable(self, "_spawn_custom")
 
