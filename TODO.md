@@ -96,7 +96,10 @@ MY TODOs:
 
 - ✅ Mejorar el mapa agregando árboles, cercas, etc.
 - ✅ Corregir movimientos en diagonal cuando en realidad no se deberia permitir si los tiles adyacentes estan bloqueados.
-- Agregar plantas sobre el terreno, como cactus, utilizando un unico atlas.
+- ✅ Agregar plantas sobre el terreno, como cactus, utilizando un unico atlas.
+- Agregar efectos de sangrado cada vez que una entidad recibo un daño
+- Comenzar con la interfaz de usuario ingame
+- Comenzar la escena para crear y unirse a salas
 - Agregar objetos mobiles sobre el terreno como plantas, bichos, nubes, etc.
 - Agregar mas tipos de enemigos. El moomoo tendra unas 30 oleadas, cada oleada con 2 tipos de enemigos, entonces necesitariamos unos 60 tipos. Cada enemigo tendra 1 habilidad especial, pasiva o activa, por lo cual necesitaremos tambien unas 60 habilidades.
   Otra opción es crear unas 3 habilidades, y que los enemigos tendrían 3 de ellas asignadas aleatoriamente. De esta manera se podría crear una amplia variabilidad de combinaciones. Sumado a que cada enemigo tiene su tipo de ataque, su rango de ataque, velocidad de ataque, etc.
