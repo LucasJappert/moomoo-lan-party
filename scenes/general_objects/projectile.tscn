@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://ppgdlw8ype7u"]
+
+[ext_resource type="Script" uid="uid://0vbog7rf1url" path="res://scripts/general_objects/projectile.gd" id="1_5icix"]
+[ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="2_5icix"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5icix"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s5kf1"]
+atlas = ExtResource("2_5icix")
+region = Rect2(0, 256, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6oe5n"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s5kf1")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Projectile" type="Node2D"]
+script = ExtResource("1_5icix")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_5icix")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 3
+sprite_frames = SubResource("SpriteFrames_6oe5n")

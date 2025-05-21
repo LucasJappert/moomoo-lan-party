@@ -58,6 +58,23 @@ Built with ❤️ and cows by **Lucas Jappert** and the MooMoo LAN community.
 
 Below are screenshots and images showing the progress of MooMoo LAN Party over time. This section will be updated as new features and visuals are added.
 
+### 📅 2024-05-21
+
+- Major improvements in pathfinding using AStarGrid2D.
+- Significant terrain design enhancements, adding trees and other decorations like cacti, plants, etc.
+- Created our own health bar.
+- Implemented the first stage of projectiles, currently arrows.
+- Implemented the initial melee and ranged attack system, including attack logic between enemies and players.
+- Created the first types of enemies.
+
+![](.images/image5.png)
+
+### 📅 2024-05-15
+
+- Improved pathfinding for all entities (Enemies, Player).
+
+![](.images/image4.png)
+
 ### 📅 2024-05-09
 
 - Add Entity reusable class (implemented on Enemies at the moment, rest to use it in Player).

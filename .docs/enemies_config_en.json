@@ -1,0 +1,204 @@
+[
+    {
+        "id": "goblin",
+        "name": "Goblin",
+        "type": "melee",
+        "max_hp": 100,
+        "physical_defense": 5,
+        "magic_defense": 2,
+        "evasion": 0.05,
+        "crit_chance": 0.1,
+        "crit_multiplier": 1.5,
+        "attack_speed": 1.2,
+        "attack_range": 0,
+        "attack_type": "melee",
+        "skills": []
+    },
+    {
+        "id": "skeleton_archer",
+        "name": "Skeleton Archer",
+        "type": "ranged",
+        "max_hp": 80,
+        "physical_defense": 2,
+        "magic_defense": 1,
+        "evasion": 0.1,
+        "crit_chance": 0.15,
+        "crit_multiplier": 2.0,
+        "attack_speed": 1.0,
+        "attack_range": 300,
+        "attack_type": "ranged",
+        "projectile_type": "arrow",
+        "skills": []
+    },
+    {
+        "id": "orc",
+        "name": "Orc",
+        "type": "melee",
+        "max_hp": 200,
+        "physical_defense": 10,
+        "magic_defense": 5,
+        "evasion": 0.03,
+        "crit_chance": 0.05,
+        "crit_multiplier": 1.5,
+        "attack_speed": 0.8,
+        "attack_range": 0,
+        "attack_type": "melee",
+        "skills": [
+            {
+                "name": "Stun Charge",
+                "type": "active",
+                "cooldown": 5,
+                "mana_cost": 0,
+                "description": "Charges at the target, stunning it for 1 second."
+            }
+        ]
+    },
+    {
+        "id": "fire_mage",
+        "name": "Fire Mage",
+        "type": "magic",
+        "max_hp": 70,
+        "physical_defense": 1,
+        "magic_defense": 5,
+        "evasion": 0.08,
+        "crit_chance": 0.12,
+        "crit_multiplier": 1.8,
+        "attack_speed": 1.0,
+        "attack_range": 350,
+        "attack_type": "magic",
+        "projectile_type": "fireball",
+        "skills": [
+            {
+                "name": "Fireball",
+                "type": "active",
+                "cooldown": 4,
+                "mana_cost": 20,
+                "description": "Casts a fireball that deals area magic damage."
+            }
+        ]
+    },
+    {
+        "id": "ice_golem",
+        "name": "Ice Golem",
+        "type": "melee",
+        "max_hp": 300,
+        "physical_defense": 15,
+        "magic_defense": 10,
+        "evasion": 0.01,
+        "crit_chance": 0.05,
+        "crit_multiplier": 1.3,
+        "attack_speed": 0.6,
+        "attack_range": 0,
+        "attack_type": "melee",
+        "skills": [
+            {
+                "name": "Frost Slam",
+                "type": "active",
+                "cooldown": 6,
+                "mana_cost": 0,
+                "description": "Slams the ground and slows nearby enemies."
+            }
+        ]
+    },
+    {
+        "id": "bat",
+        "name": "Bat",
+        "type": "melee",
+        "max_hp": 60,
+        "physical_defense": 1,
+        "magic_defense": 0,
+        "evasion": 0.2,
+        "crit_chance": 0.2,
+        "crit_multiplier": 1.5,
+        "attack_speed": 2.0,
+        "attack_range": 0,
+        "attack_type": "melee",
+        "skills": []
+    },
+    {
+        "id": "dark_priest",
+        "name": "Dark Priest",
+        "type": "magic",
+        "max_hp": 90,
+        "physical_defense": 3,
+        "magic_defense": 8,
+        "evasion": 0.05,
+        "crit_chance": 0.1,
+        "crit_multiplier": 1.7,
+        "attack_speed": 1.0,
+        "attack_range": 300,
+        "attack_type": "magic",
+        "projectile_type": "dark_bolt",
+        "skills": [
+            {
+                "name": "Drain Life",
+                "type": "active",
+                "cooldown": 8,
+                "mana_cost": 25,
+                "description": "Drains life from the target and heals the caster."
+            }
+        ]
+    },
+    {
+        "id": "slime",
+        "name": "Slime",
+        "type": "melee",
+        "max_hp": 120,
+        "physical_defense": 4,
+        "magic_defense": 4,
+        "evasion": 0.1,
+        "crit_chance": 0.05,
+        "crit_multiplier": 1.5,
+        "attack_speed": 1.0,
+        "attack_range": 0,
+        "attack_type": "melee",
+        "skills": []
+    },
+    {
+        "id": "ghost",
+        "name": "Ghost",
+        "type": "magic",
+        "max_hp": 80,
+        "physical_defense": 0,
+        "magic_defense": 6,
+        "evasion": 0.25,
+        "crit_chance": 0.15,
+        "crit_multiplier": 2.0,
+        "attack_speed": 1.1,
+        "attack_range": 280,
+        "attack_type": "magic",
+        "projectile_type": "spirit_blast",
+        "skills": [
+            {
+                "name": "Phase Shift",
+                "type": "passive",
+                "cooldown": 0,
+                "mana_cost": 0,
+                "description": "Ignores the first incoming attack every 10 seconds."
+            }
+        ]
+    },
+    {
+        "id": "exploder",
+        "name": "Exploder",
+        "type": "melee",
+        "max_hp": 50,
+        "physical_defense": 1,
+        "magic_defense": 1,
+        "evasion": 0.0,
+        "crit_chance": 0.0,
+        "crit_multiplier": 1.0,
+        "attack_speed": 0.5,
+        "attack_range": 0,
+        "attack_type": "melee",
+        "skills": [
+            {
+                "name": "Self-Destruct",
+                "type": "active",
+                "cooldown": 0,
+                "mana_cost": 0,
+                "description": "Self-destructs upon reaching the player, causing massive area damage."
+            }
+        ]
+    }
+]

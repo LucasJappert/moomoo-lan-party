@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://cmpyg7b41x6im"]
+
+[ext_resource type="PackedScene" uid="uid://dh82ovsrtutto" path="res://scenes/entity/entity_scene.tscn" id="1_p27nx"]
+[ext_resource type="Texture2D" uid="uid://6fmcewqrxu2g" path="res://assets/moomoo.png" id="2_pio5k"]
+[ext_resource type="Script" uid="uid://eg5j8f3fioi" path="res://scripts/entity/moomoo.gd" id="2_xowpe"]
+
+[node name="Moomoo" instance=ExtResource("1_p27nx")]
+script = ExtResource("2_xowpe")
+
+[node name="Sprite2D" parent="." index="3"]
+visible = true
+texture = ExtResource("2_pio5k")
+
+[node name="Label" parent="HUD" index="1"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+
+[node name="AnimatedSprite2D" parent="." index="6"]
+visible = false
+animation = &"idle"
