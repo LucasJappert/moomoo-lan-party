@@ -8,6 +8,7 @@ const BAR_SIZE = 60.0
 var my_owner: Entity
 var _is_moomoo = false
 
+
 func _post_ready(_entity: Entity):
 	my_owner = _entity
 	_is_moomoo = my_owner is Moomoo
@@ -24,8 +25,13 @@ func _process(_delta: float):
 	_try_update_health_bar()
 
 func _try_update_health_bar():
-	if not my_health_bar.visible:
+	# Hide health bar if we don't receive damage for 5 seconds
+	var now = Time.get_ticks_msec()
+	if now - my_owner.combat_data.last_damage_received_time > 5000:
+		if my_health_bar.visible: my_health_bar.visible = false
 		return
+
+	if not my_health_bar.visible: my_health_bar.visible = true
 
 	current_bar.size.x = my_owner.combat_data.current_hp * BAR_SIZE / my_owner.combat_data.max_hp
 

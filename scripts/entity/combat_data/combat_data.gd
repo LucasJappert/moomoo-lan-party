@@ -22,6 +22,7 @@ var skills: Array[Skill] = []
 
 var last_physical_hit_time: int = 0 # In milliseconds
 var nearest_enemy_focused: Entity
+var last_damage_received_time: int = 0 # In milliseconds
 
 var my_owner: Entity
 
@@ -77,4 +78,5 @@ func can_physical_attack() -> bool:
 # endregion
 
 func _global_receive_damage(_di: DamageInfo):
+	last_damage_received_time = Time.get_ticks_msec()
 	pass

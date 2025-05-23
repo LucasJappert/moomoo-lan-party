@@ -87,7 +87,7 @@ func _server_verify_right_click_mouse_pos(_delta: float):
 	pass
 
 func _load_sprite():
-	# Implemented in Player and Enemy
+	SpritesHelper.set_entity_sprites(self)
 	pass
 
 func _update_path(_target_cell: Vector2i):

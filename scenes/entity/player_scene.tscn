@@ -24,6 +24,15 @@ script = ExtResource("3_uyepr")
 [node name="Sprite2D" parent="." index="5"]
 texture = ExtResource("2_uuy8k")
 
-[node name="Label" parent="HUD" index="2"]
+[node name="HUD" parent="." index="6"]
+position = Vector2(0, 11)
+
+[node name="MyHealthBar" parent="HUD" index="0"]
+position = Vector2(0, -20)
+
+[node name="Label" parent="HUD" index="1"]
 offset_top = 6.0
 offset_bottom = 29.0
+
+[node name="CollisionShape2D" parent="ProjectileZone" index="0"]
+position = Vector2(0, -25)

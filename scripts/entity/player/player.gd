@@ -20,10 +20,6 @@ func _ready():
 		MyCamera.create_camera(self)
 		MultiplayerManager.MY_PLAYER = self
 
-func _load_sprite():
-	sprite.frames = load("res://assets/heros/hero1.tres")
-	pass
-
 func _update_path(_target_cell: Vector2i):
 	var from_cell = MapManager.world_to_cell(target_pos if target_pos != null else global_position)
 	current_path = MapManager.find_path(from_cell, _target_cell)

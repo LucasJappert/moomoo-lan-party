@@ -4,7 +4,7 @@ extends Node2D
 
 const PROJECTILE_SCENE = preload("res://scenes/general_objects/projectile.tscn")
 
-@export var speed: float = 600.0
+@export var speed: float = 400.0
 var direction := Vector2.ZERO
 var target_position := Vector2.ZERO
 var origin_entity: Entity

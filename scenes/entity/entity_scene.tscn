@@ -121,7 +121,7 @@ debug_color = Color(0.98, 0, 0.408, 0)
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -24)
 sprite_frames = ExtResource("4_odnte")
-animation = &"walk"
+animation = &"idle"
 
 [node name="CombatData" parent="." instance=ExtResource("5_wjrb4")]
 

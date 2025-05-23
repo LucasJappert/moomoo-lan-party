@@ -10,8 +10,41 @@ static func get_enemy_instance(_enemy_type: String) -> Enemy:
 
 	return enemy
 
+static func set_combat_data_by_enemy_type(_enemy: Enemy):
+	match _enemy.enemy_type:
+		EnemyTypes.GOBLIN:
+			_set_goblin(_enemy)
+		EnemyTypes.SKELETON_ARCHER:
+			_set_skeleton_archer(_enemy)
+		EnemyTypes.ORC:
+			_set_orc(_enemy)
+		EnemyTypes.FIRE_MAGE:
+			_set_fire_mage(_enemy)
+		EnemyTypes.ICE_GOLEM:
+			_set_ice_golem(_enemy)
+		EnemyTypes.BAT:
+			_set_bat(_enemy)
+		EnemyTypes.DARK_PRIEST:
+			_set_dark_priest(_enemy)
+		EnemyTypes.SLIME:
+			_set_slime(_enemy)
+		EnemyTypes.GHOST:
+			_set_ghost(_enemy)
+		EnemyTypes.EXPLODER:
+			_set_exploder(_enemy)
+		_:
+			print("Unknown enemy type: " + _enemy.enemy_type)
+			return false
 
-static func set_goblin(_enemy: Enemy):
+	if _enemy.combat_data.attack_range <= 0:
+		_enemy.combat_data.attack_range = CombatData.MIN_ATTACK_RANGE
+	if _enemy.combat_data.current_hp > _enemy.combat_data.max_hp:
+		_enemy.combat_data.current_hp = _enemy.combat_data.max_hp
+		
+	return true
+
+# region INTERNAL METHODS
+static func _set_goblin(_enemy: Enemy):
 	if _enemy.enemy_type != EnemyTypes.GOBLIN:
 		return false
 
@@ -27,7 +60,7 @@ static func set_goblin(_enemy: Enemy):
 
 	return true
 
-static func set_skeleton_archer(_enemy: Enemy):
+static func _set_skeleton_archer(_enemy: Enemy):
 	if _enemy.enemy_type != EnemyTypes.SKELETON_ARCHER:
 		return false
 
@@ -44,7 +77,7 @@ static func set_skeleton_archer(_enemy: Enemy):
 
 	return true
 
-static func set_orc(_enemy: Enemy):
+static func _set_orc(_enemy: Enemy):
 	if _enemy.enemy_type != EnemyTypes.ORC:
 		return false
 
@@ -61,7 +94,7 @@ static func set_orc(_enemy: Enemy):
 
 	return true
 
-static func set_fire_mage(_enemy: Enemy):
+static func _set_fire_mage(_enemy: Enemy):
 	if _enemy.enemy_type != EnemyTypes.FIRE_MAGE:
 		return false
 
@@ -79,7 +112,7 @@ static func set_fire_mage(_enemy: Enemy):
 
 	return true
 
-static func set_ice_golem(_enemy: Enemy):
+static func _set_ice_golem(_enemy: Enemy):
 	if _enemy.enemy_type != EnemyTypes.ICE_GOLEM:
 		return false
 
@@ -97,7 +130,7 @@ static func set_ice_golem(_enemy: Enemy):
 
 	return true
 
-static func set_bat(_enemy: Enemy):
+static func _set_bat(_enemy: Enemy):
 	if _enemy.enemy_type != EnemyTypes.BAT:
 		return false
 
@@ -114,7 +147,7 @@ static func set_bat(_enemy: Enemy):
 
 	return true
 
-static func set_dark_priest(_enemy: Enemy):
+static func _set_dark_priest(_enemy: Enemy):
 	if _enemy.enemy_type != EnemyTypes.DARK_PRIEST:
 		return false
 
@@ -132,7 +165,7 @@ static func set_dark_priest(_enemy: Enemy):
 
 	return true
 	
-static func set_slime(_enemy: Enemy):
+static func _set_slime(_enemy: Enemy):
 	if _enemy.enemy_type != EnemyTypes.SLIME:
 		return false
 
@@ -149,7 +182,7 @@ static func set_slime(_enemy: Enemy):
 
 	return true
 
-static func set_ghost(_enemy: Enemy):
+static func _set_ghost(_enemy: Enemy):
 	if _enemy.enemy_type != EnemyTypes.GHOST:
 		return false
 
@@ -167,7 +200,7 @@ static func set_ghost(_enemy: Enemy):
 
 	return true
 
-static func set_exploder(_enemy: Enemy):
+static func _set_exploder(_enemy: Enemy):
 	if _enemy.enemy_type != EnemyTypes.EXPLODER:
 		return false
 
@@ -183,36 +216,9 @@ static func set_exploder(_enemy: Enemy):
 	_enemy.combat_data.skills = [Skill.get_self_destruct()]
 
 	return true
+# endregion
 
-static func set_combat_data_by_enemy_type(_enemy: Enemy):
-	match _enemy.enemy_type:
-		EnemyTypes.GOBLIN:
-			set_goblin(_enemy)
-		EnemyTypes.SKELETON_ARCHER:
-			set_skeleton_archer(_enemy)
-		EnemyTypes.ORC:
-			set_orc(_enemy)
-		EnemyTypes.FIRE_MAGE:
-			set_fire_mage(_enemy)
-		EnemyTypes.ICE_GOLEM:
-			set_ice_golem(_enemy)
-		EnemyTypes.BAT:
-			set_bat(_enemy)
-		EnemyTypes.DARK_PRIEST:
-			set_dark_priest(_enemy)
-		EnemyTypes.SLIME:
-			set_slime(_enemy)
-		EnemyTypes.GHOST:
-			set_ghost(_enemy)
-		EnemyTypes.EXPLODER:
-			set_exploder(_enemy)
-		_:
-			print("Unknown enemy type: " + _enemy.enemy_type)
-			return false
-
-	if _enemy.combat_data.attack_range <= 0:
-		_enemy.combat_data.attack_range = CombatData.MIN_ATTACK_RANGE
-	if _enemy.combat_data.current_hp > _enemy.combat_data.max_hp:
-		_enemy.combat_data.current_hp = _enemy.combat_data.max_hp
-		
-	return true
+# static func _load_textures():
+# 	enemy_textures = {}
+# 	for type in EnemyTypes.values():
+# 		enemy_textures[type] = load("res://assets/enemies/" + type.to_lower() + ".png")

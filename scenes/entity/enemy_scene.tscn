@@ -35,6 +35,9 @@ debug_color = Color(100, 100, 100, 0)
 z_index = 2
 z_as_relative = false
 
+[node name="MyHealthBar" parent="HUD" index="0"]
+position = Vector2(0, 19)
+
 [node name="CurrentBar" parent="HUD/MyHealthBar" index="1"]
 theme_override_styles/panel = SubResource("StyleBoxFlat_v8xvt")
 
@@ -43,3 +46,6 @@ offset_left = 0.0
 offset_top = 0.0
 offset_right = 0.0
 offset_bottom = 0.0
+
+[node name="AnimatedSprite2D" parent="." index="8"]
+position = Vector2(0, -17)

@@ -32,11 +32,6 @@ func _ready_for_server():
 func set_enemy_type(_enemy_type: String) -> void:
 	enemy_type = _enemy_type
 
-func _load_sprite():
-	# TODO: Load this assets from a new module Resources
-	sprite.frames = load("res://assets/enemies/" + enemy_type + ".tres")
-	pass
-
 func _process(_delta: float) -> void:
 	_server_process(_delta)
 
