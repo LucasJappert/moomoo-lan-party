@@ -11,14 +11,16 @@ const MIN_ATTACK_RANGE: int = int(MapManager.TILE_SIZE.x)
 @export var evasion: float = 0.0
 @export var crit_chance: float = 0.0
 @export var crit_multiplier: float = 1.0
+@export var stun_chance: float = 0.0
+@export var stun_duration: float = 0.0
 @export var attack_speed: float = 1.0 # Higher is faster
 @export var attack_range: int = 0
 @export var attack_type := AttackTypes.MELEE
+@export var physical_attack_power: int = 10
+@export var magic_attack_power: int = 0
 @export var projectile_type: String = ProjectileTypes.NONE
 var skills: Array[Skill] = []
 
-@export var physical_attack_power: int = 10
-@export var magic_attack_power: int = 0
 
 var last_physical_hit_time: int = 0 # In milliseconds
 var nearest_enemy_focused: Entity
@@ -44,30 +46,40 @@ func _server_receive_damage(amount: int) -> void:
 		my_owner.rpc("rpc_die")
 
 # region TRY PHISICAL ATTACK
-func _try_enemy_phisical_attack(_delta: float):
-	if my_owner.target_entity == null:
+func try_physical_attack(_delta: float):
+	if not multiplayer.is_server(): return
+
+	if my_owner.velocity != Vector2.ZERO: return
+
+	if my_owner.target_entity == null: _assign_target_if_needed()
+
+	if my_owner.target_entity == null: return
+
+	if not can_physical_attack(): return
+
+	if not GlobalsEntityHelpers.is_target_in_attack_area(my_owner, my_owner.target_entity): return
+
+	_execute_attack()
+	last_physical_hit_time = Time.get_ticks_msec()
+
+func _assign_target_if_needed():
+	if my_owner is Player:
+		my_owner.target_entity = GlobalsEntityHelpers.get_nearest_entity_to_attack(my_owner, GameManager.get_enemies())
 		return
+		
+	if my_owner is Enemy:
+		# First we check if there is a player nearby, then if the moomoo is in attack range
+		my_owner.target_entity = GlobalsEntityHelpers.get_nearest_entity_to_attack(my_owner, GameManager.get_players())
+		if my_owner.target_entity != null: return
+		if GlobalsEntityHelpers.is_target_in_attack_area(my_owner, GameManager.moomoo): my_owner.target_entity = GameManager.moomoo
 
-	if not my_owner is Enemy:
-		return
+func _execute_attack():
+	match attack_type:
+		AttackTypes.RANGED:
+			Projectile.launch(my_owner, my_owner.target_entity, physical_attack_power)
 
-	if not can_physical_attack():
-		return
-
-	if attack_type == AttackTypes.RANGED:
-		var distance_to_target = my_owner.global_position.distance_to(my_owner.target_entity.global_position)
-		if distance_to_target > attack_range:
-			return
-		Projectile.launch(my_owner, my_owner.target_entity, physical_attack_power)
-		last_physical_hit_time = Time.get_ticks_msec()
-
-	if attack_type == AttackTypes.MELEE:
-		var distance_to_target = my_owner.global_position.distance_to(my_owner.target_entity.global_position)
-		if distance_to_target > attack_range:
-			return
-		my_owner.target_entity.combat_data._server_receive_damage(physical_attack_power)
-		last_physical_hit_time = Time.get_ticks_msec()
-
+		AttackTypes.MELEE:
+			my_owner.target_entity.combat_data._server_receive_damage(physical_attack_power)
 	
 func can_physical_attack() -> bool:
 	if my_owner.velocity != Vector2.ZERO:

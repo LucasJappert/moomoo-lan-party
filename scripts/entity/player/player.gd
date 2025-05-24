@@ -14,8 +14,15 @@ func _ready():
 	super._ready()
 	global_position = MapManager.cell_to_world(MapManager.PLAYER_CELL_SPAWN)
 	mov_speed = 200
-	combat_data.max_hp = 5000
+	combat_data.max_hp = 15000
 	combat_data.current_hp = combat_data.max_hp
+	combat_data.attack_type = AttackTypes.RANGED
+	combat_data.attack_range = 300
+	combat_data.attack_speed = 5
+
+	# We need to update the radius of the attack area node here as it enters the scene
+	_set_area_attack_shape_radius()
+
 	if player_id == multiplayer.get_unique_id():
 		MyCamera.create_camera(self)
 		MultiplayerManager.MY_PLAYER = self

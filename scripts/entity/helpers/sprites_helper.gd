@@ -2,7 +2,7 @@ class_name SpritesHelper
 
 static var _ATLAS1 = load("res://assets/atlas1.png")
 
-const _PLAYERS_START_REGION = Vector2(0, 320)
+const _PLAYERS_START_REGION = Vector2(256, 448)
 const _PLAYERS_FRAME_SIZE = Vector2(128, 128)
 const _PLAYERS_SCALE = Vector2(0.75, 0.75)
 

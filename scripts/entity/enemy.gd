@@ -32,15 +32,6 @@ func _ready_for_server():
 func set_enemy_type(_enemy_type: String) -> void:
 	enemy_type = _enemy_type
 
-func _process(_delta: float) -> void:
-	_server_process(_delta)
-
-func _server_process(_delta: float):
-	if not multiplayer.is_server():
-		return
-
-	combat_data._try_enemy_phisical_attack(_delta)
-
 func _on_every_timer_500ms():
 	_try_set_current_path()
 
@@ -53,7 +44,7 @@ func _try_set_current_path():
 	if target_entity == null:
 		return
 
-	if GlobalsEntityHelpers.is_target_entity_in_attack_area(self):
+	if GlobalsEntityHelpers.is_target_in_attack_area(self, target_entity):
 		current_path = []
 		return
 
@@ -75,6 +66,3 @@ func _get_nearest_player_inside_vision():
 			closest_player = player
 
 	return closest_player
-
-func _get_acceptable_distance():
-	return area_attack_shape.shape.radius + target_entity.collision_shape.shape.radius

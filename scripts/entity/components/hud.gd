@@ -3,7 +3,7 @@ extends Node
 # @onready var _health_bar: ProgressBar = $HealthBar
 @onready var _label: Label = $Label
 @onready var my_health_bar = $MyHealthBar
-const BAR_SIZE = 60.0
+const BAR_SIZE = 40.0
 @onready var current_bar = $MyHealthBar/CurrentBar
 var my_owner: Entity
 var _is_moomoo = false

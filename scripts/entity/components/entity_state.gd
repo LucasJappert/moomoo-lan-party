@@ -7,8 +7,7 @@ static func _process(entity: Entity) -> void:
 	_server_update(entity)
 
 static func _server_update(entity: Entity):
-	if not entity.multiplayer.is_server():
-		return
+	if not entity.multiplayer.is_server(): return
 
 	var is_moving := entity.velocity != Vector2.ZERO
 
@@ -18,14 +17,11 @@ static func _server_update(entity: Entity):
 		_server_set_current_state(entity, new_state)
 
 static func _play_animation(entity: Entity) -> void:
-	if not entity.sprite:
-		return
+	if not entity.sprite: return
 
 	match entity.current_state:
-		StateEnum.IDLE:
-			entity.sprite.play("idle")
-		StateEnum.WALK:
-			entity.sprite.play("walk")
+		StateEnum.IDLE: entity.sprite.play("idle")
+		StateEnum.WALK: entity.sprite.play("walk")
 
 static func _server_set_current_state(entity: Entity, new_state: StateEnum) -> void:
 	entity.current_state = new_state

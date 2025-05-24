@@ -28,7 +28,7 @@ texture = ExtResource("2_uuy8k")
 position = Vector2(0, 11)
 
 [node name="MyHealthBar" parent="HUD" index="0"]
-position = Vector2(0, -20)
+position = Vector2(0, -12)
 
 [node name="Label" parent="HUD" index="1"]
 offset_top = 6.0

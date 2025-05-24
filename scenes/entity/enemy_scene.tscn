@@ -15,7 +15,11 @@ properties/1/replication_mode = 2
 radius = 258.627
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v8xvt"]
-bg_color = Color(0.395875, 0.0122566, 0.0839309, 1)
+bg_color = Color(0.588235, 0.0117647, 0.0823529, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
 
 [node name="Enemy" instance=ExtResource("1_v8xvt")]
 script = ExtResource("2_4sfg8")
@@ -36,9 +40,13 @@ z_index = 2
 z_as_relative = false
 
 [node name="MyHealthBar" parent="HUD" index="0"]
-position = Vector2(0, 19)
+position = Vector2(0, 13)
+
+[node name="BgBlack" parent="HUD/MyHealthBar" index="0"]
+texture_filter = 1
 
 [node name="CurrentBar" parent="HUD/MyHealthBar" index="1"]
+texture_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_v8xvt")
 
 [node name="Label" parent="HUD" index="1"]

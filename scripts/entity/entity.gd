@@ -28,6 +28,8 @@ var movement_helper = MovementEntityHelper.new()
 
 @export var current_state: EntityState.StateEnum = EntityState.StateEnum.IDLE
 
+var target_to_attack: Entity
+
 
 @rpc("authority", "call_local")
 func rpc_set_state(state: EntityState.StateEnum) -> void:
@@ -64,31 +66,23 @@ func _set_area_attack_shape_radius() -> void:
 	area_attack_shape.shape.radius = combat_data.attack_range
 
 func _process(_delta: float) -> void:
-	_server_verify_right_click_mouse_pos(_delta)
 	EntityState._process(self)
+	combat_data.try_physical_attack(_delta)
 
 func _physics_process(_delta):
 	movement_helper._server_move_along_path(_delta)
 	_client_physics_process(_delta)
 
 func _client_physics_process(_delta: float) -> void:
-	if multiplayer.is_server() && not MultiplayerManager.HOSTED_GAME:
-		return
+	if multiplayer.is_server() && not MultiplayerManager.HOSTED_GAME: return
+		
 	sprite.flip_h = direction.x < 0
 
 func _client_init() -> void:
 	if multiplayer.is_server() && not MultiplayerManager.HOSTED_GAME:
 		return
 
-	_load_sprite()
-
-func _server_verify_right_click_mouse_pos(_delta: float):
-	# Implemented in Player
-	pass
-
-func _load_sprite():
 	SpritesHelper.set_entity_sprites(self)
-	pass
 
 func _update_path(_target_cell: Vector2i):
 	# Implemented in Player and Enemy

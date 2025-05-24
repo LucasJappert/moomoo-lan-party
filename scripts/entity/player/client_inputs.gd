@@ -24,7 +24,7 @@ func _unhandled_input(event):
 
 func _on_right_click(mouse_position: Vector2):
 	if AreaHovered.hovered_entity is Enemy:
-		rpc_id(1, "try_to_attack", AreaHovered.hovered_entity.name)
+		rpc_id(1, "right_click_on_entity", AreaHovered.hovered_entity.name)
 		return
 
 	var _target_cell = MapManager.world_to_cell(mouse_position)
@@ -36,7 +36,8 @@ func try_to_move(_target_cell: Vector2i):
 	player._update_path(_target_cell)
 
 @rpc("authority", "call_local")
-func try_to_attack(_target_entity_name: String):
+func right_click_on_entity(_target_entity_name: String):
 	var target_entity = GameManager.entities[_target_entity_name]
-	print("Implementing try_to_attack: ", target_entity)
-	Projectile.launch(player, target_entity, 50)
+	player.target_to_attack = target_entity
+	# print("Implementing right_click_on_entity: ", target_entity)
+	# Projectile.launch(player, target_entity, 50)
