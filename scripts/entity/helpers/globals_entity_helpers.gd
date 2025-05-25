@@ -1,8 +1,8 @@
 class_name GlobalsEntityHelpers
 
 
-static func is_target_in_attack_area(_entity: Entity, _target_entity: Entity) -> bool:
-	if _target_entity == null: return false
+static func is_target_in_attack_area(_entity: Entity, _target_entity) -> bool:
+	if ObjectHelpers.is_null(_target_entity): return false
 
 	var dist = _entity.global_position.distance_to(_target_entity.global_position)
 
@@ -21,3 +21,6 @@ static func get_nearest_entity_to_attack(my_owner: Entity, entities: Array[Entit
 			nearest_entity = entity
 
 	return nearest_entity
+
+static func roll_crit(_crit_chance: float) -> bool:
+	return randf() <= _crit_chance

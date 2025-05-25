@@ -5,15 +5,13 @@ func set_my_owner(_entity: Entity):
 	my_owner = _entity
 
 func _server_move_along_path(_delta: float):
-	if not my_owner.multiplayer.is_server():
-		return
+	if not my_owner.multiplayer.is_server(): return
 
 	if GlobalsEntityHelpers.is_target_in_attack_area(my_owner, my_owner.target_entity):
 		my_owner.current_path = []
 
 	if my_owner.target_pos == null:
-		if my_owner.current_path.is_empty():
-			return _stop_movement()
+		if my_owner.current_path.is_empty(): return _stop_movement()
 
 		my_owner.current_cell = MapManager.world_to_cell(my_owner.global_position)
 		var next_target_cell = my_owner.current_path[0]

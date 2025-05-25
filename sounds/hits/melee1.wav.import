@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://di60nigygpeoj"
-path="res://.godot/imported/mele1.wav-26f4c3f3702f183a696888775399c46c.sample"
+path="res://.godot/imported/melee1.wav-4cd4a065173cefe132cd831c7daf6a36.sample"
 
 [deps]
 
-source_file="res://sounds/hits/mele1.wav"
-dest_files=["res://.godot/imported/mele1.wav-26f4c3f3702f183a696888775399c46c.sample"]
+source_file="res://sounds/hits/melee1.wav"
+dest_files=["res://.godot/imported/melee1.wav-4cd4a065173cefe132cd831c7daf6a36.sample"]
 
 [params]
 

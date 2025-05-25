@@ -9,7 +9,6 @@ const PLAYER_SCENE = preload("res://scenes/entity/player_scene.tscn")
 
 func _ready() -> void:
 	MapManager.initialize()
-	SoundManager.initialize(get_tree().get_root())
 
 	MyCamera.set_screen_size()
 	%MultiplayerHUD.show()
@@ -20,6 +19,8 @@ func _ready() -> void:
 
 	DecorationsFactory.add_random_decorations_over_grass_terrain()
 	DecorationsFactory.add_random_decorations_over_dirt_terrain()
+
+	SoundManager.initialize()
 
 func _init_player_spawner():
 	player_spawner.spawn_function = Callable(self, "_spawn_custom")

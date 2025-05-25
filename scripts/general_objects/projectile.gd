@@ -11,6 +11,9 @@ var origin_entity: Entity
 var target_entity: Entity
 var damage: int
 
+func _ready():
+	SoundManager.play_arrow_shot()
+
 func _physics_process(delta: float) -> void:
 	_server_move(delta)
 
@@ -28,7 +31,6 @@ func _server_move(delta: float):
 
 	if position.distance_to(target_position) < 10:
 		if target_entity != null && origin_entity != null:
-			SoundManager.play_arrow_impact()
 			origin_entity.combat_data._server_calculate_physical_damage(target_entity)
 		queue_free()
 

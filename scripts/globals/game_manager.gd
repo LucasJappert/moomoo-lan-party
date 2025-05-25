@@ -8,6 +8,7 @@ var moomoo_node
 var moomoo: Moomoo
 var my_trees_node
 var terrain
+var audio_node
 
 func _ready():
 	enemies_node = get_tree().root.get_node("Main/Enemies")
@@ -16,6 +17,7 @@ func _ready():
 	projectiles_node = get_tree().root.get_node("Main/Projectiles")
 	my_trees_node = get_tree().root.get_node("Main/MyTrees")
 	terrain = get_tree().root.get_node("Main/Terrain")
+	audio_node = get_tree().root.get_node("Main/Audio")
 	pass
 
 func add_enemy(enemy: Enemy) -> void:
