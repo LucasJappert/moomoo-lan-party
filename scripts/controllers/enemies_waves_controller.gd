@@ -10,8 +10,8 @@ static func start_wave(wave: int) -> void:
 
 	const possible_enemies = [
 		EnemyTypes.SKELETON_ARCHER,
-		EnemyTypes.ORC,
-		EnemyTypes.FIRE_MAGE
+		# EnemyTypes.ORC,
+		# EnemyTypes.FIRE_MAGE
 	]
 	if wave == 1:
 		for direction in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
@@ -22,3 +22,4 @@ static func start_wave(wave: int) -> void:
 				enemy.global_position = moomoo_position + direction * TILES_DISTANCE * 64 + random_noise
 				enemy.id = counter
 				GameManager.add_enemy(enemy)
+				return

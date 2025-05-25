@@ -27,8 +27,9 @@ func _server_move(delta: float):
 		position += direction.normalized() * speed * delta
 
 	if position.distance_to(target_position) < 10:
-		if target_entity != null:
-			target_entity.combat_data._server_receive_damage(damage)
+		if target_entity != null && origin_entity != null:
+			SoundManager.play_arrow_impact()
+			origin_entity.combat_data._server_calculate_physical_damage(target_entity)
 		queue_free()
 
 static func launch(_origin_entity: Entity, _target_entity: Entity, _damage: int):

@@ -74,6 +74,7 @@ static func _set_skeleton_archer(_enemy: Enemy):
 	_enemy.combat_data.attack_range = 200
 	_enemy.combat_data.attack_type = AttackTypes.RANGED
 	_enemy.combat_data.projectile_type = ProjectileTypes.ARROW
+	_enemy.combat_data.skills.append(Skill.get_blessing_of_power())
 
 	return true
 
@@ -90,7 +91,6 @@ static func _set_orc(_enemy: Enemy):
 	_enemy.combat_data.attack_speed = 1.2
 	_enemy.combat_data.attack_range = 0
 	_enemy.combat_data.attack_type = AttackTypes.MELEE
-	_enemy.combat_data.skills.append(Skill.get_stun_charge())
 
 	return true
 
@@ -108,7 +108,6 @@ static func _set_fire_mage(_enemy: Enemy):
 	_enemy.combat_data.attack_range = 200
 	_enemy.combat_data.attack_type = AttackTypes.RANGED
 	_enemy.combat_data.projectile_type = ProjectileTypes.FIREBALL
-	_enemy.combat_data.skills.append(Skill.get_fireball())
 
 	return true
 
@@ -126,7 +125,6 @@ static func _set_ice_golem(_enemy: Enemy):
 	_enemy.combat_data.attack_range = 0
 	_enemy.combat_data.attack_type = AttackTypes.MELEE
 	_enemy.combat_data.projectile_type = ProjectileTypes.ICE_BOLT
-	_enemy.combat_data.skills = [Skill.get_frost_slam()]
 
 	return true
 
@@ -143,7 +141,6 @@ static func _set_bat(_enemy: Enemy):
 	_enemy.combat_data.attack_speed = 1.0
 	_enemy.combat_data.attack_range = 50
 	_enemy.combat_data.attack_type = AttackTypes.MELEE
-	_enemy.combat_data.skills = []
 
 	return true
 
@@ -161,7 +158,6 @@ static func _set_dark_priest(_enemy: Enemy):
 	_enemy.combat_data.attack_range = 260
 	_enemy.combat_data.attack_type = AttackTypes.MAGIC
 	_enemy.combat_data.projectile_type = ProjectileTypes.DARK_BOLT
-	_enemy.combat_data.skills = [Skill.get_drain_life()]
 
 	return true
 	
@@ -178,7 +174,6 @@ static func _set_slime(_enemy: Enemy):
 	_enemy.combat_data.attack_speed = 1.0
 	_enemy.combat_data.attack_range = 0
 	_enemy.combat_data.attack_type = AttackTypes.MELEE
-	_enemy.combat_data.skills = []
 
 	return true
 
@@ -196,7 +191,6 @@ static func _set_ghost(_enemy: Enemy):
 	_enemy.combat_data.attack_range = 280
 	_enemy.combat_data.attack_type = AttackTypes.MAGIC
 	_enemy.combat_data.projectile_type = ProjectileTypes.DARK_BOLT
-	_enemy.combat_data.skills = [Skill.get_phase_shift()]
 
 	return true
 
@@ -213,7 +207,6 @@ static func _set_exploder(_enemy: Enemy):
 	_enemy.combat_data.attack_speed = 0.5
 	_enemy.combat_data.attack_range = 0
 	_enemy.combat_data.attack_type = AttackTypes.MELEE
-	_enemy.combat_data.skills = [Skill.get_self_destruct()]
 
 	return true
 # endregion

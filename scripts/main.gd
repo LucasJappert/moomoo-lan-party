@@ -9,6 +9,7 @@ const PLAYER_SCENE = preload("res://scenes/entity/player_scene.tscn")
 
 func _ready() -> void:
 	MapManager.initialize()
+	SoundManager.initialize(get_tree().get_root())
 
 	MyCamera.set_screen_size()
 	%MultiplayerHUD.show()
