@@ -21,6 +21,7 @@ func _ready() -> void:
 	DecorationsFactory.add_random_decorations_over_dirt_terrain()
 
 	SoundManager.initialize()
+	DamagePopupPool.preload_popups()
 
 func _init_player_spawner():
 	player_spawner.spawn_function = Callable(self, "_spawn_custom")

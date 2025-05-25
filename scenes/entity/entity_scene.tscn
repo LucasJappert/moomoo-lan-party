@@ -96,6 +96,13 @@ offset_right = 27.0
 offset_bottom = 35.0
 grow_horizontal = 2
 grow_vertical = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DamagePopupContainer" type="Node2D" parent="HUD"]
+z_index = 3
+z_as_relative = false
+y_sort_enabled = true
 
 [node name="AreaAttack" type="Area2D" parent="."]
 

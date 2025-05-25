@@ -5,8 +5,10 @@ extends Node
 @onready var my_health_bar = $MyHealthBar
 const BAR_SIZE = 40.0
 @onready var current_bar = $MyHealthBar/CurrentBar
+@onready var damage_popup_container = $DamagePopupContainer
 var my_owner: Entity
 var _is_moomoo = false
+const SHOW_DAMAGES = false
 
 
 func _post_ready(_entity: Entity):
@@ -42,3 +44,18 @@ func _try_update_label():
 	_label.text = my_owner.name
 	# _label.text += " - " + str(MapManager.world_to_cell(my_owner.global_position))
 	pass
+
+func show_damage_popup(amount: int, color: Color = Color.RED):
+	if not SHOW_DAMAGES: return
+	
+	var popup = DamagePopupPool.get_popup()
+	damage_popup_container.add_child(popup)
+
+	# Posición aleatoria leve (ruido)
+	var _aux = int(MapManager.TILE_SIZE.x / 2)
+	var offset := Vector2(0, randi_range(-_aux, _aux))
+	popup.position = Vector2(0, -MapManager.TILE_SIZE.x * 2) + offset
+
+	if amount < 0: color = Color.RED
+	if amount > 0: color = Color.GREEN
+	popup.show_damage(amount, color)

@@ -120,6 +120,7 @@ func _global_receive_damage(_di: DamageInfo):
 	if _di.critical == 0:
 		if melee_attack: SoundManager.play_melee_hit()
 
+	my_owner.hud.show_damage_popup(-_di.total_damage)
 	last_damage_received_time = Time.get_ticks_msec()
 	pass
 

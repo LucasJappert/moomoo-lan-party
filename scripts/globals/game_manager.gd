@@ -20,6 +20,9 @@ func _ready():
 	audio_node = get_tree().root.get_node("Main/Audio")
 	pass
 
+func _process(delta: float) -> void:
+	CursorManager._static_process(delta)
+
 func add_enemy(enemy: Enemy) -> void:
 	enemies_node.add_child(enemy, true)
 	add_entity(enemy)

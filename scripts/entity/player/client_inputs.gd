@@ -38,6 +38,4 @@ func try_to_move(_target_cell: Vector2i):
 @rpc("authority", "call_local")
 func right_click_on_entity(_target_entity_name: String):
 	var target_entity = GameManager.entities[_target_entity_name]
-	player.target_to_attack = target_entity
-	# print("Implementing right_click_on_entity: ", target_entity)
-	# Projectile.launch(player, target_entity, 50)
+	player.target_entity = target_entity

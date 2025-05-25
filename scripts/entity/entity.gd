@@ -28,8 +28,6 @@ var movement_helper = MovementEntityHelper.new()
 
 @export var current_state: EntityState.StateEnum = EntityState.StateEnum.IDLE
 
-var target_to_attack: Entity
-
 
 @rpc("authority", "call_local")
 func rpc_set_state(state: EntityState.StateEnum) -> void:

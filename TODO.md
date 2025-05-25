@@ -97,7 +97,8 @@ MY TODOs:
 - ✅ Mejorar el mapa agregando árboles, cercas, etc.
 - ✅ Corregir movimientos en diagonal cuando en realidad no se deberia permitir si los tiles adyacentes estan bloqueados.
 - ✅ Agregar plantas sobre el terreno, como cactus, utilizando un unico atlas.
-- Ocultar barra de vida en enemigos si no reciben daño
+- ✅ Comenzar a agregar algunos sonidos de hits, criticos, etc.
+- ✅ Ocultar barra de vida en enemigos si no reciben daño
 - Setear sprites por codigo, tanto en enemigos como en heroes
 - Comenzar con la interfaz de usuario ingame
 - Comenzar la escena para crear y unirse a salas
