@@ -64,6 +64,7 @@ func _server_receive_physical_damage(_di: DamageInfo) -> void:
 
 	current_hp -= _di.total_damage
 	if current_hp <= 0:
+		Skill.actions_before_entity_death(my_owner, my_owner.target_entity)
 		current_hp = 0
 		my_owner.rpc("rpc_die")
 

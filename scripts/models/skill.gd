@@ -2,6 +2,41 @@ class_name Skill
 
 enum Type {ACTIVE, PASSIVE}
 
+const SkillNames = {
+	MIRROR_DEMISE = "Mirror Demise",
+	MANA_SCORCHER = "Mana Scorcher",
+	DIVINE_SHIELD = "Divine Shield",
+	ENERGY_ABSORPTION = "Energy Absorption",
+	VOID_STEP = "Void Step",
+	TOXIC_SPORES = "Toxic Spores",
+	HELLFIRE_STORM = "Hellfire Storm",
+	BONE_CAGE = "Bone Cage",
+	FLAME_BURST = "Flame Burst",
+	FROST_NOVA = "Frost Nova",
+	SHADOW_STEP = "Shadow Step",
+	LIFESTEAL_AURA = "Lifesteal Aura",
+	STUNNING_BLOW = "Stunning Blow",
+	MULTI_SHOT = "Multi Shot",
+	FINAL_EXPLOSION = "Final Explosion",
+	RAGE_BOOST = "Rage Boost",
+	KAMIKAZE_CHARGE = "Kamikaze Charge",
+	ARCANE_SHIELD = "Arcane Shield",
+	PIERCING_ARROW = "Piercing Arrow",
+	BURNING_WEAPON = "Burning Weapon",
+	EVASIVE_DASH = "Evasive Dash",
+	FROZEN_TOUCH = "Frozen Touch",
+	NECROTIC_PULSE = "Necrotic Pulse",
+	GUARDIANS_PRESENCE = "Guardian's Presence",
+	CURSE_OF_THORNS = "Curse of Thorns",
+	STORMLASH_REFLEX = "Stormlash Reflex",
+	STATIC_RETALIATION = "Static Retaliation",
+	ECHOING_WRATH = "Echoing Wrath",
+	REVERBERATING_PAIN = "Reverberating Pain",
+	PHANTOM_REPRISAL = "Phantom Reprisal",
+	SHIELDED_CORE = "Shielded Core",
+	BLESSING_OF_POWER = "Blessing of Power"
+}
+
 var name: String = ""
 var type: Type = Type.ACTIVE
 var cooldown: float = 0
@@ -24,103 +59,85 @@ var extra_physical_attack_power_percent: float = 0
 var extra_magic_attack_power_percent: float = 0
 
 
-func _init(_name: String, _type: Type, _description: String = ""):
+func _init(_name: String, _type: Type):
 	name = _name
 	type = _type
-	description = _description
 
 static func get_shielded_core() -> Skill:
-	var skill = Skill.new("Shielded Core", Skill.Type.PASSIVE, "Reduce all damage taken by 50%")
+	var skill = Skill.new(SkillNames.SHIELDED_CORE, Skill.Type.PASSIVE)
 	skill.extra_magic_defense_percent = 0.3
 	skill.extra_physical_defense_percent = 0.3
 	skill.description = "Reduces magic and physical defense by " + str(skill.extra_magic_defense_percent * 100) + "%"
 	return skill
 
 static func get_blessing_of_power() -> Skill:
-	var skill = Skill.new("Blessing of Power", Skill.Type.PASSIVE)
+	var skill = Skill.new(SkillNames.BLESSING_OF_POWER, Skill.Type.PASSIVE)
 	skill.extra_physical_attack_power_percent = 0.1
 	skill.description = "Increases physical attack power by " + str(skill.extra_physical_attack_power_percent * 100) + "%"
 	return skill
 
+static func get_mirror_demise() -> Skill:
+	var skill = Skill.new(SkillNames.MIRROR_DEMISE, Skill.Type.PASSIVE)
+	skill.description = "Upon death, splits into 4 copies with half the original HP."
+	return skill
 
-# 🌀 Activas
-# Shadow Strike – Golpe físico con +30% probabilidad de crítico y 150% de daño.
+static func get_mana_scorcher() -> Skill:
+	var skill = Skill.new(SkillNames.MANA_SCORCHER, Skill.Type.ACTIVE)
+	skill.description = "Burns 50% of the target's mana, dealing 25% of that as physical damage."
+	return skill
 
-# Arcane Pulse – Onda de energía mágica que daña a todos los enemigos cercanos.
 
-# Stunning Roar – Intenta aturdir a los enemigos en un área cercana.
+# region Logics for skills
 
-# Poison Arrow – Flecha que envenena al enemigo por varios segundos.
+static func entity_has_skill(entity: Entity, skill_name: String) -> bool:
+	return entity.combat_data.skills.any(func(skill): return skill.name == skill_name)
 
-# Quickstep – Aumenta evasión y velocidad de ataque por unos segundos.
 
-# Fireball – Lanza una bola de fuego que explota en área.
+static func actions_before_entity_death(_dead_entity: Entity, _attacker_entity: Entity) -> void:
+	if not _dead_entity is Enemy: return
+	if _dead_entity.replicated: return
 
-# Frost Nova – Congela temporalmente a los enemigos cercanos.
+	if entity_has_skill(_dead_entity, SkillNames.MIRROR_DEMISE):
+		var target_tiles = [
+			Vector2(-MapManager.TILE_SIZE.x, -MapManager.TILE_SIZE.y),
+			Vector2(MapManager.TILE_SIZE.x, -MapManager.TILE_SIZE.y),
+			Vector2(MapManager.TILE_SIZE.x, MapManager.TILE_SIZE.y),
+			Vector2(-MapManager.TILE_SIZE.x, MapManager.TILE_SIZE.y)
+		]
+		for i in range(4):
+			var new_enemy = EnemyFactory.get_enemy_instance(_dead_entity.enemy_type)
+			new_enemy.replicated = true
+			new_enemy.position = _dead_entity.position + target_tiles[i]
+			new_enemy.combat_data.max_hp = new_enemy.combat_data.max_hp * 0.5
+			new_enemy.combat_data.current_hp = new_enemy.combat_data.max_hp
+			GameManager.add_enemy(new_enemy)
 
-# Blink – Teletransporte a corta distancia.
-
-# Ground Slam – Golpe al suelo que daña y empuja enemigos alrededor.
-
-# Life Drain – Roba vida del enemigo y la transfiere al usuario.
-
-# Flame Dash – Avanza envuelto en fuego, dañando a quienes atraviesa.
-
-# Multi Shot – Dispara múltiples proyectiles a diferentes enemigos.
-
-# Thunder Clap – Descarga eléctrica que aturde a un objetivo.
-
-# Searing Blade – Aumenta el daño del próximo ataque cuerpo a cuerpo.
-
-# Guardian’s Shield – Absorbe daño durante unos segundos.
-
-# Whirlwind – Ataque giratorio que golpea a todos los enemigos cercanos.
-
-# Sniper Shot – Disparo con gran daño a larga distancia.
-
-# Crippling Trap – Coloca una trampa que reduce la velocidad y evasión.
-
-# Meteor Fall – Invoca un meteorito que cae sobre un área.
-
-# Heal Wave – Cura al usuario y a aliados cercanos.
-
-# 🌱 Pasivas
-# Thick Skin – Aumenta defensa física y mágica permanentemente.
-
-# Killer Instinct – Aumenta probabilidad de crítico contra enemigos heridos.
-
-# Battle Rhythm – Incrementa velocidad de ataque con cada golpe consecutivo.
-
-# Unyielding Will – Otorga un escudo al estar por debajo del 20% de vida.
-
-# Stun Mastery – Mejora la probabilidad y duración de aturdimientos.
-
-# Magic Efficiency – Reduce el costo de maná de habilidades mágicas.
-
-# Evasive Stance – Aumenta la evasión en combate cuerpo a cuerpo.
-
-# Fury – Incrementa daño a medida que se pierde vida.
-
-# Precision – Aumenta la precisión y reduce la evasión del enemigo.
-
-# Mana Leech – Recupera maná al infligir daño mágico.
-
-# Bloodthirst – Cura un pequeño porcentaje de HP al matar enemigos.
-
-# Arcane Resilience – Otorga resistencia al daño mágico.
-
-# Shielded Core – Reduce todo el daño recibido un 5%.
-
-# Adrenaline – Aumenta la velocidad de movimiento cuando se recibe daño.
-
-# Projectile Expert – Aumenta el alcance y daño de ataques con proyectiles.
-
-# Regeneration – Recupera lentamente HP con el tiempo.
-
-# Armor Breaker – Los ataques tienen chance de reducir la defensa del enemigo.
-
-# Spell Echo – Las habilidades mágicas tienen una probabilidad de duplicarse.
-
-# Stealth Mastery – Mejora evasión y daño al atacar desde el sigilo.
-
-# Explosive Death – Al morir, inflige daño a enemigos cercanos.
+# Skill("Mana Scorcher", "Active", 40, 8, "Burns 50% of the target's mana, dealing 25% of that as physical damage."),
+# Skill("Divine Shield", "Active", 60, 12, "Summons a divine shield making the caster immune to all damage for 5 seconds."),
+# Skill("Energy Absorption", "Active", 50, 10, "Creates a shield that absorbs 25% of incoming damage and releases it in an area after 5 seconds."),
+# Skill("Void Step", "Active", 20, 5, "Becomes intangible for 1 second, avoiding all physical damage."),
+# Skill("Toxic Spores", "Passive", 0, 0, "Releases toxic spores when hit, poisoning nearby enemies."),
+# Skill("Hellfire Storm", "Active", 60, 10, "Calls down a firestorm over an area for 3 seconds."),
+# Skill("Bone Cage", "Active", 30, 6, "Traps a target in bone prison for 2 seconds."),
+# Skill("Flame Burst", "Active", 25, 4, "A fiery explosion that deals area damage on impact."),
+# Skill("Frost Nova", "Active", 30, 6, "Slows all nearby enemies for 3 seconds."),
+# Skill("Shadow Step", "Active", 35, 7, "Teleports behind the target and lands a guaranteed critical hit."),
+# Skill("Lifesteal Aura", "Passive", 0, 0, "Steals 20% of damage dealt as health."),
+# Skill("Stunning Blow", "Passive", 0, 0, "Every 4th attack stuns the enemy for 1.5 seconds."),
+# Skill("Multi Shot", "Passive", 0, 0, "Every 3rd attack fires 3 projectiles in a cone."),
+# Skill("Final Explosion", "Passive", 0, 0, "Explodes upon death dealing magical area damage."),
+# Skill("Rage Boost", "Passive", 0, 0, "Increases physical attack by 30% below 50% HP."),
+# Skill("Kamikaze Charge", "Active", 50, 8, "Charges at the enemy and explodes on contact dealing area damage."),
+# Skill("Arcane Shield", "Active", 40, 7, "Reduces magical damage taken by 40% for 5 seconds."),
+# Skill("Piercing Arrow", "Passive", 0, 0, "Ignores 50% of the enemy's physical defense."),
+# Skill("Burning Weapon", "Passive", 0, 0, "Applies a 3-second burn on hit."),
+# Skill("Evasive Dash", "Passive", 0, 0, "Has a 20% chance to dodge incoming attacks."),
+# Skill("Frozen Touch", "Passive", 0, 0, "20% chance to freeze the target for 1 second."),
+# Skill("Necrotic Pulse", "Active", 30, 6, "Releases a dark pulse that reduces enemy attack."),
+# Skill("Guardian's Presence", "Passive", 0, 0, "Grants an aura that increases allies' physical and magical defense by 10%."),
+# Skill("Curse of Thorns", "Passive", 0, 0, "Enemies attacking the bearer have their attack speed reduced by 50% for 3 seconds."),
+# Skill("Stormlash Reflex", "Passive", 0, 0, "10% chance on hit to fire 5 lightning bolts at different enemies."),
+# Skill("Static Retaliation", "Passive", 0, 0, "10% chance on hit to unleash electricity on 3 enemies."),
+# Skill("Echoing Wrath", "Passive", 0, 0, "10% chance on hit to stun all enemies within 3 tiles."),
+# Skill("Reverberating Pain", "Passive", 0, 0, "Reflects 10% of total received damage to enemies within 3 tiles."),
+# Skill("Phantom Reprisal", "Passive", 0, 0, "15% chance on hit to teleport to a free tile within 5 tiles and deal critical damage to adjacent enemies.")

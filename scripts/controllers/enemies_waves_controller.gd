@@ -9,9 +9,9 @@ static func start_wave(wave: int) -> void:
 	var moomoo_position = GameManager.moomoo.global_position
 
 	const possible_enemies = [
-		EnemyTypes.SKELETON_ARCHER,
-		EnemyTypes.ORC,
-		# EnemyTypes.FIRE_MAGE
+		# EnemyTypes.FROST_REVENANT,
+		EnemyTypes.WARDEN_OF_DECAY,
+		EnemyTypes.FLAME_CULTIST
 	]
 	if wave == 1:
 		for direction in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:

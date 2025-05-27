@@ -1,14 +1,29 @@
-[gd_scene load_steps=6 format=3 uid="uid://bs7blwah20esy"]
+[gd_scene load_steps=8 format=3 uid="uid://bs7blwah20esy"]
 
 [ext_resource type="PackedScene" uid="uid://dh82ovsrtutto" path="res://scenes/entity/entity_scene.tscn" id="1_wbrma"]
-[ext_resource type="Texture2D" uid="uid://b55rbh85p2cfw" path="res://assets/heros/1.png" id="2_uuy8k"]
 [ext_resource type="Script" uid="uid://q3chynnhllhm" path="res://scripts/entity/player/player.gd" id="2_ylf3p"]
 [ext_resource type="Script" uid="uid://dgo10xmu82ida" path="res://scripts/entity/player/client_inputs.gd" id="3_uyepr"]
+[ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="4_ylf3p"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_2y2wq"]
 properties/0/path = NodePath(".:player_id")
 properties/0/spawn = true
 properties/0/replication_mode = 2
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uyepr"]
+atlas = ExtResource("4_ylf3p")
+region = Rect2(256, 448, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_338cv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uyepr")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [node name="Player" instance=ExtResource("1_wbrma")]
 script = ExtResource("2_ylf3p")
@@ -21,10 +36,7 @@ replication_config = SubResource("SceneReplicationConfig_2y2wq")
 unique_name_in_owner = true
 script = ExtResource("3_uyepr")
 
-[node name="Sprite2D" parent="." index="5"]
-texture = ExtResource("2_uuy8k")
-
-[node name="HUD" parent="." index="6"]
+[node name="HUD" parent="." index="5"]
 position = Vector2(0, 11)
 
 [node name="MyHealthBar" parent="HUD" index="0"]
@@ -33,6 +45,10 @@ position = Vector2(0, -12)
 [node name="Label" parent="HUD" index="1"]
 offset_top = 6.0
 offset_bottom = 29.0
+
+[node name="AnimatedSprite2D" parent="." index="7"]
+sprite_frames = SubResource("SpriteFrames_338cv")
+animation = &"default"
 
 [node name="CollisionShape2D" parent="ProjectileZone" index="0"]
 position = Vector2(0, -25)

@@ -1,9 +1,8 @@
-[gd_scene load_steps=15 format=3 uid="uid://dh82ovsrtutto"]
+[gd_scene load_steps=18 format=3 uid="uid://dh82ovsrtutto"]
 
 [ext_resource type="Script" uid="uid://ki4w4rg4wu1r" path="res://scripts/entity/entity.gd" id="1_0bgvt"]
-[ext_resource type="Texture2D" uid="uid://1fiupmgkejum" path="res://assets/enemies/1.png" id="2_odnte"]
+[ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="3_8707b"]
 [ext_resource type="Script" uid="uid://d3sm32sl44mdm" path="res://scripts/entity/components/hud.gd" id="3_wjrb4"]
-[ext_resource type="SpriteFrames" uid="uid://ccusg0tasqe8s" path="res://assets/enemies/fire_mage.tres" id="4_odnte"]
 [ext_resource type="PackedScene" uid="uid://1myskyslafks" path="res://scenes/entity/combat_data/combat_data.tscn" id="5_wjrb4"]
 [ext_resource type="Script" uid="uid://gdkfgib81pvd" path="res://scripts/entity/components/area_hovered.gd" id="6_8707b"]
 
@@ -38,6 +37,40 @@ corner_radius_bottom_left = 1
 [sub_resource type="CircleShape2D" id="CircleShape2D_idfl5"]
 radius = 32.0
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_t1n4x"]
+atlas = ExtResource("3_8707b")
+region = Rect2(512, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gvpxe"]
+atlas = ExtResource("3_8707b")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fmw7b"]
+atlas = ExtResource("3_8707b")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_os1up"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t1n4x")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gvpxe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fmw7b")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_os1up"]
 radius = 17.0
 height = 54.0
@@ -60,12 +93,6 @@ debug_color = Color(100, 98.907, 100, 0)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_5ixpm")
 debug_color = Color(0, 0.6, 0.7, 0.052)
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-visible = false
-position = Vector2(1, -26)
-scale = Vector2(0.625, 0.625)
-texture = ExtResource("2_odnte")
 
 [node name="HUD" type="Node2D" parent="."]
 script = ExtResource("3_wjrb4")
@@ -112,7 +139,7 @@ debug_color = Color(0.98, 0, 0.408, 0)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -24)
-sprite_frames = ExtResource("4_odnte")
+sprite_frames = SubResource("SpriteFrames_os1up")
 animation = &"idle"
 
 [node name="CombatData" parent="." instance=ExtResource("5_wjrb4")]

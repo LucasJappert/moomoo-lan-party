@@ -100,6 +100,7 @@ MY TODOs:
 - ✅ Comenzar a agregar algunos sonidos de hits, criticos, etc.
 - ✅ Ocultar barra de vida en enemigos si no reciben daño
 - Setear sprites por codigo, tanto en enemigos como en heroes
+- Criticos en color amarillo
 - Comenzar con la interfaz de usuario ingame
 - Comenzar la escena para crear y unirse a salas
 - Agregar objetos mobiles sobre el terreno como plantas, bichos, nubes, etc.

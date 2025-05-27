@@ -32,7 +32,7 @@ static func _static_process(_delta):
 	if not _initialized: _initialize()
 	
 	# Change cursor dynamically depending on the hovered entity
-	if AreaHovered.hovered_entity is Enemy:
+	if ObjectHelpers.is_enemy(AreaHovered.hovered_entity):
 		set_cursor(CursorType.SWORD)
 	else:
 		set_cursor(CursorType.HAND)

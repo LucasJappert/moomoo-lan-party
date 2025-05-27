@@ -17,6 +17,7 @@ var id: int = 0
 @onready var combat_data: CombatData = $CombatData
 var mov_speed: float = 100.0
 @export var direction: Vector2 = Vector2.ZERO
+var replicated: bool = false
 
 # Move this logic to a separate module
 var target_entity: Entity

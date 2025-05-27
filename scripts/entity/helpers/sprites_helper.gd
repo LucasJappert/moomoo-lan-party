@@ -6,15 +6,31 @@ const _PLAYERS_START_REGION = Vector2(256, 448)
 const _PLAYERS_FRAME_SIZE = Vector2(128, 128)
 const _PLAYERS_SCALE = Vector2(0.75, 0.75)
 
-const _ENEMIES_START_REGION = Vector2(0, 0)
-const _ENEMIES_FRAME_SIZE = Vector2(64, 64)
-const _ENEMIES_SCALE = Vector2(1.0, 1.0)
+const _ENEMIES_SCALE = Vector2(0.85, 0.85)
 
 static func set_entity_sprites(entity: Entity) -> void:
 	if entity is Player:
 		_set_sprites(entity, _PLAYERS_START_REGION, _PLAYERS_FRAME_SIZE, _PLAYERS_SCALE)
 	elif entity is Enemy:
-		_set_sprites(entity, _ENEMIES_START_REGION, _ENEMIES_FRAME_SIZE, _ENEMIES_SCALE)
+		_set_enemy_sprites(entity)
+
+static func _set_enemy_sprites(entity: Entity) -> void:
+	var frames := SpriteFrames.new()
+	var rects = EnemyTypes.get_enemy_rect_frames(entity.enemy_type)
+
+	# Setup "idle" animation using the first frame
+	_add_animation(frames, "idle", [rects[0]])
+
+	# Setup "walk" animation with 2 frames horizontally aligned
+	var walk_regions: Array[Rect2] = []
+	for rect in rects:
+		walk_regions.append(rect)
+	_add_animation(frames, "walk", walk_regions)
+
+	# Apply the animations and set initial animation
+	entity.sprite.frames = frames
+	entity.sprite.scale = _ENEMIES_SCALE
+	entity.sprite.play("idle")
 
 static func _set_sprites(entity: Entity, start_region: Vector2, frame_size: Vector2, scale: Vector2) -> void:
 	var frames := SpriteFrames.new()

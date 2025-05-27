@@ -7,211 +7,78 @@ static func get_enemy_instance(_enemy_type: String) -> Enemy:
 	var enemy: Enemy = ENEMY_SCENE.instantiate()
 
 	enemy.set_enemy_type(_enemy_type)
+	set_combat_data_by_enemy_type(enemy)
 
 	return enemy
 
 static func set_combat_data_by_enemy_type(_enemy: Enemy):
+	if _enemy.combat_data == null: _enemy.combat_data = CombatData.new()
+	
 	match _enemy.enemy_type:
-		EnemyTypes.GOBLIN:
-			_set_goblin(_enemy)
-		EnemyTypes.SKELETON_ARCHER:
-			_set_skeleton_archer(_enemy)
-		EnemyTypes.ORC:
-			_set_orc(_enemy)
-		EnemyTypes.FIRE_MAGE:
-			_set_fire_mage(_enemy)
-		EnemyTypes.ICE_GOLEM:
-			_set_ice_golem(_enemy)
-		EnemyTypes.BAT:
-			_set_bat(_enemy)
-		EnemyTypes.DARK_PRIEST:
-			_set_dark_priest(_enemy)
-		EnemyTypes.SLIME:
-			_set_slime(_enemy)
-		EnemyTypes.GHOST:
-			_set_ghost(_enemy)
-		EnemyTypes.EXPLODER:
-			_set_exploder(_enemy)
+		EnemyTypes.FROST_REVENANT:
+			_set_frost_revenant(_enemy)
+		EnemyTypes.WARDEN_OF_DECAY:
+			_set_warden_of_decay(_enemy)
+		EnemyTypes.FLAME_CULTIST:
+			_set_flame_cultist(_enemy)
 		_:
 			print("Unknown enemy type: " + _enemy.enemy_type)
 			return false
 
 	if _enemy.combat_data.attack_range < CombatData.MIN_ATTACK_RANGE:
 		_enemy.combat_data.attack_range = CombatData.MIN_ATTACK_RANGE
-	if _enemy.combat_data.current_hp > _enemy.combat_data.max_hp:
-		_enemy.combat_data.current_hp = _enemy.combat_data.max_hp
+	_enemy.combat_data.current_hp = _enemy.combat_data.max_hp
 		
 	return true
 
 # region INTERNAL METHODS
-static func _set_goblin(_enemy: Enemy):
-	if _enemy.enemy_type != EnemyTypes.GOBLIN:
-		return false
+static func _set_frost_revenant(_enemy: Enemy):
+	if _enemy.enemy_type != EnemyTypes.FROST_REVENANT: return false
 
 	_enemy.combat_data.max_hp = 100
 	_enemy.combat_data.physical_defense = 5
 	_enemy.combat_data.magic_defense = 2
 	_enemy.combat_data.evasion = 0.05
-	_enemy.combat_data.crit_chance = 0.1
+	_enemy.combat_data.crit_chance = 0.2
 	_enemy.combat_data.crit_multiplier = 1.5
 	_enemy.combat_data.attack_speed = 1.2
 	_enemy.combat_data.attack_range = 0
 	_enemy.combat_data.attack_type = AttackTypes.MELEE
 
-	return true
-
-static func _set_skeleton_archer(_enemy: Enemy):
-	if _enemy.enemy_type != EnemyTypes.SKELETON_ARCHER:
-		return false
-
-	_enemy.combat_data.max_hp = 80
-	_enemy.combat_data.physical_defense = 2
-	_enemy.combat_data.magic_defense = 1
-	_enemy.combat_data.evasion = 0.1
-	_enemy.combat_data.crit_chance = 0.15
-	_enemy.combat_data.crit_multiplier = 2.0
-	_enemy.combat_data.attack_speed = 1.0
-	_enemy.combat_data.attack_range = 200
-	_enemy.combat_data.attack_type = AttackTypes.RANGED
-	_enemy.combat_data.projectile_type = ProjectileTypes.ARROW
-	_enemy.combat_data.skills.append(Skill.get_blessing_of_power())
+	_enemy.combat_data.skills.append_array([Skill.get_mirror_demise()])
 
 	return true
 
-static func _set_orc(_enemy: Enemy):
-	if _enemy.enemy_type != EnemyTypes.ORC:
-		return false
-
-	_enemy.combat_data.max_hp = 100
-	_enemy.combat_data.physical_defense = 5
-	_enemy.combat_data.magic_defense = 2
-	_enemy.combat_data.evasion = 0.05
-	_enemy.combat_data.crit_chance = 0.1
-	_enemy.combat_data.crit_multiplier = 1.5
-	_enemy.combat_data.attack_speed = 1.2
-	_enemy.combat_data.attack_range = 0
-	_enemy.combat_data.attack_type = AttackTypes.MELEE
-
-	return true
-
-static func _set_fire_mage(_enemy: Enemy):
-	if _enemy.enemy_type != EnemyTypes.FIRE_MAGE:
-		return false
-
-	_enemy.combat_data.max_hp = 80
-	_enemy.combat_data.physical_defense = 2
-	_enemy.combat_data.magic_defense = 1
-	_enemy.combat_data.evasion = 0.1
-	_enemy.combat_data.crit_chance = 0.15
-	_enemy.combat_data.crit_multiplier = 2.0
-	_enemy.combat_data.attack_speed = 1.0
-	_enemy.combat_data.attack_range = 200
-	_enemy.combat_data.attack_type = AttackTypes.RANGED
-	_enemy.combat_data.projectile_type = ProjectileTypes.FIREBALL
-
-	return true
-
-static func _set_ice_golem(_enemy: Enemy):
-	if _enemy.enemy_type != EnemyTypes.ICE_GOLEM:
-		return false
-
-	_enemy.combat_data.max_hp = 100
-	_enemy.combat_data.physical_defense = 5
-	_enemy.combat_data.magic_defense = 2
-	_enemy.combat_data.evasion = 0.05
-	_enemy.combat_data.crit_chance = 0.1
-	_enemy.combat_data.crit_multiplier = 1.5
-	_enemy.combat_data.attack_speed = 1.2
-	_enemy.combat_data.attack_range = 0
-	_enemy.combat_data.attack_type = AttackTypes.MELEE
-	_enemy.combat_data.projectile_type = ProjectileTypes.ICE_BOLT
-
-	return true
-
-static func _set_bat(_enemy: Enemy):
-	if _enemy.enemy_type != EnemyTypes.BAT:
-		return false
-
-	_enemy.combat_data.max_hp = 80
-	_enemy.combat_data.physical_defense = 2
-	_enemy.combat_data.magic_defense = 1
-	_enemy.combat_data.evasion = 0.1
-	_enemy.combat_data.crit_chance = 0.15
-	_enemy.combat_data.crit_multiplier = 2.0
-	_enemy.combat_data.attack_speed = 1.0
-	_enemy.combat_data.attack_range = 50
-	_enemy.combat_data.attack_type = AttackTypes.MELEE
-
-	return true
-
-static func _set_dark_priest(_enemy: Enemy):
-	if _enemy.enemy_type != EnemyTypes.DARK_PRIEST:
-		return false
-
-	_enemy.combat_data.max_hp = 100
-	_enemy.combat_data.physical_defense = 5
-	_enemy.combat_data.magic_defense = 2
-	_enemy.combat_data.evasion = 0.05
-	_enemy.combat_data.crit_chance = 0.1
-	_enemy.combat_data.crit_multiplier = 1.5
-	_enemy.combat_data.attack_speed = 1.2
-	_enemy.combat_data.attack_range = 260
-	_enemy.combat_data.attack_type = AttackTypes.MAGIC
-	_enemy.combat_data.projectile_type = ProjectileTypes.DARK_BOLT
-
-	return true
-	
-static func _set_slime(_enemy: Enemy):
-	if _enemy.enemy_type != EnemyTypes.SLIME:
-		return false
+static func _set_warden_of_decay(_enemy: Enemy):
+	if _enemy.enemy_type != EnemyTypes.WARDEN_OF_DECAY: return false
 
 	_enemy.combat_data.max_hp = 120
-	_enemy.combat_data.physical_defense = 4
+	_enemy.combat_data.physical_defense = 8
 	_enemy.combat_data.magic_defense = 4
 	_enemy.combat_data.evasion = 0.1
-	_enemy.combat_data.crit_chance = 0.05
+	_enemy.combat_data.crit_chance = 0.1
 	_enemy.combat_data.crit_multiplier = 1.5
-	_enemy.combat_data.attack_speed = 1.0
+	_enemy.combat_data.attack_speed = 1
 	_enemy.combat_data.attack_range = 0
 	_enemy.combat_data.attack_type = AttackTypes.MELEE
 
-	return true
-
-static func _set_ghost(_enemy: Enemy):
-	if _enemy.enemy_type != EnemyTypes.GHOST:
-		return false
-
-	_enemy.combat_data.max_hp = 80
-	_enemy.combat_data.physical_defense = 0
-	_enemy.combat_data.magic_defense = 6
-	_enemy.combat_data.evasion = 0.25
-	_enemy.combat_data.crit_chance = 0.15
-	_enemy.combat_data.crit_multiplier = 2.0
-	_enemy.combat_data.attack_speed = 1.1
-	_enemy.combat_data.attack_range = 280
-	_enemy.combat_data.attack_type = AttackTypes.MAGIC
-	_enemy.combat_data.projectile_type = ProjectileTypes.DARK_BOLT
+	_enemy.combat_data.skills.append_array([Skill.get_mirror_demise()])
 
 	return true
 
-static func _set_exploder(_enemy: Enemy):
-	if _enemy.enemy_type != EnemyTypes.EXPLODER:
-		return false
+static func _set_flame_cultist(_enemy: Enemy):
+	if _enemy.enemy_type != EnemyTypes.FLAME_CULTIST: return false
 
-	_enemy.combat_data.max_hp = 50
-	_enemy.combat_data.physical_defense = 1
-	_enemy.combat_data.magic_defense = 1
-	_enemy.combat_data.evasion = 0.0
-	_enemy.combat_data.crit_chance = 0.0
-	_enemy.combat_data.crit_multiplier = 1.0
-	_enemy.combat_data.attack_speed = 0.5
+	_enemy.combat_data.max_hp = 1000
+	_enemy.combat_data.physical_defense = 5
+	_enemy.combat_data.magic_defense = 2
+	_enemy.combat_data.evasion = 0.05
+	_enemy.combat_data.crit_chance = 0.2
+	_enemy.combat_data.crit_multiplier = 1.5
+	_enemy.combat_data.attack_speed = 1.2
 	_enemy.combat_data.attack_range = 0
 	_enemy.combat_data.attack_type = AttackTypes.MELEE
 
-	return true
+	_enemy.combat_data.skills.append_array([Skill.get_mirror_demise()])
+
 # endregion
-
-# static func _load_textures():
-# 	enemy_textures = {}
-# 	for type in EnemyTypes.values():
-# 		enemy_textures[type] = load("res://assets/enemies/" + type.to_lower() + ".png")
