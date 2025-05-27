@@ -37,7 +37,7 @@ var _boss_level: int = 0
 func rpc_server_message(data: Dictionary):
 	var sm = ServerMessage.get_instance()
 	sm.from_dict(data)
-	print("Server message: ", sm.message)
+	hud.show_popup(sm.message, Color(sm.color.x, sm.color.y, sm.color.z))
 
 @rpc("authority", "call_local")
 func rpc_set_state(state: EntityState.StateEnum) -> void:

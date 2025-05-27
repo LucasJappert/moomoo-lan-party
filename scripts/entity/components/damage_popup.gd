@@ -5,8 +5,8 @@ extends Control
 @onready var label = $Label
 @onready var anim = $AnimationPlayer
 
-func show_damage(amount: int, color: Color = Color.RED):
-	label.text = str(amount)
+func show_damage(text: String, color: Color = Color.RED):
+	label.text = text
 	label.modulate = color
 	anim.play("show")
 

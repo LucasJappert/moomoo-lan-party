@@ -6,8 +6,8 @@ const MIN_ATTACK_RANGE: int = int(MapManager.TILE_SIZE.x)
 
 @export var max_hp: int = 100
 @export var current_hp: int = 100
-@export var physical_defense: int = 0
-@export var magic_defense: int = 0
+@export var physical_defense_percent: float = 0
+@export var magic_defense_percent: float = 0
 @export var evasion: float = 0.0
 @export var crit_chance: float = 0.0
 @export var crit_multiplier: float = 1.0
@@ -38,20 +38,20 @@ func set_my_owner(_owner: Entity) -> void:
 func _server_calculate_physical_damage(_target: Entity) -> void:
 	if _target == null: return
 
-	var extra_power = physical_attack_power * get_extra_physical_attack_power()
+	var extra_power = physical_attack_power * _get_extra_physical_attack_power()
 	var critical_damage = 0
 	if GlobalsEntityHelpers.roll_crit(crit_chance):
 		critical_damage = (physical_attack_power + extra_power) * crit_multiplier
 	var total_damage = physical_attack_power + extra_power + critical_damage
 	# print("Normal power: ", physical_attack_power, " Extra power: ", extra_power, " Total total_damage: ", total_damage)
 
-	var damage_info = DamageInfo.get_instance()
-	damage_info.total_damage = total_damage
-	damage_info.critical = critical_damage
-	damage_info.projectile_type = projectile_type
-	damage_info.damage_type = DamageInfo.DamageType.PHYSICAL
+	var _di = DamageInfo.get_instance()
+	_di.total_damage = total_damage
+	_di.critical = critical_damage
+	_di.projectile_type = projectile_type
+	_di.damage_type = DamageInfo.DamageType.PHYSICAL
 
-	_target.combat_data._server_receive_physical_damage(damage_info)
+	_target.combat_data._server_receive_physical_damage(_di)
 
 func _server_receive_physical_damage(_di: DamageInfo) -> void:
 	# verify evasion
@@ -62,14 +62,16 @@ func _server_receive_physical_damage(_di: DamageInfo) -> void:
 		my_owner.rpc("rpc_server_message", sm.to_dict())
 		return
 
-
-	var reduced_damage = _di.total_damage * get_extra_physical_defense()
+	var damage_before_defense = _di.total_damage
+	var reduced_damage = get_total_physical_defense_percent() * _di.total_damage
+	_di.critical = _di.critical - int(get_total_physical_defense_percent() * _di.critical)
 	var total_damage: int = _di.total_damage - reduced_damage
 	if total_damage < 0: total_damage = 0
 
-	# print("Received damage: ", _di.total_damage, " reduced: ", reduced_damage, " total: ", total_damage)
-
 	_di.total_damage = total_damage
+
+	print("Damage before defense: ", damage_before_defense, " reduced: ", reduced_damage, " total: ", total_damage, " critical: ", _di.critical)
+
 	my_owner.rpc("rpc_receive_damage", _di.to_dict())
 
 	current_hp -= _di.total_damage
@@ -126,23 +128,30 @@ func _global_receive_damage(_di: DamageInfo):
 	var melee_attack = _di.projectile_type == Projectile.TYPES.NONE
 	var arrow_attack = _di.projectile_type == Projectile.TYPES.ARROW
 	if _di.critical > 0:
+		my_owner.hud.show_damage_popup(str(-_di.critical), Color(1, 1, 0))
+		my_owner.hud.show_damage_popup(str(- (_di.total_damage - _di.critical)), Color(1, 0, 0))
 		if arrow_attack: SoundManager.play_critical_arrow_shot()
 		if melee_attack: SoundManager.play_critical_melee_hit()
 	if _di.critical == 0:
 		if melee_attack: SoundManager.play_melee_hit()
-
-	my_owner.hud.show_damage_popup(-_di.total_damage)
+	
 	last_damage_received_time = Time.get_ticks_msec()
 	pass
 
 # region Skills calculation
-func get_extra_physical_defense() -> float:
+func get_total_physical_defense_percent() -> float:
+	return physical_defense_percent + _get_extra_physical_defense()
+
+func get_total_physical_attack_power() -> float:
+	return physical_attack_power + _get_extra_physical_attack_power()
+
+func _get_extra_physical_defense() -> float:
 	var total: float = 0
 	for skill in skills:
 		total += skill.extra_physical_defense_percent
 	return total
 
-func get_extra_physical_attack_power() -> float:
+func _get_extra_physical_attack_power() -> float:
 	var total: float = 0
 	for skill in skills:
 		total += skill.extra_physical_attack_power_percent

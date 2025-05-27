@@ -8,7 +8,7 @@ const BAR_SIZE = 40.0
 @onready var damage_popup_container = $DamagePopupContainer
 var my_owner: Entity
 var _is_moomoo = false
-const SHOW_DAMAGES = false
+const SHOW_DAMAGES = true
 
 
 func _post_ready(_entity: Entity):
@@ -45,10 +45,14 @@ func _try_update_label():
 	# _label.text += " - " + str(MapManager.world_to_cell(my_owner.global_position))
 	pass
 
-func show_damage_popup(amount: int, color: Color = Color.RED):
+func show_damage_popup(text: String, color: Color = Color.RED):
 	if not SHOW_DAMAGES: return
-	
+	show_popup(text, color)
+
+func show_popup(text: String, color: Color = Color.RED):
 	var popup = DamagePopupPool.get_popup()
+	if not popup: return
+	
 	damage_popup_container.add_child(popup)
 
 	# Posición aleatoria leve (ruido)
@@ -56,6 +60,4 @@ func show_damage_popup(amount: int, color: Color = Color.RED):
 	var offset := Vector2(0, randi_range(-_aux, _aux))
 	popup.position = Vector2(0, -MapManager.TILE_SIZE.x * 2) + offset
 
-	if amount < 0: color = Color.RED
-	if amount > 0: color = Color.GREEN
-	popup.show_damage(amount, color)
+	popup.show_damage(text, color)
