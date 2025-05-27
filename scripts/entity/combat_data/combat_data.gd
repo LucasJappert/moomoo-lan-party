@@ -71,7 +71,7 @@ func _server_receive_physical_damage(_di: DamageInfo) -> void:
 
 # region TRY PHISICAL ATTACK
 func try_physical_attack(_delta: float):
-	if not multiplayer.is_server(): return
+	if not my_owner.multiplayer.is_server(): return
 
 	if my_owner.velocity != Vector2.ZERO: return
 

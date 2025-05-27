@@ -50,8 +50,6 @@ static func _get_enemies_start_vector() -> Dictionary[String, Vector2i]:
 			var _key = y * enemies_by_row + x
 			enemies_start_vector[get_enemy_keys()[_key]] = Vector2i(x * frame_size * frames_by_enemy, y * frame_size)
 
-	print(enemies_start_vector)
-	print(enemies_start_vector.size())
 	return enemies_start_vector
 
 static func get_enemy_rect_frames(enemy_key: String) -> Array[Rect2]:

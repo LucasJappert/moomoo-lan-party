@@ -2,6 +2,8 @@ class_name Entity
 
 extends CharacterBody2D
 
+# const COMBAT_DATA_SCENE = preload("res://scenes/entity/combat_data/combat_data.tscn")
+
 @onready var hud = $HUD
 @onready var collision_shape = $CollisionShape2D
 @onready var area_attack = $AreaAttack
@@ -14,7 +16,7 @@ extends CharacterBody2D
 
 var id: int = 0
 
-@onready var combat_data: CombatData = $CombatData
+var combat_data: CombatData
 var mov_speed: float = 100.0
 @export var direction: Vector2 = Vector2.ZERO
 var replicated: bool = false
@@ -28,6 +30,7 @@ var target_pos = null
 var movement_helper = MovementEntityHelper.new()
 
 @export var current_state: EntityState.StateEnum = EntityState.StateEnum.IDLE
+var _boss_level: int = 0
 
 
 @rpc("authority", "call_local")
@@ -48,6 +51,9 @@ func rpc_die():
 	print("⚔️ Entity died")
 	_global_die()
 
+func _init() -> void:
+	combat_data = load("res://scenes/entity/combat_data/combat_data.tscn").instantiate()
+
 func _ready():
 	collision_layer = 1
 	collision_mask = 1
@@ -60,6 +66,9 @@ func _ready():
 func _post_ready():
 	hud._post_ready(self)
 	
+
+func set_boss_level(_level: int) -> void:
+	_boss_level = _level
 
 func _set_area_attack_shape_radius() -> void:
 	area_attack_shape.shape.radius = combat_data.attack_range

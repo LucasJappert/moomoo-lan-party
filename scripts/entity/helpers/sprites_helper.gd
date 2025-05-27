@@ -13,6 +13,12 @@ static func set_entity_sprites(entity: Entity) -> void:
 		_set_sprites(entity, _PLAYERS_START_REGION, _PLAYERS_FRAME_SIZE, _PLAYERS_SCALE)
 	elif entity is Enemy:
 		_set_enemy_sprites(entity)
+	
+	if entity._boss_level > 0:
+		var scale_factor = 1.3
+		entity.sprite.scale *= scale_factor
+		entity.sprite.position.y *= scale_factor
+		entity.hud.my_health_bar.position.y -= 10
 
 static func _set_enemy_sprites(entity: Entity) -> void:
 	var frames := SpriteFrames.new()

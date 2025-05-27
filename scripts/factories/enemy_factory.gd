@@ -7,6 +7,7 @@ static func get_enemy_instance(_enemy_type: String) -> Enemy:
 	var enemy: Enemy = ENEMY_SCENE.instantiate()
 
 	enemy.set_enemy_type(_enemy_type)
+
 	set_combat_data_by_enemy_type(enemy)
 
 	return enemy
@@ -69,7 +70,7 @@ static func _set_warden_of_decay(_enemy: Enemy):
 static func _set_flame_cultist(_enemy: Enemy):
 	if _enemy.enemy_type != EnemyTypes.FLAME_CULTIST: return false
 
-	_enemy.combat_data.max_hp = 1000
+	_enemy.combat_data.max_hp = 100
 	_enemy.combat_data.physical_defense = 5
 	_enemy.combat_data.magic_defense = 2
 	_enemy.combat_data.evasion = 0.05

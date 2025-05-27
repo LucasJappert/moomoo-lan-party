@@ -1,0 +1,117 @@
+[
+	{
+		"name": "Chilling Grasp",
+		"description_es": "Reduce la velocidad de movimiento y la velocidad de ataque del objetivo en un 30%.",
+		"description_en": "Reduces the target's movement speed and attack speed by 30%."
+	},
+	{
+		"name": "Evasive Dash",
+		"description_es": "Tiene un 20% de probabilidad de esquivar cualquier ataque.",
+		"description_en": "Has a 20% chance to dodge any attack."
+	},
+	{
+		"name": "Energy Absorption",
+		"description_es": "Crea un escudo que absorbe el 25% del daño recibido. Luego libera ese daño en área.",
+		"description_en": "Creates a shield that absorbs 25% of incoming damage. Then releases it in an area."
+	},
+	{
+		"name": "Arcane Shield",
+		"description_es": "Reduce el daño mágico recibido en un 40% durante 5 segundos.",
+		"description_en": "Reduces magic damage taken by 40% for 5 seconds."
+	},
+	{
+		"name": "Hellfire Storm",
+		"description_es": "Invoca una tormenta de fuego en área durante 3 segundos.",
+		"description_en": "Summons a firestorm in an area for 3 seconds."
+	},
+	{
+		"name": "Stunning Blow",
+		"description_es": "Cada 4 ataques aturde al enemigo por 1.5 segundos.",
+		"description_en": "Every 4 attacks stuns the enemy for 1.5 seconds."
+	},
+	{
+		"name": "Bone Cage",
+		"description_es": "Encierra a un enemigo en una prisión ósea durante 2 segundos.",
+		"description_en": "Traps an enemy in a bone prison for 2 seconds."
+	},
+	{
+		"name": "Lifesteal Aura",
+		"description_es": "Roba el 20% del daño causado como vida.",
+		"description_en": "Steals 20% of dealt damage as life."
+	},
+	{
+		"name": "Toxic Spores",
+		"description_es": "Libera esporas venenosas al ser golpeado, envenenando enemigos cercanos.",
+		"description_en": "Releases poisonous spores when hit, poisoning nearby enemies."
+	},
+	{
+		"name": "Multi Shot",
+		"description_es": "Cada 3 ataques, dispara 3 proyectiles en abanico.",
+		"description_en": "Every 3 attacks, fires 3 projectiles in a fan shape."
+	},
+	{
+		"name": "Piercing Arrow",
+		"description_es": "Ignora el 50% de la defensa física del enemigo.",
+		"description_en": "Ignores 50% of the enemy's physical defense."
+	},
+	{
+		"name": "Burning Weapon",
+		"description_es": "Sus ataques aplican una quemadura que inflige daño durante 3 segundos.",
+		"description_en": "Applies a burn that deals damage over 3 seconds."
+	},
+	{
+		"name": "Void Step",
+		"description_es": "Se vuelve intangible durante 1 segundo, evitando todo daño físico.",
+		"description_en": "Becomes intangible for 1 second, avoiding all physical damage."
+	},
+	{
+		"name": "Mana Scorcher",
+		"description_es": "Quema el 50% del maná del objetivo, causando daño físico igual al 25% del maná quemado.",
+		"description_en": "Burns 50% of the target’s mana, dealing physical damage equal to 25% of the burned mana."
+	},
+	{
+		"name": "Flame Burst",
+		"description_es": "Explosión de fuego que causa daño en área al impactar.",
+		"description_en": "A fiery explosion that deals area damage on impact."
+	},
+	{
+		"name": "Shadow Step",
+		"description_es": "Se teletransporta detrás del objetivo con un golpe crítico garantizado.",
+		"description_en": "Teleports behind the target with a guaranteed critical hit."
+	},
+	{
+		"name": "Frost Nova",
+		"description_es": "Ralentiza a todos los enemigos cercanos durante 3 segundos.",
+		"description_en": "Slows all nearby enemies for 3 seconds."
+	},
+	{
+		"name": "Rage Boost",
+		"description_es": "Aumenta su ataque físico un 30% cuando cae por debajo del 50% de vida.",
+		"description_en": "Increases physical attack by 30% when falling below 50% HP."
+	},
+	{
+		"name": "Final Explosion",
+		"description_es": "Al morir, explota causando daño mágico en área.",
+		"description_en": "Explodes upon death, dealing magical area damage."
+	},
+	{
+		"name": "Kamikaze Charge",
+		"description_es": "Corre hacia el objetivo y se autodestruye causando daño en área.",
+		"description_en": "Charges toward the target and self-destructs, dealing area damage."
+	},
+	{
+		"name": "Necrotic Pulse",
+		"description_es": "Emite una onda oscura que reduce el ataque del enemigo.",
+		"description_en": "Emits a dark pulse that reduces enemy attack."
+	},
+	{
+		"name": "Mirror Demise",
+		"description_es": "Al morir, se divide en 4 copias con la mitad de la vida original.",
+		"description_en": "Upon death, splits into 4 copies with half original HP."
+	},
+	{
+		"name": "Frozen Touch",
+		"description_es": "20% de probabilidad de congelar al objetivo por 1 segundo.",
+		"description_en": "20% chance to freeze the target for 1 second."
+	}
+]

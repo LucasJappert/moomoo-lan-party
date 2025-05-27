@@ -7,7 +7,7 @@ func set_my_owner(_entity: Entity):
 func _server_move_along_path(_delta: float):
 	if not my_owner.multiplayer.is_server(): return
 
-	if GlobalsEntityHelpers.is_target_in_attack_area(my_owner, my_owner.target_entity):
+	if my_owner is Enemy and GlobalsEntityHelpers.is_target_in_attack_area(my_owner, my_owner.target_entity):
 		my_owner.current_path = []
 
 	if my_owner.target_pos == null:

@@ -9,7 +9,7 @@ var timer_500ms: Timer
 func _ready():
 	super._ready()
 
-	EnemyFactory.set_combat_data_by_enemy_type(self)
+	# EnemyFactory.set_combat_data_by_enemy_type(self)
 
 	# We need to update the radius of the attack area node here as it enters the scene
 	_set_area_attack_shape_radius()

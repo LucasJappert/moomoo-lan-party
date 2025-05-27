@@ -99,7 +99,11 @@ MY TODOs:
 - ✅ Agregar plantas sobre el terreno, como cactus, utilizando un unico atlas.
 - ✅ Comenzar a agregar algunos sonidos de hits, criticos, etc.
 - ✅ Ocultar barra de vida en enemigos si no reciben daño
-- Setear sprites por codigo, tanto en enemigos como en heroes
+- ✅ Setear sprites por codigo en enemigos
+- Aplicar skills únicamente en enemigos bosses (4 bosses por oleada)
+- Implementar skills en enemigos (útiles luego para héroes también)
+- Implementar nuevos tipos de proyectiles
+- Setear sprites por codigo en heroes
 - Criticos en color amarillo
 - Comenzar con la interfaz de usuario ingame
 - Comenzar la escena para crear y unirse a salas
