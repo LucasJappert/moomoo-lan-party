@@ -34,6 +34,12 @@ var _boss_level: int = 0
 
 
 @rpc("authority", "call_local")
+func rpc_server_message(data: Dictionary):
+	var sm = ServerMessage.get_instance()
+	sm.from_dict(data)
+	print("Server message: ", sm.message)
+
+@rpc("authority", "call_local")
 func rpc_set_state(state: EntityState.StateEnum) -> void:
 	current_state = state
 	
@@ -42,7 +48,7 @@ func rpc_set_state(state: EntityState.StateEnum) -> void:
 
 @rpc("authority", "call_local")
 func rpc_receive_damage(data: Dictionary):
-	var di = DamageInfo.new()
+	var di = DamageInfo.get_instance()
 	di.from_dict(data)
 	combat_data._global_receive_damage(di)
 

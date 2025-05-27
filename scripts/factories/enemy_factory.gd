@@ -39,7 +39,7 @@ static func _set_frost_revenant(_enemy: Enemy):
 	_enemy.combat_data.max_hp = 100
 	_enemy.combat_data.physical_defense = 5
 	_enemy.combat_data.magic_defense = 2
-	_enemy.combat_data.evasion = 0.05
+	_enemy.combat_data.evasion = 0.15
 	_enemy.combat_data.crit_chance = 0.2
 	_enemy.combat_data.crit_multiplier = 1.5
 	_enemy.combat_data.attack_speed = 1.2
@@ -73,7 +73,7 @@ static func _set_flame_cultist(_enemy: Enemy):
 	_enemy.combat_data.max_hp = 100
 	_enemy.combat_data.physical_defense = 5
 	_enemy.combat_data.magic_defense = 2
-	_enemy.combat_data.evasion = 0.05
+	_enemy.combat_data.evasion = 0
 	_enemy.combat_data.crit_chance = 0.2
 	_enemy.combat_data.crit_multiplier = 1.5
 	_enemy.combat_data.attack_speed = 0.6

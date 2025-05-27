@@ -45,14 +45,24 @@ func _server_calculate_physical_damage(_target: Entity) -> void:
 	var total_damage = physical_attack_power + extra_power + critical_damage
 	# print("Normal power: ", physical_attack_power, " Extra power: ", extra_power, " Total total_damage: ", total_damage)
 
-	var damage_info = DamageInfo.new()
+	var damage_info = DamageInfo.get_instance()
 	damage_info.total_damage = total_damage
 	damage_info.critical = critical_damage
 	damage_info.projectile_type = projectile_type
+	damage_info.damage_type = DamageInfo.DamageType.PHYSICAL
 
 	_target.combat_data._server_receive_physical_damage(damage_info)
 
 func _server_receive_physical_damage(_di: DamageInfo) -> void:
+	# verify evasion
+	if GlobalsEntityHelpers.roll_evasion(evasion):
+		var sm = ServerMessage.get_instance()
+		sm.message = "Dodge"
+		sm.color = Vector3(0, 0.5, 1)
+		my_owner.rpc("rpc_server_message", sm.to_dict())
+		return
+
+
 	var reduced_damage = _di.total_damage * get_extra_physical_defense()
 	var total_damage: int = _di.total_damage - reduced_damage
 	if total_damage < 0: total_damage = 0

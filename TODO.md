@@ -102,6 +102,9 @@ MY TODOs:
 - ✅ Setear sprites por codigo en enemigos
 - ✅ Aplicar skills únicamente en enemigos bosses (4 bosses por oleada)
 - ✅ Implementar nuevos tipos de proyectiles
+- Implementar animaciones varias como congelamiento, sangrado, sobre entidades
+- Implementar animaciones sobre tiles, como fuego, sanacion, congelamiento.
+- Configurar daños, hp, defensas, etc según el número de wave
 - Implementar skills en enemigos (útiles luego para héroes también)
 - Setear sprites por codigo en heroes
 - Criticos en color amarillo
