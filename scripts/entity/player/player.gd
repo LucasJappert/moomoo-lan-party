@@ -20,7 +20,7 @@ func _ready():
 	combat_data.attack_range = 300
 	combat_data.attack_speed = 5.5
 	combat_data.crit_chance = 0.5
-	combat_data.projectile_type = ProjectileTypes.ARROW
+	combat_data.projectile_type = Projectile.TYPES.ARROW
 	combat_data.skills.append(Skill.get_shielded_core())
 
 	# We need to update the radius of the attack area node here as it enters the scene

@@ -18,7 +18,7 @@ const MIN_ATTACK_RANGE: int = int(MapManager.TILE_SIZE.x)
 @export var physical_attack_power: int = 5
 @export var magic_attack_power: int = 0
 @export var attack_type := AttackTypes.MELEE
-@export var projectile_type: String = ProjectileTypes.NONE
+@export var projectile_type: String = Projectile.TYPES.NONE
 var skills: Array[Skill] = []
 
 
@@ -113,8 +113,8 @@ func can_physical_attack() -> bool:
 # endregion
 
 func _global_receive_damage(_di: DamageInfo):
-	var melee_attack = _di.projectile_type == ProjectileTypes.NONE
-	var arrow_attack = _di.projectile_type == ProjectileTypes.ARROW
+	var melee_attack = _di.projectile_type == Projectile.TYPES.NONE
+	var arrow_attack = _di.projectile_type == Projectile.TYPES.ARROW
 	if _di.critical > 0:
 		if arrow_attack: SoundManager.play_critical_arrow_shot()
 		if melee_attack: SoundManager.play_critical_melee_hit()

@@ -76,9 +76,10 @@ static func _set_flame_cultist(_enemy: Enemy):
 	_enemy.combat_data.evasion = 0.05
 	_enemy.combat_data.crit_chance = 0.2
 	_enemy.combat_data.crit_multiplier = 1.5
-	_enemy.combat_data.attack_speed = 1.2
-	_enemy.combat_data.attack_range = 0
-	_enemy.combat_data.attack_type = AttackTypes.MELEE
+	_enemy.combat_data.attack_speed = 0.6
+	_enemy.combat_data.attack_range = 200
+	_enemy.combat_data.attack_type = AttackTypes.RANGED
+	_enemy.combat_data.projectile_type = Projectile.TYPES.FIREBALL
 
 	_enemy.combat_data.skills.append_array([Skill.get_mirror_demise()])
 

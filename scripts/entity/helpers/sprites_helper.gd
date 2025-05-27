@@ -58,6 +58,7 @@ static func _set_sprites(entity: Entity, start_region: Vector2, frame_size: Vect
 
 static func _add_animation(frames: SpriteFrames, name: String, regions: Array[Rect2]) -> void:
 	# Create a new animation and configure its properties
+	frames.remove_animation(name)
 	frames.add_animation(name)
 	frames.set_animation_speed(name, 10)
 	frames.set_animation_loop(name, true)

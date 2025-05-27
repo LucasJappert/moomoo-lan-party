@@ -62,10 +62,10 @@ static func _get_available_player() -> AudioStreamPlayer:
 			return player
 	return _players[0]
 
-static func play_arrow_shot(volume: float = -15.0):
-	_play_sfx("res://sounds/hits/normal_arrow.wav", volume, 1) # ← Max 3 at the same time
+static func play_projectile_hit(type: String, volume: float = -15.0):
+	_play_sfx("res://sounds/hits/" + type + ".wav", volume, 1)
 
-static func play_critical_arrow_shot(volume: float = -5.0):
+static func play_critical_arrow_shot(volume: float = -10.0):
 	_play_sfx("res://sounds/hits/critic_arrow.wav", volume, 1) # ← Max 3 at the same time
 
 static func play_melee_hit(volume: float = -15.0):

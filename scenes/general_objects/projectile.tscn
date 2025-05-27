@@ -22,7 +22,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_5icix")
 }],
 "loop": true,
-"name": &"default",
+"name": &"test",
 "speed": 5.0
 }]
 
@@ -36,3 +36,4 @@ replication_config = SubResource("SceneReplicationConfig_5icix")
 texture_filter = 3
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_6oe5n")
+animation = &"test"
