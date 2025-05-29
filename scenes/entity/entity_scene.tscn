@@ -1,10 +1,11 @@
-[gd_scene load_steps=18 format=3 uid="uid://dh82ovsrtutto"]
+[gd_scene load_steps=19 format=3 uid="uid://dh82ovsrtutto"]
 
 [ext_resource type="Script" uid="uid://ki4w4rg4wu1r" path="res://scripts/entity/entity.gd" id="1_0bgvt"]
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="3_8707b"]
 [ext_resource type="Script" uid="uid://d3sm32sl44mdm" path="res://scripts/entity/components/hud.gd" id="3_wjrb4"]
 [ext_resource type="PackedScene" uid="uid://1myskyslafks" path="res://scenes/entity/combat_data/combat_data.tscn" id="5_wjrb4"]
 [ext_resource type="Script" uid="uid://gdkfgib81pvd" path="res://scripts/entity/components/area_hovered.gd" id="6_8707b"]
+[ext_resource type="Script" uid="uid://db742u3k35mx7" path="res://scripts/entity/components/front_animations_node.gd" id="6_os1up"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_odnte"]
 properties/0/path = NodePath(".:position")
@@ -161,3 +162,6 @@ shape = SubResource("CircleShape2D_8707b")
 debug_color = Color(1, 1, 1, 0.054)
 
 [node name="CombatData" parent="." instance=ExtResource("5_wjrb4")]
+
+[node name="FrontAnimationsNode" type="Node2D" parent="."]
+script = ExtResource("6_os1up")

@@ -5,7 +5,6 @@ extends CombatAttributes
 const MIN_ATTACK_RANGE: int = int(MapManager.TILE_SIZE.x)
 
 @onready var combat_effect_node = $CombatEffectNode
-var combat_effects: Array[CombatEffect] = []
 
 @export var max_hp: int = 100
 @export var current_hp: int = 100
@@ -13,7 +12,6 @@ var combat_effects: Array[CombatEffect] = []
 @export var projectile_type: String = Projectile.TYPES.NONE
 var skills: Array[Skill] = []
 
-# var _active_effects: Array[CombatEffect] = []
 
 var last_physical_hit_time: int = 0 # In milliseconds
 var nearest_enemy_focused: Entity
@@ -22,13 +20,11 @@ var last_damage_received_time: int = 0 # In milliseconds
 var my_owner: Entity
 
 func _ready() -> void:
+	initialize_default_values()
 	if multiplayer.is_server() == false:
 		set_process(false)
 
-func _process(_delta: float) -> void:
-	for effect in combat_effects.duplicate(): # Duplicate is to avoid concurrency issues
-		if not effect.is_active: remove_effect(effect)
-
+	
 func set_my_owner(_owner: Entity) -> void:
 	my_owner = _owner
 	pass
@@ -36,26 +32,22 @@ func set_my_owner(_owner: Entity) -> void:
 func add_effect(effect: CombatEffect) -> void:
 	# Should be called only on the server
 	combat_effect_node.add_child(effect, true)
-	combat_effects.append(effect)
-func remove_effect(effect: CombatEffect) -> void:
-	combat_effects.erase(effect)
-	if not multiplayer.is_server(): return
 
-	effect.queue_free()
 func get_effects() -> Array[CombatEffect]:
-	return combat_effects
-func get_effects_size() -> int:
-	return combat_effect_node.get_child_count()
+	var effects: Array[CombatEffect] = []
+	for child in combat_effect_node.get_children():
+		if child is CombatEffect:
+			effects.append(child as CombatEffect)
+	return effects
 
 func _server_calculate_physical_damage(_target: Entity) -> void:
 	if my_owner.multiplayer.is_server() == false: return
 	if _target == null: return
 
-	var extra_power = physical_attack_power * _get_extra_physical_attack_power()
 	var critical_damage = 0
 	if GlobalsEntityHelpers.roll_crit(crit_chance):
-		critical_damage = (physical_attack_power + extra_power) * crit_multiplier
-	var total_damage = physical_attack_power + extra_power + critical_damage
+		critical_damage = get_total_physical_attack_power() * crit_multiplier
+	var total_damage = get_total_physical_attack_power() + critical_damage
 	# print("Normal power: ", physical_attack_power, " Extra power: ", extra_power, " Total total_damage: ", total_damage)
 
 	var _di = DamageInfo.get_instance()
@@ -95,6 +87,36 @@ func _server_receive_physical_damage(_di: DamageInfo, _attacker: Entity) -> void
 		current_hp = 0
 		my_owner.rpc("rpc_die")
 
+# region SETTERs
+# endregion
+
+# region GETTERs
+func get_skill(skill_name: String) -> Skill:
+	for skill in skills:
+		if skill.name == skill_name: return skill
+	return null
+
+func get_total_attack_speed() -> float:
+	var total = attack_speed + _get_extra_attack_speed()
+	var extra_percent = _get_extra_attack_speed_percent()
+	total = total * (1 + extra_percent)
+	if total < 0: total = 0
+	return total
+
+func get_total_move_speed() -> float:
+	var total = move_speed + _get_extra_move_speed()
+	var extra_percent = _get_extra_move_speed_percent()
+	total = total * (1 + extra_percent)
+	if total < 0: total = 0
+	return total
+
+func get_total_physical_attack_power() -> float:
+	var total = physical_attack_power + _get_extra_physical_attack_power()
+	var extra_percent = _get_extra_physical_attack_power_percent()
+	total = total * (1 + extra_percent)
+	if total < 0: total = 0
+	return total
+# endregion
 
 # region TRY PHISICAL ATTACK
 func try_physical_attack(_delta: float):
@@ -133,10 +155,9 @@ func _execute_physical_attack():
 			_server_calculate_physical_damage(my_owner.target_entity)
 	
 func can_physical_attack() -> bool:
-	if my_owner.velocity != Vector2.ZERO:
-		return false
+	if my_owner.velocity != Vector2.ZERO: return false
 	var now = Time.get_ticks_msec()
-	return now - last_physical_hit_time >= (1000.0 / attack_speed)
+	return now - last_physical_hit_time >= (1000.0 / get_total_attack_speed())
 # endregion
 
 func _global_receive_damage(_di: DamageInfo):
@@ -155,29 +176,90 @@ func _global_receive_damage(_di: DamageInfo):
 
 # region Skills calculation
 func get_total_physical_defense_percent() -> float:
-	return physical_defense_percent + _get_extra_physical_defense()
+	return physical_defense_percent + _get_extra_physical_defense_percent()
 
-func get_total_physical_attack_power() -> float:
-	return physical_attack_power + _get_extra_physical_attack_power()
 
 func get_total_evasion() -> float:
 	return evasion + _get_extra_evasion()
 
-func _get_extra_physical_defense() -> float:
+func _get_extra_physical_defense_percent() -> float:
 	var total: float = 0
-	for skill in skills:
-		total += skill.extra_physical_defense_percent
+	for skill in skills: total += skill.physical_defense_percent
+	for effect in get_effects(): total += effect.physical_defense_percent
 	return total
 
 func _get_extra_physical_attack_power() -> float:
 	var total: float = 0
-	for skill in skills:
-		total += skill.extra_physical_attack_power_percent
+	for skill in skills: total += skill.physical_attack_power
+	for effect in get_effects(): total += effect.physical_attack_power
+	return total
+func _get_extra_physical_attack_power_percent() -> float:
+	var total: float = 0
+	for skill in skills: total += skill.physical_attack_power_percent
+	for effect in get_effects(): total += effect.physical_attack_power_percent
 	return total
 
 func _get_extra_evasion() -> float:
 	var total: float = 0
-	for skill in skills:
-		total += skill.extra_evasion
+	for skill in skills: total += skill.evasion
+	for effect in get_effects(): total += effect.evasion
 	return total
+
+func _get_extra_attack_speed() -> float:
+	var total: float = 0
+	for skill in skills: total += skill.attack_speed
+	for effect in get_effects(): total += effect.attack_speed
+	return total
+
+func _get_extra_attack_speed_percent() -> float:
+	var total: float = 0
+	for skill in skills: total += skill.attack_speed_percent
+	for effect in get_effects(): total += effect.attack_speed_percent
+	return total
+
+func _get_extra_move_speed() -> float:
+	var total: float = 0
+	for skill in skills: total += skill.move_speed
+	for effect in get_effects(): total += effect.move_speed
+	return total
+
+func _get_extra_move_speed_percent() -> float:
+	var total: float = 0
+	for skill in skills: total += skill.move_speed_percent
+	for effect in get_effects(): total += effect.move_speed_percent
+	return total
+
 # endregion
+
+# region Front Animations
+func animation_active(animated_sprite_name: String) -> bool:
+	for animated_sprite in my_owner.front_animations_node.get_children():
+		if animated_sprite is AnimatedSprite2D and animated_sprite.name == animated_sprite_name:
+			return true
+	return false
+func remove_animations(animated_sprite_name: String):
+	for child in my_owner.front_animations_node.get_children():
+		if child is AnimatedSprite2D and child.animation == animated_sprite_name:
+			child.queue_free()
+
+func apply_frost_hit_animation():
+	const sprite_size = Vector2(32, 32)
+	var frames = SpritesAnimationHelper.get_sprite_frames(Vector2(0, 576), sprite_size, 11, 30, false)
+	spawn_front_fx(frames, "frost_hit")
+
+func apply_stun_animation():
+	const ANIMATED_SPRITE_NAME = "stun"
+	if animation_active(ANIMATED_SPRITE_NAME): return
+	const sprite_size = Vector2(32, 17)
+	var frames = SpritesAnimationHelper.get_sprite_frames(Vector2(0, 608), sprite_size, 14, 30, true)
+	spawn_front_fx(frames, ANIMATED_SPRITE_NAME)
+
+func spawn_front_fx(frames: SpriteFrames, animated_sprite_name: String):
+	var sprite := AnimatedSprite2D.new()
+	sprite.sprite_frames = frames
+	sprite.name = animated_sprite_name
+	my_owner.front_animations_node.add_child(sprite, true)
+	sprite.play()
+	sprite.animation_finished.connect(func(): sprite.queue_free())
+
+# endregion Front Animations

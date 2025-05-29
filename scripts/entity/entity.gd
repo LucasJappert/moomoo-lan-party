@@ -11,11 +11,11 @@ extends CharacterBody2D
 @onready var area_hovered_shape = $AreaHovered/CollisionShape2D
 @onready var projectile_zone = $ProjectileZone/CollisionShape2D
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var front_animations_node = $FrontAnimationsNode
 
 var id: int = 0
 
 @onready var combat_data: CombatData = $CombatData
-@export var mov_speed: float = 100.0
 @export var direction: Vector2 = Vector2.ZERO
 var replicated: bool = false
 
@@ -92,7 +92,7 @@ func _client_init() -> void:
 	if multiplayer.is_server() && not MultiplayerManager.HOSTED_GAME:
 		return
 
-	SpritesHelper.set_entity_sprites(self)
+	SpritesAnimationHelper.set_entity_sprites(self)
 
 func _update_path(_target_cell: Vector2i):
 	# Implemented in Player and Enemy

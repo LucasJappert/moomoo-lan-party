@@ -27,7 +27,7 @@ func _server_move_along_path(_delta: float):
 		my_owner.current_path.remove_at(0)
 
 	my_owner.direction = (my_owner.target_pos - my_owner.global_position).normalized()
-	my_owner.velocity = my_owner.direction * my_owner.mov_speed
+	my_owner.velocity = my_owner.direction * my_owner.combat_data.get_total_move_speed()
 
 	my_owner.global_position.x += my_owner.velocity.x * _delta
 	my_owner.global_position.y += my_owner.velocity.y * _delta

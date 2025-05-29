@@ -1,5 +1,7 @@
 class_name Skill
 
+extends CombatAttributes
+
 enum Type {ACTIVE, PASSIVE}
 
 const SkillNames = {
@@ -34,30 +36,14 @@ const SkillNames = {
 	REVERBERATING_PAIN = "Reverberating Pain",
 	PHANTOM_REPRISAL = "Phantom Reprisal",
 	SHIELDED_CORE = "Shielded Core",
-	BLESSING_OF_POWER = "Blessing of Power"
+	BLESSING_OF_POWER = "Blessing of Power",
+	STUNNING_STRIKE = "Stunning Strike"
 }
 
-var name: String = ""
 var type: Type = Type.ACTIVE
 var cooldown: float = 0
 var mana_cost: float = 0
 var description: String = ""
-
-# Combat attributes modifiers
-var extra_hp_value: int = 0
-var extra_hp_percent: float = 0
-var extra_physical_defense_percent: float = 0
-var extra_magic_defense_percent: float = 0
-var extra_evasion: float = 0
-var extra_crit_chance: float = 0
-var extra_crit_multiplier: float = 0
-var extra_stun_chance: float = 0
-var extra_stun_duration: float = 0
-var extra_attack_speed: float = 0
-var extra_attack_range: int = 0
-var extra_physical_attack_power_percent: float = 0
-var extra_magic_attack_power_percent: float = 0
-
 
 func _init(_name: String, _type: Type):
 	name = _name
@@ -65,15 +51,15 @@ func _init(_name: String, _type: Type):
 
 static func get_shielded_core() -> Skill:
 	var skill = Skill.new(SkillNames.SHIELDED_CORE, Skill.Type.PASSIVE)
-	skill.extra_magic_defense_percent = 0.3
-	skill.extra_physical_defense_percent = 0.3
-	skill.description = "Reduces magic and physical defense by " + str(skill.extra_magic_defense_percent * 100) + "%"
+	skill.magic_defense_percent = 0.3
+	skill.physical_defense_percent = 0.3
+	skill.description = "Reduces magic and physical defense by " + str(skill.magic_defense_percent * 100) + "%"
 	return skill
 
 static func get_blessing_of_power() -> Skill:
 	var skill = Skill.new(SkillNames.BLESSING_OF_POWER, Skill.Type.PASSIVE)
-	skill.extra_physical_attack_power_percent = 0.1
-	skill.description = "Increases physical attack power by " + str(skill.extra_physical_attack_power_percent * 100) + "%"
+	skill.physical_attack_power_percent = 0.5
+	skill.description = "Increases physical attack power by " + str(skill.physical_attack_power_percent * 100) + "%"
 	return skill
 
 static func get_mirror_demise() -> Skill:
@@ -87,22 +73,28 @@ static func get_mana_scorcher() -> Skill:
 	return skill
 
 static func get_frozen_touch() -> Skill:
-	var skill = Skill.new(SkillNames.FROZEN_TOUCH, Skill.Type.ACTIVE)
-	skill.description = "The attacker's icy touch partially freezes the target, reducing their movement and attack speed by 30%."
+	var skill = Skill.new(SkillNames.FROZEN_TOUCH, Skill.Type.PASSIVE)
+	skill.attack_speed_percent = -0.1
+	skill.move_speed_percent = -0.1
+	skill.freeze_duration = 4
+	skill.description = "The attacker's icy touch partially freezes the target, reducing their movement and attack speed by " + \
+	str(skill.attack_speed_percent * 100) + "% for " + str(skill.freeze_duration) + " seconds."
 	return skill
 
+static func get_stunning_strike() -> Skill:
+	var skill = Skill.new(SkillNames.STUNNING_STRIKE, Skill.Type.PASSIVE)
+	skill.stun_duration = 2
+	skill.stun_chance = 0.25
+	skill.description = "Has a " + str(skill.stun_chance * 100) + "% chance to stun the target for " + str(skill.stun_duration) + " seconds."
+	return skill
 
-# region Logics for skills
-
-static func entity_has_skill(entity: Entity, skill_name: String) -> bool:
-	return entity.combat_data.skills.any(func(skill): return skill.name == skill_name)
-
+# region :::::::::::::::::::: SKILLS LOGICS
 
 static func actions_before_entity_death(_dead_entity: Entity, _attacker_entity: Entity) -> void:
 	if not _dead_entity is Enemy: return
 	if _dead_entity.replicated: return
 
-	if entity_has_skill(_dead_entity, SkillNames.MIRROR_DEMISE):
+	if _dead_entity.combat_data.get_skill(SkillNames.MIRROR_DEMISE):
 		var target_tiles = [
 			Vector2(-MapManager.TILE_SIZE.x, -MapManager.TILE_SIZE.y),
 			Vector2(MapManager.TILE_SIZE.x, -MapManager.TILE_SIZE.y),
@@ -119,14 +111,19 @@ static func actions_before_entity_death(_dead_entity: Entity, _attacker_entity: 
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
 	# Should be called only on the server
-	if entity_has_skill(_attacker, SkillNames.FROZEN_TOUCH):
-		var combat_attributes = CombatAttributes.new()
-		combat_attributes.attack_speed = -2
-		# var effect = CombatEffect.new(combat_attributes, 3.0)
-		var effect = CombatEffect.get_instance(combat_attributes, 3.0)
-		print("effect: ", effect)
+	var _attacker_frozen_skill = _attacker.combat_data.get_skill(SkillNames.FROZEN_TOUCH)
+	if _attacker_frozen_skill:
+		var attr = _attacker_frozen_skill.get_combat_attributes()
+		var effect = CombatEffect.get_instance(_attacker_frozen_skill.freeze_duration, attr)
 		_target.combat_data.add_effect(effect)
-	pass
+	
+	var _attacker_stun_skill = _attacker.combat_data.get_skill(SkillNames.STUNNING_STRIKE)
+	if _attacker_stun_skill:
+		var attr = _attacker_stun_skill.get_combat_attributes()
+		var effect = CombatEffect.get_instance(_attacker_stun_skill.stun_duration, attr)
+		_target.combat_data.add_effect(effect)
+
+# endregion .................... SKILLS LOGICS
 
 # Skill("Mana Scorcher", "Active", 40, 8, "Burns 50% of the target's mana, dealing 25% of that as physical damage."),
 # Skill("Divine Shield", "Active", 60, 12, "Summons a divine shield making the caster immune to all damage for 5 seconds."),

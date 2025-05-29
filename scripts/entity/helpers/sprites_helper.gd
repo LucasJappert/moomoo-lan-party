@@ -1,4 +1,4 @@
-class_name SpritesHelper
+class_name SpritesAnimationHelper
 
 static var _ATLAS1 = load("res://assets/atlas1.png")
 
@@ -19,6 +19,17 @@ static func set_entity_sprites(entity: Entity) -> void:
 		entity.sprite.scale *= scale_factor
 		entity.sprite.position.y *= scale_factor
 		entity.hud.my_health_bar.position.y -= 10
+
+static func get_sprite_frames(start_region: Vector2, frame_size: Vector2, frames_size: int, speed: float, looped: bool) -> SpriteFrames:
+	var frames := SpriteFrames.new()
+	var regions: Array[Rect2] = []
+	for i in range(frames_size):
+		var region := Rect2(Vector2(start_region.x + i * frame_size.x, start_region.y), frame_size)
+		regions.append(region)
+	_add_animation(frames, "default", regions)
+	frames.set_animation_speed("default", speed)
+	frames.set_animation_loop("default", looped)
+	return frames
 
 static func _set_enemy_sprites(entity: Entity) -> void:
 	var frames := SpriteFrames.new()

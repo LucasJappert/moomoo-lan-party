@@ -30,6 +30,11 @@
 		"description_en": "Every 4 attacks stuns the enemy for 1.5 seconds."
 	},
 	{
+		"name": "Stunning Strike",
+		"description_es": "Tiene un 25% de probabilidad de aturdir al objetivo durante 2 segundos.",
+		"description_en": "Has a 25% chance to stun the target for 2 seconds."
+	},
+	{
 		"name": "Bone Cage",
 		"description_es": "Encierra a un enemigo en una prisión ósea durante 2 segundos.",
 		"description_en": "Traps an enemy in a bone prison for 2 seconds."

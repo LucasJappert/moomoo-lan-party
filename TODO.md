@@ -102,12 +102,16 @@ MY TODOs:
 - ✅ Setear sprites por codigo en enemigos
 - ✅ Aplicar skills únicamente en enemigos bosses (4 bosses por oleada)
 - ✅ Implementar nuevos tipos de proyectiles
+- ✅ Criticos en color amarillo
+- ✅ Implementar sistema para agregar efectos en el tiempo (útiles para buffs, debuffs, etc). Clase CombatEffect.
+- ✅ Implementar skill de reducción de ataque y movimiento con freeze.
+- Implementar skill con chances de stun y su respectiva animación.
 - Implementar animaciones varias como congelamiento, sangrado, sobre entidades
+- Revisar hover sobre enemigos
 - Implementar animaciones sobre tiles, como fuego, sanacion, congelamiento.
 - Configurar daños, hp, defensas, etc según el número de wave
 - Implementar skills en enemigos (útiles luego para héroes también)
 - Setear sprites por codigo en heroes
-- Criticos en color amarillo
 - Comenzar con la interfaz de usuario ingame
 - Comenzar la escena para crear y unirse a salas
 - Agregar objetos mobiles sobre el terreno como plantas, bichos, nubes, etc.

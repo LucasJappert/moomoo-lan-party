@@ -60,7 +60,7 @@ func _get_fireball_frames() -> SpriteFrames:
 		Rect2(Vector2(96, 288), Vector2(32, 32))
 	]
 
-	SpritesHelper._add_animation(frames, "default", rects)
+	SpritesAnimationHelper._add_animation(frames, "default", rects)
 	return frames
 
 func _get_arrow_frames() -> SpriteFrames:
@@ -69,7 +69,7 @@ func _get_arrow_frames() -> SpriteFrames:
 		Rect2(Vector2(0, 256), Vector2(64, 32))
 	]
 
-	SpritesHelper._add_animation(frames, "default", rects)
+	SpritesAnimationHelper._add_animation(frames, "default", rects)
 	return frames
 
 func _physics_process(delta: float) -> void:

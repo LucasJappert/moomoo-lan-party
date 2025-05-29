@@ -18,8 +18,6 @@ func _ready():
 	# We need to update the radius of the attack area node here as it enters the scene
 	_set_area_attack_shape_radius()
 
-	mov_speed = 60
-
 	_ready_for_server()
 	
 func _ready_for_server():
@@ -35,11 +33,11 @@ func _ready_for_server():
 func set_combat_data():
 	match enemy_type:
 		EnemyTypes.FROST_REVENANT:
-			EnemyFactory._set_frost_revenant(self)
+			EnemyFactory.set_frost_revenant(self)
 		EnemyTypes.WARDEN_OF_DECAY:
-			EnemyFactory._set_warden_of_decay(self)
+			EnemyFactory.set_warden_of_decay(self)
 		EnemyTypes.FLAME_CULTIST:
-			EnemyFactory._set_flame_cultist(self)
+			EnemyFactory.set_flame_cultist(self)
 		_:
 			print("Unknown enemy type: " + enemy_type)
 			return false

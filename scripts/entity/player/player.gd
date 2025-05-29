@@ -13,7 +13,6 @@ func get_client_inputs(): return %ClientInputs
 func _ready():
 	super._ready()
 	global_position = MapManager.cell_to_world(MapManager.PLAYER_CELL_SPAWN)
-	mov_speed = 200
 	combat_data.max_hp = 15000
 	combat_data.current_hp = combat_data.max_hp
 	combat_data.attack_type = AttackTypes.RANGED
@@ -22,9 +21,11 @@ func _ready():
 	combat_data.crit_chance = 0.5
 	combat_data.physical_attack_power = 4
 	combat_data.projectile_type = Projectile.TYPES.ARROW
+	combat_data.move_speed = 200
 	combat_data.skills.append_array([
 		Skill.get_shielded_core(),
-		Skill.get_frozen_touch()
+		Skill.get_frozen_touch(),
+		Skill.get_stunning_strike()
 	])
 
 	# We need to update the radius of the attack area node here as it enters the scene

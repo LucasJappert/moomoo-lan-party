@@ -5,6 +5,7 @@ const MAX_PLAYERS := 10
 static var _players: Array[AudioStreamPlayer] = []
 static var _initialized := false
 static var _playing_counts: Dictionary = {} # ← sonido_path : cantidad
+static var _MUTED := true
 
 static func initialize():
 	if _initialized:
@@ -21,6 +22,7 @@ static func initialize():
 	print("✅ SoundManager initialized with %d players" % MAX_PLAYERS)
 
 static func _play_sfx(path: String, volume: float = 0.0, max_simultaneous: int = 2):
+	if _MUTED: return
 	if not _initialized:
 		push_error("⚠️ SoundManager not initialized.")
 		return
