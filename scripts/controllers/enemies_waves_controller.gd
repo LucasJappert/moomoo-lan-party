@@ -25,10 +25,6 @@ static func start_wave() -> void:
 			enemy.id = counter
 			
 			var is_boss = (i == ENEMIES_BY_ZONE - 1)
-			
 			enemy._boss_level = _wave_number if is_boss else 0
-			
-			if not is_boss:
-				enemy.combat_data.skills.clear()
 				
 			GameManager.add_enemy(enemy)

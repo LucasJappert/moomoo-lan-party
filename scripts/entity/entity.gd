@@ -2,8 +2,6 @@ class_name Entity
 
 extends CharacterBody2D
 
-# const COMBAT_DATA_SCENE = preload("res://scenes/entity/combat_data/combat_data.tscn")
-
 @onready var hud = $HUD
 @onready var collision_shape = $CollisionShape2D
 @onready var area_attack = $AreaAttack
@@ -16,8 +14,8 @@ extends CharacterBody2D
 
 var id: int = 0
 
-var combat_data: CombatData
-var mov_speed: float = 100.0
+@onready var combat_data: CombatData = $CombatData
+@export var mov_speed: float = 100.0
 @export var direction: Vector2 = Vector2.ZERO
 var replicated: bool = false
 
@@ -30,7 +28,7 @@ var target_pos = null
 var movement_helper = MovementEntityHelper.new()
 
 @export var current_state: EntityState.StateEnum = EntityState.StateEnum.IDLE
-var _boss_level: int = 0
+@export var _boss_level: int = 0
 
 
 @rpc("authority", "call_local")
@@ -38,13 +36,6 @@ func rpc_server_message(data: Dictionary):
 	var sm = ServerMessage.get_instance()
 	sm.from_dict(data)
 	hud.show_popup(sm.message, Color(sm.color.x, sm.color.y, sm.color.z))
-
-@rpc("authority", "call_local")
-func rpc_set_state(state: EntityState.StateEnum) -> void:
-	current_state = state
-	
-	if MultiplayerManager.HOSTED_GAME || not multiplayer.is_server():
-		EntityState._play_animation(self)
 
 @rpc("authority", "call_local")
 func rpc_receive_damage(data: Dictionary):
@@ -55,14 +46,19 @@ func rpc_receive_damage(data: Dictionary):
 @rpc("authority", "call_local")
 func rpc_die():
 	print("⚔️ Entity died")
+	print("Multiplayer: ", multiplayer.is_server())
 	_global_die()
 
 func _init() -> void:
-	combat_data = load("res://scenes/entity/combat_data/combat_data.tscn").instantiate()
+	# combat_data = load("res://scenes/entity/combat_data/combat_data.tscn").instantiate()
+	# add_child(combat_data)
+	# print("_init Entity name: ", name, " combat_data.current_hp: ", combat_data.current_hp)
+	pass
 
 func _ready():
 	collision_layer = 1
 	collision_mask = 1
+	print("_ready Entity name: ", name, " combat_data.current_hp: ", combat_data.current_hp)
 	movement_helper.set_my_owner(self)
 	combat_data.set_my_owner(self)
 	area_attack_shape.shape = area_attack_shape.shape.duplicate() # to avoid changing the original shape
@@ -104,4 +100,6 @@ func _update_path(_target_cell: Vector2i):
 
 func _global_die():
 	# Implemented in Player and Enemy
+	# if multiplayer.is_server(): GameManager.remove_entity(self)
 	GameManager.remove_entity(self)
+	print("GameManager: " + str(GameManager.entities))

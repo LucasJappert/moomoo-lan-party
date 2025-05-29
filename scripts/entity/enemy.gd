@@ -1,6 +1,7 @@
+extends Entity
+
 class_name Enemy
 
-extends Entity
 
 @export var enemy_type: String
 
@@ -9,7 +10,10 @@ var timer_500ms: Timer
 func _ready():
 	super._ready()
 
-	# EnemyFactory.set_combat_data_by_enemy_type(self)
+	set_combat_data()
+			
+	if _boss_level == 0:
+		combat_data.skills.clear()
 
 	# We need to update the radius of the attack area node here as it enters the scene
 	_set_area_attack_shape_radius()
@@ -28,6 +32,23 @@ func _ready_for_server():
 	timer_500ms.timeout.connect(_on_every_timer_500ms)
 	add_child(timer_500ms)
 
+func set_combat_data():
+	match enemy_type:
+		EnemyTypes.FROST_REVENANT:
+			EnemyFactory._set_frost_revenant(self)
+		EnemyTypes.WARDEN_OF_DECAY:
+			EnemyFactory._set_warden_of_decay(self)
+		EnemyTypes.FLAME_CULTIST:
+			EnemyFactory._set_flame_cultist(self)
+		_:
+			print("Unknown enemy type: " + enemy_type)
+			return false
+
+	if combat_data.attack_range < CombatData.MIN_ATTACK_RANGE:
+		combat_data.attack_range = CombatData.MIN_ATTACK_RANGE
+	combat_data.current_hp = combat_data.max_hp
+		
+	return true
 	
 func set_enemy_type(_enemy_type: String) -> void:
 	enemy_type = _enemy_type

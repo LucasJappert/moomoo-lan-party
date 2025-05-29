@@ -1,26 +1,19 @@
 class_name CombatData
 
-extends Node
+extends CombatAttributes
 
 const MIN_ATTACK_RANGE: int = int(MapManager.TILE_SIZE.x)
 
+@onready var combat_effect_node = $CombatEffectNode
+var combat_effects: Array[CombatEffect] = []
+
 @export var max_hp: int = 100
 @export var current_hp: int = 100
-@export var physical_defense_percent: float = 0
-@export var magic_defense_percent: float = 0
-@export var evasion: float = 0.0
-@export var crit_chance: float = 0.0
-@export var crit_multiplier: float = 1.0
-@export var stun_chance: float = 0.0
-@export var stun_duration: float = 0.0
-@export var attack_speed: float = 1.0 # Higher is faster
-@export var attack_range: int = 0
-@export var physical_attack_power: int = 5
-@export var magic_attack_power: int = 0
 @export var attack_type := AttackTypes.MELEE
 @export var projectile_type: String = Projectile.TYPES.NONE
 var skills: Array[Skill] = []
 
+# var _active_effects: Array[CombatEffect] = []
 
 var last_physical_hit_time: int = 0 # In milliseconds
 var nearest_enemy_focused: Entity
@@ -29,13 +22,33 @@ var last_damage_received_time: int = 0 # In milliseconds
 var my_owner: Entity
 
 func _ready() -> void:
-	pass
+	if multiplayer.is_server() == false:
+		set_process(false)
+
+func _process(_delta: float) -> void:
+	for effect in combat_effects.duplicate(): # Duplicate is to avoid concurrency issues
+		if not effect.is_active: remove_effect(effect)
 
 func set_my_owner(_owner: Entity) -> void:
 	my_owner = _owner
 	pass
 
+func add_effect(effect: CombatEffect) -> void:
+	# Should be called only on the server
+	combat_effect_node.add_child(effect, true)
+	combat_effects.append(effect)
+func remove_effect(effect: CombatEffect) -> void:
+	combat_effects.erase(effect)
+	if not multiplayer.is_server(): return
+
+	effect.queue_free()
+func get_effects() -> Array[CombatEffect]:
+	return combat_effects
+func get_effects_size() -> int:
+	return combat_effect_node.get_child_count()
+
 func _server_calculate_physical_damage(_target: Entity) -> void:
+	if my_owner.multiplayer.is_server() == false: return
 	if _target == null: return
 
 	var extra_power = physical_attack_power * _get_extra_physical_attack_power()
@@ -51,26 +64,28 @@ func _server_calculate_physical_damage(_target: Entity) -> void:
 	_di.projectile_type = projectile_type
 	_di.damage_type = DamageInfo.DamageType.PHYSICAL
 
-	_target.combat_data._server_receive_physical_damage(_di)
+	_target.combat_data._server_receive_physical_damage(_di, my_owner)
 
-func _server_receive_physical_damage(_di: DamageInfo) -> void:
-	# verify evasion
-	if GlobalsEntityHelpers.roll_evasion(evasion):
+func _server_receive_physical_damage(_di: DamageInfo, _attacker: Entity) -> void:
+	if my_owner.multiplayer.is_server() == false: return
+	if GlobalsEntityHelpers.roll_evasion(get_total_evasion()):
 		var sm = ServerMessage.get_instance()
 		sm.message = "Dodge"
 		sm.color = Vector3(0, 0.5, 1)
 		my_owner.rpc("rpc_server_message", sm.to_dict())
 		return
 
+	Skill.actions_after_effective_hit(_attacker, my_owner, _di)
+
 	var damage_before_defense = _di.total_damage
-	var reduced_damage = get_total_physical_defense_percent() * _di.total_damage
+	var reduced_damage = get_total_physical_defense_percent() * damage_before_defense
 	_di.critical = _di.critical - int(get_total_physical_defense_percent() * _di.critical)
 	var total_damage: int = _di.total_damage - reduced_damage
 	if total_damage < 0: total_damage = 0
 
 	_di.total_damage = total_damage
 
-	print("Damage before defense: ", damage_before_defense, " reduced: ", reduced_damage, " total: ", total_damage, " critical: ", _di.critical)
+	# print("Damage before defense: ", damage_before_defense, " reduced: ", reduced_damage, " total: ", total_damage, " critical: ", _di.critical)
 
 	my_owner.rpc("rpc_receive_damage", _di.to_dict())
 
@@ -145,6 +160,9 @@ func get_total_physical_defense_percent() -> float:
 func get_total_physical_attack_power() -> float:
 	return physical_attack_power + _get_extra_physical_attack_power()
 
+func get_total_evasion() -> float:
+	return evasion + _get_extra_evasion()
+
 func _get_extra_physical_defense() -> float:
 	var total: float = 0
 	for skill in skills:
@@ -155,5 +173,11 @@ func _get_extra_physical_attack_power() -> float:
 	var total: float = 0
 	for skill in skills:
 		total += skill.extra_physical_attack_power_percent
+	return total
+
+func _get_extra_evasion() -> float:
+	var total: float = 0
+	for skill in skills:
+		total += skill.extra_evasion
 	return total
 # endregion

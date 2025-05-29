@@ -28,7 +28,7 @@ func add_enemy(enemy: Enemy) -> void:
 	add_entity(enemy)
 
 func add_my_tree(my_tree: MyTree) -> void:
-	my_trees_node.add_child(my_tree)
+	my_trees_node.add_child(my_tree, true)
 	MapManager.set_cell_blocked(MapManager.world_to_cell(my_tree.global_position), true)
 
 func add_entity(entity: Entity) -> void:
@@ -45,7 +45,7 @@ func remove_entity(entity: Entity) -> void:
 	var current_cell = MapManager.world_to_cell(entity.global_position)
 	MapManager.set_cell_blocked(current_cell, false)
 	entities.erase(entity.name)
-	entity.queue_free()
+	entity.queue_free() # We shouldn't do this in the client side, server should do it and sync it
 
 func get_players() -> Array[Entity]:
 	return entities.values().filter(func(e): return e is Player)

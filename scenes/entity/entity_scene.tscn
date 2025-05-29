@@ -1,8 +1,9 @@
-[gd_scene load_steps=17 format=3 uid="uid://dh82ovsrtutto"]
+[gd_scene load_steps=18 format=3 uid="uid://dh82ovsrtutto"]
 
 [ext_resource type="Script" uid="uid://ki4w4rg4wu1r" path="res://scripts/entity/entity.gd" id="1_0bgvt"]
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="3_8707b"]
 [ext_resource type="Script" uid="uid://d3sm32sl44mdm" path="res://scripts/entity/components/hud.gd" id="3_wjrb4"]
+[ext_resource type="PackedScene" uid="uid://1myskyslafks" path="res://scenes/entity/combat_data/combat_data.tscn" id="5_wjrb4"]
 [ext_resource type="Script" uid="uid://gdkfgib81pvd" path="res://scripts/entity/components/area_hovered.gd" id="6_8707b"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_odnte"]
@@ -12,6 +13,12 @@ properties/0/replication_mode = 2
 properties/1/path = NodePath(".:direction")
 properties/1/spawn = true
 properties/1/replication_mode = 2
+properties/2/path = NodePath(".:current_state")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:_boss_level")
+properties/3/spawn = true
+properties/3/replication_mode = 1
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_wjrb4"]
 radius = 300.0
@@ -112,23 +119,20 @@ offset_right = 20.0
 offset_bottom = -64.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_os1up")
 
-[node name="Label" type="Label" parent="HUD"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -27.0
-offset_top = 12.0
-offset_right = 27.0
-offset_bottom = 35.0
-grow_horizontal = 2
-grow_vertical = 2
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="DamagePopupContainer" type="Node2D" parent="HUD"]
 z_index = 3
 z_as_relative = false
 y_sort_enabled = true
+
+[node name="PanelContainer" type="PanelContainer" parent="HUD"]
+offset_left = -23.0
+offset_top = 13.0
+offset_right = 23.0
+offset_bottom = 36.0
+
+[node name="Label" type="Label" parent="HUD/PanelContainer"]
+layout_mode = 2
+horizontal_alignment = 1
 
 [node name="AreaAttack" type="Area2D" parent="."]
 
@@ -155,3 +159,5 @@ debug_color = Color(1.92523e-07, 0.642713, 0.312982, 0.096)
 position = Vector2(0, -13)
 shape = SubResource("CircleShape2D_8707b")
 debug_color = Color(1, 1, 1, 0.054)
+
+[node name="CombatData" parent="." instance=ExtResource("5_wjrb4")]

@@ -23,12 +23,6 @@ animations = [{
 position = Vector2(0, -5)
 script = ExtResource("2_xowpe")
 
-[node name="Label" parent="HUD" index="1"]
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-
 [node name="AnimatedSprite2D" parent="." index="5"]
 position = Vector2(4, -29)
 scale = Vector2(0.734375, 0.734375)

@@ -1,8 +1,8 @@
 [
 	{
-		"name": "Chilling Grasp",
-		"description_es": "Reduce la velocidad de movimiento y la velocidad de ataque del objetivo en un 30%.",
-		"description_en": "Reduces the target's movement speed and attack speed by 30%."
+		"name": "Frozen Touch",
+		"description_es": "El toque helado del atacante congela parcialmente al objetivo, reduciendo su velocidad de movimiento y velocidad de ataque en un 30%.",
+		"description_en": "The attacker's icy touch partially freezes the target, reducing their movement and attack speed by 30%."
 	},
 	{
 		"name": "Evasive Dash",

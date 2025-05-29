@@ -8,29 +8,7 @@ static func get_enemy_instance(_enemy_type: String) -> Enemy:
 
 	enemy.set_enemy_type(_enemy_type)
 
-	set_combat_data_by_enemy_type(enemy)
-
 	return enemy
-
-static func set_combat_data_by_enemy_type(_enemy: Enemy):
-	if _enemy.combat_data == null: _enemy.combat_data = CombatData.new()
-	
-	match _enemy.enemy_type:
-		EnemyTypes.FROST_REVENANT:
-			_set_frost_revenant(_enemy)
-		EnemyTypes.WARDEN_OF_DECAY:
-			_set_warden_of_decay(_enemy)
-		EnemyTypes.FLAME_CULTIST:
-			_set_flame_cultist(_enemy)
-		_:
-			print("Unknown enemy type: " + _enemy.enemy_type)
-			return false
-
-	if _enemy.combat_data.attack_range < CombatData.MIN_ATTACK_RANGE:
-		_enemy.combat_data.attack_range = CombatData.MIN_ATTACK_RANGE
-	_enemy.combat_data.current_hp = _enemy.combat_data.max_hp
-		
-	return true
 
 # region INTERNAL METHODS
 static func _set_frost_revenant(_enemy: Enemy):
@@ -70,10 +48,10 @@ static func _set_warden_of_decay(_enemy: Enemy):
 static func _set_flame_cultist(_enemy: Enemy):
 	if _enemy.enemy_type != EnemyTypes.FLAME_CULTIST: return false
 
-	_enemy.combat_data.max_hp = 100
-	_enemy.combat_data.physical_defense_percent = 0.5
-	_enemy.combat_data.magic_defense_percent = 0.5
-	_enemy.combat_data.evasion = 0.5
+	_enemy.combat_data.max_hp = 111
+	_enemy.combat_data.physical_defense_percent = 0
+	_enemy.combat_data.magic_defense_percent = 0
+	_enemy.combat_data.evasion = 0
 	_enemy.combat_data.crit_chance = 0.2
 	_enemy.combat_data.crit_multiplier = 1.5
 	_enemy.combat_data.attack_speed = 0.6

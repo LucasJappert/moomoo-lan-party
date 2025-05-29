@@ -72,12 +72,6 @@ texture_filter = 1
 texture_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_v8xvt")
 
-[node name="Label" parent="HUD" index="1"]
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-
 [node name="AnimatedSprite2D" parent="." index="7"]
 position = Vector2(0, -17)
 sprite_frames = SubResource("SpriteFrames_pwsty")

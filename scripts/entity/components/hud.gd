@@ -1,7 +1,7 @@
 extends Node
 
 # @onready var _health_bar: ProgressBar = $HealthBar
-@onready var _label: Label = $Label
+@onready var _label: Label = $PanelContainer/Label
 @onready var my_health_bar = $MyHealthBar
 const BAR_SIZE = 40.0
 @onready var current_bar = $MyHealthBar/CurrentBar
@@ -15,11 +15,12 @@ func _post_ready(_entity: Entity):
 	my_owner = _entity
 	_is_moomoo = my_owner is Moomoo
 
-	var lb_style = StyleBoxFlat.new()
-	lb_style.bg_color = Color(0, 0, 0, 0.2)
-	_label.add_theme_stylebox_override("normal", lb_style)
-	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_label.visible = my_owner is Player
+	# var lb_style = StyleBoxFlat.new()
+	# lb_style.bg_color = Color(0, 0, 0, 0.2)
+	# _label.add_theme_stylebox_override("normal", lb_style)
+	# _label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	# _label.visible = my_owner is Player
+	_label.visible = true
 	_label.text = my_owner.name
 
 func _process(_delta: float):
@@ -41,7 +42,8 @@ func _try_update_label():
 	if not _label.visible:
 		return
 		
-	_label.text = my_owner.name
+	# _label.text = str(my_owner.current_state)
+	_label.text = str(my_owner.combat_data.get_effects_size())
 	# _label.text += " - " + str(MapManager.world_to_cell(my_owner.global_position))
 	pass
 
@@ -53,7 +55,7 @@ func show_popup(text: String, color: Color = Color.RED):
 	var popup = DamagePopupPool.get_popup()
 	if not popup: return
 	
-	damage_popup_container.add_child(popup)
+	damage_popup_container.add_child(popup, true)
 
 	# Posición aleatoria leve (ruido)
 	var _aux = int(MapManager.TILE_SIZE.x / 2)

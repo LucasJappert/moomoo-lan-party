@@ -14,7 +14,7 @@ static func initialize():
 		var player := AudioStreamPlayer.new()
 		player.bus = "Master"
 		player.name = "SoundPlayer_%d" % i
-		GameManager.audio_node.add_child(player)
+		GameManager.audio_node.add_child(player, true)
 		_players.append(player)
 
 	_initialized = true

@@ -5,6 +5,7 @@ enum Type {ACTIVE, PASSIVE}
 const SkillNames = {
 	MIRROR_DEMISE = "Mirror Demise",
 	MANA_SCORCHER = "Mana Scorcher",
+	FROZEN_TOUCH = "Frozen Touch",
 	DIVINE_SHIELD = "Divine Shield",
 	ENERGY_ABSORPTION = "Energy Absorption",
 	VOID_STEP = "Void Step",
@@ -24,7 +25,6 @@ const SkillNames = {
 	PIERCING_ARROW = "Piercing Arrow",
 	BURNING_WEAPON = "Burning Weapon",
 	EVASIVE_DASH = "Evasive Dash",
-	FROZEN_TOUCH = "Frozen Touch",
 	NECROTIC_PULSE = "Necrotic Pulse",
 	GUARDIANS_PRESENCE = "Guardian's Presence",
 	CURSE_OF_THORNS = "Curse of Thorns",
@@ -86,6 +86,11 @@ static func get_mana_scorcher() -> Skill:
 	skill.description = "Burns 50% of the target's mana, dealing 25% of that as physical damage."
 	return skill
 
+static func get_frozen_touch() -> Skill:
+	var skill = Skill.new(SkillNames.FROZEN_TOUCH, Skill.Type.ACTIVE)
+	skill.description = "The attacker's icy touch partially freezes the target, reducing their movement and attack speed by 30%."
+	return skill
+
 
 # region Logics for skills
 
@@ -111,6 +116,17 @@ static func actions_before_entity_death(_dead_entity: Entity, _attacker_entity: 
 			new_enemy.combat_data.max_hp = new_enemy.combat_data.max_hp * 0.5
 			new_enemy.combat_data.current_hp = new_enemy.combat_data.max_hp
 			GameManager.add_enemy(new_enemy)
+
+static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
+	# Should be called only on the server
+	if entity_has_skill(_attacker, SkillNames.FROZEN_TOUCH):
+		var combat_attributes = CombatAttributes.new()
+		combat_attributes.attack_speed = -2
+		# var effect = CombatEffect.new(combat_attributes, 3.0)
+		var effect = CombatEffect.get_instance(combat_attributes, 3.0)
+		print("effect: ", effect)
+		_target.combat_data.add_effect(effect)
+	pass
 
 # Skill("Mana Scorcher", "Active", 40, 8, "Burns 50% of the target's mana, dealing 25% of that as physical damage."),
 # Skill("Divine Shield", "Active", 60, 12, "Summons a divine shield making the caster immune to all damage for 5 seconds."),
