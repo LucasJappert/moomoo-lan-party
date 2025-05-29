@@ -33,6 +33,7 @@ func add_effect(effect: CombatEffect) -> void:
 	# Should be called only on the server
 	combat_effect_node.add_child(effect, true)
 
+# TODO: Improve this get by creating a dictionary to quickly obtain active effects
 func get_effects() -> Array[CombatEffect]:
 	var effects: Array[CombatEffect] = []
 	for child in combat_effect_node.get_children():
@@ -232,6 +233,7 @@ func _get_extra_move_speed_percent() -> float:
 # endregion
 
 # region Front Animations
+const _ANIMATED_SPRITE_STUN_NAME = "stun"
 func animation_active(animated_sprite_name: String) -> bool:
 	for animated_sprite in my_owner.front_animations_node.get_children():
 		if animated_sprite is AnimatedSprite2D and animated_sprite.name == animated_sprite_name:
@@ -239,8 +241,16 @@ func animation_active(animated_sprite_name: String) -> bool:
 	return false
 func remove_animations(animated_sprite_name: String):
 	for child in my_owner.front_animations_node.get_children():
-		if child is AnimatedSprite2D and child.animation == animated_sprite_name:
+		if child is AnimatedSprite2D and child.name == animated_sprite_name:
 			child.queue_free()
+func try_to_remove_obsolete_stun_animation():
+	var animation_stun_active = animation_active(_ANIMATED_SPRITE_STUN_NAME)
+	if not animation_stun_active: return
+	
+	for effect in get_effects():
+		if effect.stun_duration > 0: return
+
+	remove_animations(_ANIMATED_SPRITE_STUN_NAME)
 
 func apply_frost_hit_animation():
 	const sprite_size = Vector2(32, 32)
@@ -248,11 +258,10 @@ func apply_frost_hit_animation():
 	spawn_front_fx(frames, "frost_hit")
 
 func apply_stun_animation():
-	const ANIMATED_SPRITE_NAME = "stun"
-	if animation_active(ANIMATED_SPRITE_NAME): return
+	if animation_active(_ANIMATED_SPRITE_STUN_NAME): return
 	const sprite_size = Vector2(32, 17)
 	var frames = SpritesAnimationHelper.get_sprite_frames(Vector2(0, 608), sprite_size, 14, 30, true)
-	spawn_front_fx(frames, ANIMATED_SPRITE_NAME)
+	spawn_front_fx(frames, _ANIMATED_SPRITE_STUN_NAME)
 
 func spawn_front_fx(frames: SpriteFrames, animated_sprite_name: String):
 	var sprite := AnimatedSprite2D.new()

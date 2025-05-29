@@ -1,6 +1,6 @@
 extends Node2D
 
-var my_owner: Entity
+var my_owner: Entity # Use the safety _get_entity function
 
 func _ready():
 	connect("child_entered_tree", Callable(self, "_on_child_added"))
@@ -16,6 +16,8 @@ func _on_child_added(effect: CombatEffect):
 	effect.tree_exited.connect(func(): _on_child_removed(effect))
 
 func _on_child_removed(effect: CombatEffect):
+	if effect.stun_duration > 0:
+		_get_entity().combat_data.try_to_remove_obsolete_stun_animation()
 	print("❄️ CombatEffect eliminado:", effect)
 
 func _get_entity() -> Entity:

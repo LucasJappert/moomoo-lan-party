@@ -114,7 +114,7 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 	var _attacker_frozen_skill = _attacker.combat_data.get_skill(SkillNames.FROZEN_TOUCH)
 	if _attacker_frozen_skill:
 		var attr = _attacker_frozen_skill.get_combat_attributes()
-		var effect = CombatEffect.get_instance(_attacker_frozen_skill.freeze_duration, attr)
+		var effect = CombatEffect.get_instance(attr.freeze_duration, attr)
 		_target.combat_data.add_effect(effect)
 	
 	var _attacker_stun_skill = _attacker.combat_data.get_skill(SkillNames.STUNNING_STRIKE)
