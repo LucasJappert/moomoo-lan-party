@@ -23,6 +23,8 @@ func _post_ready(_entity: Entity):
 	_label.visible = true
 	_label.text = my_owner.name
 
+	my_health_bar.position.y = - my_owner.sprite_heigth
+
 func _process(_delta: float):
 	_try_update_label()
 	_try_update_health_bar()

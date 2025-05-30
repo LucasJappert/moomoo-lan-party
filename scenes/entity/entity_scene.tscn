@@ -105,19 +105,20 @@ debug_color = Color(0, 0.6, 0.7, 0.052)
 script = ExtResource("3_wjrb4")
 
 [node name="MyHealthBar" type="Node2D" parent="HUD"]
+position = Vector2(0, -52)
 
 [node name="BgBlack" type="Panel" parent="HUD/MyHealthBar"]
-offset_left = -21.0
-offset_top = -67.0
-offset_right = 21.0
-offset_bottom = -63.0
+offset_left = -20.0
+offset_top = -2.0
+offset_right = 22.0
+offset_bottom = 2.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_8707b")
 
 [node name="CurrentBar" type="Panel" parent="HUD/MyHealthBar"]
-offset_left = -20.0
-offset_top = -66.0
-offset_right = 20.0
-offset_bottom = -64.0
+offset_left = -19.0
+offset_top = -1.0
+offset_right = 21.0
+offset_bottom = 1.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_os1up")
 
 [node name="DamagePopupContainer" type="Node2D" parent="HUD"]

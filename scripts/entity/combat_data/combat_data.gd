@@ -117,6 +117,11 @@ func get_total_physical_attack_power() -> float:
 	total = total * (1 + extra_percent)
 	if total < 0: total = 0
 	return total
+
+func is_stunned() -> bool:
+	for effect in get_effects():
+		if effect.stun_duration > 0: return true
+	return false
 # endregion
 
 # region TRY PHISICAL ATTACK
@@ -157,6 +162,7 @@ func _execute_physical_attack():
 	
 func can_physical_attack() -> bool:
 	if my_owner.velocity != Vector2.ZERO: return false
+	if is_stunned(): return false
 	var now = Time.get_ticks_msec()
 	return now - last_physical_hit_time >= (1000.0 / get_total_attack_speed())
 # endregion
@@ -260,11 +266,13 @@ func apply_frost_hit_animation():
 func apply_stun_animation():
 	if animation_active(_ANIMATED_SPRITE_STUN_NAME): return
 	const sprite_size = Vector2(32, 17)
+	var sprite_position = Vector2(0, my_owner.hud.my_health_bar.position.y + 10)
 	var frames = SpritesAnimationHelper.get_sprite_frames(Vector2(0, 608), sprite_size, 14, 30, true)
-	spawn_front_fx(frames, _ANIMATED_SPRITE_STUN_NAME)
+	spawn_front_fx(frames, _ANIMATED_SPRITE_STUN_NAME, sprite_position)
 
-func spawn_front_fx(frames: SpriteFrames, animated_sprite_name: String):
+func spawn_front_fx(frames: SpriteFrames, animated_sprite_name: String, sprite_position: Vector2 = Vector2.ZERO):
 	var sprite := AnimatedSprite2D.new()
+	sprite.position = sprite_position
 	sprite.sprite_frames = frames
 	sprite.name = animated_sprite_name
 	my_owner.front_animations_node.add_child(sprite, true)

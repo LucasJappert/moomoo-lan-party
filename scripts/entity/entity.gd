@@ -13,6 +13,8 @@ extends CharacterBody2D
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var front_animations_node = $FrontAnimationsNode
 
+var sprite_heigth: float = 0
+
 var id: int = 0
 
 @onready var combat_data: CombatData = $CombatData
@@ -89,8 +91,7 @@ func _client_physics_process(_delta: float) -> void:
 	sprite.flip_h = direction.x < 0
 
 func _client_init() -> void:
-	if multiplayer.is_server() && not MultiplayerManager.HOSTED_GAME:
-		return
+	if multiplayer.is_server() && not MultiplayerManager.HOSTED_GAME: return
 
 	SpritesAnimationHelper.set_entity_sprites(self)
 

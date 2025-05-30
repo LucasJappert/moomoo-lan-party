@@ -4,13 +4,15 @@ var my_owner: Entity
 func set_my_owner(_entity: Entity):
 	my_owner = _entity
 
-func _server_move_along_path(_delta: float):
+func _server_move_along_path(_delta: float) -> void:
 	if not my_owner.multiplayer.is_server(): return
 
 	if my_owner is Enemy and GlobalsEntityHelpers.is_target_in_attack_area(my_owner, my_owner.target_entity):
 		my_owner.current_path = []
 
 	if my_owner.target_pos == null:
+		if my_owner.combat_data.is_stunned(): return
+		
 		if my_owner.current_path.is_empty(): return _stop_movement()
 
 		my_owner.current_cell = MapManager.world_to_cell(my_owner.global_position)
@@ -36,5 +38,5 @@ func _server_move_along_path(_delta: float):
 		my_owner.global_position = my_owner.target_pos
 		my_owner.target_pos = null
 
-func _stop_movement():
+func _stop_movement() -> void:
 	my_owner.velocity = Vector2.ZERO

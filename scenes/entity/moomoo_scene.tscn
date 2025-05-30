@@ -15,7 +15,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_pio5k")
 }],
 "loop": true,
-"name": &"default",
+"name": &"idle",
 "speed": 5.0
 }]
 
@@ -27,4 +27,3 @@ script = ExtResource("2_xowpe")
 position = Vector2(4, -29)
 scale = Vector2(0.734375, 0.734375)
 sprite_frames = SubResource("SpriteFrames_xowpe")
-animation = &"default"

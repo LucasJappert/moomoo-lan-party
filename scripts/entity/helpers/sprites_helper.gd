@@ -20,6 +20,9 @@ static func set_entity_sprites(entity: Entity) -> void:
 		entity.sprite.position.y *= scale_factor
 		entity.hud.my_health_bar.position.y -= 10
 
+	entity.sprite_heigth = entity.sprite.sprite_frames.get_frame_texture("idle", 0).get_height() * entity.sprite.scale.y
+	print("sprite_heigth: ", entity.sprite_heigth)
+
 static func get_sprite_frames(start_region: Vector2, frame_size: Vector2, frames_size: int, speed: float, looped: bool) -> SpriteFrames:
 	var frames := SpriteFrames.new()
 	var regions: Array[Rect2] = []
