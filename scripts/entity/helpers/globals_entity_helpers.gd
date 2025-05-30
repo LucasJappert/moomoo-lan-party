@@ -22,8 +22,5 @@ static func get_nearest_entity_to_attack(my_owner: Entity, entities: Array[Entit
 
 	return nearest_entity
 
-static func roll_crit(_crit_chance: float) -> bool:
-	return randf() <= _crit_chance
-
-static func roll_evasion(_evasion: float) -> bool:
-	return randf() <= _evasion
+static func roll_chance(_chance: float) -> bool:
+	return randf() <= _chance

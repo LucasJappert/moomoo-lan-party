@@ -18,7 +18,6 @@ func _on_child_added(effect: CombatEffect):
 func _on_child_removed(effect: CombatEffect):
 	if effect.stun_duration > 0:
 		_get_entity().combat_data.try_to_remove_obsolete_stun_animation()
-	print("❄️ CombatEffect eliminado:", effect)
 
 func _get_entity() -> Entity:
 	if my_owner: return my_owner

@@ -105,7 +105,8 @@ MY TODOs:
 - ✅ Criticos en color amarillo
 - ✅ Implementar sistema para agregar efectos en el tiempo (útiles para buffs, debuffs, etc). Clase CombatEffect.
 - ✅ Implementar skill de reducción de ataque y movimiento con freeze.
-- Implementar skill con chances de stun y su respectiva animación.
+- ✅ Ver bug de velocidad de ataque de mi pj cuando esta stuneado/frezeado varias veces
+- ✅ Implementar skill con chances de stun y su respectiva animación.
 - Implementar animaciones varias como congelamiento, sangrado, sobre entidades
 - Revisar hover sobre enemigos
 - Implementar animaciones sobre tiles, como fuego, sanacion, congelamiento.

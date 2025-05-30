@@ -12,8 +12,7 @@ func _ready():
 
 	set_combat_data()
 			
-	if _boss_level == 0:
-		combat_data.skills.clear()
+	# if _boss_level == 0: combat_data.skills.clear() # Remove skills from non-boss enemies
 
 	# We need to update the radius of the attack area node here as it enters the scene
 	_set_area_attack_shape_radius()
@@ -31,6 +30,7 @@ func _ready_for_server():
 	add_child(timer_500ms)
 
 func set_combat_data():
+	if combat_data == null: combat_data = CombatData.new()
 	match enemy_type:
 		EnemyTypes.FROST_REVENANT:
 			EnemyFactory.set_frost_revenant(self)

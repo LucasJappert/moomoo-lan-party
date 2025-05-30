@@ -46,7 +46,7 @@ func _server_calculate_physical_damage(_target: Entity) -> void:
 	if _target == null: return
 
 	var critical_damage = 0
-	if GlobalsEntityHelpers.roll_crit(crit_chance):
+	if GlobalsEntityHelpers.roll_chance(crit_chance):
 		critical_damage = get_total_physical_attack_power() * crit_multiplier
 	var total_damage = get_total_physical_attack_power() + critical_damage
 	# print("Normal power: ", physical_attack_power, " Extra power: ", extra_power, " Total total_damage: ", total_damage)
@@ -61,7 +61,10 @@ func _server_calculate_physical_damage(_target: Entity) -> void:
 
 func _server_receive_physical_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	if my_owner.multiplayer.is_server() == false: return
-	if GlobalsEntityHelpers.roll_evasion(get_total_evasion()):
+
+	# Evasion verification
+	if GlobalsEntityHelpers.roll_chance(get_total_evasion()):
+		# TODO: Crear un helper para enviar mensajes
 		var sm = ServerMessage.get_instance()
 		sm.message = "Dodge"
 		sm.color = Vector3(0, 0.5, 1)
@@ -97,19 +100,35 @@ func get_skill(skill_name: String) -> Skill:
 		if skill.name == skill_name: return skill
 	return null
 
-func get_total_attack_speed() -> float:
-	var total = attack_speed + _get_extra_attack_speed()
-	var extra_percent = _get_extra_attack_speed_percent()
-	total = total * (1 + extra_percent)
-	if total < 0: total = 0
-	return total
+func get_total_attack_speed() -> int:
+	var base_speed := attack_speed + _get_extra_attack_speed()
+	var extra_percent := _get_extra_attack_speed_percent()
+
+	# Apply attack speed percentage as an inverse modifier
+	var effective_speed := base_speed - (base_speed * extra_percent)
+
+	# Protect against extreme values
+	effective_speed = clamp(effective_speed, 100.0, 10000.0)
+
+	return int(effective_speed)
 
 func get_total_move_speed() -> float:
-	var total = move_speed + _get_extra_move_speed()
-	var extra_percent = _get_extra_move_speed_percent()
-	total = total * (1 + extra_percent)
-	if total < 0: total = 0
-	return total
+	var tiles_per_second := move_speed + _get_extra_move_speed()
+	var extra_percent := _get_extra_move_speed_percent()
+
+	tiles_per_second += tiles_per_second * extra_percent
+	tiles_per_second = clamp(tiles_per_second, 0.1, 10.0)
+
+	return tiles_per_second
+
+func get_total_physical_defense_percent() -> float:
+	return physical_defense_percent + _get_extra_physical_defense_percent()
+
+func get_total_evasion() -> float:
+	return evasion + _get_extra_evasion()
+
+func get_total_stun_chance() -> float:
+	return stun_chance + _get_extra_stun_chance()
 
 func get_total_physical_attack_power() -> float:
 	var total = physical_attack_power + _get_extra_physical_attack_power()
@@ -164,7 +183,7 @@ func can_physical_attack() -> bool:
 	if my_owner.velocity != Vector2.ZERO: return false
 	if is_stunned(): return false
 	var now = Time.get_ticks_msec()
-	return now - last_physical_hit_time >= (1000.0 / get_total_attack_speed())
+	return now - last_physical_hit_time >= get_total_attack_speed()
 # endregion
 
 func _global_receive_damage(_di: DamageInfo):
@@ -181,61 +200,50 @@ func _global_receive_damage(_di: DamageInfo):
 	last_damage_received_time = Time.get_ticks_msec()
 	pass
 
-# region Skills calculation
-func get_total_physical_defense_percent() -> float:
-	return physical_defense_percent + _get_extra_physical_defense_percent()
-
-
-func get_total_evasion() -> float:
-	return evasion + _get_extra_evasion()
-
+# region INTERNAL GETTERs
 func _get_extra_physical_defense_percent() -> float:
 	var total: float = 0
-	for skill in skills: total += skill.physical_defense_percent
 	for effect in get_effects(): total += effect.physical_defense_percent
-	return total
+	return snapped(total, 0.01)
 
 func _get_extra_physical_attack_power() -> float:
 	var total: float = 0
-	for skill in skills: total += skill.physical_attack_power
 	for effect in get_effects(): total += effect.physical_attack_power
-	return total
+	return snapped(total, 0.01)
 func _get_extra_physical_attack_power_percent() -> float:
 	var total: float = 0
-	for skill in skills: total += skill.physical_attack_power_percent
 	for effect in get_effects(): total += effect.physical_attack_power_percent
-	return total
+	return snapped(total, 0.01)
 
 func _get_extra_evasion() -> float:
 	var total: float = 0
-	for skill in skills: total += skill.evasion
 	for effect in get_effects(): total += effect.evasion
-	return total
+	return snapped(total, 0.01)
 
-func _get_extra_attack_speed() -> float:
-	var total: float = 0
-	for skill in skills: total += skill.attack_speed
+func _get_extra_attack_speed() -> int:
+	var total: int = 0
 	for effect in get_effects(): total += effect.attack_speed
 	return total
 
 func _get_extra_attack_speed_percent() -> float:
-	var total: float = 0
-	for skill in skills: total += skill.attack_speed_percent
+	var total: float = 0.0
 	for effect in get_effects(): total += effect.attack_speed_percent
-	return total
+	return snapped(clamp(total, -10.0, 10.0), 0.1)
 
 func _get_extra_move_speed() -> float:
 	var total: float = 0
-	for skill in skills: total += skill.move_speed
 	for effect in get_effects(): total += effect.move_speed
-	return total
+	return snapped(total, 0.01)
 
 func _get_extra_move_speed_percent() -> float:
 	var total: float = 0
-	for skill in skills: total += skill.move_speed_percent
 	for effect in get_effects(): total += effect.move_speed_percent
-	return total
+	return snapped(total, 0.01)
 
+func _get_extra_stun_chance() -> float:
+	var total: float = 0
+	for effect in get_effects(): total += effect.stun_chance
+	return snapped(total, 0.01)
 # endregion
 
 # region Front Animations

@@ -17,15 +17,15 @@ func _ready():
 	combat_data.current_hp = combat_data.max_hp
 	combat_data.attack_type = AttackTypes.RANGED
 	combat_data.attack_range = 300
-	combat_data.attack_speed = 0.5
+	combat_data.attack_speed = 300
 	combat_data.crit_chance = 0.5
 	combat_data.physical_attack_power = 4
 	combat_data.projectile_type = Projectile.TYPES.ARROW
-	combat_data.move_speed = 200
+	combat_data.move_speed = 5
 	combat_data.skills.append_array([
 		Skill.get_shielded_core(),
 		Skill.get_frozen_touch(),
-		Skill.get_stunning_strike()
+		# Skill.get_stunning_strike()
 	])
 
 	# We need to update the radius of the attack area node here as it enters the scene

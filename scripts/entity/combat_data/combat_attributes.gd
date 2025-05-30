@@ -16,20 +16,20 @@ extends Node
 @export var magic_attack_power: int = 0
 @export var magic_attack_power_percent: float = 0
 @export var freeze_duration: float = 0 # In seconds
-@export var attack_speed: float = 0 # Higher is faster
-@export var move_speed: float = 0
+@export var attack_speed: int = 0 # Milliseconds between attacks
+@export var move_speed: float = 0 # Tiles per second
 @export var attack_speed_percent: float = 0
 @export var move_speed_percent: float = 0
 
 
 static func get_default_instance() -> CombatAttributes:
 	var attr = CombatAttributes.new()
-	attr.move_speed = 60 # Default move speed for enemies
+	attr.move_speed = 3 # Default move speed for enemies
 	attr.attack_range = 32
 	attr.magic_attack_power = 0
 	attr.physical_attack_power = 10
 	attr.crit_multiplier = 1.5
-	attr.attack_speed = 1.2
+	attr.attack_speed = 1000
 	return attr
 
 func initialize_from_combat_attributes(combat_attributes: CombatAttributes) -> void:

@@ -78,7 +78,7 @@ static func get_frozen_touch() -> Skill:
 	skill.move_speed_percent = -0.1
 	skill.freeze_duration = 4
 	skill.description = "The attacker's icy touch partially freezes the target, reducing their movement and attack speed by " + \
-	str(skill.attack_speed_percent * 100) + "% for " + str(skill.freeze_duration) + " seconds."
+	str(abs(skill.attack_speed_percent) * 100) + "% for " + str(skill.freeze_duration) + " seconds."
 	return skill
 
 static func get_stunning_strike() -> Skill:
@@ -105,9 +105,11 @@ static func actions_before_entity_death(_dead_entity: Entity, _attacker_entity: 
 			var new_enemy = EnemyFactory.get_enemy_instance(_dead_entity.enemy_type)
 			new_enemy.replicated = true
 			new_enemy.position = _dead_entity.position + target_tiles[i]
+			GameManager.add_enemy(new_enemy)
+
+			# We need set combat_data props after the enemy is added to the scene
 			new_enemy.combat_data.max_hp = new_enemy.combat_data.max_hp * 0.5
 			new_enemy.combat_data.current_hp = new_enemy.combat_data.max_hp
-			GameManager.add_enemy(new_enemy)
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
 	# Should be called only on the server
@@ -117,11 +119,15 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 		var effect = CombatEffect.get_instance(attr.freeze_duration, attr)
 		_target.combat_data.add_effect(effect)
 	
-	var _attacker_stun_skill = _attacker.combat_data.get_skill(SkillNames.STUNNING_STRIKE)
-	if _attacker_stun_skill:
-		var attr = _attacker_stun_skill.get_combat_attributes()
-		var effect = CombatEffect.get_instance(_attacker_stun_skill.stun_duration, attr)
-		_target.combat_data.add_effect(effect)
+	# Stun verification, we need it after the evasion check
+	if GlobalsEntityHelpers.roll_chance(_attacker.combat_data.get_total_stun_chance()):
+		var _attacker_stun_skill = _attacker.combat_data.get_skill(SkillNames.STUNNING_STRIKE)
+		if _attacker_stun_skill:
+			var attr = _attacker_stun_skill.get_combat_attributes()
+			var effect = CombatEffect.get_instance(_attacker_stun_skill.stun_duration, attr)
+			_target.combat_data.add_effect(effect)
+
+	return
 
 # endregion .................... SKILLS LOGICS
 
