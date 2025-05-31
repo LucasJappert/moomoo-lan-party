@@ -1,10 +1,7 @@
 class_name EnemyFactory
 
-const ENEMY_SCENE = preload("res://scenes/entity/enemy_scene.tscn")
-
-
 static func get_enemy_instance(_enemy_type: String) -> Enemy:
-	var enemy: Enemy = ENEMY_SCENE.instantiate()
+	var enemy: Enemy = load("res://scenes/entity/enemy_scene.tscn").instantiate()
 
 	enemy.set_enemy_type(_enemy_type)
 

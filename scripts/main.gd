@@ -9,14 +9,18 @@ const PLAYER_SCENE = preload("res://scenes/entity/player_scene.tscn")
 static var GLOBAL_MOUSE_POSITION: Vector2 = Vector2.ZERO
 static var VIEWPORT_MOUSE_POSITION: Vector2 = Vector2.ZERO
 static var SCREEN_SIZE: Vector2 = Vector2.ZERO
+static var MY_PLAYER: Player
+static var MY_PLAYER_ID: int = -1
 
 @onready var player_spawner = $PlayerSpawner
 @onready var terrain = $Terrain
+
 
 func _ready() -> void:
 	MapManager.initialize()
 
 	MyCamera.set_screen_size()
+	MyCamera.create_camera()
 	%MultiplayerHUD.show()
 
 	call_deferred("_init_player_spawner")

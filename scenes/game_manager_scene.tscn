@@ -271,13 +271,12 @@ font = SubResource("SystemFont_p57ef")
 
 [node name="MultiplayerHUD" type="Control" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 3
 anchors_preset = 0
-offset_left = 434.0
-offset_top = 2.0
-offset_right = 837.0
-offset_bottom = 127.0
+offset_left = 446.0
+offset_top = 95.0
+offset_right = 849.0
+offset_bottom = 220.0
 
 [node name="Panel" type="Panel" parent="MultiplayerHUD"]
 layout_mode = 1

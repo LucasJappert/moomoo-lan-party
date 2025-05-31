@@ -10,7 +10,7 @@ static func clean_path(_entity: Entity) -> void:
 func _server_move_along_path(_delta: float) -> void:
 	if not my_owner.multiplayer.is_server(): return
 
-	if my_owner is Enemy and GlobalsEntityHelpers.is_target_in_attack_area(my_owner, my_owner.target_entity):
+	if GlobalsEntityHelpers.is_target_in_attack_area(my_owner, my_owner.target_entity):
 		my_owner.current_path = []
 
 	if my_owner.target_pos == null:

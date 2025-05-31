@@ -17,7 +17,7 @@ func _ready():
 		set_physics_process(false)
 
 func _process(_delta):
-	if MultiplayerManager.MY_PLAYER != null:
+	if Main.MY_PLAYER != null:
 		hovered_cell = MapManager.world_to_cell(Main.GLOBAL_MOUSE_POSITION)
 		
 	queue_redraw()
@@ -96,7 +96,7 @@ func _try_draw_solid_cells(cell: Vector2i, pos: Vector2):
 		draw_rect(Rect2(pos - MapManager.TILE_SIZE / 2.0, MapManager.TILE_SIZE), solid_cell_color, true)
 
 func _draw_hovered_cell():
-	if MultiplayerManager.MY_PLAYER == null: return
+	if Main.MY_PLAYER == null: return
 
 	var pos := MapManager.cell_to_world(hovered_cell)
 	draw_rect(Rect2(pos - MapManager.TILE_SIZE / 2.0, MapManager.TILE_SIZE), Color(0, 0, 0, 0.2), true)

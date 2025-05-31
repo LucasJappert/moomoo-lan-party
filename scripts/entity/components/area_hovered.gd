@@ -9,7 +9,7 @@ var my_owner: Entity
 func _ready() -> void:
 	my_owner = get_parent()
 
-	if multiplayer.get_unique_id() != MultiplayerManager.MY_PLAYER_ID:
+	if multiplayer.get_unique_id() != Main.MY_PLAYER_ID:
 		set_process(false)
 		return
 

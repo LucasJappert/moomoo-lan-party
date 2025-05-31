@@ -2,6 +2,7 @@ extends Node2D
 
 @onready var player: Player = get_parent()
 
+
 func _ready():
 	if get_multiplayer_authority() != multiplayer.get_unique_id():
 		set_process(false)
@@ -33,10 +34,18 @@ func _on_right_click(mouse_position: Vector2):
 
 @rpc("authority", "call_local")
 func try_to_move(_target_cell: Vector2i):
+	player.target_entity = null
 	player._update_path(_target_cell)
 
 @rpc("authority", "call_local")
 func right_click_on_entity(_target_entity_name: String):
-	MovementEntityHelper.clean_path(player)
+	# Always run in server
+	print("right_click_on_entity: ", _target_entity_name)
+	print(" multiplayer server: ", multiplayer.is_server())
 	var target_entity = GameManager.entities[_target_entity_name]
+
+	var is_in_attack_range = GlobalsEntityHelpers.is_target_in_attack_area(player, target_entity)
+	if is_in_attack_range: MovementEntityHelper.clean_path(player)
+	if not is_in_attack_range: player._update_path(MapManager.world_to_cell(target_entity.global_position))
+
 	player.target_entity = target_entity

@@ -25,15 +25,15 @@ func _ready():
 	combat_data.skills.append_array([
 		Skill.get_shielded_core(),
 		Skill.get_frozen_touch(),
-		# Skill.get_stunning_strike()
+		# Skill.get_stunning_strike()s
 	])
 
 	# We need to update the radius of the attack area node here as it enters the scene
 	_set_area_attack_shape_radius()
 
 	if player_id == multiplayer.get_unique_id():
-		MyCamera.create_camera(self)
-		MultiplayerManager.MY_PLAYER = self
+		MyCamera.update_camera_position(global_position)
+		Main.MY_PLAYER = self
 
 func _update_path(_target_cell: Vector2i):
 	var from_cell = MapManager.world_to_cell(target_pos if target_pos != null else global_position)
