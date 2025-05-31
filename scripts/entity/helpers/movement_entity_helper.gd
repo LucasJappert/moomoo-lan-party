@@ -4,6 +4,9 @@ var my_owner: Entity
 func set_my_owner(_entity: Entity):
 	my_owner = _entity
 
+static func clean_path(_entity: Entity) -> void:
+	_entity.current_path = []
+
 func _server_move_along_path(_delta: float) -> void:
 	if not my_owner.multiplayer.is_server(): return
 

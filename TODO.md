@@ -108,7 +108,9 @@ MY TODOs:
 - ✅ Ver bug de velocidad de ataque de mi pj cuando esta stuneado/frezeado varias veces
 - ✅ Implementar skill con chances de stun y su respectiva animación.
 - ✅ Revisar hover sobre enemigos y dar un color rojizo a los enemigos hovereados.
-- Detener movimiento y atacar cuando se hace click para atacar a un enemigo
+- ✅ Detener movimiento y atacar cuando se hace click para atacar a un enemigo
+- Implement camera movement with mouse (not fixed to player)
+- Mover hacia el target cuando el player quiere atacar a un enemigo pero se encuentra fuera de rango.
 - Implementar animaciones varias como congelamiento, sangrado, sobre entidades
 - Implementar animaciones sobre tiles, como fuego, sanacion, congelamiento.
 - Configurar daños, hp, defensas, etc según el número de wave

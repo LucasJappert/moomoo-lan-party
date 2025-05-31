@@ -26,11 +26,9 @@ static func _play_animation(entity: Entity) -> void:
 	match entity.current_state:
 		StateEnum.IDLE:
 			if entity.sprite.animation != "idle":
-				print("entity.current_state: ", entity.current_state)
 				entity.sprite.play("idle")
 		StateEnum.WALK:
 			if entity.sprite.animation != "walk":
-				print("entity.current_state: ", entity.current_state)
 				entity.sprite.play("walk")
 
 static func _server_set_current_state(entity: Entity, new_state: StateEnum) -> void:

@@ -21,13 +21,11 @@ func _process(_delta: float) -> void:
 		hovered_entity = null
 
 func _on_mouse_entered():
-	print("_on_mouse_entered: ", my_owner.name)
 	if not _currently_hovered_entities.has(my_owner):
 		_currently_hovered_entities.append(my_owner)
 		_update_hovered_entity()
 
 func _on_mouse_exited():
-	print("_on_mouse_exited: ", my_owner.name)
 	_currently_hovered_entities.erase(my_owner)
 	_update_hovered_entity()
 	if my_owner is Enemy: my_owner.sprite.modulate = Color.WHITE

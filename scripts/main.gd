@@ -1,8 +1,14 @@
+class_name Main
+
 extends Node2D
 
 const ENEMIES_WAVES_CONTROLLER = preload("res://scripts/controllers/enemies_waves_controller.gd")
 const MOOMOO_SCENE = preload("res://scenes/entity/moomoo_scene.tscn")
 const PLAYER_SCENE = preload("res://scenes/entity/player_scene.tscn")
+
+static var GLOBAL_MOUSE_POSITION: Vector2 = Vector2.ZERO
+static var VIEWPORT_MOUSE_POSITION: Vector2 = Vector2.ZERO
+static var SCREEN_SIZE: Vector2 = Vector2.ZERO
 
 @onready var player_spawner = $PlayerSpawner
 @onready var terrain = $Terrain
@@ -22,6 +28,11 @@ func _ready() -> void:
 
 	SoundManager.initialize()
 	DamagePopupPool.preload_popups()
+
+func _process(_delta: float) -> void:
+	GLOBAL_MOUSE_POSITION = get_global_mouse_position()
+	VIEWPORT_MOUSE_POSITION = get_viewport().get_mouse_position()
+	SCREEN_SIZE = get_viewport().get_visible_rect().size
 
 func _init_player_spawner():
 	player_spawner.spawn_function = Callable(self, "_spawn_custom")

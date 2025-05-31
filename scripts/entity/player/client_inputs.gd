@@ -37,5 +37,6 @@ func try_to_move(_target_cell: Vector2i):
 
 @rpc("authority", "call_local")
 func right_click_on_entity(_target_entity_name: String):
+	MovementEntityHelper.clean_path(player)
 	var target_entity = GameManager.entities[_target_entity_name]
 	player.target_entity = target_entity
