@@ -44,8 +44,8 @@ static func set_flame_cultist(_enemy: Enemy):
 	_enemy.combat_data.projectile_type = Projectile.TYPES.FIREBALL
 
 	_enemy.combat_data.skills.append_array([
-		Skill.get_mirror_demise(),
-		Skill.get_frozen_touch(),
+		# Skill.get_mirror_demise(),
+		# Skill.get_frozen_touch(),
 		# Skill.get_stunning_strike(),
 	])
 

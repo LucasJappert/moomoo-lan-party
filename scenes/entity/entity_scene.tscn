@@ -21,12 +21,6 @@ properties/3/path = NodePath(".:_boss_level")
 properties/3/spawn = true
 properties/3/replication_mode = 1
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_wjrb4"]
-radius = 300.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_5ixpm"]
-radius = 16.0
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8707b"]
 bg_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 2
@@ -40,6 +34,12 @@ corner_radius_top_left = 1
 corner_radius_top_right = 1
 corner_radius_bottom_right = 1
 corner_radius_bottom_left = 1
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wjrb4"]
+radius = 300.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5ixpm"]
+radius = 16.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_idfl5"]
 radius = 32.0
@@ -78,28 +78,18 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_8707b"]
+radius = 2.0
+
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_os1up"]
 radius = 17.0
 height = 54.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_8707b"]
-radius = 2.0
 
 [node name="Entity" type="CharacterBody2D"]
 script = ExtResource("1_0bgvt")
 
 [node name="EntitySynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_odnte")
-
-[node name="AreaVision" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaVision"]
-shape = SubResource("CircleShape2D_wjrb4")
-debug_color = Color(100, 98.907, 100, 0)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_5ixpm")
-debug_color = Color(0, 0.6, 0.7, 0.052)
 
 [node name="HUD" type="Node2D" parent="."]
 script = ExtResource("3_wjrb4")
@@ -131,10 +121,21 @@ offset_left = -23.0
 offset_top = 13.0
 offset_right = 23.0
 offset_bottom = 36.0
+mouse_default_cursor_shape = 3
 
 [node name="Label" type="Label" parent="HUD/PanelContainer"]
 layout_mode = 2
 horizontal_alignment = 1
+
+[node name="AreaVision" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaVision"]
+shape = SubResource("CircleShape2D_wjrb4")
+debug_color = Color(100, 98.9059, 100, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_5ixpm")
+debug_color = Color(0, 0.6, 0.7, 0.052)
 
 [node name="AreaAttack" type="Area2D" parent="."]
 
@@ -147,14 +148,6 @@ position = Vector2(0, -24)
 sprite_frames = SubResource("SpriteFrames_os1up")
 animation = &"idle"
 
-[node name="AreaHovered" type="Area2D" parent="."]
-script = ExtResource("6_8707b")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaHovered"]
-position = Vector2(0, -19)
-shape = SubResource("CapsuleShape2D_os1up")
-debug_color = Color(1.92523e-07, 0.642713, 0.312982, 0.096)
-
 [node name="ProjectileZone" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ProjectileZone"]
@@ -166,3 +159,13 @@ debug_color = Color(1, 1, 1, 0.054)
 
 [node name="FrontAnimationsNode" type="Node2D" parent="."]
 script = ExtResource("6_os1up")
+
+[node name="AreaHovered" type="Area2D" parent="."]
+script = ExtResource("6_8707b")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaHovered"]
+light_mask = 4
+visibility_layer = 4
+position = Vector2(0, -19)
+shape = SubResource("CapsuleShape2D_os1up")
+debug_color = Color(1.92523e-07, 0.642713, 0.312982, 0.096)

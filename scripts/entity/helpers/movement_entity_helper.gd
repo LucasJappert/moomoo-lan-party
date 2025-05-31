@@ -18,7 +18,6 @@ func _server_move_along_path(_delta: float) -> void:
 		my_owner.current_cell = MapManager.world_to_cell(my_owner.global_position)
 		var next_target_cell = my_owner.current_path[0]
 
-		
 		if MapManager._astar_grid.is_point_solid(next_target_cell):
 			 # Update the path and return when next target cell is blocked
 			my_owner._update_path(my_owner.current_path.back())

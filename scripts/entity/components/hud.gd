@@ -1,10 +1,12 @@
 extends Node
 
 # @onready var _health_bar: ProgressBar = $HealthBar
+@onready var _label_container: PanelContainer = $PanelContainer
 @onready var _label: Label = $PanelContainer/Label
-@onready var my_health_bar = $MyHealthBar
+@onready var my_health_bar: Node2D = $MyHealthBar
 const BAR_SIZE = 40.0
-@onready var current_bar = $MyHealthBar/CurrentBar
+@onready var bg_black: Panel = $MyHealthBar/BgBlack
+@onready var current_bar: Panel = $MyHealthBar/CurrentBar
 @onready var damage_popup_container = $DamagePopupContainer
 var my_owner: Entity
 var _is_moomoo = false
@@ -20,10 +22,14 @@ func _post_ready(_entity: Entity):
 	# _label.add_theme_stylebox_override("normal", lb_style)
 	# _label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	# _label.visible = my_owner is Player
-	_label.visible = true
+	_label_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_label_container.visible = false
+	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.text = my_owner.name
 
 	my_health_bar.position.y = - my_owner.sprite_heigth
+	bg_black.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	current_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func _process(_delta: float):
 	_try_update_label()
@@ -41,10 +47,10 @@ func _try_update_health_bar():
 	current_bar.size.x = my_owner.combat_data.current_hp * BAR_SIZE / my_owner.combat_data.max_hp
 
 func _try_update_label():
-	if not _label.visible:
+	if not _label_container.visible:
 		return
 		
-	_label.text = str(my_owner.combat_data.current_hp) + " - " + str(my_owner.combat_data.get_total_attack_speed()) + " - " + str(my_owner.combat_data.get_total_move_speed())
+	# _label.text = str(my_owner.combat_data.current_hp) + " - " + str(my_owner.combat_data.get_total_attack_speed()) + " - " + str(my_owner.combat_data.get_total_move_speed())
 	# _label.text = str(my_owner.current_state)
 	# _label.text = str(my_owner.combat_data.get_effects().size())
 	# _label.text = str(my_owner.combat_data.get_total_attack_speed()) + " - " + str(my_owner.combat_data.get_total_move_speed())

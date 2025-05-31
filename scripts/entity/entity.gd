@@ -89,6 +89,9 @@ func _client_physics_process(_delta: float) -> void:
 	if multiplayer.is_server() && not MultiplayerManager.HOSTED_GAME: return
 		
 	sprite.flip_h = direction.x < 0
+	# if self is Enemy:
+	# 	if AreaHovered.hovered_entity == self:
+	# 		sprite.modulate = Color(1, 0, 0)
 
 func _client_init() -> void:
 	if multiplayer.is_server() && not MultiplayerManager.HOSTED_GAME: return
