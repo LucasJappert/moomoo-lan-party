@@ -1,3 +1,5 @@
+class_name HUD
+
 extends Node
 
 # @onready var _health_bar: ProgressBar = $HealthBar
@@ -10,7 +12,7 @@ const BAR_SIZE = 40.0
 @onready var damage_popup_container = $DamagePopupContainer
 var my_owner: Entity
 var _is_moomoo = false
-const SHOW_DAMAGES = true
+const SHOW_DAMAGES_HEALS = true
 
 
 func _post_ready(_entity: Entity):
@@ -23,7 +25,7 @@ func _post_ready(_entity: Entity):
 	# _label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	# _label.visible = my_owner is Player
 	_label_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_label_container.visible = false
+	_label_container.visible = true
 	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.text = my_owner.name
 
@@ -51,14 +53,15 @@ func _try_update_label():
 		return
 		
 	# _label.text = str(my_owner.combat_data.current_hp) + " - " + str(my_owner.combat_data.get_total_attack_speed()) + " - " + str(my_owner.combat_data.get_total_move_speed())
+	_label.text = str(my_owner.combat_data.current_hp)
 	# _label.text = str(my_owner.current_state)
 	# _label.text = str(my_owner.combat_data.get_effects().size())
 	# _label.text = str(my_owner.combat_data.get_total_attack_speed()) + " - " + str(my_owner.combat_data.get_total_move_speed())
 	# _label.text += " - " + str(MapManager.world_to_cell(my_owner.global_position))
 	pass
 
-func show_damage_popup(text: String, color: Color = Color.RED):
-	if not SHOW_DAMAGES: return
+func show_damage_heal_popup(text: String, color: Color = Color.RED):
+	if not SHOW_DAMAGES_HEALS: return
 	show_popup(text, color)
 
 func show_popup(text: String, color: Color = Color.RED):

@@ -2,7 +2,7 @@ class_name Entity
 
 extends CharacterBody2D
 
-@onready var hud = $HUD
+@onready var hud: HUD = $HUD
 @onready var collision_shape = $CollisionShape2D
 @onready var area_attack = $AreaAttack
 @onready var area_attack_shape = $AreaAttack/CollisionShape2D
@@ -40,10 +40,10 @@ func rpc_server_message(data: Dictionary):
 	hud.show_popup(sm.message, Color(sm.color.x, sm.color.y, sm.color.z))
 
 @rpc("authority", "call_local")
-func rpc_receive_damage(data: Dictionary):
+func rpc_receive_damage_or_heal(data: Dictionary):
 	var di = DamageInfo.get_instance()
 	di.from_dict(data)
-	combat_data._global_receive_damage(di)
+	combat_data._global_receive_damage_or_heal(di)
 
 @rpc("authority", "call_local")
 func rpc_die():
@@ -60,7 +60,6 @@ func _init() -> void:
 func _ready():
 	collision_layer = 1
 	collision_mask = 1
-	print("_ready Entity name: ", name, " combat_data.current_hp: ", combat_data.current_hp)
 	movement_helper.set_my_owner(self)
 	combat_data.set_my_owner(self)
 	area_attack_shape.shape = area_attack_shape.shape.duplicate() # to avoid changing the original shape

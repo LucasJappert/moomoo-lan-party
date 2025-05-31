@@ -52,7 +52,7 @@ func _server_calculate_physical_damage(_target: Entity) -> void:
 	# print("Normal power: ", physical_attack_power, " Extra power: ", extra_power, " Total total_damage: ", total_damage)
 
 	var _di = DamageInfo.get_instance()
-	_di.total_damage = total_damage
+	_di.total_damage_heal = total_damage
 	_di.critical = critical_damage
 	_di.projectile_type = projectile_type
 	_di.damage_type = DamageInfo.DamageType.PHYSICAL
@@ -71,26 +71,30 @@ func _server_receive_physical_damage(_di: DamageInfo, _attacker: Entity) -> void
 		my_owner.rpc("rpc_server_message", sm.to_dict())
 		return
 
-	Skill.actions_after_effective_hit(_attacker, my_owner, _di)
-
-	var damage_before_defense = _di.total_damage
+	var damage_before_defense = _di.total_damage_heal
 	var reduced_damage = get_total_physical_defense_percent() * damage_before_defense
 	_di.critical = _di.critical - int(get_total_physical_defense_percent() * _di.critical)
-	var total_damage: int = _di.total_damage - reduced_damage
+	var total_damage: int = _di.total_damage_heal - reduced_damage
 	if total_damage < 0: total_damage = 0
 
-	_di.total_damage = total_damage
+	_di.total_damage_heal = total_damage
+
+	Skill.actions_after_effective_hit(_attacker, my_owner, _di)
 
 	# print("Damage before defense: ", damage_before_defense, " reduced: ", reduced_damage, " total: ", total_damage, " critical: ", _di.critical)
 
-	my_owner.rpc("rpc_receive_damage", _di.to_dict())
+	my_owner.rpc("rpc_receive_damage_or_heal", _di.to_dict())
 
-	current_hp -= _di.total_damage
+	update_current_hp_for_damage(total_damage)
+
+func update_current_hp_for_damage(value_to_decrease: int) -> void:
+	current_hp -= value_to_decrease
+	current_hp = clamp(current_hp, 0, max_hp)
+	
 	if current_hp <= 0:
 		Skill.actions_before_entity_death(my_owner, my_owner.target_entity)
 		current_hp = 0
 		my_owner.rpc("rpc_die")
-
 # region SETTERs
 # endregion
 
@@ -186,16 +190,19 @@ func can_physical_attack() -> bool:
 	return now - last_physical_hit_time >= get_total_attack_speed()
 # endregion
 
-func _global_receive_damage(_di: DamageInfo):
+func _global_receive_damage_or_heal(_di: DamageInfo):
 	var melee_attack = _di.projectile_type == Projectile.TYPES.NONE
 	var arrow_attack = _di.projectile_type == Projectile.TYPES.ARROW
 	if _di.critical > 0:
-		my_owner.hud.show_damage_popup(str(-_di.critical), Color(1, 1, 0))
-		my_owner.hud.show_damage_popup(str(- (_di.total_damage - _di.critical)), Color(1, 0, 0))
+		my_owner.hud.show_damage_heal_popup(str(-_di.critical), Color(1, 1, 0))
+		my_owner.hud.show_damage_heal_popup(str(- (_di.total_damage_heal - _di.critical)), Color(1, 0, 0))
 		if arrow_attack: SoundManager.play_critical_arrow_shot()
 		if melee_attack: SoundManager.play_critical_melee_hit()
-	if _di.critical == 0:
+	if _di.critical == 0 and _di.total_damage_heal > 0:
 		if melee_attack: SoundManager.play_melee_hit()
+
+	if _di.total_damage_heal < 0: # Heal
+		my_owner.hud.show_damage_heal_popup(str(abs(_di.total_damage_heal)), Color(0, 1, 0))
 	
 	last_damage_received_time = Time.get_ticks_msec()
 	pass

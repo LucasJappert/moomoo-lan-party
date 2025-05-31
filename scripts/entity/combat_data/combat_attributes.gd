@@ -20,6 +20,7 @@ extends Node
 @export var move_speed: float = 0 # Tiles per second
 @export var attack_speed_percent: float = 0
 @export var move_speed_percent: float = 0
+@export var life_steal_percent: float = 0
 
 
 static func get_default_instance() -> CombatAttributes:
@@ -51,6 +52,7 @@ func initialize_from_combat_attributes(combat_attributes: CombatAttributes) -> v
 	move_speed_percent = combat_attributes.move_speed_percent
 	magic_attack_power_percent = combat_attributes.magic_attack_power_percent
 	physical_attack_power_percent = combat_attributes.physical_attack_power_percent
+	life_steal_percent = combat_attributes.life_steal_percent
 
 func initialize_default_values() -> void:
 	initialize_from_combat_attributes(get_default_instance())

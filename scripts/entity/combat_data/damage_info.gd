@@ -5,21 +5,21 @@ enum DamageType {
 	MAGIC
 }
 
-var total_damage: int
+var total_damage_heal: int # Positive for damage, negative for heal
 var critical: int
 var projectile_type: String
 var damage_type: int = DamageType.PHYSICAL
 
 func to_dict() -> Dictionary:
 	return {
-		"total_damage": total_damage,
+		"total_damage_heal": total_damage_heal,
 		"critical": critical,
 		"projectile_type": projectile_type,
 		"damage_type": damage_type
 	}
 
 func from_dict(data: Dictionary) -> void:
-	total_damage = data.get("total_damage", 0)
+	total_damage_heal = data.get("total_damage_heal", 0)
 	critical = data.get("critical", 0)
 	projectile_type = data.get("projectile_type", "")
 	damage_type = data.get("damage_type", DamageType.PHYSICAL)

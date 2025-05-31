@@ -40,8 +40,6 @@ func try_to_move(_target_cell: Vector2i):
 @rpc("authority", "call_local")
 func right_click_on_entity(_target_entity_name: String):
 	# Always run in server
-	print("right_click_on_entity: ", _target_entity_name)
-	print(" multiplayer server: ", multiplayer.is_server())
 	var target_entity = GameManager.entities[_target_entity_name]
 
 	var is_in_attack_range = GlobalsEntityHelpers.is_target_in_attack_area(player, target_entity)

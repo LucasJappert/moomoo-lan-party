@@ -40,7 +40,7 @@
 		"description_en": "Traps an enemy in a bone prison for 2 seconds."
 	},
 	{
-		"name": "Lifesteal Aura",
+		"name": "Lifesteal",
 		"description_es": "Roba el 20% del daño causado como vida.",
 		"description_en": "Steals 20% of dealt damage as life."
 	},

@@ -5,6 +5,7 @@ extends CombatAttributes
 enum Type {ACTIVE, PASSIVE}
 
 const SkillNames = {
+	LIFESTEAL = "Lifesteal",
 	MIRROR_DEMISE = "Mirror Demise",
 	MANA_SCORCHER = "Mana Scorcher",
 	FROZEN_TOUCH = "Frozen Touch",
@@ -17,7 +18,6 @@ const SkillNames = {
 	FLAME_BURST = "Flame Burst",
 	FROST_NOVA = "Frost Nova",
 	SHADOW_STEP = "Shadow Step",
-	LIFESTEAL_AURA = "Lifesteal Aura",
 	STUNNING_BLOW = "Stunning Blow",
 	MULTI_SHOT = "Multi Shot",
 	FINAL_EXPLOSION = "Final Explosion",
@@ -88,6 +88,12 @@ static func get_stunning_strike() -> Skill:
 	skill.description = "Has a " + str(skill.stun_chance * 100) + "% chance to stun the target for " + str(skill.stun_duration) + " seconds."
 	return skill
 
+static func get_lifesteal() -> Skill:
+	var skill = Skill.new(SkillNames.LIFESTEAL, Skill.Type.PASSIVE)
+	skill.life_steal_percent = 0.2
+	skill.description = "Steals " + str(skill.life_steal_percent * 100) + "% of dealt damage as life."
+	return skill
+
 # region :::::::::::::::::::: SKILLS LOGICS
 
 static func actions_before_entity_death(_dead_entity: Entity, _attacker_entity: Entity) -> void:
@@ -113,6 +119,7 @@ static func actions_before_entity_death(_dead_entity: Entity, _attacker_entity: 
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
 	# Should be called only on the server
+	# Freeze verification
 	var _attacker_frozen_skill = _attacker.combat_data.get_skill(SkillNames.FROZEN_TOUCH)
 	if _attacker_frozen_skill:
 		var attr = _attacker_frozen_skill.get_combat_attributes()
@@ -126,6 +133,17 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 			var attr = _attacker_stun_skill.get_combat_attributes()
 			var effect = CombatEffect.get_instance(_attacker_stun_skill.stun_duration, attr)
 			_target.combat_data.add_effect(effect)
+
+	# Lifesteal verification
+	if _attacker.combat_data.current_hp < _attacker.combat_data.max_hp:
+		var _attacker_lifesteal_skill = _attacker.combat_data.get_skill(SkillNames.LIFESTEAL)
+		if _attacker_lifesteal_skill:
+			var total_heal = int(_di.total_damage_heal * _attacker_lifesteal_skill.life_steal_percent)
+			if total_heal > 0:
+				var new_di = DamageInfo.get_instance()
+				new_di.total_damage_heal = - total_heal
+				_attacker.rpc("rpc_receive_damage_or_heal", new_di.to_dict())
+				_attacker.combat_data.update_current_hp_for_damage(-total_heal)
 
 	return
 

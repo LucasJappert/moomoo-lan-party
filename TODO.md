@@ -111,6 +111,10 @@ MY TODOs:
 - ✅ Detener movimiento y atacar cuando se hace click para atacar a un enemigo
 - ✅ Implement camera movement with mouse (not fixed to player)
 - ✅ Move towards target when player wants to attack an enemy but is out of range.
+- ✅ Add life-stealing skill.
+- Agregar skill de velocidad de ataque de un 25%
+- Agregar skill de daño en area
+- Agregar skill de disparo multiple
 - Implementar animaciones varias como congelamiento, sangrado, sobre entidades
 - Implementar animaciones sobre tiles, como fuego, sanacion, congelamiento.
 - Configurar daños, hp, defensas, etc según el número de wave
