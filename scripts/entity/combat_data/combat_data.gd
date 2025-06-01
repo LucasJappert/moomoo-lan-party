@@ -8,6 +8,8 @@ const MIN_ATTACK_RANGE: int = int(MapManager.TILE_SIZE.x)
 
 @export var max_hp: int = 100
 @export var current_hp: int = 100
+@export var max_mana: int = 100
+@export var current_mana: int = 100
 @export var attack_type := AttackTypes.MELEE
 @export var projectile_type: String = Projectile.TYPES.NONE
 var skills: Array[Skill] = []
@@ -24,7 +26,7 @@ func _ready() -> void:
 	if multiplayer.is_server() == false:
 		set_process(false)
 
-	
+
 func set_my_owner(_owner: Entity) -> void:
 	my_owner = _owner
 	pass
@@ -89,7 +91,7 @@ func _server_receive_physical_damage(_di: DamageInfo, _attacker: Entity) -> void
 
 func update_current_hp_for_damage(value_to_decrease: int) -> void:
 	current_hp -= value_to_decrease
-	current_hp = clamp(current_hp, 0, max_hp)
+	current_hp = clamp(current_hp, 0, get_total_max_hp())
 	
 	if current_hp <= 0:
 		Skill.actions_before_entity_death(my_owner, my_owner.target_entity)
@@ -103,6 +105,12 @@ func get_skill(skill_name: String) -> Skill:
 	for skill in skills:
 		if skill.name == skill_name: return skill
 	return null
+
+func get_total_max_hp() -> int:
+	return max_hp + _get_extra_hp()
+
+func get_total_max_mana() -> int:
+	return max_mana + _get_extra_mana()
 
 func get_total_attack_speed() -> int:
 	var base_speed := attack_speed + _get_extra_attack_speed()
@@ -145,6 +153,8 @@ func is_stunned() -> bool:
 	for effect in get_effects():
 		if effect.stun_duration > 0: return true
 	return false
+
+
 # endregion
 
 # region TRY PHISICAL ATTACK
@@ -251,6 +261,17 @@ func _get_extra_stun_chance() -> float:
 	var total: float = 0
 	for effect in get_effects(): total += effect.stun_chance
 	return snapped(total, 0.01)
+
+func _get_extra_hp() -> int:
+	var total: int = 0
+	for effect in get_effects(): total += effect.hp
+	return total
+
+func _get_extra_mana() -> int:
+	var total: int = 0
+	for effect in get_effects(): total += effect.mana
+	return total
+
 # endregion
 
 # region Front Animations

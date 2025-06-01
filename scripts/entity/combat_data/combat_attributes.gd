@@ -3,6 +3,7 @@ class_name CombatAttributes
 extends Node
 
 @export var hp: int = 0
+@export var mana: int = 0
 @export var physical_defense_percent: float = 0
 @export var magic_defense_percent: float = 0
 @export var evasion: float = 0.0
@@ -35,6 +36,7 @@ static func get_default_instance() -> CombatAttributes:
 
 func initialize_from_combat_attributes(combat_attributes: CombatAttributes) -> void:
 	hp = combat_attributes.hp
+	mana = combat_attributes.mana
 	physical_defense_percent = combat_attributes.physical_defense_percent
 	magic_defense_percent = combat_attributes.magic_defense_percent
 	evasion = combat_attributes.evasion

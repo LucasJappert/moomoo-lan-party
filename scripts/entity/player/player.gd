@@ -14,7 +14,7 @@ func _ready():
 	super._ready()
 	global_position = MapManager.cell_to_world(MapManager.PLAYER_CELL_SPAWN)
 	combat_data.max_hp = 5000
-	combat_data.current_hp = combat_data.max_hp
+	combat_data.current_hp = 5000
 	combat_data.attack_type = AttackTypes.RANGED
 	combat_data.attack_range = 300
 	combat_data.attack_speed = 200

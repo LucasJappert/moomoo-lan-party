@@ -38,6 +38,8 @@ func _process(_delta: float):
 	_try_update_health_bar()
 
 func _try_update_health_bar():
+	if my_owner is Player && my_owner.id == Main.MY_PLAYER_ID: return
+	
 	# Hide health bar if we don't receive damage for 5 seconds
 	var now = Time.get_ticks_msec()
 	if now - my_owner.combat_data.last_damage_received_time > 5000:
@@ -46,7 +48,7 @@ func _try_update_health_bar():
 
 	if not my_health_bar.visible: my_health_bar.visible = true
 
-	current_bar.size.x = my_owner.combat_data.current_hp * BAR_SIZE / my_owner.combat_data.max_hp
+	current_bar.size.x = my_owner.combat_data.current_hp * BAR_SIZE / my_owner.combat_data.get_total_max_hp()
 
 func _try_update_label():
 	if not _label_container.visible:
