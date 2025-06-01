@@ -56,7 +56,12 @@ static func try_update_zoom(event: InputEvent):
 static func process(delta: float) -> void:
 	if not camera or Main.MY_PLAYER_ID < 0: return
 
-	if not DisplayServer.window_is_focused() or DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_MINIMIZED: return
+	var window_is_focused = DisplayServer.window_is_focused()
+	var window_is_minimized = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_MINIMIZED
+	if not window_is_focused or window_is_minimized: return
+
+	if Main.VIEWPORT_MOUSE_POSITION.x < -100 or Main.VIEWPORT_MOUSE_POSITION.x > Main.SCREEN_SIZE.x + 100: return
+	if Main.VIEWPORT_MOUSE_POSITION.y < -100 or Main.VIEWPORT_MOUSE_POSITION.y > Main.SCREEN_SIZE.y + 100: return
 
 	var direction := Vector2.ZERO
 

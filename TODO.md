@@ -112,6 +112,7 @@ MY TODOs:
 - ✅ Implement camera movement with mouse (not fixed to player)
 - ✅ Move towards target when player wants to attack an enemy but is out of range.
 - ✅ Add life-stealing skill.
+- Comenzar con la interfaz de usuario ingame
 - Agregar skill de velocidad de ataque de un 25%
 - Agregar skill de daño en area
 - Agregar skill de disparo multiple
@@ -120,7 +121,6 @@ MY TODOs:
 - Configurar daños, hp, defensas, etc según el número de wave
 - Implementar skills en enemigos (útiles luego para héroes también)
 - Setear sprites por codigo en heroes
-- Comenzar con la interfaz de usuario ingame
 - Comenzar la escena para crear y unirse a salas
 - Agregar objetos mobiles sobre el terreno como plantas, bichos, nubes, etc.
 - Agregar mas tipos de enemigos. El moomoo tendra unas 30 oleadas, cada oleada con 2 tipos de enemigos, entonces necesitariamos unos 60 tipos. Cada enemigo tendra 1 habilidad especial, pasiva o activa, por lo cual necesitaremos tambien unas 60 habilidades.
