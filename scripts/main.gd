@@ -9,6 +9,7 @@ static var VIEWPORT_MOUSE_POSITION: Vector2 = Vector2.ZERO
 static var SCREEN_SIZE: Vector2 = Vector2.ZERO
 static var MY_PLAYER: Player
 static var MY_PLAYER_ID: int = -1
+const HOSTED_GAME = true # In this version of Moomoo this is always true
 
 @onready var player_spawner = $PlayerSpawner
 @onready var terrain = $Terrain

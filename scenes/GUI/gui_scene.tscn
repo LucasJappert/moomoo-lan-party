@@ -5,7 +5,7 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_li5rb"]
 atlas = ExtResource("1_gbqeo")
-region = Rect2(958, 1905, 1090, 143)
+region = Rect2(960, 1905, 1088, 143)
 
 [sub_resource type="FontFile" id="FontFile_gbqeo"]
 cache/0/16/0/ascent = 0.0
@@ -172,17 +172,34 @@ cache/0/32/0/scale = 1.0
 [node name="GuiScene" type="CanvasLayer"]
 script = ExtResource("1_li5rb")
 
-[node name="BottomCenterAnchor" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
+[node name="SkillsBarContainer" type="CenterContainer" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
+offset_top = -70.0
+offset_bottom = -70.0
 grow_horizontal = 2
-grow_vertical = 2
+grow_vertical = 0
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
-[node name="SkillsBar" type="Sprite2D" parent="BottomCenterAnchor"]
-position = Vector2(989, 1009)
+[node name="HpBall" type="Sprite2D" parent="SkillsBarContainer"]
+position = Vector2(-474.1, 0)
+texture = ExtResource("1_gbqeo")
+region_enabled = true
+region_rect = Rect2(838, 1926, 122, 122)
+
+[node name="ManaBall" type="Sprite2D" parent="SkillsBarContainer"]
+position = Vector2(475, 0)
+texture = ExtResource("1_gbqeo")
+region_enabled = true
+region_rect = Rect2(838, 1926, 122, 122)
+
+[node name="SkillsBar" type="Sprite2D" parent="SkillsBarContainer"]
 texture = SubResource("AtlasTexture_li5rb")
+region_rect = Rect2(960, 1905, 1088, 143)
 
 [node name="NinePatchRect" type="NinePatchRect" parent="."]
 anchors_preset = 15

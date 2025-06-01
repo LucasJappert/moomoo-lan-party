@@ -85,7 +85,7 @@ func _physics_process(_delta):
 	_client_physics_process(_delta)
 
 func _client_physics_process(_delta: float) -> void:
-	if multiplayer.is_server() && not MultiplayerManager.HOSTED_GAME: return
+	if multiplayer.is_server() && not Main.HOSTED_GAME: return
 		
 	sprite.flip_h = direction.x < 0
 	# if self is Enemy:
@@ -93,7 +93,7 @@ func _client_physics_process(_delta: float) -> void:
 	# 		sprite.modulate = Color(1, 0, 0)
 
 func _client_init() -> void:
-	if multiplayer.is_server() && not MultiplayerManager.HOSTED_GAME: return
+	if multiplayer.is_server() && not Main.HOSTED_GAME: return
 
 	SpritesAnimationHelper.set_entity_sprites(self)
 
