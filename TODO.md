@@ -112,7 +112,10 @@ MY TODOs:
 - ✅ Implement camera movement with mouse (not fixed to player)
 - ✅ Move towards target when player wants to attack an enemy but is out of range.
 - ✅ Add life-stealing skill.
-- Comenzar con la interfaz de usuario ingame
+- ➡️ Start implementing experience and leveling logic
+- ➡️ Start building ingame UI
+- Implementar funcionalidad de experiencia en los players
+- Sincronizar Moomoo
 - Agregar skill de velocidad de ataque de un 25%
 - Agregar skill de daño en area
 - Agregar skill de disparo multiple

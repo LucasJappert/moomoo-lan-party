@@ -96,6 +96,9 @@ func update_current_hp_for_damage(value_to_decrease: int) -> void:
 	if current_hp <= 0:
 		Skill.actions_before_entity_death(my_owner, my_owner.target_entity)
 		current_hp = 0
+		if my_owner is Enemy:
+			for player in GameManager.get_players():
+				player.increment_current_exp(1000)
 		my_owner.rpc("rpc_die")
 # region SETTERs
 # endregion

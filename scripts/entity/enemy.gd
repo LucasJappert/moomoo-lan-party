@@ -2,8 +2,8 @@ extends Entity
 
 class_name Enemy
 
-
 @export var enemy_type: String
+static var _exp_when_dead: int = 0
 
 var timer_500ms: Timer
 
@@ -85,3 +85,11 @@ func _get_nearest_player_inside_vision():
 			closest_player = player
 
 	return closest_player
+
+static func get_enemy_exp_when_dead() -> int:
+	if _exp_when_dead > 0: return _exp_when_dead
+
+	var player_total_accumulated_exp: int = Player.get_total_accumulated_exp()
+	_exp_when_dead = int(player_total_accumulated_exp / float(EnemiesWavesController.TOTAL_ENEMIES_TO_CREATE))
+
+	return _exp_when_dead

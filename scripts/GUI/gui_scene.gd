@@ -3,9 +3,28 @@ extends CanvasLayer
 @onready var _skills_bar = $SkillsBarContainer/SkillsBar
 @onready var _hp_ball = $SkillsBarContainer/HpBall
 @onready var _mana_ball = $SkillsBarContainer/ManaBall
+# @onready var _full_exp_rect = $SkillsBarContainer/FullExpRect
+@onready var _current_exp_rect = $SkillsBarContainer/CurrentExpRect
 
 var _original_ball_size: Vector2
+var _original_ball_pos_y: float
 var _original_ball_rect_pos_y: float
+const EXP_BAR_FULL_SIZE = Vector2i(768, 10)
+# var exp_bar_position = Vector2(-EXP_BAR_FULL_SIZE.x * 0.5, -EXP_BAR_FULL_SIZE.y * 0.5)
+
+
+func _on_host_game_pressed() -> void:
+	%MultiplayerHUD.hide()
+	_skills_bar.set_visible(true)
+	MultiplayerManager.become_host()
+	GameManager.spawn_moomoo()
+	
+	EnemiesWavesController.start_wave()
+	
+func _on_join_as_player_pressed() -> void:
+	%MultiplayerHUD.hide()
+	_skills_bar.set_visible(true)
+	MultiplayerManager.become_client()
 
 
 func _ready() -> void:
@@ -17,21 +36,26 @@ func _ready() -> void:
 	_hp_ball.modulate = Color(1, 0.3, 0.3)
 	_mana_ball.modulate = Color(0.2, 0.6, 1.0)
 	_original_ball_size = _hp_ball.region_rect.size
+	_original_ball_pos_y = _hp_ball.position.y
 	_original_ball_rect_pos_y = _hp_ball.region_rect.position.y
+
+	_current_exp_rect.size.y = EXP_BAR_FULL_SIZE.y
 	# _skills_bar.set_visible(false)
 
 func _process(_delta: float) -> void:
 	if not Main.MY_PLAYER: return
-	update_hp_ball_sprite()
-	update_mana_ball_sprite()
 
-func update_hp_ball_sprite():
+	_update_hp_ball_sprite()
+	_update_mana_ball_sprite()
+	_update_exp_bar()
+
+func _update_hp_ball_sprite():
 	_update_ball_sprite(
 		_hp_ball,
 		Main.MY_PLAYER.combat_data.current_hp,
 		Main.MY_PLAYER.combat_data.get_total_max_hp()
 	)
-func update_mana_ball_sprite():
+func _update_mana_ball_sprite():
 	_update_ball_sprite(
 		_mana_ball,
 		Main.MY_PLAYER.combat_data.current_mana,
@@ -47,18 +71,9 @@ func _update_ball_sprite(ball_sprite: Sprite2D, current_value: int, max_value: i
 		Vector2(_original_ball_size.x, visible_height)
 	)
 
-	ball_sprite.position.y = crop_from_top * 0.5
+	ball_sprite.position.y = _original_ball_pos_y + crop_from_top
 
-func _on_host_game_pressed() -> void:
-	%MultiplayerHUD.hide()
-	_skills_bar.set_visible(true)
-	MultiplayerManager.become_host()
-	GameManager.spawn_moomoo()
-	
-	EnemiesWavesController.start_wave()
-	
-func _on_join_as_player_pressed() -> void:
-	%MultiplayerHUD.hide()
-	_skills_bar.set_visible(true)
-	MultiplayerManager.become_client()
-	# GameManager._spawn_moomoo()
+func _update_exp_bar():
+	var current_level = Main.MY_PLAYER.current_level
+	var percent: float = clamp(Main.MY_PLAYER.current_exp / float(Player.get_exp_per_level(current_level)), 0.0, 1.0)
+	_current_exp_rect.size.x = int(EXP_BAR_FULL_SIZE.x * percent)

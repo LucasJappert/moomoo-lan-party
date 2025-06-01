@@ -9,6 +9,12 @@
 properties/0/path = NodePath(".:player_id")
 properties/0/spawn = true
 properties/0/replication_mode = 2
+properties/1/path = NodePath(".:current_exp")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:current_level")
+properties/2/spawn = true
+properties/2/replication_mode = 2
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uyepr"]
 atlas = ExtResource("4_ylf3p")
@@ -28,6 +34,8 @@ animations = [{
 [node name="Player" instance=ExtResource("1_wbrma")]
 script = ExtResource("2_ylf3p")
 player_id = 0
+current_exp = 0
+current_level = 1
 
 [node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="0"]
 replication_config = SubResource("SceneReplicationConfig_2y2wq")

@@ -56,6 +56,7 @@ func _try_update_label():
 		
 	# _label.text = str(my_owner.combat_data.current_hp) + " - " + str(my_owner.combat_data.get_total_attack_speed()) + " - " + str(my_owner.combat_data.get_total_move_speed())
 	_label.text = str(my_owner.combat_data.current_hp)
+	if my_owner is Player: _label.text = str(my_owner.current_level)
 	# _label.text = str(my_owner.current_state)
 	# _label.text = str(my_owner.combat_data.get_effects().size())
 	# _label.text = str(my_owner.combat_data.get_total_attack_speed()) + " - " + str(my_owner.combat_data.get_total_move_speed())
