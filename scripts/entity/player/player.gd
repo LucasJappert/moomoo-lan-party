@@ -5,7 +5,7 @@ extends Entity
 @export var player_id: int = 0
 @export var current_exp: int = 0
 @export var current_level: int = 1
-@export var hero_type: String = HeroTypes.THARNOK_THE_VERDANT
+@export var hero_type: String = HeroTypes.IRON_VEX
 const MAX_LEVEL: int = 30
 static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 

@@ -2,7 +2,7 @@ class_name CombatData
 
 extends CombatAttributes
 
-const MIN_ATTACK_RANGE: int = int(MapManager.TILE_SIZE.x)
+const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapManager.TILE_SIZE.y, 2))) + 1
 
 @onready var combat_effect_node = $CombatEffectNode
 

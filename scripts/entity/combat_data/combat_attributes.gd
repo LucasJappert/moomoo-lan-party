@@ -27,7 +27,7 @@ extends Node
 static func get_default_instance() -> CombatAttributes:
 	var attr = CombatAttributes.new()
 	attr.move_speed = 3 # Default move speed for enemies
-	attr.attack_range = 32
+	attr.attack_range = CombatData.MIN_ATTACK_RANGE
 	attr.magic_attack_power = 0
 	attr.physical_attack_power = 10
 	attr.crit_multiplier = 1.5

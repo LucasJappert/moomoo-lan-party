@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://dywrecu6pml77"]
+[gd_scene load_steps=7 format=3 uid="uid://dywrecu6pml77"]
 
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="1_gbqeo"]
 [ext_resource type="Script" uid="uid://0x16271fub0a" path="res://scripts/GUI/gui_scene.gd" id="1_li5rb"]
+[ext_resource type="PackedScene" uid="uid://buj7u3vemtwye" path="res://scenes/GUI/slot_over_skill_bar.tscn" id="3_acekp"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_li5rb"]
 
@@ -225,6 +226,20 @@ region_rect = Rect2(838, 1926, 122, 122)
 [node name="SkillsBar" type="TextureRect" parent="SkillsBarContainer"]
 layout_mode = 0
 texture = SubResource("AtlasTexture_li5rb")
+
+[node name="SkillSlotsContainer" type="Node2D" parent="SkillsBarContainer"]
+
+[node name="SkillSlot1" parent="SkillsBarContainer/SkillSlotsContainer" instance=ExtResource("3_acekp")]
+position = Vector2(183, 94)
+
+[node name="SkillSlot2" parent="SkillsBarContainer/SkillSlotsContainer" instance=ExtResource("3_acekp")]
+position = Vector2(262, 94)
+
+[node name="SkillSlot3" parent="SkillsBarContainer/SkillSlotsContainer" instance=ExtResource("3_acekp")]
+position = Vector2(342, 94)
+
+[node name="SkillSlot4" parent="SkillsBarContainer/SkillSlotsContainer" instance=ExtResource("3_acekp")]
+position = Vector2(423, 94)
 
 [node name="MultiplayerHUD" type="Control" parent="."]
 unique_name_in_owner = true

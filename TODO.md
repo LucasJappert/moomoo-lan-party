@@ -118,10 +118,12 @@ MY TODOs: 🔵🟡✅
 - 🟡 Start implementing experience and leveling logic
 - 🟡 Start building ingame UI
 - 🟡 Set first hero types
-- 🔵 Comenzar a dibujar las 4 habilidades en la barra inferior
+- 🔵 Start drawing the 4 abilities on the bottom bar
+- Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
 - Agregar skill de velocidad de ataque de un 25%
 - Agregar skill de daño en area
 - Agregar skill de disparo multiple
+- Agregar skill que causa un x2 cuando el ataque es por la espalda del enemigo.
 - Agregar skill que cada 5 ataques regenera el 5% de la vida total a todos los aliados
 - Implementar animaciones varias como congelamiento, sangrado, sobre entidades
 - Implementar animaciones sobre tiles, como fuego, sanacion, congelamiento.

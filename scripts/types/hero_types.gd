@@ -58,16 +58,21 @@ static func initialize_hero(player: Player) -> void:
 		player.combat_data.projectile_type = Projectile.TYPES.NONE
 		my_attr.hp = 600
 		my_attr.evasion = 0.1
-		player.combat_data.skills = [Skill.get_lifesteal(), Skill.get_stunning_strike()]
+		player.combat_data.skills = [
+			Skill.get_skill(Skill.Names.LIFESTEAL),
+			Skill.get_skill(Skill.Names.STUNNING_STRIKE),
+			Skill.get_skill(Skill.Names.SHIELDED_CORE),
+			Skill.get_skill(Skill.Names.FROZEN_TOUCH)
+		]
 	
 	if player.hero_type == LIORA_SUNVEIL:
-		player.combat_data.skills = [Skill.get_lifesteal()]
+		player.combat_data.skills = [Skill.get_skill(Skill.Names.LIFESTEAL)]
 	
 	if player.hero_type == THARNOK_THE_VERDANT:
-		player.combat_data.skills = [Skill.get_lifesteal()]
+		player.combat_data.skills = [Skill.get_skill(Skill.Names.LIFESTEAL)]
 	
 	if player.hero_type == VARRIK_DUSKHOLLOW:
-		player.combat_data.skills = [Skill.get_lifesteal()]
+		player.combat_data.skills = [Skill.get_skill(Skill.Names.LIFESTEAL)]
 
 	player.combat_data.max_hp = my_attr.hp
 	player.combat_data.initialize_from_combat_attributes(my_attr)

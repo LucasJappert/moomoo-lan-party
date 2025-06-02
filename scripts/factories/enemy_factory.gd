@@ -15,7 +15,7 @@ static func set_frost_revenant(_enemy: Enemy):
 	_enemy.combat_data.evasion = 0.15
 	_enemy.combat_data.crit_chance = 0.2
 
-	_enemy.combat_data.skills.append_array([Skill.get_mirror_demise()])
+	_enemy.combat_data.skills.append_array([Skill.get_skill(Skill.Names.MIRROR_DEMISE)])
 
 	return true
 
@@ -26,7 +26,7 @@ static func set_warden_of_decay(_enemy: Enemy):
 	_enemy.combat_data.crit_chance = 0.1
 	_enemy.combat_data.crit_multiplier = 1.5
 
-	_enemy.combat_data.skills.append_array([Skill.get_mirror_demise()])
+	_enemy.combat_data.skills.append_array([Skill.get_skill(Skill.Names.MIRROR_DEMISE)])
 
 	return true
 
@@ -42,10 +42,7 @@ static func set_flame_cultist(_enemy: Enemy):
 	_enemy.combat_data.physical_attack_power = 2
 	
 	_enemy.combat_data.skills.append_array([
-		Skill.get_lifesteal(),
-		# Skill.get_mirror_demise(),
-		# Skill.get_frozen_touch(),
-		# Skill.get_stunning_strike(),
+		Skill.get_skill(Skill.Names.LIFESTEAL),
 	])
 
 # endregion

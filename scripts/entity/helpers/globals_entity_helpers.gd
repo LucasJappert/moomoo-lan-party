@@ -14,7 +14,7 @@ static func get_nearest_entity_to_attack(my_owner: Entity, entities: Array[Entit
 
 	for entity in entities:
 		var dist = entity.global_position.distance_to(my_owner.global_position)
-		if dist > my_owner.combat_data.attack_range: continue
+		if dist > my_owner.combat_data.get_total_attack_range(): continue
 
 		if dist < closest_distance:
 			closest_distance = dist

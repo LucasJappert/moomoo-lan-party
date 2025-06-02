@@ -4,7 +4,7 @@ extends CombatAttributes
 
 enum Type {ACTIVE, PASSIVE}
 
-const SkillNames = {
+const Names = {
 	SHIELDED_CORE = "Shielded Core", # ✅
 	BLESSING_OF_POWER = "Blessing of Power", # ✅
 	LIFESTEAL = "Lifesteal", # ✅
@@ -40,57 +40,71 @@ const SkillNames = {
 	PHANTOM_REPRISAL = "Phantom Reprisal",
 }
 
+static var _SKILLS: Dictionary[String, Skill]
+const frame_size = 64
+const _ATLAS_START_POS = Vector2(0, 1632)
+
 var type: Type = Type.ACTIVE
 var cooldown: float = 0
 var mana_cost: float = 0
 var description: String = ""
+var is_learned: bool = false
+
+var rect_region: Rect2 = Rect2()
+
+static func initialize_skills() -> void:
+	var skill_name = Names.SHIELDED_CORE
+	_SKILLS[skill_name] = Skill.new(skill_name, Skill.Type.PASSIVE)
+	_SKILLS[skill_name].rect_region = Rect2(0 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
+	_SKILLS[skill_name].magic_defense_percent = 0.3
+	_SKILLS[skill_name].physical_defense_percent = 0.3
+	_SKILLS[skill_name].description = "Reduces magic and physical defense by " + str(_SKILLS[skill_name].magic_defense_percent * 100) + "%"
+
+	skill_name = Names.BLESSING_OF_POWER
+	_SKILLS[skill_name] = Skill.new(skill_name, Skill.Type.PASSIVE)
+	_SKILLS[skill_name].rect_region = Rect2(1 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
+	_SKILLS[skill_name].physical_attack_power_percent = 0.5
+	_SKILLS[skill_name].description = "Increases physical attack power by " + str(_SKILLS[skill_name].physical_attack_power_percent * 100) + "%"
+
+	skill_name = Names.MIRROR_DEMISE
+	_SKILLS[skill_name] = Skill.new(skill_name, Skill.Type.PASSIVE)
+	_SKILLS[skill_name].rect_region = Rect2(2 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
+	_SKILLS[skill_name].description = "Upon death, splits into 4 copies with half the original HP."
+
+	skill_name = Names.FROZEN_TOUCH
+	_SKILLS[skill_name] = Skill.new(skill_name, Skill.Type.PASSIVE)
+	_SKILLS[skill_name].rect_region = Rect2(3 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
+	_SKILLS[skill_name].attack_speed_percent = -0.1
+	_SKILLS[skill_name].move_speed_percent = -0.1
+	_SKILLS[skill_name].freeze_duration = 4
+	_SKILLS[skill_name].description = "The attacker's icy touch partially freezes the target, reducing their movement and attack speed by " + \
+	str(abs(_SKILLS[skill_name].attack_speed_percent) * 100) + "% for " + str(_SKILLS[skill_name].freeze_duration) + " seconds."
+
+	skill_name = Names.STUNNING_STRIKE
+	_SKILLS[skill_name] = Skill.new(skill_name, Skill.Type.PASSIVE)
+	_SKILLS[skill_name].rect_region = Rect2(4 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
+	_SKILLS[skill_name].stun_duration = 2
+	_SKILLS[skill_name].stun_chance = 0.25
+	_SKILLS[skill_name].description = "Has a " + str(_SKILLS[skill_name].stun_chance * 100) + "% chance to stun the target for " + str(_SKILLS[skill_name].stun_duration) + " seconds."
+
+	skill_name = Names.LIFESTEAL
+	_SKILLS[skill_name] = Skill.new(skill_name, Skill.Type.PASSIVE)
+	_SKILLS[skill_name].rect_region = Rect2(5 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
+	_SKILLS[skill_name].life_steal_percent = 0.2
+	_SKILLS[skill_name].description = "Steals " + str(_SKILLS[skill_name].life_steal_percent * 100) + "% of dealt damage as life."
+
+static func get_skill(skill_name: String) -> Skill:
+	if _SKILLS.is_empty(): initialize_skills()
+	
+	return _SKILLS[skill_name]
 
 func _init(_name: String, _type: Type):
 	name = _name
 	type = _type
 
-static func get_shielded_core() -> Skill:
-	var skill = Skill.new(SkillNames.SHIELDED_CORE, Skill.Type.PASSIVE)
-	skill.magic_defense_percent = 0.3
-	skill.physical_defense_percent = 0.3
-	skill.description = "Reduces magic and physical defense by " + str(skill.magic_defense_percent * 100) + "%"
-	return skill
-
-static func get_blessing_of_power() -> Skill:
-	var skill = Skill.new(SkillNames.BLESSING_OF_POWER, Skill.Type.PASSIVE)
-	skill.physical_attack_power_percent = 0.5
-	skill.description = "Increases physical attack power by " + str(skill.physical_attack_power_percent * 100) + "%"
-	return skill
-
-static func get_mirror_demise() -> Skill:
-	var skill = Skill.new(SkillNames.MIRROR_DEMISE, Skill.Type.PASSIVE)
-	skill.description = "Upon death, splits into 4 copies with half the original HP."
-	return skill
-
-static func get_frozen_touch() -> Skill:
-	var skill = Skill.new(SkillNames.FROZEN_TOUCH, Skill.Type.PASSIVE)
-	skill.attack_speed_percent = -0.1
-	skill.move_speed_percent = -0.1
-	skill.freeze_duration = 4
-	skill.description = "The attacker's icy touch partially freezes the target, reducing their movement and attack speed by " + \
-	str(abs(skill.attack_speed_percent) * 100) + "% for " + str(skill.freeze_duration) + " seconds."
-	return skill
-
-static func get_stunning_strike() -> Skill:
-	var skill = Skill.new(SkillNames.STUNNING_STRIKE, Skill.Type.PASSIVE)
-	skill.stun_duration = 2
-	skill.stun_chance = 0.25
-	skill.description = "Has a " + str(skill.stun_chance * 100) + "% chance to stun the target for " + str(skill.stun_duration) + " seconds."
-	return skill
-
-static func get_lifesteal() -> Skill:
-	var skill = Skill.new(SkillNames.LIFESTEAL, Skill.Type.PASSIVE)
-	skill.life_steal_percent = 0.2
-	skill.description = "Steals " + str(skill.life_steal_percent * 100) + "% of dealt damage as life."
-	return skill
 
 static func get_mana_scorcher() -> Skill:
-	var skill = Skill.new(SkillNames.MANA_SCORCHER, Skill.Type.ACTIVE)
+	var skill = Skill.new(Names.MANA_SCORCHER, Skill.Type.ACTIVE)
 	skill.description = "Burns 50% of the target's mana, dealing 25% of that as physical damage."
 	return skill
 
@@ -100,7 +114,7 @@ static func actions_before_entity_death(_dead_entity: Entity, _attacker_entity: 
 	if not _dead_entity is Enemy: return
 	if _dead_entity.replicated: return
 
-	if _dead_entity.combat_data.get_skill(SkillNames.MIRROR_DEMISE):
+	if _dead_entity.combat_data.get_skill(Names.MIRROR_DEMISE):
 		var target_tiles = [
 			Vector2(-MapManager.TILE_SIZE.x, -MapManager.TILE_SIZE.y),
 			Vector2(MapManager.TILE_SIZE.x, -MapManager.TILE_SIZE.y),
@@ -120,7 +134,7 @@ static func actions_before_entity_death(_dead_entity: Entity, _attacker_entity: 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
 	# Should be called only on the server
 	# Freeze verification
-	var _attacker_frozen_skill = _attacker.combat_data.get_skill(SkillNames.FROZEN_TOUCH)
+	var _attacker_frozen_skill = _attacker.combat_data.get_skill(Names.FROZEN_TOUCH)
 	if _attacker_frozen_skill:
 		var attr = _attacker_frozen_skill.get_combat_attributes()
 		var effect = CombatEffect.get_instance(attr.freeze_duration, attr)
@@ -128,7 +142,7 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 	
 	# Stun verification, we need it after the evasion check
 	if GlobalsEntityHelpers.roll_chance(_attacker.combat_data.get_total_stun_chance()):
-		var _attacker_stun_skill = _attacker.combat_data.get_skill(SkillNames.STUNNING_STRIKE)
+		var _attacker_stun_skill = _attacker.combat_data.get_skill(Names.STUNNING_STRIKE)
 		if _attacker_stun_skill:
 			var attr = _attacker_stun_skill.get_combat_attributes()
 			var effect = CombatEffect.get_instance(_attacker_stun_skill.stun_duration, attr)
@@ -136,7 +150,7 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 
 	# Lifesteal verification
 	if _attacker.combat_data.current_hp < _attacker.combat_data.max_hp:
-		var _attacker_lifesteal_skill = _attacker.combat_data.get_skill(SkillNames.LIFESTEAL)
+		var _attacker_lifesteal_skill = _attacker.combat_data.get_skill(Names.LIFESTEAL)
 		if _attacker_lifesteal_skill:
 			var total_heal = int(_di.total_damage_heal * _attacker_lifesteal_skill.life_steal_percent)
 			if total_heal > 0:

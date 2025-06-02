@@ -5,12 +5,15 @@ extends CanvasLayer
 @onready var _mana_ball = $SkillsBarContainer/ManaBall
 # @onready var _full_exp_rect = $SkillsBarContainer/FullExpRect
 @onready var _current_exp_rect = $SkillsBarContainer/CurrentExpRect
+@onready var _skill_slots_container = $SkillsBarContainer/SkillSlotsContainer
 
 var _original_ball_size: Vector2
 var _original_ball_pos_y: float
 var _original_ball_rect_pos_y: float
 const EXP_BAR_FULL_SIZE = Vector2i(768, 10)
 # var exp_bar_position = Vector2(-EXP_BAR_FULL_SIZE.x * 0.5, -EXP_BAR_FULL_SIZE.y * 0.5)
+
+var _player_skills: Array[Skill] = []
 
 
 func _on_host_game_pressed() -> void:
@@ -48,6 +51,7 @@ func _process(_delta: float) -> void:
 	_update_hp_ball_sprite()
 	_update_mana_ball_sprite()
 	_update_exp_bar()
+	_update_slots_of_skills()
 
 func _update_hp_ball_sprite():
 	_update_ball_sprite(
@@ -77,3 +81,23 @@ func _update_exp_bar():
 	var current_level = Main.MY_PLAYER.current_level
 	var percent: float = clamp(Main.MY_PLAYER.current_exp / float(Player.get_exp_per_level(current_level)), 0.0, 1.0)
 	_current_exp_rect.size.x = int(EXP_BAR_FULL_SIZE.x * percent)
+
+func _update_slots_of_skills():
+	if _player_skills.is_empty():
+		_player_skills = Main.MY_PLAYER.combat_data.skills
+		_update_region_of_skill_slots()
+
+
+	for i in range(Main.MY_PLAYER.combat_data.skills.size()):
+		print(Main.MY_PLAYER.combat_data.skills[i].name)
+
+
+# region 	INTERNAL AUXILIARY METHODS
+func _update_region_of_skill_slots() -> void:
+	var skill_children = _skill_slots_container.get_children()
+	for i in range(skill_children.size()):
+		if _player_skills[i] == null: continue
+
+		skill_children[i].region_rect = _player_skills[i].rect_region
+
+# endregion INTERNAL AUXILIARY METHODS

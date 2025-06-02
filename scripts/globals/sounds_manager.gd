@@ -1,11 +1,11 @@
 extends Node
 class_name SoundManager
 
+static var _MUTED := false
 const MAX_PLAYERS := 10
 static var _players: Array[AudioStreamPlayer] = []
 static var _initialized := false
 static var _playing_counts: Dictionary = {} # ← sonido_path : cantidad
-static var _MUTED := true
 
 static func initialize():
 	if _initialized:
