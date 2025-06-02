@@ -1,0 +1,26 @@
+[
+	{
+		"name": "Iron Vex",
+		"alias": "Vexar",
+		"description_en": "A shielded warrior who strikes back with raw plasma force.",
+		"description_es": "Un guerrero blindado que contraataca con fuerza de plasma pura."
+	},
+	{
+		"name": "Liora Sunveil",
+		"alias": "Lumira",
+		"description_en": "A divine priestess channeling celestial light to heal and smite.",
+		"description_es": "Una sacerdotisa divina que canaliza luz celestial para sanar y castigar."
+	},
+	{
+		"name": "Tharnok the Verdant",
+		"alias": "Thornak",
+		"description_en": "Nature-bound knight who thrives on regeneration and retaliation.",
+		"description_es": "Caballero vinculado a la naturaleza que se regenera y contraataca."
+	},
+	{
+		"name": "Varrik Duskhollow",
+		"alias": "Duskar",
+		"description_en": "A cursed archer who fires shadow-tipped arrows from afar.",
+		"description_es": "Arquero maldito que dispara flechas sombrías desde la distancia."
+	}
+]

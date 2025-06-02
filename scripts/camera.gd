@@ -15,13 +15,13 @@ const CAMERA_SPEED := 800.0 # px/seg
 static func set_screen_size():
 	var screen_size = DisplayServer.screen_get_size(0)
 
-	var new_width = int(screen_size.x * 0.4)
+	var new_width = int(screen_size.x * 0.7)
 	var new_height = int(new_width * 9.0 / 16.0)
 
 	DisplayServer.window_set_size(Vector2i(new_width, new_height))
 
 	var pos_x = screen_size.x - new_width
-	var pos_y = screen_size.y - new_height
+	var pos_y = 200
 	DisplayServer.window_set_position(Vector2i(pos_x, pos_y))
 
 static func create_camera(spawn_position: Vector2 = Moomoo.SPAWN_POSITION):
@@ -60,8 +60,11 @@ static func process(delta: float) -> void:
 	var window_is_minimized = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_MINIMIZED
 	if not window_is_focused or window_is_minimized: return
 
-	if Main.VIEWPORT_MOUSE_POSITION.x < -100 or Main.VIEWPORT_MOUSE_POSITION.x > Main.SCREEN_SIZE.x + 100: return
-	if Main.VIEWPORT_MOUSE_POSITION.y < -100 or Main.VIEWPORT_MOUSE_POSITION.y > Main.SCREEN_SIZE.y + 100: return
+	var window_is_maximized = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_MAXIMIZED
+
+	if window_is_focused && not window_is_maximized:
+		if Main.VIEWPORT_MOUSE_POSITION.x < 0 or Main.VIEWPORT_MOUSE_POSITION.x > Main.SCREEN_SIZE.x: return
+		if Main.VIEWPORT_MOUSE_POSITION.y < 0 or Main.VIEWPORT_MOUSE_POSITION.y > Main.SCREEN_SIZE.y: return
 
 	var direction := Vector2.ZERO
 

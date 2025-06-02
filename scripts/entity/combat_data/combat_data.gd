@@ -89,7 +89,10 @@ func _server_receive_physical_damage(_di: DamageInfo, _attacker: Entity) -> void
 
 	update_current_hp_for_damage(total_damage)
 
+# region SETTERs
 func update_current_hp_for_damage(value_to_decrease: int) -> void:
+	if current_hp <= 0: return
+	
 	current_hp -= value_to_decrease
 	current_hp = clamp(current_hp, 0, get_total_max_hp())
 	
@@ -100,7 +103,6 @@ func update_current_hp_for_damage(value_to_decrease: int) -> void:
 			for player in GameManager.get_players():
 				player.increment_current_exp(1000)
 		my_owner.rpc("rpc_die")
-# region SETTERs
 # endregion
 
 # region GETTERs
@@ -127,6 +129,11 @@ func get_total_attack_speed() -> int:
 
 	return int(effective_speed)
 
+func get_total_attack_range() -> int:
+	var total := attack_range + _get_extra_attack_range()
+	if total < MIN_ATTACK_RANGE: total = MIN_ATTACK_RANGE
+	return total
+
 func get_total_move_speed() -> float:
 	var tiles_per_second := move_speed + _get_extra_move_speed()
 	var extra_percent := _get_extra_move_speed_percent()
@@ -151,6 +158,7 @@ func get_total_physical_attack_power() -> float:
 	total = total * (1 + extra_percent)
 	if total < 0: total = 0
 	return total
+
 
 func is_stunned() -> bool:
 	for effect in get_effects():
@@ -249,6 +257,11 @@ func _get_extra_attack_speed_percent() -> float:
 	var total: float = 0.0
 	for effect in get_effects(): total += effect.attack_speed_percent
 	return snapped(clamp(total, -10.0, 10.0), 0.1)
+
+func _get_extra_attack_range() -> int:
+	var total: int = 0
+	for effect in get_effects(): total += effect.attack_range
+	return total
 
 func _get_extra_move_speed() -> float:
 	var total: float = 0

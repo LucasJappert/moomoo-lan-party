@@ -74,7 +74,7 @@ func set_boss_level(_level: int) -> void:
 	_boss_level = _level
 
 func _set_area_attack_shape_radius() -> void:
-	area_attack_shape.shape.radius = combat_data.attack_range
+	area_attack_shape.shape.radius = combat_data.get_total_attack_range()
 
 func _process(_delta: float) -> void:
 	EntityState._process(self)

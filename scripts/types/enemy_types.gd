@@ -34,8 +34,9 @@ const MOONFANG_DUELIST = "Moonfang Duelist"
 const BONE_BULWARK = "Bone Bulwark"
 const FROSTBONE_WARRIOR = "Frostbone Warrior"
 
-const frames_by_enemy = 2
-const frame_size = 64
+const _START_REGION = Vector2i(0, 0)
+const _FRAME_SIZE = Vector2i(64, 64)
+const frames_by_type = 2
 static var enemies_start_vector: Dictionary[String, Vector2i] = {}
 
 static func _get_enemies_start_vector() -> Dictionary[String, Vector2i]:
@@ -48,18 +49,18 @@ static func _get_enemies_start_vector() -> Dictionary[String, Vector2i]:
 	for y in range(enemies_by_column):
 		for x in range(enemies_by_row):
 			var _key = y * enemies_by_row + x
-			enemies_start_vector[get_enemy_keys()[_key]] = Vector2i(x * frame_size * frames_by_enemy, y * frame_size)
+			enemies_start_vector[get_keys()[_key]] = Vector2i(_START_REGION.x + x * _FRAME_SIZE.x * frames_by_type, _START_REGION.y + y * _FRAME_SIZE.y)
 
 	return enemies_start_vector
 
-static func get_enemy_rect_frames(enemy_key: String) -> Array[Rect2]:
+static func get_rect_frames(enemy_key: String) -> Array[Rect2]:
 	var start_vector := _get_enemies_start_vector()[enemy_key]
 	var rects: Array[Rect2] = []
-	for i in range(frames_by_enemy):
-		rects.append(Rect2(start_vector.x + i * frame_size, start_vector.y, frame_size, frame_size))
+	for i in range(frames_by_type):
+		rects.append(Rect2(start_vector.x + i * _FRAME_SIZE.x, start_vector.y, _FRAME_SIZE.x, _FRAME_SIZE.y))
 	return rects
 
-static func get_enemy_keys() -> Array[String]:
+static func get_keys() -> Array[String]:
 	return [
 		FROST_REVENANT,
 		WARDEN_OF_DECAY,

@@ -92,7 +92,7 @@ This file tracks upcoming features and tasks in development. Contributions are w
 
 Let’s build MooMoo LAN Party together! 🐮
 
-MY TODOs:
+MY TODOs: 🔵🟡✅
 
 - ✅ Mejorar el mapa agregando árboles, cercas, etc.
 - ✅ Corregir movimientos en diagonal cuando en realidad no se deberia permitir si los tiles adyacentes estan bloqueados.
@@ -112,18 +112,20 @@ MY TODOs:
 - ✅ Implement camera movement with mouse (not fixed to player)
 - ✅ Move towards target when player wants to attack an enemy but is out of range.
 - ✅ Add life-stealing skill.
-- ➡️ Start implementing experience and leveling logic
-- ➡️ Start building ingame UI
-- Implementar funcionalidad de experiencia en los players
-- Sincronizar Moomoo
+- ✅ Implement skills in enemies (also useful for heroes later)
+- ✅ Set sprites by code in heroes
+- ✅ Sync Moomoo
+- 🟡 Start implementing experience and leveling logic
+- 🟡 Start building ingame UI
+- 🟡 Set first hero types
+- 🔵 Comenzar a dibujar las 4 habilidades en la barra inferior
 - Agregar skill de velocidad de ataque de un 25%
 - Agregar skill de daño en area
 - Agregar skill de disparo multiple
+- Agregar skill que cada 5 ataques regenera el 5% de la vida total a todos los aliados
 - Implementar animaciones varias como congelamiento, sangrado, sobre entidades
 - Implementar animaciones sobre tiles, como fuego, sanacion, congelamiento.
 - Configurar daños, hp, defensas, etc según el número de wave
-- Implementar skills en enemigos (útiles luego para héroes también)
-- Setear sprites por codigo en heroes
 - Comenzar la escena para crear y unirse a salas
 - Agregar objetos mobiles sobre el terreno como plantas, bichos, nubes, etc.
 - Agregar mas tipos de enemigos. El moomoo tendra unas 30 oleadas, cada oleada con 2 tipos de enemigos, entonces necesitariamos unos 60 tipos. Cada enemigo tendra 1 habilidad especial, pasiva o activa, por lo cual necesitaremos tambien unas 60 habilidades.

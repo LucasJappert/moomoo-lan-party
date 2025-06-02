@@ -5,6 +5,7 @@ extends Entity
 @export var player_id: int = 0
 @export var current_exp: int = 0
 @export var current_level: int = 1
+@export var hero_type: String = HeroTypes.THARNOK_THE_VERDANT
 const MAX_LEVEL: int = 30
 static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 
@@ -16,21 +17,8 @@ func get_client_inputs(): return %ClientInputs
 func _ready():
 	super._ready()
 	global_position = MapManager.cell_to_world(MapManager.PLAYER_CELL_SPAWN)
-	combat_data.max_hp = 5000
-	combat_data.current_hp = 5000
-	combat_data.attack_type = AttackTypes.RANGED
-	combat_data.attack_range = 300
-	combat_data.attack_speed = 200
-	combat_data.crit_chance = 0.5
-	combat_data.physical_attack_power = 100
-	combat_data.projectile_type = Projectile.TYPES.ARROW
-	combat_data.move_speed = 5
-	combat_data.skills.append_array([
-		Skill.get_shielded_core(),
-		Skill.get_lifesteal(),
-		# Skill.get_frozen_touch(),
-		# Skill.get_stunning_strike()s
-	])
+
+	HeroTypes.initialize_hero(self)
 
 	# We need to update the radius of the attack area node here as it enters the scene
 	_set_area_attack_shape_radius()

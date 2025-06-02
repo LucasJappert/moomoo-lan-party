@@ -10,6 +10,9 @@ atlas = ExtResource("1_gbqeo")
 region = Rect2(960, 1905, 1088, 143)
 
 [sub_resource type="FontFile" id="FontFile_gbqeo"]
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
 cache/0/16/0/ascent = 0.0
 cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0
@@ -201,7 +204,7 @@ color = Color(0.25098, 0.235294, 0.184314, 1)
 layout_mode = 2
 offset_left = 160.0
 offset_top = 37.0
-offset_right = 560.0
+offset_right = 170.0
 offset_bottom = 47.0
 color = Color(0, 0.447059, 0.0509804, 1)
 

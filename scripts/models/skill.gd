@@ -5,10 +5,13 @@ extends CombatAttributes
 enum Type {ACTIVE, PASSIVE}
 
 const SkillNames = {
-	LIFESTEAL = "Lifesteal",
-	MIRROR_DEMISE = "Mirror Demise",
+	SHIELDED_CORE = "Shielded Core", # ✅
+	BLESSING_OF_POWER = "Blessing of Power", # ✅
+	LIFESTEAL = "Lifesteal", # ✅
+	MIRROR_DEMISE = "Mirror Demise", # ✅
+	FROZEN_TOUCH = "Frozen Touch", # ✅
+	STUNNING_STRIKE = "Stunning Strike", # ✅
 	MANA_SCORCHER = "Mana Scorcher",
-	FROZEN_TOUCH = "Frozen Touch",
 	DIVINE_SHIELD = "Divine Shield",
 	ENERGY_ABSORPTION = "Energy Absorption",
 	VOID_STEP = "Void Step",
@@ -35,9 +38,6 @@ const SkillNames = {
 	ECHOING_WRATH = "Echoing Wrath",
 	REVERBERATING_PAIN = "Reverberating Pain",
 	PHANTOM_REPRISAL = "Phantom Reprisal",
-	SHIELDED_CORE = "Shielded Core",
-	BLESSING_OF_POWER = "Blessing of Power",
-	STUNNING_STRIKE = "Stunning Strike"
 }
 
 var type: Type = Type.ACTIVE
@@ -67,11 +67,6 @@ static func get_mirror_demise() -> Skill:
 	skill.description = "Upon death, splits into 4 copies with half the original HP."
 	return skill
 
-static func get_mana_scorcher() -> Skill:
-	var skill = Skill.new(SkillNames.MANA_SCORCHER, Skill.Type.ACTIVE)
-	skill.description = "Burns 50% of the target's mana, dealing 25% of that as physical damage."
-	return skill
-
 static func get_frozen_touch() -> Skill:
 	var skill = Skill.new(SkillNames.FROZEN_TOUCH, Skill.Type.PASSIVE)
 	skill.attack_speed_percent = -0.1
@@ -92,6 +87,11 @@ static func get_lifesteal() -> Skill:
 	var skill = Skill.new(SkillNames.LIFESTEAL, Skill.Type.PASSIVE)
 	skill.life_steal_percent = 0.2
 	skill.description = "Steals " + str(skill.life_steal_percent * 100) + "% of dealt damage as life."
+	return skill
+
+static func get_mana_scorcher() -> Skill:
+	var skill = Skill.new(SkillNames.MANA_SCORCHER, Skill.Type.ACTIVE)
+	skill.description = "Burns 50% of the target's mana, dealing 25% of that as physical damage."
 	return skill
 
 # region :::::::::::::::::::: SKILLS LOGICS

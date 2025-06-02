@@ -62,6 +62,6 @@ func add_decoration(sprite: Sprite2D) -> void:
 	decorations.add_child(sprite, true)
 
 func spawn_moomoo() -> void:
-	GameManager.moomoo = load("res://scenes/entity/moomoo_scene.tscn").instantiate()
-	GameManager.moomoo_node.add_child(GameManager.moomoo, true)
+	moomoo = load("res://scenes/entity/moomoo_scene.tscn").instantiate()
+	moomoo_node.add_child(GameManager.moomoo, true)
 	MapManager.set_cell_blocked_from_world(GameManager.moomoo.global_position, true)
