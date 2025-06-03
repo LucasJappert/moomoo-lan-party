@@ -12,16 +12,22 @@ extends Node
 @export var stun_chance: float = 0.0
 @export var stun_duration: float = 0.0
 @export var attack_range: int = 0
+@export var attack_speed: float = 0 # Attacks per second
 @export var physical_attack_power: int = 0
 @export var physical_attack_power_percent: float = 0
 @export var magic_attack_power: int = 0
 @export var magic_attack_power_percent: float = 0
 @export var freeze_duration: float = 0 # In seconds
-@export var attack_speed: int = 0 # Milliseconds between attacks
 @export var move_speed: float = 0 # Tiles per second
 @export var attack_speed_percent: float = 0
 @export var move_speed_percent: float = 0
 @export var life_steal_percent: float = 0
+@export var hp_regeneration_points: float = 0 # Points per second
+@export var mana_regeneration_points: float = 0 # Points per second
+
+@export var agility: int = 0
+@export var strength: int = 0
+@export var intelligence: int = 0
 
 
 static func get_default_instance() -> CombatAttributes:
@@ -31,7 +37,7 @@ static func get_default_instance() -> CombatAttributes:
 	attr.magic_attack_power = 0
 	attr.physical_attack_power = 10
 	attr.crit_multiplier = 1.5
-	attr.attack_speed = 1000
+	attr.attack_speed = 0.5
 	return attr
 
 func initialize_from_combat_attributes(combat_attributes: CombatAttributes) -> void:
@@ -55,6 +61,12 @@ func initialize_from_combat_attributes(combat_attributes: CombatAttributes) -> v
 	magic_attack_power_percent = combat_attributes.magic_attack_power_percent
 	physical_attack_power_percent = combat_attributes.physical_attack_power_percent
 	life_steal_percent = combat_attributes.life_steal_percent
+	hp_regeneration_points = combat_attributes.hp_regeneration_points
+	mana_regeneration_points = combat_attributes.mana_regeneration_points
+
+	agility = combat_attributes.agility
+	strength = combat_attributes.strength
+	intelligence = combat_attributes.intelligence
 
 func initialize_default_values() -> void:
 	initialize_from_combat_attributes(get_default_instance())

@@ -48,7 +48,7 @@ static func initialize_hero(player: Player) -> void:
 	my_attr.evasion = 0.05
 	my_attr.crit_chance = 0.05
 	my_attr.crit_multiplier = 1.5
-	my_attr.attack_speed = 1000
+	my_attr.attack_speed = 2
 	my_attr.physical_attack_power = 25
 	my_attr.magic_attack_power = 25
 	my_attr.move_speed = 5
@@ -58,6 +58,9 @@ static func initialize_hero(player: Player) -> void:
 		player.combat_data.projectile_type = Projectile.TYPES.NONE
 		my_attr.hp = 600
 		my_attr.evasion = 0.1
+		my_attr.agility = 10
+		my_attr.strength = 20
+		my_attr.intelligence = 5
 		player.combat_data.skills = [
 			Skill.get_skill(Skill.Names.LIFESTEAL),
 			Skill.get_skill(Skill.Names.STUNNING_STRIKE),

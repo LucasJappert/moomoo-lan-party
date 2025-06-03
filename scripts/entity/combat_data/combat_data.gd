@@ -117,17 +117,13 @@ func get_total_max_hp() -> int:
 func get_total_max_mana() -> int:
 	return max_mana + _get_extra_mana()
 
-func get_total_attack_speed() -> int:
-	var base_speed := attack_speed + _get_extra_attack_speed()
-	var extra_percent := _get_extra_attack_speed_percent()
+func get_total_attack_speed() -> float:
+	var base_speed: float = attack_speed + _get_extra_attack_speed()
+	var percent_bonus: float = _get_extra_attack_speed_percent()
 
-	# Apply attack speed percentage as an inverse modifier
-	var effective_speed := base_speed - (base_speed * extra_percent)
+	var total_speed: float = base_speed * (1.0 + percent_bonus)
 
-	# Protect against extreme values
-	effective_speed = clamp(effective_speed, 100.0, 10000.0)
-
-	return int(effective_speed)
+	return clamp(total_speed, 0.1, 10.0) # Minimum: 0.1 attacks per second, Maximum: 10 attacks per second
 
 func get_total_attack_range() -> int:
 	var total := attack_range + _get_extra_attack_range()
@@ -205,10 +201,12 @@ func _execute_physical_attack():
 			_server_calculate_physical_damage(my_owner.target_entity)
 	
 func can_physical_attack() -> bool:
-	if my_owner.velocity != Vector2.ZERO: return false
-	if is_stunned(): return false
+	if my_owner.velocity != Vector2.ZERO: return false # If moving, can't attack
+	if is_stunned(): return false # If stunned, can't attack
+
 	var now = Time.get_ticks_msec()
-	return now - last_physical_hit_time >= get_total_attack_speed()
+	var interval_ms = 1000.0 / get_total_attack_speed()
+	return now - last_physical_hit_time >= interval_ms # If enough time has passed, can attack
 # endregion
 
 func _global_receive_damage_or_heal(_di: DamageInfo):
@@ -248,15 +246,17 @@ func _get_extra_evasion() -> float:
 	for effect in get_effects(): total += effect.evasion
 	return snapped(total, 0.01)
 
-func _get_extra_attack_speed() -> int:
-	var total: int = 0
-	for effect in get_effects(): total += effect.attack_speed
-	return total
+func _get_extra_attack_speed() -> float:
+	var total: float = 0.0
+	for effect in get_effects():
+		total += effect.attack_speed
+	return snapped(total, 0.01)
 
 func _get_extra_attack_speed_percent() -> float:
 	var total: float = 0.0
-	for effect in get_effects(): total += effect.attack_speed_percent
-	return snapped(clamp(total, -10.0, 10.0), 0.1)
+	for effect in get_effects():
+		total += effect.attack_speed_percent
+	return snapped(clamp(total, -0.9, 10.0), 0.01) # Max 1000% bonus, min -90%
 
 func _get_extra_attack_range() -> int:
 	var total: int = 0

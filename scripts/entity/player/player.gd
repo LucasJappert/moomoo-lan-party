@@ -6,6 +6,7 @@ extends Entity
 @export var current_exp: int = 0
 @export var current_level: int = 1
 @export var hero_type: String = HeroTypes.IRON_VEX
+@export var primary_attribute = AttributeTypes.STRENGTH
 const MAX_LEVEL: int = 30
 static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 
