@@ -1,17 +1,26 @@
+class_name Main
+
 extends Node2D
 
-const ENEMIES_WAVES_CONTROLLER = preload("res://scripts/controllers/enemies_waves_controller.gd")
-const MOOMOO_SCENE = preload("res://scenes/entity/moomoo_scene.tscn")
 const PLAYER_SCENE = preload("res://scenes/entity/player_scene.tscn")
+
+static var GLOBAL_MOUSE_POSITION: Vector2 = Vector2.ZERO
+static var VIEWPORT_MOUSE_POSITION: Vector2 = Vector2.ZERO
+static var SCREEN_SIZE: Vector2 = Vector2.ZERO
+static var MY_PLAYER: Player
+static var MY_PLAYER_ID: int = -1
+const HOSTED_GAME = true # In this version of Moomoo this is always true
 
 @onready var player_spawner = $PlayerSpawner
 @onready var terrain = $Terrain
 
+
 func _ready() -> void:
+	# DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_RESIZE_DISABLED, true)
 	MapManager.initialize()
 
 	MyCamera.set_screen_size()
-	%MultiplayerHUD.show()
+	MyCamera.create_camera()
 
 	call_deferred("_init_player_spawner")
 
@@ -19,6 +28,14 @@ func _ready() -> void:
 
 	DecorationsFactory.add_random_decorations_over_grass_terrain()
 	DecorationsFactory.add_random_decorations_over_dirt_terrain()
+
+	SoundManager.initialize()
+	DamagePopupPool.preload_popups()
+
+func _process(_delta: float) -> void:
+	GLOBAL_MOUSE_POSITION = get_global_mouse_position()
+	VIEWPORT_MOUSE_POSITION = get_viewport().get_mouse_position()
+	SCREEN_SIZE = get_viewport().get_visible_rect().size
 
 func _init_player_spawner():
 	player_spawner.spawn_function = Callable(self, "_spawn_custom")
@@ -29,22 +46,3 @@ func _spawn_custom(data: Dictionary) -> Node:
 	player.set_player_id(player_id)
 	player.get_client_inputs().set_multiplayer_authority(player_id)
 	return player
-
-
-func _on_host_game_pressed() -> void:
-	%MultiplayerHUD.hide()
-	MultiplayerManager.become_host()
-	_spawn_moomoo()
-	
-	ENEMIES_WAVES_CONTROLLER.start_wave(1)
-	
-func _on_join_as_player_pressed() -> void:
-	%MultiplayerHUD.hide()
-	MultiplayerManager.become_client()
-	_spawn_moomoo()
-
-
-func _spawn_moomoo() -> void:
-	GameManager.moomoo = MOOMOO_SCENE.instantiate()
-	GameManager.moomoo_node.add_child(GameManager.moomoo, true)
-	MapManager.set_cell_blocked_from_world(GameManager.moomoo.global_position, true)

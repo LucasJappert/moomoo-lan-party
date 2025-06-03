@@ -8,6 +8,7 @@ var moomoo_node
 var moomoo: Moomoo
 var my_trees_node
 var terrain
+var audio_node
 
 func _ready():
 	enemies_node = get_tree().root.get_node("Main/Enemies")
@@ -16,14 +17,19 @@ func _ready():
 	projectiles_node = get_tree().root.get_node("Main/Projectiles")
 	my_trees_node = get_tree().root.get_node("Main/MyTrees")
 	terrain = get_tree().root.get_node("Main/Terrain")
+	audio_node = get_tree().root.get_node("Main/Audio")
 	pass
+
+func _process(delta: float) -> void:
+	CursorManager._static_process(delta)
+	MyCamera.process(delta)
 
 func add_enemy(enemy: Enemy) -> void:
 	enemies_node.add_child(enemy, true)
 	add_entity(enemy)
 
 func add_my_tree(my_tree: MyTree) -> void:
-	my_trees_node.add_child(my_tree)
+	my_trees_node.add_child(my_tree, true)
 	MapManager.set_cell_blocked(MapManager.world_to_cell(my_tree.global_position), true)
 
 func add_entity(entity: Entity) -> void:
@@ -40,7 +46,7 @@ func remove_entity(entity: Entity) -> void:
 	var current_cell = MapManager.world_to_cell(entity.global_position)
 	MapManager.set_cell_blocked(current_cell, false)
 	entities.erase(entity.name)
-	entity.queue_free()
+	entity.queue_free() # We shouldn't do this in the client side, server should do it and sync it
 
 func get_players() -> Array[Entity]:
 	return entities.values().filter(func(e): return e is Player)
@@ -54,3 +60,8 @@ func add_projectile(projectile: Projectile) -> void:
 func add_decoration(sprite: Sprite2D) -> void:
 	var decorations = get_tree().root.get_node("Main/Terrain/Decorations")
 	decorations.add_child(sprite, true)
+
+func spawn_moomoo() -> void:
+	moomoo = load("res://scenes/entity/moomoo_scene.tscn").instantiate()
+	moomoo_node.add_child(GameManager.moomoo, true)
+	MapManager.set_cell_blocked_from_world(GameManager.moomoo.global_position, true)

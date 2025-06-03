@@ -92,15 +92,48 @@ This file tracks upcoming features and tasks in development. Contributions are w
 
 Let’s build MooMoo LAN Party together! 🐮
 
-MY TODOs:
+MY TODOs: 🔵🟡✅
 
 - ✅ Mejorar el mapa agregando árboles, cercas, etc.
 - ✅ Corregir movimientos en diagonal cuando en realidad no se deberia permitir si los tiles adyacentes estan bloqueados.
 - ✅ Agregar plantas sobre el terreno, como cactus, utilizando un unico atlas.
-- Agregar efectos de sangrado cada vez que una entidad recibo un daño
-- Comenzar con la interfaz de usuario ingame
+- ✅ Comenzar a agregar algunos sonidos de hits, criticos, etc.
+- ✅ Ocultar barra de vida en enemigos si no reciben daño
+- ✅ Setear sprites por codigo en enemigos
+- ✅ Aplicar skills únicamente en enemigos bosses (4 bosses por oleada)
+- ✅ Implementar nuevos tipos de proyectiles
+- ✅ Criticos en color amarillo
+- ✅ Implementar sistema para agregar efectos en el tiempo (útiles para buffs, debuffs, etc). Clase CombatEffect.
+- ✅ Implementar skill de reducción de ataque y movimiento con freeze.
+- ✅ Ver bug de velocidad de ataque de mi pj cuando esta stuneado/frezeado varias veces
+- ✅ Implementar skill con chances de stun y su respectiva animación.
+- ✅ Revisar hover sobre enemigos y dar un color rojizo a los enemigos hovereados.
+- ✅ Detener movimiento y atacar cuando se hace click para atacar a un enemigo
+- ✅ Implement camera movement with mouse (not fixed to player)
+- ✅ Move towards target when player wants to attack an enemy but is out of range.
+- ✅ Add life-stealing skill.
+- ✅ Implement skills in enemies (also useful for heroes later)
+- ✅ Set sprites by code in heroes
+- ✅ Sync Moomoo
+- ✅ Start drawing the 4 abilities on the bottom bar
+- 🟡 Start implementing experience and leveling logic
+- 🟡 Start building ingame UI
+- 🟡 Set first hero types
+- 🟡 Start logic for strength, agility, and intelligence attributes
+- 🔵 Comenzar a mostrar stats de mi player
+- Implementar lógica de regeneración de vida y mana
+- Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+- Agregar skill de velocidad de ataque de un 25%
+- Agregar skill de daño en area
+- Agregar skill de disparo multiple
+- Agregar skill que causa un x2 cuando el ataque es por la espalda del enemigo.
+- Agregar skill que cada 5 ataques regenera el 5% de la vida total a todos los aliados
+- Implementar animaciones varias como congelamiento, sangrado, sobre entidades
+- Implementar animaciones sobre tiles, como fuego, sanacion, congelamiento.
+- Configurar daños, hp, defensas, etc según el número de wave
 - Comenzar la escena para crear y unirse a salas
 - Agregar objetos mobiles sobre el terreno como plantas, bichos, nubes, etc.
 - Agregar mas tipos de enemigos. El moomoo tendra unas 30 oleadas, cada oleada con 2 tipos de enemigos, entonces necesitariamos unos 60 tipos. Cada enemigo tendra 1 habilidad especial, pasiva o activa, por lo cual necesitaremos tambien unas 60 habilidades.
   Otra opción es crear unas 3 habilidades, y que los enemigos tendrían 3 de ellas asignadas aleatoriamente. De esta manera se podría crear una amplia variabilidad de combinaciones. Sumado a que cada enemigo tiene su tipo de ataque, su rango de ataque, velocidad de ataque, etc.
+- Agregar efectos de sangrado cada vez que una entidad recibo un daño
 - Agregar mas tipos de héroes. En esta primera etapa bastaría con 10 diferentes tipos con sus respectivas 4 habilidades y una ulti.

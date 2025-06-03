@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://cj8vdyvtjs0ju"]
+[gd_scene load_steps=10 format=3 uid="uid://cj8vdyvtjs0ju"]
 
 [ext_resource type="PackedScene" uid="uid://dh82ovsrtutto" path="res://scenes/entity/entity_scene.tscn" id="1_v8xvt"]
 [ext_resource type="Script" uid="uid://crmmhsx5pjp8f" path="res://scripts/entity/enemy.gd" id="2_4sfg8"]
+[ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="3_4sfg8"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_xrr2a"]
 properties/0/path = NodePath(".:id")
@@ -11,11 +12,37 @@ properties/1/path = NodePath(".:enemy_type")
 properties/1/spawn = true
 properties/1/replication_mode = 2
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v8xvt"]
+bg_color = Color(0.588235, 0.0117647, 0.0823529, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_l0aop"]
 radius = 258.627
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v8xvt"]
-bg_color = Color(0.395875, 0.0122566, 0.0839309, 1)
+[sub_resource type="AtlasTexture" id="AtlasTexture_02km5"]
+atlas = ExtResource("3_4sfg8")
+region = Rect2(896, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ixj5c"]
+atlas = ExtResource("3_4sfg8")
+region = Rect2(960, 128, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pwsty"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_02km5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ixj5c")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [node name="Enemy" instance=ExtResource("1_v8xvt")]
 script = ExtResource("2_4sfg8")
@@ -23,6 +50,16 @@ enemy_type = ""
 
 [node name="EnemySynchronizer" type="MultiplayerSynchronizer" parent="." index="0"]
 replication_config = SubResource("SceneReplicationConfig_xrr2a")
+
+[node name="MyHealthBar" parent="HUD" index="0"]
+position = Vector2(0, 13)
+
+[node name="BgBlack" parent="HUD/MyHealthBar" index="0"]
+texture_filter = 1
+
+[node name="CurrentBar" parent="HUD/MyHealthBar" index="1"]
+texture_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_v8xvt")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="AreaVision" index="0"]
 visible = false
@@ -35,11 +72,11 @@ debug_color = Color(100, 100, 100, 0)
 z_index = 2
 z_as_relative = false
 
-[node name="CurrentBar" parent="HUD/MyHealthBar" index="1"]
-theme_override_styles/panel = SubResource("StyleBoxFlat_v8xvt")
+[node name="AnimatedSprite2D" parent="." index="7"]
+sprite_frames = SubResource("SpriteFrames_pwsty")
+animation = &"default"
 
-[node name="Label" parent="HUD" index="1"]
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
+[node name="AreaHovered" parent="." index="11"]
+light_mask = 0
+collision_layer = 524288
+collision_mask = 0
