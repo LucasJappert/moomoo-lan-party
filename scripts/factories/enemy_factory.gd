@@ -11,7 +11,7 @@ static func get_enemy_instance(_enemy_type: String) -> Enemy:
 static func set_frost_revenant(_enemy: Enemy):
 	if _enemy.enemy_type != EnemyTypes.FROST_REVENANT: return false
 
-	_enemy.combat_data.max_hp = 100
+	_enemy.combat_data.base_hp = 100
 	_enemy.combat_data.evasion = 0.15
 	_enemy.combat_data.crit_chance = 0.2
 
@@ -22,7 +22,7 @@ static func set_frost_revenant(_enemy: Enemy):
 static func set_warden_of_decay(_enemy: Enemy):
 	if _enemy.enemy_type != EnemyTypes.WARDEN_OF_DECAY: return false
 
-	_enemy.combat_data.max_hp = 120
+	_enemy.combat_data.base_hp = 120
 	_enemy.combat_data.crit_chance = 0.1
 	_enemy.combat_data.crit_multiplier = 1.5
 
@@ -33,7 +33,7 @@ static func set_warden_of_decay(_enemy: Enemy):
 static func set_flame_cultist(_enemy: Enemy):
 	if _enemy.enemy_type != EnemyTypes.FLAME_CULTIST: return false
 
-	_enemy.combat_data.max_hp = 1010
+	_enemy.combat_data.base_hp = 1010
 	_enemy.combat_data.crit_chance = 0.2
 	_enemy.combat_data.crit_multiplier = 1.5
 	_enemy.combat_data.attack_range = 200

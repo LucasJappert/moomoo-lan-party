@@ -24,8 +24,8 @@ func _post_ready(_entity: Entity):
 	# _label.add_theme_stylebox_override("normal", lb_style)
 	# _label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	# _label.visible = my_owner is Player
+	_label_container.visible = false
 	_label_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_label_container.visible = true
 	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.text = my_owner.name
 
@@ -48,18 +48,17 @@ func _try_update_health_bar():
 
 	if not my_health_bar.visible: my_health_bar.visible = true
 
-	current_bar.size.x = my_owner.combat_data.current_hp * BAR_SIZE / my_owner.combat_data.get_total_max_hp()
+	current_bar.size.x = my_owner.combat_data.current_hp * BAR_SIZE / my_owner.combat_data.get_total_hp()
 
 func _try_update_label():
-	if not _label_container.visible:
-		return
+	if not _label_container.visible: return
 		
-	# _label.text = str(my_owner.combat_data.current_hp) + " - " + str(my_owner.combat_data.get_total_attack_speed()) + " - " + str(my_owner.combat_data.get_total_move_speed())
+	# _label.text = str(my_owner.combat_data.current_hp) + " - " + str(my_owner.combat_data.get_total_stats().attack_speed) + " - " + str(my_owner.combat_data.get_total_stats().move_speed)
 	# _label.text = str(my_owner.combat_data.current_hp)
 	if my_owner is Player: _label.text = str(my_owner.current_level)
 	# _label.text = str(my_owner.current_state)
 	# _label.text = str(my_owner.combat_data.get_effects().size())
-	_label.text = str(my_owner.combat_data.get_total_attack_speed()) + " - " + str(my_owner.combat_data.get_total_move_speed())
+	_label.text = str(my_owner.combat_data.get_total_stats().attack_speed) + " - " + str(my_owner.combat_data.get_total_stats().move_speed)
 	# _label.text += " - " + str(MapManager.world_to_cell(my_owner.global_position))
 	pass
 

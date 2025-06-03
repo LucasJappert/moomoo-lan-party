@@ -30,15 +30,27 @@ func _server_move_along_path(_delta: float) -> void:
 		my_owner.target_pos = MapManager.cell_to_world(next_target_cell)
 		my_owner.current_path.remove_at(0)
 
-	my_owner.direction = (my_owner.target_pos - my_owner.global_position).normalized()
-	my_owner.velocity = my_owner.direction * my_owner.combat_data.get_total_move_speed() * MapManager.TILE_SIZE.x
+	var to_target = my_owner.target_pos - my_owner.global_position
+	var direction = to_target.normalized()
+	var speed = my_owner.combat_data.get_total_stats().move_speed * MapManager.TILE_SIZE.x
+	var velocity = direction * speed
 
-	my_owner.global_position.x += my_owner.velocity.x * _delta
-	my_owner.global_position.y += my_owner.velocity.y * _delta
+	var move_delta = velocity * _delta
+	var new_pos = my_owner.global_position + move_delta
 
-	if my_owner.global_position.distance_to(my_owner.target_pos) < 2:
+	# Detect if you went past the target
+	var old_to_target = my_owner.target_pos - my_owner.global_position
+	var new_to_target = my_owner.target_pos - new_pos
+
+	# If the sign of the dot product changes, you overshot
+	if old_to_target.dot(new_to_target) <= 0.0:
 		my_owner.global_position = my_owner.target_pos
 		my_owner.target_pos = null
+	else:
+		my_owner.global_position = new_pos
+
+	my_owner.direction = direction
+	my_owner.velocity = velocity
 
 func _stop_movement() -> void:
 	my_owner.velocity = Vector2.ZERO

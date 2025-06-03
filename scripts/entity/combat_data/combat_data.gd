@@ -1,14 +1,12 @@
 class_name CombatData
 
-extends CombatAttributes
-
-const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapManager.TILE_SIZE.y, 2))) + 1
+extends CombatStats
 
 @onready var combat_effect_node = $CombatEffectNode
 
-@export var max_hp: int = 100
+@export var base_hp: int = 100
 @export var current_hp: int = 100
-@export var max_mana: int = 100
+@export var base_mana: int = 100
 @export var current_mana: int = 100
 @export var attack_type := AttackTypes.MELEE
 @export var projectile_type: String = Projectile.TYPES.NONE
@@ -49,8 +47,8 @@ func _server_calculate_physical_damage(_target: Entity) -> void:
 
 	var critical_damage = 0
 	if GlobalsEntityHelpers.roll_chance(crit_chance):
-		critical_damage = get_total_physical_attack_power() * crit_multiplier
-	var total_damage = get_total_physical_attack_power() + critical_damage
+		critical_damage = get_total_stats().physical_attack_power * crit_multiplier
+	var total_damage = get_total_stats().physical_attack_power + critical_damage
 	# print("Normal power: ", physical_attack_power, " Extra power: ", extra_power, " Total total_damage: ", total_damage)
 
 	var _di = DamageInfo.get_instance()
@@ -65,7 +63,7 @@ func _server_receive_physical_damage(_di: DamageInfo, _attacker: Entity) -> void
 	if my_owner.multiplayer.is_server() == false: return
 
 	# Evasion verification
-	if GlobalsEntityHelpers.roll_chance(get_total_evasion()):
+	if GlobalsEntityHelpers.roll_chance(get_total_stats().evasion):
 		# TODO: Crear un helper para enviar mensajes
 		var sm = ServerMessage.get_instance()
 		sm.message = "Dodge"
@@ -73,9 +71,9 @@ func _server_receive_physical_damage(_di: DamageInfo, _attacker: Entity) -> void
 		my_owner.rpc("rpc_server_message", sm.to_dict())
 		return
 
-	var damage_before_defense = _di.total_damage_heal
-	var reduced_damage = get_total_physical_defense_percent() * damage_before_defense
-	_di.critical = _di.critical - int(get_total_physical_defense_percent() * _di.critical)
+	var damage_before_defense := _di.total_damage_heal
+	var reduced_damage := int(get_total_stats().physical_defense_percent * damage_before_defense)
+	_di.critical = _di.critical - int(get_total_stats().physical_defense_percent * _di.critical)
 	var total_damage: int = _di.total_damage_heal - reduced_damage
 	if total_damage < 0: total_damage = 0
 
@@ -94,7 +92,7 @@ func update_current_hp_for_damage(value_to_decrease: int) -> void:
 	if current_hp <= 0: return
 	
 	current_hp -= value_to_decrease
-	current_hp = clamp(current_hp, 0, get_total_max_hp())
+	current_hp = clamp(current_hp, 0, get_total_hp())
 	
 	if current_hp <= 0:
 		Skill.actions_before_entity_death(my_owner, my_owner.target_entity)
@@ -111,50 +109,11 @@ func get_skill(skill_name: String) -> Skill:
 		if skill.name == skill_name: return skill
 	return null
 
-func get_total_max_hp() -> int:
-	return max_hp + _get_extra_hp()
+func get_total_hp() -> int:
+	return base_hp + get_total_stats().hp
 
-func get_total_max_mana() -> int:
-	return max_mana + _get_extra_mana()
-
-func get_total_attack_speed() -> float:
-	var base_speed: float = attack_speed + _get_extra_attack_speed()
-	var percent_bonus: float = _get_extra_attack_speed_percent()
-
-	var total_speed: float = base_speed * (1.0 + percent_bonus)
-
-	return clamp(total_speed, 0.1, 10.0) # Minimum: 0.1 attacks per second, Maximum: 10 attacks per second
-
-func get_total_attack_range() -> int:
-	var total := attack_range + _get_extra_attack_range()
-	if total < MIN_ATTACK_RANGE: total = MIN_ATTACK_RANGE
-	return total
-
-func get_total_move_speed() -> float:
-	var tiles_per_second := move_speed + _get_extra_move_speed()
-	var extra_percent := _get_extra_move_speed_percent()
-
-	tiles_per_second += tiles_per_second * extra_percent
-	tiles_per_second = clamp(tiles_per_second, 0.1, 10.0)
-
-	return tiles_per_second
-
-func get_total_physical_defense_percent() -> float:
-	return physical_defense_percent + _get_extra_physical_defense_percent()
-
-func get_total_evasion() -> float:
-	return evasion + _get_extra_evasion()
-
-func get_total_stun_chance() -> float:
-	return stun_chance + _get_extra_stun_chance()
-
-func get_total_physical_attack_power() -> float:
-	var total = physical_attack_power + _get_extra_physical_attack_power()
-	var extra_percent = _get_extra_physical_attack_power_percent()
-	total = total * (1 + extra_percent)
-	if total < 0: total = 0
-	return total
-
+func get_total_mana() -> int:
+	return base_mana + get_total_stats().mana
 
 func is_stunned() -> bool:
 	for effect in get_effects():
@@ -205,11 +164,12 @@ func can_physical_attack() -> bool:
 	if is_stunned(): return false # If stunned, can't attack
 
 	var now = Time.get_ticks_msec()
-	var interval_ms = 1000.0 / get_total_attack_speed()
+	var interval_ms = 1000.0 / get_total_stats().attack_speed
 	return now - last_physical_hit_time >= interval_ms # If enough time has passed, can attack
 # endregion
 
-func _global_receive_damage_or_heal(_di: DamageInfo):
+# region 	SERVER METHODS
+func global_receive_damage_or_heal(_di: DamageInfo):
 	var melee_attack = _di.projectile_type == Projectile.TYPES.NONE
 	var arrow_attack = _di.projectile_type == Projectile.TYPES.ARROW
 	if _di.critical > 0:
@@ -226,69 +186,24 @@ func _global_receive_damage_or_heal(_di: DamageInfo):
 	last_damage_received_time = Time.get_ticks_msec()
 	pass
 
-# region INTERNAL GETTERs
-func _get_extra_physical_defense_percent() -> float:
-	var total: float = 0
-	for effect in get_effects(): total += effect.physical_defense_percent
-	return snapped(total, 0.01)
+# endregion SERVER METHODS
 
-func _get_extra_physical_attack_power() -> float:
-	var total: float = 0
-	for effect in get_effects(): total += effect.physical_attack_power
-	return snapped(total, 0.01)
-func _get_extra_physical_attack_power_percent() -> float:
-	var total: float = 0
-	for effect in get_effects(): total += effect.physical_attack_power_percent
-	return snapped(total, 0.01)
 
-func _get_extra_evasion() -> float:
-	var total: float = 0
-	for effect in get_effects(): total += effect.evasion
-	return snapped(total, 0.01)
+# region 	GETTERs
 
-func _get_extra_attack_speed() -> float:
-	var total: float = 0.0
+func get_total_stats() -> CombatStats:
+	# This function returns the total of all stats, including extras from effects and extras from attributes
+	var total_stats = get_total_stats_including_extras_by_attributes()
+	total_stats.accumulate_combat_stats(_get_extra_stats_by_effects().get_total_stats_including_extras_by_attributes())
+	return total_stats
+
+func _get_extra_stats_by_effects() -> CombatStats:
+	var extra_stats = CombatStats.new()
 	for effect in get_effects():
-		total += effect.attack_speed
-	return snapped(total, 0.01)
+		extra_stats.accumulate_combat_stats(effect.get_combat_stats_instance())
+	return extra_stats
 
-func _get_extra_attack_speed_percent() -> float:
-	var total: float = 0.0
-	for effect in get_effects():
-		total += effect.attack_speed_percent
-	return snapped(clamp(total, -0.9, 10.0), 0.01) # Max 1000% bonus, min -90%
-
-func _get_extra_attack_range() -> int:
-	var total: int = 0
-	for effect in get_effects(): total += effect.attack_range
-	return total
-
-func _get_extra_move_speed() -> float:
-	var total: float = 0
-	for effect in get_effects(): total += effect.move_speed
-	return snapped(total, 0.01)
-
-func _get_extra_move_speed_percent() -> float:
-	var total: float = 0
-	for effect in get_effects(): total += effect.move_speed_percent
-	return snapped(total, 0.01)
-
-func _get_extra_stun_chance() -> float:
-	var total: float = 0
-	for effect in get_effects(): total += effect.stun_chance
-	return snapped(total, 0.01)
-
-func _get_extra_hp() -> int:
-	var total: int = 0
-	for effect in get_effects(): total += effect.hp
-	return total
-
-func _get_extra_mana() -> int:
-	var total: int = 0
-	for effect in get_effects(): total += effect.mana
-	return total
-
-# endregion
+# endregion GETTERs
 
 # region Front Animations
 const _ANIMATED_SPRITE_STUN_NAME = "stun"

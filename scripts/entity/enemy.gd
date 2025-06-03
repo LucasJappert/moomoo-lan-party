@@ -42,9 +42,9 @@ func set_combat_data():
 			print("Unknown enemy type: " + enemy_type)
 			return false
 
-	if combat_data.attack_range < CombatData.MIN_ATTACK_RANGE:
-		combat_data.attack_range = CombatData.MIN_ATTACK_RANGE
-	combat_data.current_hp = combat_data.get_total_max_hp()
+	if combat_data.attack_range < CombatStats.MIN_ATTACK_RANGE:
+		combat_data.attack_range = CombatStats.MIN_ATTACK_RANGE
+	combat_data.current_hp = combat_data.get_total_hp()
 		
 	return true
 	

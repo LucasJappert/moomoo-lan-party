@@ -1,13 +1,13 @@
 class_name CombatEffect
 
-extends CombatAttributes
+extends CombatStats
 
 @export var _duration: float # In seconds
 var _elapsed: float = 0.0
 
 # Only executed on the server
-func initialize(combat_attributes: CombatAttributes, duration: float) -> void:
-	super.initialize_from_combat_attributes(combat_attributes)
+func initialize(stats: CombatStats, duration: float) -> void:
+	super.accumulate_combat_stats(stats)
 	_duration = duration
 
 func _process(delta: float) -> void:
@@ -15,8 +15,8 @@ func _process(delta: float) -> void:
 	if _elapsed >= _duration:
 		if multiplayer.is_server(): queue_free() # Only executed on the server
 
-static func get_instance(duration: float, combat_attributes: CombatAttributes = CombatAttributes.new()) -> CombatEffect:
+static func get_instance(duration: float, stats: CombatStats = CombatStats.new()) -> CombatEffect:
 	const SCENE = preload("res://scenes/entity/combat_data/combat_effect.tscn")
 	var combat_effect = SCENE.instantiate()
-	combat_effect.initialize(combat_attributes, duration)
+	combat_effect.initialize(stats, duration)
 	return combat_effect

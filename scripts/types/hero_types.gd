@@ -40,27 +40,29 @@ static func get_keys() -> Array[String]:
 	]
 
 static func initialize_hero(player: Player) -> void:
-	var my_attr = CombatAttributes.new()
-	my_attr.hp = 500
-	my_attr.mana = 100
-	my_attr.physical_defense_percent = 0.1
-	my_attr.magic_defense_percent = 0.1
-	my_attr.evasion = 0.05
-	my_attr.crit_chance = 0.05
-	my_attr.crit_multiplier = 1.5
-	my_attr.attack_speed = 2
-	my_attr.physical_attack_power = 25
-	my_attr.magic_attack_power = 25
-	my_attr.move_speed = 5
-	my_attr.attack_range = CombatData.MIN_ATTACK_RANGE
+	player.combat_data.base_hp = 400
+	player.combat_data.base_mana = 100
+	player.combat_data.physical_defense_percent = 0.1
+	player.combat_data.magic_defense_percent = 0.1
+	player.combat_data.evasion = 0.05
+	player.combat_data.crit_chance = 0.05
+	player.combat_data.crit_multiplier = 1.5
+	player.combat_data.attack_speed = 2
+	player.combat_data.physical_attack_power = 25
+	player.combat_data.magic_attack_power = 25
+	player.combat_data.move_speed = 5
+	player.combat_data.agility = 10
+	player.combat_data.strength = 10
+	player.combat_data.intelligence = 10
+	player.combat_data.attack_range = CombatStats.MIN_ATTACK_RANGE
 	if player.hero_type == IRON_VEX:
 		player.combat_data.attack_type = AttackTypes.MELEE
 		player.combat_data.projectile_type = Projectile.TYPES.NONE
-		my_attr.hp = 600
-		my_attr.evasion = 0.1
-		my_attr.agility = 10
-		my_attr.strength = 20
-		my_attr.intelligence = 5
+		player.combat_data.base_hp = 600
+		player.combat_data.evasion = 0.1
+		player.combat_data.agility = 100
+		player.combat_data.strength = 15
+		player.combat_data.intelligence = 5
 		player.combat_data.skills = [
 			Skill.get_skill(Skill.Names.LIFESTEAL),
 			Skill.get_skill(Skill.Names.STUNNING_STRIKE),
@@ -77,9 +79,7 @@ static func initialize_hero(player: Player) -> void:
 	if player.hero_type == VARRIK_DUSKHOLLOW:
 		player.combat_data.skills = [Skill.get_skill(Skill.Names.LIFESTEAL)]
 
-	player.combat_data.max_hp = my_attr.hp
-	player.combat_data.initialize_from_combat_attributes(my_attr)
-	player.combat_data.current_hp = player.combat_data.get_total_max_hp()
+	player.combat_data.current_hp = player.combat_data.get_total_hp()
 
 # [
 #   {

@@ -23,7 +23,6 @@ var replicated: bool = false
 
 # Move this logic to a separate module
 var target_entity: Entity
-var target_position: Vector2 = Vector2.ZERO
 var current_path: Array[Vector2i] = []
 var current_cell = null
 var target_pos = null
@@ -43,7 +42,7 @@ func rpc_server_message(data: Dictionary):
 func rpc_receive_damage_or_heal(data: Dictionary):
 	var di = DamageInfo.get_instance()
 	di.from_dict(data)
-	combat_data._global_receive_damage_or_heal(di)
+	combat_data.global_receive_damage_or_heal(di)
 
 @rpc("authority", "call_local")
 func rpc_die():
@@ -74,7 +73,7 @@ func set_boss_level(_level: int) -> void:
 	_boss_level = _level
 
 func _set_area_attack_shape_radius() -> void:
-	area_attack_shape.shape.radius = combat_data.get_total_attack_range()
+	area_attack_shape.shape.radius = combat_data.get_total_stats().attack_range
 
 func _process(_delta: float) -> void:
 	EntityState._process(self)

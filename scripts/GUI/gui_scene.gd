@@ -49,7 +49,7 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if not Main.MY_PLAYER: return
 
-	_hp_label.text = "%d/%d" % [Main.MY_PLAYER.combat_data.current_hp, Main.MY_PLAYER.combat_data.get_total_max_hp()]
+	_hp_label.text = "%d/%d" % [Main.MY_PLAYER.combat_data.current_hp, Main.MY_PLAYER.combat_data.get_total_hp()]
 	_update_hp_ball_sprite()
 	_update_mana_ball_sprite()
 	_update_exp_bar()
@@ -59,13 +59,13 @@ func _update_hp_ball_sprite():
 	_update_ball_sprite(
 		_hp_ball,
 		Main.MY_PLAYER.combat_data.current_hp,
-		Main.MY_PLAYER.combat_data.get_total_max_hp()
+		Main.MY_PLAYER.combat_data.get_total_hp()
 	)
 func _update_mana_ball_sprite():
 	_update_ball_sprite(
 		_mana_ball,
 		Main.MY_PLAYER.combat_data.current_mana,
-		Main.MY_PLAYER.combat_data.get_total_max_mana()
+		Main.MY_PLAYER.combat_data.get_total_mana()
 	)
 func _update_ball_sprite(ball_sprite: Sprite2D, current_value: int, max_value: int) -> void:
 	var percent: float = clamp(current_value / float(max_value), 0.0, 1.0)
@@ -90,8 +90,8 @@ func _update_slots_of_skills():
 		_update_region_of_skill_slots()
 
 
-	for i in range(Main.MY_PLAYER.combat_data.skills.size()):
-		print(Main.MY_PLAYER.combat_data.skills[i].name)
+	# for i in range(Main.MY_PLAYER.combat_data.skills.size()):
+	# 	print(Main.MY_PLAYER.combat_data.skills[i].name)
 
 
 # region 	INTERNAL AUXILIARY METHODS

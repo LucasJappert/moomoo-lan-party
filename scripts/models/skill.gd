@@ -1,6 +1,6 @@
 class_name Skill
 
-extends CombatAttributes
+extends CombatStats
 
 enum Type {ACTIVE, PASSIVE}
 
@@ -128,28 +128,28 @@ static func actions_before_entity_death(_dead_entity: Entity, _attacker_entity: 
 			GameManager.add_enemy(new_enemy)
 
 			# We need set combat_data props after the enemy is added to the scene
-			new_enemy.combat_data.max_hp = new_enemy.combat_data.get_total_max_hp() * 0.5
-			new_enemy.combat_data.current_hp = new_enemy.combat_data.max_hp
+			new_enemy.combat_data.base_hp = new_enemy.combat_data.get_total_hp() * 0.5
+			new_enemy.combat_data.current_hp = new_enemy.combat_data.base_hp
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
 	# Should be called only on the server
 	# Freeze verification
 	var _attacker_frozen_skill = _attacker.combat_data.get_skill(Names.FROZEN_TOUCH)
 	if _attacker_frozen_skill:
-		var attr = _attacker_frozen_skill.get_combat_attributes()
+		var attr = _attacker_frozen_skill.get_combat_stats_instance()
 		var effect = CombatEffect.get_instance(attr.freeze_duration, attr)
 		_target.combat_data.add_effect(effect)
 	
 	# Stun verification, we need it after the evasion check
-	if GlobalsEntityHelpers.roll_chance(_attacker.combat_data.get_total_stun_chance()):
+	if GlobalsEntityHelpers.roll_chance(_attacker.combat_data.get_total_stats().stun_chance):
 		var _attacker_stun_skill = _attacker.combat_data.get_skill(Names.STUNNING_STRIKE)
 		if _attacker_stun_skill:
-			var attr = _attacker_stun_skill.get_combat_attributes()
+			var attr = _attacker_stun_skill.get_combat_stats_instance()
 			var effect = CombatEffect.get_instance(_attacker_stun_skill.stun_duration, attr)
 			_target.combat_data.add_effect(effect)
 
 	# Lifesteal verification
-	if _attacker.combat_data.current_hp < _attacker.combat_data.max_hp:
+	if _attacker.combat_data.current_hp < _attacker.combat_data.base_hp:
 		var _attacker_lifesteal_skill = _attacker.combat_data.get_skill(Names.LIFESTEAL)
 		if _attacker_lifesteal_skill:
 			var total_heal = int(_di.total_damage_heal * _attacker_lifesteal_skill.life_steal_percent)
