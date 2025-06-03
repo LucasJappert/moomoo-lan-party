@@ -227,6 +227,15 @@ region_rect = Rect2(838, 1926, 122, 122)
 layout_mode = 0
 texture = SubResource("AtlasTexture_li5rb")
 
+[node name="HpLabel" type="Label" parent="SkillsBarContainer"]
+offset_left = 5.0
+offset_top = 51.0
+offset_right = 133.0
+offset_bottom = 95.0
+text = "10.000/10.000"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="SkillSlotsContainer" type="Node2D" parent="SkillsBarContainer"]
 
 [node name="SkillSlot1" parent="SkillsBarContainer/SkillSlotsContainer" instance=ExtResource("3_acekp")]

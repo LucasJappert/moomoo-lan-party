@@ -31,4 +31,3 @@ static func start_wave() -> void:
 			enemy._boss_level = _wave_number if is_boss else 0
 				
 			GameManager.add_enemy(enemy)
-			return

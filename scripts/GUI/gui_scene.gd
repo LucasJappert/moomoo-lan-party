@@ -2,6 +2,7 @@ extends CanvasLayer
 
 @onready var _skills_bar = $SkillsBarContainer/SkillsBar
 @onready var _hp_ball = $SkillsBarContainer/HpBall
+@onready var _hp_label = $SkillsBarContainer/HpLabel
 @onready var _mana_ball = $SkillsBarContainer/ManaBall
 # @onready var _full_exp_rect = $SkillsBarContainer/FullExpRect
 @onready var _current_exp_rect = $SkillsBarContainer/CurrentExpRect
@@ -48,6 +49,7 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if not Main.MY_PLAYER: return
 
+	_hp_label.text = "%d/%d" % [Main.MY_PLAYER.combat_data.current_hp, Main.MY_PLAYER.combat_data.get_total_max_hp()]
 	_update_hp_ball_sprite()
 	_update_mana_ball_sprite()
 	_update_exp_bar()
