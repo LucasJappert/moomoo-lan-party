@@ -19,11 +19,6 @@ func _post_ready(_entity: Entity):
 	my_owner = _entity
 	_is_moomoo = my_owner is Moomoo
 
-	# var lb_style = StyleBoxFlat.new()
-	# lb_style.bg_color = Color(0, 0, 0, 0.2)
-	# _label.add_theme_stylebox_override("normal", lb_style)
-	# _label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	# _label.visible = my_owner is Player
 	_label_container.visible = false
 	_label_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE

@@ -116,11 +116,15 @@ MY TODOs: 🔵🟡✅
 - ✅ Set sprites by code in heroes
 - ✅ Sync Moomoo
 - ✅ Start drawing the 4 abilities on the bottom bar
+- ✅ Start showing my player stats
+- ✅ Fix sprite position in enemies
 - 🟡 Start implementing experience and leveling logic
 - 🟡 Start building ingame UI
 - 🟡 Set first hero types
 - 🟡 Start logic for strength, agility, and intelligence attributes
-- 🔵 Comenzar a mostrar stats de mi player
+- 🔵 Dibujar avatar en el panel izquierdo
+- Función click + shift para moverse hacia un tile
+- Corregir clicks fuera de la grilla
 - Implementar lógica de regeneración de vida y mana
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
 - Agregar skill de velocidad de ataque de un 25%

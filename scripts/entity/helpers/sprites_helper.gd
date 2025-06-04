@@ -2,25 +2,32 @@ class_name SpritesAnimationHelper
 
 static var _ATLAS1 = load("res://assets/atlas1.png")
 
-const _PLAYERS_SCALE = Vector2(0.75, 0.75)
+const _PLAYERS_SCALE: float = 0.75
 
-const _ENEMIES_SCALE = Vector2(0.85, 0.85)
+const _ENEMIES_SCALE: float = 0.85
 
 static func set_entity_sprites(entity: Entity) -> void:
 	if entity is Player:
 		var rects = HeroTypes.get_rect_frames(entity.hero_type)
 		_set_sprites(entity, rects, _PLAYERS_SCALE)
+		entity.sprite.position.y = -38 * _PLAYERS_SCALE
 	elif entity is Enemy:
 		var rects = EnemyTypes.get_rect_frames(entity.enemy_type)
-		_set_sprites(entity, rects, _ENEMIES_SCALE)
+		var scale_factor = 1.3 if entity._boss_level > 0 else _ENEMIES_SCALE
+		_set_sprites(entity, rects, scale_factor)
+		entity.sprite.position.y = -24 * scale_factor
+		# entity.sprite.position.y = -12 # * (1 - _PLAYERS_SCALE)
+		# entity.sprite.position.y = -10
 	
-	if entity._boss_level > 0:
-		var scale_factor = 1.3
-		entity.sprite.scale *= scale_factor
-		entity.sprite.position.y *= scale_factor
-		entity.hud.my_health_bar.position.y -= 10
+	print(entity.sprite.position.y)
+	# if entity._boss_level > 0:
+	# 	var scale_factor = 1.3
+	# 	entity.sprite.scale *= scale_factor
+	# 	entity.hud.my_health_bar.position.y -= 10
+	
+	entity.sprite_heigth = entity.sprite.sprite_frames.get_frame_texture("idle", 0).get_height()
+	# entity.sprite.position.y = - entity.sprite_heigth * 0.5
 
-	entity.sprite_heigth = entity.sprite.sprite_frames.get_frame_texture("idle", 0).get_height() * entity.sprite.scale.y
 
 static func get_sprite_frames(start_region: Vector2, frame_size: Vector2, frames_size: int, speed: float, looped: bool) -> SpriteFrames:
 	var frames := SpriteFrames.new()
@@ -33,7 +40,7 @@ static func get_sprite_frames(start_region: Vector2, frame_size: Vector2, frames
 	frames.set_animation_loop("default", looped)
 	return frames
 
-static func _set_sprites(entity: Entity, rects: Array[Rect2], scale: Vector2) -> void:
+static func _set_sprites(entity: Entity, rects: Array[Rect2], scale: float) -> void:
 	var frames := SpriteFrames.new()
 
 	# Setup "idle" animation using the first frame
@@ -47,7 +54,7 @@ static func _set_sprites(entity: Entity, rects: Array[Rect2], scale: Vector2) ->
 
 	# Apply the animations and set initial animation
 	entity.sprite.frames = frames
-	entity.sprite.scale = scale
+	entity.sprite.scale = Vector2(scale, scale)
 	entity.sprite.play("idle")
 
 static func _add_animation(frames: SpriteFrames, name: String, regions: Array[Rect2]) -> void:
