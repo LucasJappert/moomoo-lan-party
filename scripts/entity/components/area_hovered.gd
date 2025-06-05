@@ -10,8 +10,7 @@ func _ready() -> void:
 	my_owner = get_parent()
 
 	if multiplayer.get_unique_id() != Main.MY_PLAYER_ID:
-		set_process(false)
-		return
+		return set_process(false)
 
 	connect("mouse_entered", func(): _on_mouse_entered())
 	connect("mouse_exited", func(): _on_mouse_exited())
@@ -20,17 +19,23 @@ func _process(_delta: float) -> void:
 	if not is_instance_valid(hovered_entity):
 		hovered_entity = null
 
+	_update_hovered_entity()
+
 func _on_mouse_entered():
 	if not _currently_hovered_entities.has(my_owner):
 		_currently_hovered_entities.append(my_owner)
-		_update_hovered_entity()
 
 func _on_mouse_exited():
 	_currently_hovered_entities.erase(my_owner)
-	_update_hovered_entity()
 	if my_owner is Enemy: my_owner.sprite.modulate = Color.WHITE
 
 static func _update_hovered_entity():
+	if ClientInputs.SHIFT_PRESSED:
+		if not ObjectHelpers.is_null(hovered_entity):
+			hovered_entity.sprite.modulate = Color.WHITE
+			hovered_entity = null
+		return
+
 	# Clean up invalid entities first
 	_currently_hovered_entities = _currently_hovered_entities.filter(func(e): return is_instance_valid(e))
 

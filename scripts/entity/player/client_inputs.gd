@@ -1,7 +1,9 @@
+class_name ClientInputs
+
 extends Node2D
 
 @onready var player: Player = get_parent()
-
+static var SHIFT_PRESSED = false
 
 func _ready():
 	if get_multiplayer_authority() != multiplayer.get_unique_id():
@@ -9,6 +11,9 @@ func _ready():
 		set_physics_process(false)
 		set_process_unhandled_input(false)
 	
+func _process(_delta: float) -> void:
+	SHIFT_PRESSED = Input.is_key_pressed(KEY_SHIFT)
+
 func _unhandled_input(event):
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_RIGHT:
@@ -24,9 +29,8 @@ func _unhandled_input(event):
 
 
 func _on_right_click(mouse_position: Vector2):
-	if AreaHovered.hovered_entity is Enemy:
-		rpc_id(1, "right_click_on_entity", AreaHovered.hovered_entity.name)
-		return
+	if not SHIFT_PRESSED and AreaHovered.hovered_entity is Enemy:
+		return rpc_id(1, "notify_right_click_on_entity_to_server", AreaHovered.hovered_entity.name)
 
 	var _target_cell = MapManager.world_to_cell(mouse_position)
 	rpc_id(1, "try_to_move", _target_cell)
@@ -38,7 +42,7 @@ func try_to_move(_target_cell: Vector2i):
 	player._update_path(_target_cell)
 
 @rpc("authority", "call_local")
-func right_click_on_entity(_target_entity_name: String):
+func notify_right_click_on_entity_to_server(_target_entity_name: String):
 	# Always run in server
 	var target_entity = GameManager.entities[_target_entity_name]
 
