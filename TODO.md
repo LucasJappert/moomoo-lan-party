@@ -119,13 +119,13 @@ MY TODOs: 🔵🟡✅
 - ✅ Start showing my player stats
 - ✅ Fix sprite position in enemies
 - ✅ Draw avatar in the left panel and the hero's name
+- ✅ Shift + click function to move to a tile
+- ✅ Fix clicks outside grid
 - 🟡 Start implementing experience and leveling logic
 - 🟡 Start building ingame UI
 - 🟡 Set first hero types
 - 🟡 Start logic for strength, agility, and intelligence attributes
-- 🔵 Shift + click function to move to a tile
-- 🔵 Fix clicks outside grid
-- Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+- 🔵 Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
 - Implementar lógica de regeneración de vida y mana
 - Agregar skill de velocidad de ataque de un 25%
 - Agregar skill de daño en area
