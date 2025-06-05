@@ -13,11 +13,14 @@ extends CanvasLayer
 @onready var _stats1_lab5 = $PanelBL/ContainerStats1Values/Lab5
 @onready var _stats1_lab6 = $PanelBL/ContainerStats1Values/Lab6
 @onready var _stats2_lab1 = $PanelBL/ContainerStats2Values/Lab1
-@onready var _stats2_lab2 = $PanelBL/ContainerStats2Values/Lab2
+# @onready var _stats2_lab2 = $PanelBL/ContainerStats2Values/Lab2
 @onready var _stats2_lab3 = $PanelBL/ContainerStats2Values/Lab3
 @onready var _stats2_lab4 = $PanelBL/ContainerStats2Values/Lab4
 @onready var _stats2_lab5 = $PanelBL/ContainerStats2Values/Lab5
 @onready var _stats2_lab6 = $PanelBL/ContainerStats2Values/Lab6
+@onready var _hero_type = $PanelBL/HeroType
+@onready var _hero_alias = $PanelBL/HeroAlias
+
 
 # Panel Bottom Right
 @onready var _mana_ball = $PanelBR/ManaBall
@@ -120,7 +123,10 @@ func _update_region_of_skill_slots() -> void:
 		skill_children[i].region_rect = _player_skills[i].rect_region
 
 func _update_panel_bottom_left() -> void:
+	_hero_type.text = Main.MY_PLAYER.hero_type
+	_hero_alias.text = Main.MY_PLAYER.json_data.alias
 	_level.text = str(Main.MY_PLAYER.current_level)
+
 	var total_stats = Main.MY_PLAYER.combat_data.get_total_stats_including_extras_by_attributes()
 	_stats1_lab1.text = str(total_stats.strength)
 	_stats1_lab2.text = str(total_stats.agility)
@@ -129,8 +135,8 @@ func _update_panel_bottom_left() -> void:
 	_stats1_lab5.text = StringHelpers.format_float(total_stats.attack_speed)
 	_stats1_lab6.text = StringHelpers.format_percent(total_stats.life_steal_percent)
 
-	_stats2_lab1.text = StringHelpers.format_float(total_stats.physical_attack_power)
-	_stats2_lab2.text = StringHelpers.format_float(total_stats.magic_attack_power)
+	_stats2_lab1.text = StringHelpers.format_float(total_stats.physical_attack_power) + " / " + StringHelpers.format_float(total_stats.magic_attack_power)
+	# _stats2_lab2.text = StringHelpers.format_float(total_stats.magic_attack_power)
 	_stats2_lab3.text = StringHelpers.format_percent(total_stats.physical_defense_percent) + " / " + StringHelpers.format_percent(total_stats.magic_defense_percent)
 	_stats2_lab4.text = StringHelpers.format_percent(total_stats.evasion)
 	_stats2_lab5.text = StringHelpers.format_percent(total_stats.stun_chance)

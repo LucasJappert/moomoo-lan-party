@@ -118,11 +118,11 @@ MY TODOs: 🔵🟡✅
 - ✅ Start drawing the 4 abilities on the bottom bar
 - ✅ Start showing my player stats
 - ✅ Fix sprite position in enemies
+- 🔵 Draw avatar in the left panel and the hero's name
 - 🟡 Start implementing experience and leveling logic
 - 🟡 Start building ingame UI
 - 🟡 Set first hero types
 - 🟡 Start logic for strength, agility, and intelligence attributes
-- 🔵 Dibujar avatar en el panel izquierdo
 - Función click + shift para moverse hacia un tile
 - Corregir clicks fuera de la grilla
 - Implementar lógica de regeneración de vida y mana

@@ -1,5 +1,15 @@
 class_name HeroTypes
 
+class JsonItem:
+	var alias: String
+	var description_en: String
+	var description_es: String
+
+	func _init(data: Dictionary):
+		alias = data["alias"]
+		description_en = data["description_en"]
+		description_es = data["description_es"]
+
 const IRON_VEX = "Iron Vex"
 const LIORA_SUNVEIL = "Liora Sunveil"
 const THARNOK_THE_VERDANT = "Tharnok the Verdant"
@@ -9,6 +19,7 @@ const _START_REGION = Vector2i(0, 320)
 const _FRAME_SIZE = Vector2i(128, 128)
 const frames_by_type := 2
 static var heros_start_vector: Dictionary[String, Vector2i] = {}
+static var heros_json_data: Dictionary[String, JsonItem] = {}
 
 static func _get_heros_start_vector() -> Dictionary[String, Vector2i]:
 	if heros_start_vector.size() != 0:
@@ -39,6 +50,19 @@ static func get_keys() -> Array[String]:
 		VARRIK_DUSKHOLLOW
 	]
 
+static func get_json_data() -> Dictionary[String, JsonItem]:
+	var json_data = JsonHelpers.load_json("res://.docs/heros.json")
+	var result: Dictionary[String, JsonItem] = {}
+	for key in json_data:
+		result[key] = JsonItem.new(json_data[key])
+	return result
+
+static func get_hero_json_data(hero_type: String) -> JsonItem:
+	if heros_json_data.size() == 0:
+		heros_json_data = get_json_data()
+
+	return heros_json_data[hero_type]
+
 static func initialize_hero(player: Player) -> void:
 	player.combat_data.base_hp = 400
 	player.combat_data.base_mana = 100
@@ -55,6 +79,8 @@ static func initialize_hero(player: Player) -> void:
 	player.combat_data.strength = 10
 	player.combat_data.intelligence = 10
 	player.combat_data.attack_range = CombatStats.MIN_ATTACK_RANGE
+	player.json_data = HeroTypes.get_hero_json_data(player.hero_type)
+
 	if player.hero_type == IRON_VEX:
 		player.combat_data.attack_type = AttackTypes.MELEE
 		player.combat_data.projectile_type = Projectile.TYPES.NONE

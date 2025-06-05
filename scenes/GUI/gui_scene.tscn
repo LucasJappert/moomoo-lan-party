@@ -181,7 +181,7 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_acekp"]
 atlas = ExtResource("1_gbqeo")
-region = Rect2(1024, 2016, 128, 32)
+region = Rect2(288, 459, 64, 64)
 
 [node name="GuiScene" type="CanvasLayer"]
 script = ExtResource("1_li5rb")
@@ -207,6 +207,7 @@ layout_mode = 0
 texture = SubResource("AtlasTexture_li5rb")
 
 [node name="HpLabel" type="Label" parent="SkillsBarContainer"]
+layout_mode = 0
 offset_left = 5.0
 offset_top = 51.0
 offset_right = 133.0
@@ -295,6 +296,22 @@ offset_right = 736.0
 offset_bottom = 1080.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_acekp")
 
+[node name="BgAvatar" type="ColorRect" parent="PanelBL"]
+layout_mode = 2
+offset_left = 27.0
+offset_top = 46.0
+offset_right = 166.0
+offset_bottom = 181.0
+color = Color(0.118581, 0.118581, 0.118581, 1)
+
+[node name="Avatar" type="TextureRect" parent="PanelBL"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 48.0
+offset_right = 164.0
+offset_bottom = 179.0
+texture = SubResource("AtlasTexture_acekp")
+
 [node name="FullExpRect" type="ColorRect" parent="PanelBL"]
 layout_mode = 2
 offset_left = 18.0
@@ -324,15 +341,6 @@ texture = ExtResource("1_gbqeo")
 centered = false
 region_enabled = true
 region_rect = Rect2(1312, 1536, 736, 256)
-
-[node name="TextureRect" type="TextureRect" parent="PanelBL"]
-visible = false
-layout_mode = 0
-offset_left = 203.0
-offset_top = 33.0
-offset_right = 356.0
-offset_bottom = 65.0
-texture = SubResource("AtlasTexture_acekp")
 
 [node name="ContainerStats1" type="VBoxContainer" parent="PanelBL"]
 layout_mode = 0
@@ -428,12 +436,13 @@ offset_right = 404.0
 offset_bottom = 198.0
 alignment = 1
 
-[node name="PhysicalDamage" type="Label" parent="PanelBL/ContainerStats2"]
+[node name="Damage" type="Label" parent="PanelBL/ContainerStats2"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
-text = "- P.D.: "
+text = "- Dam: "
 
 [node name="MagicDamage" type="Label" parent="PanelBL/ContainerStats2"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
 text = "- M.D.: "
@@ -460,9 +469,9 @@ text = "- Crit.: "
 
 [node name="ContainerStats2Values" type="VBoxContainer" parent="PanelBL"]
 layout_mode = 0
-offset_left = 403.0
+offset_left = 401.0
 offset_top = 30.0
-offset_right = 492.0
+offset_right = 490.0
 offset_bottom = 198.0
 alignment = 1
 
@@ -473,6 +482,7 @@ theme_override_styles/normal = ExtResource("4_0ehin")
 text = "---"
 
 [node name="Lab2" type="Label" parent="PanelBL/ContainerStats2Values"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
 theme_override_styles/normal = ExtResource("4_0ehin")
@@ -505,6 +515,31 @@ theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
 theme_override_styles/normal = ExtResource("4_0ehin")
 text = "---"
 justification_flags = 35
+
+[node name="HeroType" type="Label" parent="PanelBL"]
+layout_mode = 2
+offset_left = 7.0
+offset_top = 17.0
+offset_right = 188.0
+offset_bottom = 40.0
+theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_styles/normal = ExtResource("4_0ehin")
+text = "Hero Type"
+horizontal_alignment = 1
+text_overrun_behavior = 3
+
+[node name="HeroAlias" type="Label" parent="PanelBL"]
+layout_mode = 2
+offset_left = 39.0
+offset_top = 40.0
+offset_right = 158.0
+offset_bottom = 63.0
+theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_styles/normal = ExtResource("4_0ehin")
+text = "Alias"
+horizontal_alignment = 1
+text_overrun_behavior = 3
+uppercase = true
 
 [node name="Level" type="Label" parent="PanelBL"]
 layout_mode = 0
