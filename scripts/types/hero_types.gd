@@ -71,7 +71,7 @@ static func initialize_hero(player: Player) -> void:
 	player.combat_data.evasion = 0.05
 	player.combat_data.crit_chance = 0.05
 	player.combat_data.crit_multiplier = 1.5
-	player.combat_data.attack_speed = 2
+	player.combat_data.attack_speed = 1
 	player.combat_data.physical_attack_power = 25
 	player.combat_data.magic_attack_power = 25
 	player.combat_data.move_speed = 5
@@ -86,9 +86,11 @@ static func initialize_hero(player: Player) -> void:
 		player.combat_data.projectile_type = Projectile.TYPES.NONE
 		player.combat_data.base_hp = 600
 		player.combat_data.evasion = 0.1
-		player.combat_data.agility = 100
+		player.combat_data.agility = 10
 		player.combat_data.strength = 15
-		player.combat_data.intelligence = 5
+		player.combat_data.intelligence = 10
+		player.combat_data.stun_chance = 0.5
+		player.combat_data.stun_duration = 5
 		player.combat_data.skills = [
 			Skill.get_skill(Skill.Names.LIFESTEAL),
 			Skill.get_skill(Skill.Names.STUNNING_STRIKE),
@@ -105,7 +107,7 @@ static func initialize_hero(player: Player) -> void:
 	if player.hero_type == VARRIK_DUSKHOLLOW:
 		player.combat_data.skills = [Skill.get_skill(Skill.Names.LIFESTEAL)]
 
-	player.combat_data.current_hp = player.combat_data.get_total_hp()
+	player.combat_data.current_hp = int(player.combat_data.get_total_hp() * 0.9)
 
 # [
 #   {

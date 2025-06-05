@@ -5,12 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://buj7u3vemtwye" path="res://scenes/GUI/slot_over_skill_bar.tscn" id="3_acekp"]
 [ext_resource type="StyleBox" uid="uid://rxq74mic16cg" path="res://bg_label_stats.tres" id="4_0ehin"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_li5rb"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_li5rb"]
-atlas = ExtResource("1_gbqeo")
-region = Rect2(960, 1905, 1088, 143)
-
 [sub_resource type="FontFile" id="FontFile_gbqeo"]
 subpixel_positioning = 0
 msdf_pixel_range = 14
@@ -183,52 +177,14 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 atlas = ExtResource("1_gbqeo")
 region = Rect2(288, 459, 64, 64)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_li5rb"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_li5rb"]
+atlas = ExtResource("1_gbqeo")
+region = Rect2(960, 1905, 1088, 143)
+
 [node name="GuiScene" type="CanvasLayer"]
 script = ExtResource("1_li5rb")
-
-[node name="SkillsBarContainer" type="Panel" parent="."]
-visible = false
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -544.0
-offset_top = -143.0
-offset_right = 544.0
-grow_horizontal = 2
-grow_vertical = 0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxEmpty_li5rb")
-
-[node name="SkillsBar" type="TextureRect" parent="SkillsBarContainer"]
-layout_mode = 0
-texture = SubResource("AtlasTexture_li5rb")
-
-[node name="HpLabel" type="Label" parent="SkillsBarContainer"]
-layout_mode = 0
-offset_left = 5.0
-offset_top = 51.0
-offset_right = 133.0
-offset_bottom = 95.0
-text = "10.000/10.000"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="SkillSlotsContainer" type="Node2D" parent="SkillsBarContainer"]
-
-[node name="SkillSlot1" parent="SkillsBarContainer/SkillSlotsContainer" instance=ExtResource("3_acekp")]
-position = Vector2(183, 94)
-
-[node name="SkillSlot2" parent="SkillsBarContainer/SkillSlotsContainer" instance=ExtResource("3_acekp")]
-position = Vector2(262, 94)
-
-[node name="SkillSlot3" parent="SkillsBarContainer/SkillSlotsContainer" instance=ExtResource("3_acekp")]
-position = Vector2(342, 94)
-
-[node name="SkillSlot4" parent="SkillsBarContainer/SkillSlotsContainer" instance=ExtResource("3_acekp")]
-position = Vector2(423, 94)
 
 [node name="MultiplayerHUD" type="Control" parent="."]
 unique_name_in_owner = true
@@ -290,6 +246,37 @@ centered = false
 region_enabled = true
 region_rect = Rect2(1312, 1792, 736, 256)
 
+[node name="LabelMana" type="Label" parent="PanelBR"]
+offset_left = 31.0
+offset_top = 132.0
+offset_right = 171.0
+offset_bottom = 155.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 19
+text = "18.000 / 20.000"
+horizontal_alignment = 1
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="SkillSlotsContainer" type="Node2D" parent="PanelBR"]
+position = Vector2(165, -5)
+
+[node name="SkillSlot1" parent="PanelBR/SkillSlotsContainer" instance=ExtResource("3_acekp")]
+position = Vector2(189, 100)
+scale = Vector2(1.312, 1.313)
+
+[node name="SkillSlot2" parent="PanelBR/SkillSlotsContainer" instance=ExtResource("3_acekp")]
+position = Vector2(297, 100)
+scale = Vector2(1.312, 1.312)
+
+[node name="SkillSlot3" parent="PanelBR/SkillSlotsContainer" instance=ExtResource("3_acekp")]
+position = Vector2(405, 100)
+scale = Vector2(1.312, 1.312)
+
+[node name="SkillSlot4" parent="PanelBR/SkillSlotsContainer" instance=ExtResource("3_acekp")]
+position = Vector2(513, 100)
+scale = Vector2(1.312, 1.312)
+
 [node name="PanelBL" type="Panel" parent="."]
 offset_top = 824.0
 offset_right = 736.0
@@ -341,6 +328,18 @@ texture = ExtResource("1_gbqeo")
 centered = false
 region_enabled = true
 region_rect = Rect2(1312, 1536, 736, 256)
+
+[node name="LabelHP" type="Label" parent="PanelBL"]
+offset_left = 564.0
+offset_top = 132.0
+offset_right = 704.0
+offset_bottom = 155.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 19
+text = "18.000 / 20.000"
+horizontal_alignment = 1
+vertical_alignment = 1
+text_overrun_behavior = 3
 
 [node name="ContainerStats1" type="VBoxContainer" parent="PanelBL"]
 layout_mode = 0
@@ -552,3 +551,35 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 26
 text = "32"
 horizontal_alignment = 1
+
+[node name="SkillsBarContainer" type="Panel" parent="."]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -544.0
+offset_top = -143.0
+offset_right = 544.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxEmpty_li5rb")
+
+[node name="SkillsBar" type="TextureRect" parent="SkillsBarContainer"]
+visible = false
+layout_mode = 0
+texture = SubResource("AtlasTexture_li5rb")
+
+[node name="HpLabel" type="Label" parent="SkillsBarContainer"]
+visible = false
+layout_mode = 0
+offset_left = 5.0
+offset_top = 51.0
+offset_right = 133.0
+offset_bottom = 95.0
+text = "10.000/10.000"
+horizontal_alignment = 1
+vertical_alignment = 1

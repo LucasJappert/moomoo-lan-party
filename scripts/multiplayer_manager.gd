@@ -39,7 +39,7 @@ func _add_player_to_game(id):
 	var main = get_tree().get_root().get_node("Main")
 	var new_player = main.player_spawner.spawn(spawn_data)
 	GameManager.add_entity(new_player)
-	print("Added player: " + new_player.name)
+	print("Added player: " + new_player.name, " id: " + str(id))
 	print("Total players: " + str(GameManager.players_node.get_child_count()))
 
 func _remove_player_from_game(id):

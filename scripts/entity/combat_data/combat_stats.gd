@@ -12,7 +12,7 @@ const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapM
 @export var crit_chance: float = 0.0
 @export var crit_multiplier: float = 0
 @export var stun_chance: float = 0.0
-@export var stun_duration: float = 0.0
+@export var stun_duration: float = 0.0 # In seconds
 @export var attack_range: int = 0
 @export var attack_speed: float = 0 # Attacks per second
 @export var physical_attack_power: int = 0
@@ -24,12 +24,14 @@ const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapM
 @export var attack_speed_percent: float = 0
 @export var move_speed_percent: float = 0
 @export var life_steal_percent: float = 0
-@export var hp_regeneration_points: float = 0 # Points per second
-@export var mana_regeneration_points: float = 0 # Points per second
+@export var hp_regeneration_points: int = 0 # Points per second
+@export var mana_regeneration_points: int = 0 # Points per second
 
 @export var agility: int = 0
 @export var strength: int = 0
 @export var intelligence: int = 0
+
+@export var is_owner_friendly: bool = true
 
 
 static func get_default_instance() -> CombatStats:
@@ -42,7 +44,7 @@ static func get_default_instance() -> CombatStats:
 	attr.attack_speed = 0.5
 	return attr
 
-func accumulate_combat_stats(stats: CombatStats) -> void:
+func accumulate_combat_stats(stats: CombatStats) -> CombatStats:
 	hp += stats.hp
 	mana += stats.mana
 	physical_defense_percent += stats.physical_defense_percent
@@ -65,10 +67,13 @@ func accumulate_combat_stats(stats: CombatStats) -> void:
 	life_steal_percent += stats.life_steal_percent
 	hp_regeneration_points += stats.hp_regeneration_points
 	mana_regeneration_points += stats.mana_regeneration_points
+	is_owner_friendly = stats.is_owner_friendly
 
 	agility += stats.agility
 	strength += stats.strength
 	intelligence += stats.intelligence
+
+	return self
 
 func initialize_default_values() -> void:
 	accumulate_combat_stats(get_default_instance())

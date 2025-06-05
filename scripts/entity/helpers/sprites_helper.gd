@@ -16,17 +16,8 @@ static func set_entity_sprites(entity: Entity) -> void:
 		var scale_factor = 1.3 if entity._boss_level > 0 else _ENEMIES_SCALE
 		_set_sprites(entity, rects, scale_factor)
 		entity.sprite.position.y = -24 * scale_factor
-		# entity.sprite.position.y = -12 # * (1 - _PLAYERS_SCALE)
-		# entity.sprite.position.y = -10
 	
-	print(entity.sprite.position.y)
-	# if entity._boss_level > 0:
-	# 	var scale_factor = 1.3
-	# 	entity.sprite.scale *= scale_factor
-	# 	entity.hud.my_health_bar.position.y -= 10
-	
-	entity.sprite_heigth = entity.sprite.sprite_frames.get_frame_texture("idle", 0).get_height()
-	# entity.sprite.position.y = - entity.sprite_heigth * 0.5
+	entity.sprite_heigth = entity.sprite.sprite_frames.get_frame_texture("idle", 0).get_height() * entity.sprite.scale.y
 
 
 static func get_sprite_frames(start_region: Vector2, frame_size: Vector2, frames_size: int, speed: float, looped: bool) -> SpriteFrames:

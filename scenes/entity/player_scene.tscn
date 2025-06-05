@@ -29,11 +29,8 @@ replication_config = SubResource("SceneReplicationConfig_2y2wq")
 unique_name_in_owner = true
 script = ExtResource("3_uyepr")
 
-[node name="HUD" parent="." index="3"]
-position = Vector2(0, 11)
-
 [node name="MyHealthBar" parent="HUD" index="0"]
-position = Vector2(0, -12)
+position = Vector2(0, -62)
 
 [node name="CollisionShape2D" parent="ProjectileZone" index="0"]
 position = Vector2(0, -25)

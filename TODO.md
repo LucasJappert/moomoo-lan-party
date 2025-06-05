@@ -121,12 +121,12 @@ MY TODOs: 🔵🟡✅
 - ✅ Draw avatar in the left panel and the hero's name
 - ✅ Shift + click function to move to a tile
 - ✅ Fix clicks outside grid
+- ✅ Implement regeneration logic for health and mana
 - 🟡 Start implementing experience and leveling logic
 - 🟡 Start building ingame UI
 - 🟡 Set first hero types
 - 🟡 Start logic for strength, agility, and intelligence attributes
-- 🔵 Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
-- Implementar lógica de regeneración de vida y mana
+- 🔵 Agregar avatar del target arriba a la izquierda
 - Agregar skill de velocidad de ataque de un 25%
 - Agregar skill de daño en area
 - Agregar skill de disparo multiple
@@ -141,3 +141,4 @@ MY TODOs: 🔵🟡✅
   Otra opción es crear unas 3 habilidades, y que los enemigos tendrían 3 de ellas asignadas aleatoriamente. De esta manera se podría crear una amplia variabilidad de combinaciones. Sumado a que cada enemigo tiene su tipo de ataque, su rango de ataque, velocidad de ataque, etc.
 - Agregar efectos de sangrado cada vez que una entidad recibo un daño
 - Agregar mas tipos de héroes. En esta primera etapa bastaría con 10 diferentes tipos con sus respectivas 4 habilidades y una ulti.
+- Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.

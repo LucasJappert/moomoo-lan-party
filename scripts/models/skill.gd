@@ -48,7 +48,8 @@ var type: Type = Type.ACTIVE
 var cooldown: float = 0
 var mana_cost: float = 0
 var description: String = ""
-var is_learned: bool = false
+var is_learned: bool = true
+var apply_to_owner: bool = true
 
 var rect_region: Rect2 = Rect2()
 
@@ -58,12 +59,14 @@ static func initialize_skills() -> void:
 	_SKILLS[skill_name].rect_region = Rect2(0 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_SKILLS[skill_name].magic_defense_percent = 0.3
 	_SKILLS[skill_name].physical_defense_percent = 0.3
+	_SKILLS[skill_name].apply_to_owner = true
 	_SKILLS[skill_name].description = "Reduces magic and physical defense by " + str(_SKILLS[skill_name].magic_defense_percent * 100) + "%"
 
 	skill_name = Names.BLESSING_OF_POWER
 	_SKILLS[skill_name] = Skill.new(skill_name, Skill.Type.PASSIVE)
 	_SKILLS[skill_name].rect_region = Rect2(1 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_SKILLS[skill_name].physical_attack_power_percent = 0.5
+	_SKILLS[skill_name].apply_to_owner = true
 	_SKILLS[skill_name].description = "Increases physical attack power by " + str(_SKILLS[skill_name].physical_attack_power_percent * 100) + "%"
 
 	skill_name = Names.MIRROR_DEMISE
@@ -77,6 +80,7 @@ static func initialize_skills() -> void:
 	_SKILLS[skill_name].attack_speed_percent = -0.1
 	_SKILLS[skill_name].move_speed_percent = -0.1
 	_SKILLS[skill_name].freeze_duration = 4
+	_SKILLS[skill_name].apply_to_owner = false
 	_SKILLS[skill_name].description = "The attacker's icy touch partially freezes the target, reducing their movement and attack speed by " + \
 	str(abs(_SKILLS[skill_name].attack_speed_percent) * 100) + "% for " + str(_SKILLS[skill_name].freeze_duration) + " seconds."
 
@@ -85,12 +89,14 @@ static func initialize_skills() -> void:
 	_SKILLS[skill_name].rect_region = Rect2(4 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_SKILLS[skill_name].stun_duration = 2
 	_SKILLS[skill_name].stun_chance = 0.25
+	_SKILLS[skill_name].apply_to_owner = false
 	_SKILLS[skill_name].description = "Has a " + str(_SKILLS[skill_name].stun_chance * 100) + "% chance to stun the target for " + str(_SKILLS[skill_name].stun_duration) + " seconds."
 
 	skill_name = Names.LIFESTEAL
 	_SKILLS[skill_name] = Skill.new(skill_name, Skill.Type.PASSIVE)
 	_SKILLS[skill_name].rect_region = Rect2(5 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_SKILLS[skill_name].life_steal_percent = 0.2
+	_SKILLS[skill_name].apply_to_owner = true
 	_SKILLS[skill_name].description = "Steals " + str(_SKILLS[skill_name].life_steal_percent * 100) + "% of dealt damage as life."
 
 static func get_skill(skill_name: String) -> Skill:
@@ -137,30 +143,8 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 	var _attacker_frozen_skill = _attacker.combat_data.get_skill(Names.FROZEN_TOUCH)
 	if _attacker_frozen_skill:
 		var attr = _attacker_frozen_skill.get_combat_stats_instance()
-		var effect = CombatEffect.get_instance(attr.freeze_duration, attr)
+		var effect = CombatEffect.get_temporal_effect(Names.FROZEN_TOUCH, attr.freeze_duration, attr)
 		_target.combat_data.add_effect(effect)
-	
-	# Stun verification, we need it after the evasion check
-	if GlobalsEntityHelpers.roll_chance(_attacker.combat_data.get_total_stats().stun_chance):
-		var _attacker_stun_skill = _attacker.combat_data.get_skill(Names.STUNNING_STRIKE)
-		if _attacker_stun_skill:
-			var attr = _attacker_stun_skill.get_combat_stats_instance()
-			var effect = CombatEffect.get_instance(_attacker_stun_skill.stun_duration, attr)
-			_target.combat_data.add_effect(effect)
-
-	# Lifesteal verification
-	if _attacker.combat_data.current_hp < _attacker.combat_data.base_hp:
-		var _attacker_lifesteal_skill = _attacker.combat_data.get_skill(Names.LIFESTEAL)
-		if _attacker_lifesteal_skill:
-			var total_heal = int(_di.total_damage_heal * _attacker_lifesteal_skill.life_steal_percent)
-			if total_heal > 0:
-				var new_di = DamageInfo.get_instance()
-				new_di.total_damage_heal = - total_heal
-				_attacker.rpc("rpc_receive_damage_or_heal", new_di.to_dict())
-				_attacker.combat_data.update_current_hp_for_damage(-total_heal)
-
-	return
-
 # endregion .................... SKILLS LOGICS
 
 # Skill("Mana Scorcher", "Active", 40, 8, "Burns 50% of the target's mana, dealing 25% of that as physical damage."),

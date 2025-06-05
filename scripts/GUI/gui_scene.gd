@@ -4,6 +4,7 @@ extends CanvasLayer
 
 # Panel Bottom Left
 @onready var _hp_ball = $PanelBL/HpBall
+@onready var _hp_label = $PanelBL/LabelHP
 @onready var _current_exp_rect = $PanelBL/CurrentExpRect
 @onready var _level = $PanelBL/Level
 @onready var _stats1_lab1 = $PanelBL/ContainerStats1Values/Lab1
@@ -24,8 +25,8 @@ extends CanvasLayer
 
 # Panel Bottom Right
 @onready var _mana_ball = $PanelBR/ManaBall
-@onready var _hp_label = $SkillsBarContainer/HpLabel
-@onready var _skill_slots_container = $SkillsBarContainer/SkillSlotsContainer
+@onready var _mana_label = $PanelBR/LabelMana
+@onready var _skill_slots_container = $PanelBR/SkillSlotsContainer
 
 var _original_ball_size: Vector2
 var _original_ball_pos_y: float
@@ -69,6 +70,7 @@ func _process(_delta: float) -> void:
 	if not Main.MY_PLAYER: return
 
 	_hp_label.text = "%d/%d" % [Main.MY_PLAYER.combat_data.current_hp, Main.MY_PLAYER.combat_data.get_total_hp()]
+	_mana_label.text = "%d/%d" % [Main.MY_PLAYER.combat_data.current_mana, Main.MY_PLAYER.combat_data.get_total_mana()]
 	_update_hp_ball_sprite()
 	_update_mana_ball_sprite()
 	_update_exp_bar()
@@ -118,7 +120,7 @@ func _update_slots_of_skills():
 func _update_region_of_skill_slots() -> void:
 	var skill_children = _skill_slots_container.get_children()
 	for i in range(skill_children.size()):
-		if _player_skills[i] == null: continue
+		if i >= _player_skills.size(): continue
 
 		skill_children[i].region_rect = _player_skills[i].rect_region
 
@@ -127,7 +129,7 @@ func _update_panel_bottom_left() -> void:
 	_hero_alias.text = Main.MY_PLAYER.json_data.alias
 	_level.text = str(Main.MY_PLAYER.current_level)
 
-	var total_stats = Main.MY_PLAYER.combat_data.get_total_stats_including_extras_by_attributes()
+	var total_stats = Main.MY_PLAYER.combat_data.get_total_stats()
 	_stats1_lab1.text = str(total_stats.strength)
 	_stats1_lab2.text = str(total_stats.agility)
 	_stats1_lab3.text = str(total_stats.intelligence)

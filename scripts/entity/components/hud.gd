@@ -24,7 +24,10 @@ func _post_ready(_entity: Entity):
 	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.text = my_owner.name
 
-	my_health_bar.position.y = - my_owner.sprite_heigth
+	my_health_bar.position.y = my_owner.sprite.position.y - my_owner.sprite_heigth * 0.5
+	if my_owner is Enemy: my_health_bar.position.y -= 10
+	if my_owner is Player && my_owner.player_id == Main.MY_PLAYER_ID: my_health_bar.visible = false
+
 	bg_black.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	current_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
@@ -33,7 +36,7 @@ func _process(_delta: float):
 	_try_update_health_bar()
 
 func _try_update_health_bar():
-	if my_owner is Player && my_owner.id == Main.MY_PLAYER_ID: return
+	if my_owner is Player && my_owner.player_id == Main.MY_PLAYER_ID: return
 	
 	# Hide health bar if we don't receive damage for 5 seconds
 	var now = Time.get_ticks_msec()
