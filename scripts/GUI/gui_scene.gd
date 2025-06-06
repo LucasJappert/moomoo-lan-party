@@ -74,11 +74,11 @@ func _ready() -> void:
 	# _skills_bar.set_visible(false)
 
 func _process(_delta: float) -> void:
+	if not Main.MY_PLAYER: return
+
 	var fps := int(1.0 / _delta)
 	if fps < 50: $LabelFPS.text = "FPS ⚠️: %d " % fps
 	else: $LabelFPS.text = "FPS: %d" % fps
-
-	if not Main.MY_PLAYER: return
 
 	_mana_label.text = "%d/%d" % [Main.MY_PLAYER.combat_data.current_mana, Main.MY_PLAYER.combat_data.get_total_mana()]
 	_update_slots_of_skills()

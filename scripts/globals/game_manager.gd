@@ -54,6 +54,9 @@ func get_players() -> Array[Entity]:
 func get_enemies() -> Array[Entity]:
 	return entities.values().filter(func(e): return e is Enemy)
 
+func get_entity(entity_name: String) -> Entity:
+	return entities.get(entity_name)
+
 func add_projectile(projectile: Projectile) -> void:
 	projectiles_node.add_child(projectile, true)
 

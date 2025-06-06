@@ -76,7 +76,7 @@ func _process(_delta: float) -> void:
 	combat_data.try_physical_attack(_delta)
 
 func _physics_process(_delta):
-	movement_helper.server_move_along_path(_delta)
+	movement_helper.server_physics_process(_delta)
 	_client_physics_process(_delta)
 
 func _client_physics_process(_delta: float) -> void:

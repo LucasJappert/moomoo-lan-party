@@ -38,7 +38,6 @@ func _on_right_click(mouse_position: Vector2):
 
 @rpc("authority", "call_local")
 func try_to_move(_target_cell: Vector2i):
-	player.movement_helper.target_entity = null
 	# TODO: Review target_pos = target_cell
 	player.movement_helper.update_path(_target_cell)
 
@@ -46,10 +45,8 @@ func try_to_move(_target_cell: Vector2i):
 func notify_to_server_the_right_click_on_entity(_target_entity_name: String):
 	# Always run in server
 	var target_entity = GameManager.entities[_target_entity_name]
-	player.combat_data._target_entity = target_entity
+	player.combat_data.set_target(target_entity)
 
-	var is_in_attack_range = GlobalsEntityHelpers.is_target_in_attack_area(player, target_entity)
-	if is_in_attack_range: player.movement_helper.clean_path()
-	if not is_in_attack_range: player.movement_helper.update_path(MapManager.world_to_cell(target_entity.global_position))
-
-	player.movement_helper.target_entity = target_entity
+	# var is_in_attack_range = GlobalsEntityHelpers.is_target_in_attack_area(player, target_entity)
+	# if is_in_attack_range: player.movement_helper.clean_path()
+	# if not is_in_attack_range: player.movement_helper.update_path_to_entity(target_entity)

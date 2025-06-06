@@ -124,6 +124,7 @@ MY TODOs: 🔵🟡✅
 - ✅ Implement regeneration logic for health and mana
 - ✅ Add target avatar at the top left
 - ✅ Print FPS (drops below 60 when laptop is plugged in)
+- ✅ Move and attack target when out of range doing nothing.
 - 🟡 Start implementing experience and leveling logic
 - 🟡 Start building ingame UI
 - 🟡 Set first hero types

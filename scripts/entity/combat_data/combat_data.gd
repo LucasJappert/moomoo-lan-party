@@ -17,9 +17,11 @@ var _target_entity: Entity #
 
 var last_physical_hit_time: int = 0 # In milliseconds
 var nearest_enemy_focused: Entity
-var last_damage_received_time: int = 0 # In milliseconds
 
 var my_owner: Entity
+
+var last_damage_received_time: int = 0 # In milliseconds
+var latest_attacker: Entity
 
 func _ready() -> void:
 	initialize_default_values()
@@ -30,6 +32,14 @@ func _process(_delta: float):
 	_try_to_add_effect_from_skills()
 
 	_actions_after_1_second(_delta)
+	
+	if my_owner.combat_data._target_entity == null:
+		if my_owner.movement_helper.current_path.is_empty():
+			if my_owner.combat_data.latest_attacker:
+				if my_owner is Player:
+					var nearest_enemy: Entity
+					nearest_enemy = GlobalsEntityHelpers.get_nearest_entity(my_owner.global_position, GameManager.get_enemies(), my_owner.area_vision_shape.shape.radius)
+					my_owner.combat_data.set_target(nearest_enemy)
 
 
 func set_my_owner(_owner: Entity) -> void:
@@ -76,6 +86,7 @@ func _server_calculate_physical_damage(_target: Entity) -> void:
 	_di.critical = critical_damage
 	_di.projectile_type = projectile_type
 	_di.damage_type = DamageInfo.DamageType.PHYSICAL
+	_di.attacker_name = my_owner.name
 
 	_target.combat_data._server_receive_physical_damage(_di, my_owner)
 
@@ -125,6 +136,14 @@ func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void
 
 func update_current_mana(value_to_increase: int) -> void:
 	current_mana = clamp(current_mana + value_to_increase, 0, get_total_mana())
+
+func register_attacker(attacker: Entity) -> void:
+	latest_attacker = attacker
+	last_damage_received_time = Time.get_ticks_msec()
+
+func set_target(_target: Entity) -> void:
+	_target_entity = _target
+	my_owner.movement_helper.update_path_to_entity(_target)
 # endregion
 
 # region GETTERs
@@ -146,31 +165,35 @@ func is_stunned() -> bool:
 # endregion
 
 # region TRY PHISICAL ATTACK
-func try_physical_attack(_delta: float):
-	if not my_owner.multiplayer.is_server(): return
+func try_physical_attack(_delta: float) -> bool:
+	if not my_owner.multiplayer.is_server(): return false
 
-	if my_owner.velocity != Vector2.ZERO: return
+	if my_owner.velocity != Vector2.ZERO: return false
 
 	# Priorize players over moomoo (only for enemies)
-	if _target_entity == GameManager.moomoo: _target_entity = _get_target()
+	if _target_entity == GameManager.moomoo: _target_entity = _get_nearest_target_in_range_attack()
 
 	if not GlobalsEntityHelpers.is_target_in_attack_area(my_owner, _target_entity):
-		_target_entity = _get_target()
+		_target_entity = _get_nearest_target_in_range_attack()
 
-	if _target_entity == null: return
+	if _target_entity == null: return false
 
-	if not can_physical_attack(): return
+	if not can_physical_attack(): return false
 
 	_execute_physical_attack()
 	last_physical_hit_time = Time.get_ticks_msec()
 
-func _get_target():
+	return true
+
+func _get_nearest_target_in_range_attack():
+	var max_range = get_total_stats().attack_range
+	var start_pos = my_owner.global_position
 	if my_owner is Player:
-		return GlobalsEntityHelpers.get_nearest_entity_to_attack(my_owner, GameManager.get_enemies())
+		return GlobalsEntityHelpers.get_nearest_entity(start_pos, GameManager.get_enemies(), max_range)
 
 	if my_owner is Enemy:
 		# First we check if there is a player nearby, then if the moomoo is in attack range
-		var nearest_player = GlobalsEntityHelpers.get_nearest_entity_to_attack(my_owner, GameManager.get_players())
+		var nearest_player = GlobalsEntityHelpers.get_nearest_entity(start_pos, GameManager.get_players(), max_range)
 		if nearest_player: return nearest_player
 
 		if GlobalsEntityHelpers.is_target_in_attack_area(my_owner, GameManager.moomoo): return GameManager.moomoo
@@ -209,8 +232,7 @@ func global_receive_damage_or_heal(_di: DamageInfo):
 	if _di.total_damage_heal < 0: # Heal
 		my_owner.hud.show_damage_heal_popup(str(abs(_di.total_damage_heal)), Color(0, 1, 0))
 	
-	last_damage_received_time = Time.get_ticks_msec()
-	pass
+	register_attacker(_di.get_attacker())
 
 func _try_to_add_effect_from_skills() -> void:
 	if not my_owner is Player: return

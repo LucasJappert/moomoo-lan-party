@@ -9,13 +9,15 @@ var total_damage_heal: int # Positive for damage, negative for heal
 var critical: int
 var projectile_type: String
 var damage_type: int = DamageType.PHYSICAL
+var attacker_name: String
 
 func to_dict() -> Dictionary:
 	return {
 		"total_damage_heal": total_damage_heal,
 		"critical": critical,
 		"projectile_type": projectile_type,
-		"damage_type": damage_type
+		"damage_type": damage_type,
+		"attacker_name": attacker_name
 	}
 
 func from_dict(data: Dictionary) -> void:
@@ -23,6 +25,10 @@ func from_dict(data: Dictionary) -> void:
 	critical = data.get("critical", 0)
 	projectile_type = data.get("projectile_type", "")
 	damage_type = data.get("damage_type", DamageType.PHYSICAL)
+	attacker_name = data.get("attacker_name", "")
+
+func get_attacker() -> Entity:
+	return GameManager.get_entity(attacker_name)
 
 static func get_instance() -> DamageInfo:
 	var damage_info = DamageInfo.new()
