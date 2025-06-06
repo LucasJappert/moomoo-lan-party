@@ -79,7 +79,7 @@ func _try_draw_paths():
 		return
 
 	for entity in GameManager.entities.values():
-		for cell in entity.current_path:
+		for cell in entity.movement_helper.current_path:
 			if MapManager._astar_grid.is_in_boundsv(cell):
 				var pos := MapManager.cell_to_world(cell)
 				draw_rect(Rect2(pos - MapManager.TILE_SIZE / 2.0, MapManager.TILE_SIZE), Color(1, 1, 0, 0.5), true)

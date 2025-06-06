@@ -22,11 +22,7 @@ var id: int = 0
 var replicated: bool = false
 
 # Move this logic to a separate module
-var target_entity: Entity
-var current_path: Array[Vector2i] = []
-var current_cell = null
-var target_pos = null
-var movement_helper = MovementEntityHelper.new()
+var movement_helper: MovementHelper
 
 @export var current_state: EntityState.StateEnum = EntityState.StateEnum.IDLE
 @export var _boss_level: int = 0
@@ -59,7 +55,7 @@ func _init() -> void:
 func _ready():
 	collision_layer = 1
 	collision_mask = 1
-	movement_helper.set_my_owner(self)
+	movement_helper = MovementHelper.new(self)
 	combat_data.set_my_owner(self)
 	area_attack_shape.shape = area_attack_shape.shape.duplicate() # to avoid changing the original shape
 	_client_init()
@@ -80,25 +76,18 @@ func _process(_delta: float) -> void:
 	combat_data.try_physical_attack(_delta)
 
 func _physics_process(_delta):
-	movement_helper._server_move_along_path(_delta)
+	movement_helper.server_move_along_path(_delta)
 	_client_physics_process(_delta)
 
 func _client_physics_process(_delta: float) -> void:
 	if multiplayer.is_server() && not Main.HOSTED_GAME: return
 		
 	sprite.flip_h = direction.x < 0
-	# if self is Enemy:
-	# 	if AreaHovered.hovered_entity == self:
-	# 		sprite.modulate = Color(1, 0, 0)
 
 func _client_init() -> void:
 	if multiplayer.is_server() && not Main.HOSTED_GAME: return
 
 	SpritesAnimationHelper.set_entity_sprites(self)
-
-func _update_path(_target_cell: Vector2i):
-	# Implemented in Player and Enemy
-	pass
 
 func _global_die():
 	# Implemented in Player and Enemy

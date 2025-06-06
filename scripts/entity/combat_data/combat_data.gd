@@ -13,7 +13,7 @@ extends CombatStats
 var skills: Array[Skill] = []
 
 var _1_second_timer: float = 0.0
-
+var _target_entity: Entity #
 
 var last_physical_hit_time: int = 0 # In milliseconds
 var nearest_enemy_focused: Entity
@@ -60,6 +60,7 @@ func get_effect(effect_name: String) -> CombatEffect:
 		if effect.name == effect_name: return effect
 	return null
 
+# TODO: Review
 func _server_calculate_physical_damage(_target: Entity) -> void:
 	if my_owner.multiplayer.is_server() == false: return
 	if _target == null: return
@@ -108,14 +109,14 @@ func _server_receive_physical_damage(_di: DamageInfo, _attacker: Entity) -> void
 	update_current_hp(-total_damage)
 
 # region SETTERs
-func update_current_hp(value_to_increase: int) -> void:
+func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void:
 	if current_hp <= 0: return
 	
 	current_hp += value_to_increase
 	current_hp = clamp(current_hp, 0, get_total_hp())
 	
 	if current_hp <= 0:
-		Skill.actions_before_entity_death(my_owner, my_owner.target_entity)
+		Skill.actions_before_entity_death(my_owner, _attacker)
 		current_hp = 0
 		if my_owner is Enemy:
 			for player in GameManager.get_players():
@@ -150,35 +151,39 @@ func try_physical_attack(_delta: float):
 
 	if my_owner.velocity != Vector2.ZERO: return
 
-	if my_owner.target_entity == null: _assign_target_if_needed()
+	# Priorize players over moomoo (only for enemies)
+	if _target_entity == GameManager.moomoo: _target_entity = _get_target()
 
-	if my_owner.target_entity == null: return
+	if not GlobalsEntityHelpers.is_target_in_attack_area(my_owner, _target_entity):
+		_target_entity = _get_target()
+
+	if _target_entity == null: return
 
 	if not can_physical_attack(): return
-
-	if not GlobalsEntityHelpers.is_target_in_attack_area(my_owner, my_owner.target_entity): return
 
 	_execute_physical_attack()
 	last_physical_hit_time = Time.get_ticks_msec()
 
-func _assign_target_if_needed():
+func _get_target():
 	if my_owner is Player:
-		my_owner.target_entity = GlobalsEntityHelpers.get_nearest_entity_to_attack(my_owner, GameManager.get_enemies())
-		return
+		return GlobalsEntityHelpers.get_nearest_entity_to_attack(my_owner, GameManager.get_enemies())
 
 	if my_owner is Enemy:
 		# First we check if there is a player nearby, then if the moomoo is in attack range
-		my_owner.target_entity = GlobalsEntityHelpers.get_nearest_entity_to_attack(my_owner, GameManager.get_players())
-		if my_owner.target_entity != null: return
-		if GlobalsEntityHelpers.is_target_in_attack_area(my_owner, GameManager.moomoo): my_owner.target_entity = GameManager.moomoo
+		var nearest_player = GlobalsEntityHelpers.get_nearest_entity_to_attack(my_owner, GameManager.get_players())
+		if nearest_player: return nearest_player
+
+		if GlobalsEntityHelpers.is_target_in_attack_area(my_owner, GameManager.moomoo): return GameManager.moomoo
+
+	return null
 
 func _execute_physical_attack():
 	match attack_type:
 		AttackTypes.RANGED:
-			Projectile.launch(my_owner, my_owner.target_entity, physical_attack_power)
+			Projectile.launch(my_owner, _target_entity, get_total_stats().physical_attack_power)
 
 		AttackTypes.MELEE:
-			_server_calculate_physical_damage(my_owner.target_entity)
+			_server_calculate_physical_damage(_target_entity)
 	
 func can_physical_attack() -> bool:
 	if my_owner.velocity != Vector2.ZERO: return false # If moving, can't attack

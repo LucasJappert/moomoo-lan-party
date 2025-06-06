@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cj8vdyvtjs0ju"]
+[gd_scene load_steps=5 format=3 uid="uid://cj8vdyvtjs0ju"]
 
 [ext_resource type="PackedScene" uid="uid://dh82ovsrtutto" path="res://scenes/entity/entity_scene.tscn" id="1_v8xvt"]
 [ext_resource type="Script" uid="uid://crmmhsx5pjp8f" path="res://scripts/entity/enemy.gd" id="2_4sfg8"]
@@ -11,13 +11,6 @@ properties/1/path = NodePath(".:enemy_type")
 properties/1/spawn = true
 properties/1/replication_mode = 2
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v8xvt"]
-bg_color = Color(0.588235, 0.0117647, 0.0823529, 1)
-corner_radius_top_left = 1
-corner_radius_top_right = 1
-corner_radius_bottom_right = 1
-corner_radius_bottom_left = 1
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_l0aop"]
 radius = 258.627
 
@@ -27,16 +20,6 @@ enemy_type = ""
 
 [node name="EnemySynchronizer" type="MultiplayerSynchronizer" parent="." index="0"]
 replication_config = SubResource("SceneReplicationConfig_xrr2a")
-
-[node name="MyHealthBar" parent="HUD" index="0"]
-position = Vector2(0, 13)
-
-[node name="BgBlack" parent="HUD/MyHealthBar" index="0"]
-texture_filter = 1
-
-[node name="CurrentBar" parent="HUD/MyHealthBar" index="1"]
-texture_filter = 1
-theme_override_styles/panel = SubResource("StyleBoxFlat_v8xvt")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="AreaVision" index="0"]
 visible = false

@@ -30,7 +30,7 @@ func _unhandled_input(event):
 
 func _on_right_click(mouse_position: Vector2):
 	if not SHIFT_PRESSED and AreaHovered.hovered_entity is Enemy:
-		return rpc_id(1, "notify_right_click_on_entity_to_server", AreaHovered.hovered_entity.name)
+		return rpc_id(1, "notify_to_server_the_right_click_on_entity", AreaHovered.hovered_entity.name)
 
 	var _target_cell = MapManager.world_to_cell(mouse_position)
 	rpc_id(1, "try_to_move", _target_cell)
@@ -38,16 +38,18 @@ func _on_right_click(mouse_position: Vector2):
 
 @rpc("authority", "call_local")
 func try_to_move(_target_cell: Vector2i):
-	player.target_entity = null
-	player._update_path(_target_cell)
+	player.movement_helper.target_entity = null
+	# TODO: Review target_pos = target_cell
+	player.movement_helper.update_path(_target_cell)
 
 @rpc("authority", "call_local")
-func notify_right_click_on_entity_to_server(_target_entity_name: String):
+func notify_to_server_the_right_click_on_entity(_target_entity_name: String):
 	# Always run in server
 	var target_entity = GameManager.entities[_target_entity_name]
+	player.combat_data._target_entity = target_entity
 
 	var is_in_attack_range = GlobalsEntityHelpers.is_target_in_attack_area(player, target_entity)
-	if is_in_attack_range: MovementEntityHelper.clean_path(player)
-	if not is_in_attack_range: player._update_path(MapManager.world_to_cell(target_entity.global_position))
+	if is_in_attack_range: player.movement_helper.clean_path()
+	if not is_in_attack_range: player.movement_helper.update_path(MapManager.world_to_cell(target_entity.global_position))
 
-	player.target_entity = target_entity
+	player.movement_helper.target_entity = target_entity

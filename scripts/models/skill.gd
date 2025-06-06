@@ -116,7 +116,7 @@ static func get_mana_scorcher() -> Skill:
 
 # region :::::::::::::::::::: SKILLS LOGICS
 
-static func actions_before_entity_death(_dead_entity: Entity, _attacker_entity: Entity) -> void:
+static func actions_before_entity_death(_dead_entity: Entity, _attacker: Entity) -> void:
 	if not _dead_entity is Enemy: return
 	if _dead_entity.replicated: return
 

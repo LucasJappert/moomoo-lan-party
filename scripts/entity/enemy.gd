@@ -52,27 +52,20 @@ func set_enemy_type(_enemy_type: String) -> void:
 	enemy_type = _enemy_type
 
 func _on_every_timer_500ms():
-	_try_set_current_path()
+	var nearest_player = get_nearest_player_inside_vision()
+	movement_helper.try_set_current_path_for_enemy(nearest_player)
 
-func _try_set_current_path():
-	target_entity = _get_nearest_player_inside_vision()
 
-	if target_entity == null:
-		target_entity = GameManager.moomoo
+static func get_enemy_exp_when_dead() -> int:
+	if _exp_when_dead > 0: return _exp_when_dead
 
-	if target_entity == null:
-		return
+	var player_total_accumulated_exp: int = Player.get_total_accumulated_exp()
+	_exp_when_dead = int(player_total_accumulated_exp / float(EnemiesWavesController.TOTAL_ENEMIES_TO_CREATE))
 
-	if GlobalsEntityHelpers.is_target_in_attack_area(self, target_entity):
-		current_path = []
-		return
+	return _exp_when_dead
 
-	var from_cell = MapManager.world_to_cell(target_pos if target_pos != null else global_position)
-	var to_cell = MapManager.world_to_cell(target_entity.global_position)
-	current_path = MapManager.find_path(from_cell, to_cell)
-
-func _get_nearest_player_inside_vision():
-	var closest_player: Node2D = null
+func get_nearest_player_inside_vision() -> Entity:
+	var closest_player: Entity
 	var closest_distance := INF
 
 	for player in GameManager.get_players():
@@ -85,11 +78,3 @@ func _get_nearest_player_inside_vision():
 			closest_player = player
 
 	return closest_player
-
-static func get_enemy_exp_when_dead() -> int:
-	if _exp_when_dead > 0: return _exp_when_dead
-
-	var player_total_accumulated_exp: int = Player.get_total_accumulated_exp()
-	_exp_when_dead = int(player_total_accumulated_exp / float(EnemiesWavesController.TOTAL_ENEMIES_TO_CREATE))
-
-	return _exp_when_dead

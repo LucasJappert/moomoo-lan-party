@@ -2,6 +2,13 @@ extends CanvasLayer
 
 @onready var _skills_bar = $SkillsBarContainer/SkillsBar
 
+# Panel Top left
+const _RECT_TARGET_MAX_HP = Rect2(81, 27, 189, 21)
+const _RECT_TARGET_MAX_MANA = Rect2(80, 51, 183, 15)
+@onready var _panel_tl = $PanelTL
+@onready var _target_rect_current_hp = $PanelTL/TargetRectCurrentHP
+@onready var _target_rect_current_mana = $PanelTL/TargetRectCurrentMana
+
 # Panel Bottom Left
 @onready var _hp_ball = $PanelBL/HpBall
 @onready var _hp_label = $PanelBL/LabelHP
@@ -67,16 +74,80 @@ func _ready() -> void:
 	# _skills_bar.set_visible(false)
 
 func _process(_delta: float) -> void:
+	var fps := int(1.0 / _delta)
+	if fps < 50: $LabelFPS.text = "FPS ⚠️: %d " % fps
+	else: $LabelFPS.text = "FPS: %d" % fps
+
 	if not Main.MY_PLAYER: return
 
-	_hp_label.text = "%d/%d" % [Main.MY_PLAYER.combat_data.current_hp, Main.MY_PLAYER.combat_data.get_total_hp()]
 	_mana_label.text = "%d/%d" % [Main.MY_PLAYER.combat_data.current_mana, Main.MY_PLAYER.combat_data.get_total_mana()]
-	_update_hp_ball_sprite()
-	_update_mana_ball_sprite()
-	_update_exp_bar()
 	_update_slots_of_skills()
+	_update_panel_top_left()
 	_update_panel_bottom_left()
 
+
+func _update_slots_of_skills():
+	if _player_skills.is_empty():
+		_player_skills = Main.MY_PLAYER.combat_data.skills
+		_update_region_of_skill_slots()
+
+
+	# for i in range(Main.MY_PLAYER.combat_data.skills.size()):
+	# 	print(Main.MY_PLAYER.combat_data.skills[i].name)
+
+
+# region 	INTERNAL AUXILIARY METHODS
+func _update_panel_top_left() -> void:
+	if not Main.MY_PLAYER.combat_data._target_entity:
+		_panel_tl.visible = false
+		return
+
+	if _panel_tl.visible == false: _panel_tl.visible = true
+
+	var target = Main.MY_PLAYER.combat_data._target_entity
+	var current_hp = target.combat_data.current_hp
+	var current_mana = target.combat_data.current_mana
+	var max_hp = target.combat_data.get_total_hp()
+	var max_mana = target.combat_data.get_total_mana()
+	_target_rect_current_hp.size.x = int(_RECT_TARGET_MAX_HP.size.x * current_hp / max_hp)
+	_target_rect_current_mana.size.x = int(_RECT_TARGET_MAX_MANA.size.x * current_mana / max_mana)
+
+func _update_region_of_skill_slots() -> void:
+	var skill_children = _skill_slots_container.get_children()
+	for i in range(skill_children.size()):
+		if i >= _player_skills.size(): continue
+
+		skill_children[i].region_rect = _player_skills[i].rect_region
+
+func _update_panel_bottom_left() -> void:
+	_hp_label.text = "%d/%d" % [Main.MY_PLAYER.combat_data.current_hp, Main.MY_PLAYER.combat_data.get_total_hp()]
+	_update_hp_ball_sprite()
+	_update_exp_bar()
+
+	_hero_type.text = Main.MY_PLAYER.hero_type
+	_hero_alias.text = Main.MY_PLAYER.json_data.alias
+	_level.text = str(Main.MY_PLAYER.current_level)
+
+	var total_stats = Main.MY_PLAYER.combat_data.get_total_stats()
+	_stats1_lab1.text = str(total_stats.strength)
+	_stats1_lab2.text = str(total_stats.agility)
+	_stats1_lab3.text = str(total_stats.intelligence)
+	_stats1_lab4.text = StringHelpers.format_float(total_stats.move_speed) # str(total_stats.move_speed)
+	_stats1_lab5.text = StringHelpers.format_float(total_stats.attack_speed)
+	_stats1_lab6.text = StringHelpers.format_percent(total_stats.life_steal_percent)
+
+	_stats2_lab1.text = StringHelpers.format_float(total_stats.physical_attack_power) + " / " + StringHelpers.format_float(total_stats.magic_attack_power)
+	# _stats2_lab2.text = StringHelpers.format_float(total_stats.magic_attack_power)
+	_stats2_lab3.text = StringHelpers.format_percent(total_stats.physical_defense_percent) + " / " + StringHelpers.format_percent(total_stats.magic_defense_percent)
+	_stats2_lab4.text = StringHelpers.format_percent(total_stats.evasion)
+	_stats2_lab5.text = StringHelpers.format_percent(total_stats.stun_chance)
+	_stats2_lab6.text = StringHelpers.format_percent(total_stats.crit_chance) + " (*" + StringHelpers.format_float(total_stats.crit_multiplier) + ")"
+
+
+func _update_exp_bar():
+	var current_level = Main.MY_PLAYER.current_level
+	var percent: float = clamp(Main.MY_PLAYER.current_exp / float(Player.get_exp_per_level(current_level)), 0.0, 1.0)
+	_current_exp_rect.size.x = int(EXP_BAR_FULL_SIZE.x * percent)
 func _update_hp_ball_sprite():
 	_update_ball_sprite(
 		_hp_ball,
@@ -100,49 +171,5 @@ func _update_ball_sprite(ball_sprite: Sprite2D, current_value: int, max_value: i
 	)
 
 	ball_sprite.position.y = _original_ball_pos_y + crop_from_top
-
-func _update_exp_bar():
-	var current_level = Main.MY_PLAYER.current_level
-	var percent: float = clamp(Main.MY_PLAYER.current_exp / float(Player.get_exp_per_level(current_level)), 0.0, 1.0)
-	_current_exp_rect.size.x = int(EXP_BAR_FULL_SIZE.x * percent)
-
-func _update_slots_of_skills():
-	if _player_skills.is_empty():
-		_player_skills = Main.MY_PLAYER.combat_data.skills
-		_update_region_of_skill_slots()
-
-
-	# for i in range(Main.MY_PLAYER.combat_data.skills.size()):
-	# 	print(Main.MY_PLAYER.combat_data.skills[i].name)
-
-
-# region 	INTERNAL AUXILIARY METHODS
-func _update_region_of_skill_slots() -> void:
-	var skill_children = _skill_slots_container.get_children()
-	for i in range(skill_children.size()):
-		if i >= _player_skills.size(): continue
-
-		skill_children[i].region_rect = _player_skills[i].rect_region
-
-func _update_panel_bottom_left() -> void:
-	_hero_type.text = Main.MY_PLAYER.hero_type
-	_hero_alias.text = Main.MY_PLAYER.json_data.alias
-	_level.text = str(Main.MY_PLAYER.current_level)
-
-	var total_stats = Main.MY_PLAYER.combat_data.get_total_stats()
-	_stats1_lab1.text = str(total_stats.strength)
-	_stats1_lab2.text = str(total_stats.agility)
-	_stats1_lab3.text = str(total_stats.intelligence)
-	_stats1_lab4.text = StringHelpers.format_float(total_stats.move_speed) # str(total_stats.move_speed)
-	_stats1_lab5.text = StringHelpers.format_float(total_stats.attack_speed)
-	_stats1_lab6.text = StringHelpers.format_percent(total_stats.life_steal_percent)
-
-	_stats2_lab1.text = StringHelpers.format_float(total_stats.physical_attack_power) + " / " + StringHelpers.format_float(total_stats.magic_attack_power)
-	# _stats2_lab2.text = StringHelpers.format_float(total_stats.magic_attack_power)
-	_stats2_lab3.text = StringHelpers.format_percent(total_stats.physical_defense_percent) + " / " + StringHelpers.format_percent(total_stats.magic_defense_percent)
-	_stats2_lab4.text = StringHelpers.format_percent(total_stats.evasion)
-	_stats2_lab5.text = StringHelpers.format_percent(total_stats.stun_chance)
-	_stats2_lab6.text = StringHelpers.format_percent(total_stats.crit_chance) + " (*" + StringHelpers.format_float(total_stats.crit_multiplier) + ")"
-
 
 # endregion INTERNAL AUXILIARY METHODS

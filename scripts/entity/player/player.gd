@@ -28,10 +28,6 @@ func _ready():
 		MyCamera.update_camera_position(global_position)
 		Main.MY_PLAYER = self
 
-func _update_path(_target_cell: Vector2i):
-	var from_cell = MapManager.world_to_cell(target_pos if target_pos != null else global_position)
-	current_path = MapManager.find_path(from_cell, _target_cell)
-
 # region 	SETTERs
 func increment_current_exp(value: int) -> void:
 	current_exp += value

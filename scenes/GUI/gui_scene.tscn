@@ -225,6 +225,32 @@ theme_override_fonts/font = SubResource("FontFile_gbqeo")
 theme_override_font_sizes/font_size = 32
 text = "Join as Player"
 
+[node name="PanelTL" type="Panel" parent="."]
+theme_override_styles/panel = SubResource("StyleBoxFlat_acekp")
+
+[node name="TargetRectCurrentHP" type="ColorRect" parent="PanelTL"]
+layout_mode = 2
+offset_left = 81.0
+offset_top = 27.0
+offset_right = 270.0
+offset_bottom = 48.0
+color = Color(0.8, 0, 0, 1)
+
+[node name="TargetRectCurrentMana" type="ColorRect" parent="PanelTL"]
+layout_mode = 2
+offset_left = 80.0
+offset_top = 51.0
+offset_right = 263.0
+offset_bottom = 66.0
+color = Color(0, 0.4, 0.8, 1)
+
+[node name="Avatar" type="Sprite2D" parent="PanelTL"]
+texture_filter = 1
+texture = ExtResource("1_gbqeo")
+centered = false
+region_enabled = true
+region_rect = Rect2(1760, 1440, 288, 96)
+
 [node name="PanelBR" type="Panel" parent="."]
 offset_left = 1184.0
 offset_top = 824.0
@@ -583,3 +609,10 @@ offset_bottom = 95.0
 text = "10.000/10.000"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="LabelFPS" type="Label" parent="."]
+unique_name_in_owner = true
+offset_left = 301.0
+offset_right = 378.0
+offset_bottom = 23.0
+text = "FPS:"
