@@ -33,6 +33,7 @@ func _process(_delta: float):
 
 	_actions_after_1_second(_delta)
 	
+	# TODO: Improve this
 	if my_owner.combat_data._target_entity == null:
 		if my_owner.movement_helper.current_path.is_empty():
 			if my_owner.combat_data.latest_attacker:
@@ -144,6 +145,8 @@ func register_attacker(attacker: Entity) -> void:
 func set_target(_target: Entity) -> void:
 	_target_entity = _target
 	my_owner.movement_helper.update_path_to_entity(_target)
+	var rect_region = SpritesAnimationHelper.get_rect_region_of_sprite(_target.sprite)
+	GameManager.my_main.gui_scene.set_target_avatar_region(rect_region)
 # endregion
 
 # region GETTERs

@@ -61,3 +61,9 @@ static func _add_animation(frames: SpriteFrames, name: String, regions: Array[Re
 		atlas_texture.atlas = _ATLAS1
 		atlas_texture.region = region
 		frames.add_frame(name, atlas_texture)
+
+static func get_rect_region_of_sprite(sprite: AnimatedSprite2D) -> Rect2:
+	var tex := sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
+	if tex is AtlasTexture:
+		return (tex as AtlasTexture).region
+	return Rect2()

@@ -1,5 +1,6 @@
 extends Node
 
+var my_main: Node2D
 var enemies_node: Node2D
 var entities: Dictionary[String, Entity] = {}
 var players_node: Node2D
@@ -9,15 +10,18 @@ var moomoo: Moomoo
 var my_trees_node
 var terrain
 var audio_node
+var MY_PLAYER: Player
+var MY_PLAYER_ID: int = -1
 
 func _ready():
-	enemies_node = get_tree().root.get_node("Main/Enemies")
-	players_node = get_tree().root.get_node("Main/Players")
-	moomoo_node = get_tree().root.get_node("Main/Moomoo")
-	projectiles_node = get_tree().root.get_node("Main/Projectiles")
-	my_trees_node = get_tree().root.get_node("Main/MyTrees")
-	terrain = get_tree().root.get_node("Main/Terrain")
-	audio_node = get_tree().root.get_node("Main/Audio")
+	my_main = get_tree().root.get_node("MyMain")
+	enemies_node = get_tree().root.get_node("MyMain/Enemies")
+	players_node = get_tree().root.get_node("MyMain/Players")
+	moomoo_node = get_tree().root.get_node("MyMain/Moomoo")
+	projectiles_node = get_tree().root.get_node("MyMain/Projectiles")
+	my_trees_node = get_tree().root.get_node("MyMain/MyTrees")
+	terrain = get_tree().root.get_node("MyMain/Terrain")
+	audio_node = get_tree().root.get_node("MyMain/Audio")
 	pass
 
 func _process(delta: float) -> void:
@@ -61,10 +65,16 @@ func add_projectile(projectile: Projectile) -> void:
 	projectiles_node.add_child(projectile, true)
 
 func add_decoration(sprite: Sprite2D) -> void:
-	var decorations = get_tree().root.get_node("Main/Terrain/Decorations")
+	var decorations = get_tree().root.get_node("MyMain/Terrain/Decorations")
 	decorations.add_child(sprite, true)
 
 func spawn_moomoo() -> void:
 	moomoo = load("res://scenes/entity/moomoo_scene.tscn").instantiate()
 	moomoo_node.add_child(GameManager.moomoo, true)
 	MapManager.set_cell_blocked_from_world(GameManager.moomoo.global_position, true)
+
+# region 	SETTERs
+func set_my_player(player: Player) -> void:
+	MY_PLAYER = player
+	my_main.gui_scene.set_my_player_avatar_region(player)
+# endregion SETTERs

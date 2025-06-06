@@ -54,7 +54,7 @@ static func try_update_zoom(event: InputEvent):
 	camera.zoom = Vector2.ONE * _zoom_level
 
 static func process(delta: float) -> void:
-	if not camera or Main.MY_PLAYER_ID < 0: return
+	if not camera or GameManager.MY_PLAYER_ID < 0: return
 
 	var window_is_focused = DisplayServer.window_is_focused()
 	var window_is_minimized = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_MINIMIZED
@@ -63,19 +63,19 @@ static func process(delta: float) -> void:
 	var window_is_maximized = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_MAXIMIZED
 
 	if window_is_focused && not window_is_maximized:
-		if Main.VIEWPORT_MOUSE_POSITION.x < 0 or Main.VIEWPORT_MOUSE_POSITION.x > Main.SCREEN_SIZE.x: return
-		if Main.VIEWPORT_MOUSE_POSITION.y < 0 or Main.VIEWPORT_MOUSE_POSITION.y > Main.SCREEN_SIZE.y: return
+		if MyMain.VIEWPORT_MOUSE_POSITION.x < 0 or MyMain.VIEWPORT_MOUSE_POSITION.x > MyMain.SCREEN_SIZE.x: return
+		if MyMain.VIEWPORT_MOUSE_POSITION.y < 0 or MyMain.VIEWPORT_MOUSE_POSITION.y > MyMain.SCREEN_SIZE.y: return
 
 	var direction := Vector2.ZERO
 
-	if Main.VIEWPORT_MOUSE_POSITION.x <= EDGE_MARGIN:
+	if MyMain.VIEWPORT_MOUSE_POSITION.x <= EDGE_MARGIN:
 		direction.x -= 1
-	elif Main.VIEWPORT_MOUSE_POSITION.x >= Main.SCREEN_SIZE.x - EDGE_MARGIN:
+	elif MyMain.VIEWPORT_MOUSE_POSITION.x >= MyMain.SCREEN_SIZE.x - EDGE_MARGIN:
 		direction.x += 1
 
-	if Main.VIEWPORT_MOUSE_POSITION.y <= EDGE_MARGIN:
+	if MyMain.VIEWPORT_MOUSE_POSITION.y <= EDGE_MARGIN:
 		direction.y -= 1
-	elif Main.VIEWPORT_MOUSE_POSITION.y >= Main.SCREEN_SIZE.y - EDGE_MARGIN:
+	elif MyMain.VIEWPORT_MOUSE_POSITION.y >= MyMain.SCREEN_SIZE.y - EDGE_MARGIN:
 		direction.y += 1
 
 	if direction == Vector2.ZERO: return

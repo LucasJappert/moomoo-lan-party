@@ -15,14 +15,14 @@ func become_host():
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
-	Main.MY_PLAYER_ID = multiplayer.get_unique_id()
+	GameManager.MY_PLAYER_ID = multiplayer.get_unique_id()
 	_add_player_to_game(multiplayer.get_unique_id())
 
 func become_client():
 	var client = ENetMultiplayerPeer.new()
 	client.create_client(SERVER_IP, SERVER_PORT)
 	multiplayer.multiplayer_peer = client
-	Main.MY_PLAYER_ID = multiplayer.get_unique_id()
+	GameManager.MY_PLAYER_ID = multiplayer.get_unique_id()
 
 func _on_peer_connected(id):
 	print("peer_connected: " + str(id))
@@ -36,7 +36,7 @@ func _add_player_to_game(id):
 	var spawn_data = {
 		"player_id": id
 	}
-	var main = get_tree().get_root().get_node("Main")
+	var main = get_tree().get_root().get_node("MyMain")
 	var new_player = main.player_spawner.spawn(spawn_data)
 	GameManager.add_entity(new_player)
 	print("Added player: " + new_player.name, " id: " + str(id))

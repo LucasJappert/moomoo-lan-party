@@ -26,7 +26,7 @@ func _post_ready(_entity: Entity):
 
 	my_health_bar.position.y = my_owner.sprite.position.y - my_owner.sprite_heigth * 0.5
 	if my_owner is Enemy: my_health_bar.position.y -= 10
-	if my_owner is Player && my_owner.player_id == Main.MY_PLAYER_ID: my_health_bar.visible = false
+	if my_owner is Player && my_owner.player_id == GameManager.MY_PLAYER_ID: my_health_bar.visible = false
 
 	bg_black.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	current_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -36,7 +36,7 @@ func _process(_delta: float):
 	_try_update_health_bar()
 
 func _try_update_health_bar():
-	if my_owner is Player && my_owner.player_id == Main.MY_PLAYER_ID: return
+	if my_owner is Player && my_owner.player_id == GameManager.MY_PLAYER_ID: return
 	
 	if my_owner.combat_data.latest_attacker == null:
 		if my_health_bar.visible: my_health_bar.visible = false
@@ -51,7 +51,7 @@ func _try_update_label():
 		
 	# _label.text = str(my_owner.combat_data.current_hp) + " - " + str(my_owner.combat_data.get_total_stats().attack_speed) + " - " + str(my_owner.combat_data.get_total_stats().move_speed)
 	# _label.text = str(my_owner.combat_data.current_hp)
-	if my_owner is Player: _label.text = str(my_owner.current_level)
+	if my_owner is Player: _label.text = str(my_owner.level)
 	# _label.text = str(my_owner.current_state)
 	# _label.text = str(my_owner.combat_data.get_effects().size())
 	_label.text = str(my_owner.combat_data.get_total_stats().attack_speed) + " - " + str(my_owner.combat_data.get_total_stats().move_speed)

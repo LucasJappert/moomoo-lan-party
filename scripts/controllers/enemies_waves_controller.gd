@@ -26,6 +26,7 @@ static func start_wave() -> void:
 			var random_noise = Vector2(randi_range(-64, 64), randi_range(-64, 64))
 			enemy.global_position = moomoo_position + direction * TILES_DISTANCE * 64 + random_noise
 			enemy.id = counter
+			enemy.level = _wave_number
 			
 			var is_boss = (i == ENEMIES_BY_ZONE - 1)
 			enemy._boss_level = _wave_number if is_boss else 0

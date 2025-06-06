@@ -9,7 +9,7 @@ var my_owner: Entity
 func _ready() -> void:
 	my_owner = get_parent()
 
-	if multiplayer.get_unique_id() != Main.MY_PLAYER_ID:
+	if multiplayer.get_unique_id() != GameManager.MY_PLAYER_ID:
 		return set_process(false)
 
 	connect("mouse_entered", func(): _on_mouse_entered())

@@ -5,11 +5,17 @@ extends CanvasLayer
 # Panel Top left
 const _RECT_TARGET_MAX_HP = Rect2(81, 27, 189, 21)
 const _RECT_TARGET_MAX_MANA = Rect2(80, 51, 183, 15)
+@onready var _panelTL_avatar_bg = $PanelTL/TargetAvatarBg
+@onready var _panelTL_avatar = $PanelTL/TargetAvatar
 @onready var _panel_tl = $PanelTL
 @onready var _target_rect_current_hp = $PanelTL/TargetRectCurrentHP
 @onready var _target_rect_current_mana = $PanelTL/TargetRectCurrentMana
+@onready var _label_target_level = $PanelTL/TargetLevel
+@onready var _label_target_current_hp = $PanelTL/TargetCurrentHp
+@onready var _label_target_current_mana = $PanelTL/TargetCurrentMana
 
 # Panel Bottom Left
+@onready var _my_player_avatar = $PanelBL/MyPlayerAvatar
 @onready var _hp_ball = $PanelBL/HpBall
 @onready var _hp_label = $PanelBL/LabelHP
 @onready var _current_exp_rect = $PanelBL/CurrentExpRect
@@ -59,11 +65,12 @@ func _on_join_as_player_pressed() -> void:
 
 
 func _ready() -> void:
-	if multiplayer.is_server() && not Main.HOSTED_GAME: return
+	if multiplayer.is_server() && not MyMain.HOSTED_GAME: return
 
 	%HostGameButton.connect("pressed", _on_host_game_pressed)
 	%JoinAsPlayerButton.connect("pressed", _on_join_as_player_pressed)
 	%MultiplayerHUD.show()
+	_panelTL_avatar_bg.modulate = Color(0, 0, 0, 0.2)
 	_hp_ball.modulate = Color(0.8, 0, 0)
 	_mana_ball.modulate = Color(0, 0.4, 0.8)
 	_original_ball_size = _hp_ball.region_rect.size
@@ -74,13 +81,13 @@ func _ready() -> void:
 	# _skills_bar.set_visible(false)
 
 func _process(_delta: float) -> void:
-	if not Main.MY_PLAYER: return
+	if not GameManager.MY_PLAYER: return
 
 	var fps := int(1.0 / _delta)
 	if fps < 50: $LabelFPS.text = "FPS ⚠️: %d " % fps
 	else: $LabelFPS.text = "FPS: %d" % fps
 
-	_mana_label.text = "%d/%d" % [Main.MY_PLAYER.combat_data.current_mana, Main.MY_PLAYER.combat_data.get_total_mana()]
+	_mana_label.text = "%d/%d" % [GameManager.MY_PLAYER.combat_data.current_mana, GameManager.MY_PLAYER.combat_data.get_total_mana()]
 	_update_slots_of_skills()
 	_update_panel_top_left()
 	_update_panel_bottom_left()
@@ -88,29 +95,40 @@ func _process(_delta: float) -> void:
 
 func _update_slots_of_skills():
 	if _player_skills.is_empty():
-		_player_skills = Main.MY_PLAYER.combat_data.skills
+		_player_skills = GameManager.MY_PLAYER.combat_data.skills
 		_update_region_of_skill_slots()
 
 
-	# for i in range(Main.MY_PLAYER.combat_data.skills.size()):
-	# 	print(Main.MY_PLAYER.combat_data.skills[i].name)
+	# for i in range(GameManager.MY_PLAYER.combat_data.skills.size()):
+	# 	print(GameManager.MY_PLAYER.combat_data.skills[i].name)
 
+# region	SETTERS
+func set_my_player_avatar_region(my_player: Player) -> void:
+	var rects = HeroTypes.get_rect_frames(my_player.hero_type)
+	_my_player_avatar.region_rect = rects[0]
+
+func set_target_avatar_region(rect_region: Rect2) -> void:
+	_panelTL_avatar.region_rect = rect_region
+# endregion SETTERS
 
 # region 	INTERNAL AUXILIARY METHODS
 func _update_panel_top_left() -> void:
-	if not Main.MY_PLAYER.combat_data._target_entity:
+	if not GameManager.MY_PLAYER.combat_data._target_entity:
 		_panel_tl.visible = false
 		return
 
 	if _panel_tl.visible == false: _panel_tl.visible = true
 
-	var target = Main.MY_PLAYER.combat_data._target_entity
+	var target = GameManager.MY_PLAYER.combat_data._target_entity
 	var current_hp = target.combat_data.current_hp
 	var current_mana = target.combat_data.current_mana
 	var max_hp = target.combat_data.get_total_hp()
 	var max_mana = target.combat_data.get_total_mana()
 	_target_rect_current_hp.size.x = int(_RECT_TARGET_MAX_HP.size.x * current_hp / max_hp)
 	_target_rect_current_mana.size.x = int(_RECT_TARGET_MAX_MANA.size.x * current_mana / max_mana)
+	_label_target_level.text = str(target.level)
+	_label_target_current_hp.text = "%d/%d" % [current_hp, max_hp]
+	_label_target_current_mana.text = "%d/%d" % [current_mana, max_mana]
 
 func _update_region_of_skill_slots() -> void:
 	var skill_children = _skill_slots_container.get_children()
@@ -120,15 +138,15 @@ func _update_region_of_skill_slots() -> void:
 		skill_children[i].region_rect = _player_skills[i].rect_region
 
 func _update_panel_bottom_left() -> void:
-	_hp_label.text = "%d/%d" % [Main.MY_PLAYER.combat_data.current_hp, Main.MY_PLAYER.combat_data.get_total_hp()]
+	_hp_label.text = "%d/%d" % [GameManager.MY_PLAYER.combat_data.current_hp, GameManager.MY_PLAYER.combat_data.get_total_hp()]
 	_update_hp_ball_sprite()
 	_update_exp_bar()
 
-	_hero_type.text = Main.MY_PLAYER.hero_type
-	_hero_alias.text = Main.MY_PLAYER.json_data.alias
-	_level.text = str(Main.MY_PLAYER.current_level)
+	_hero_type.text = GameManager.MY_PLAYER.hero_type
+	_hero_alias.text = GameManager.MY_PLAYER.json_data.alias
+	_level.text = str(GameManager.MY_PLAYER.level)
 
-	var total_stats = Main.MY_PLAYER.combat_data.get_total_stats()
+	var total_stats = GameManager.MY_PLAYER.combat_data.get_total_stats()
 	_stats1_lab1.text = str(total_stats.strength)
 	_stats1_lab2.text = str(total_stats.agility)
 	_stats1_lab3.text = str(total_stats.intelligence)
@@ -145,20 +163,20 @@ func _update_panel_bottom_left() -> void:
 
 
 func _update_exp_bar():
-	var current_level = Main.MY_PLAYER.current_level
-	var percent: float = clamp(Main.MY_PLAYER.current_exp / float(Player.get_exp_per_level(current_level)), 0.0, 1.0)
+	var level = GameManager.MY_PLAYER.level
+	var percent: float = clamp(GameManager.MY_PLAYER.current_exp / float(Player.get_exp_per_level(level)), 0.0, 1.0)
 	_current_exp_rect.size.x = int(EXP_BAR_FULL_SIZE.x * percent)
 func _update_hp_ball_sprite():
 	_update_ball_sprite(
 		_hp_ball,
-		Main.MY_PLAYER.combat_data.current_hp,
-		Main.MY_PLAYER.combat_data.get_total_hp()
+		GameManager.MY_PLAYER.combat_data.current_hp,
+		GameManager.MY_PLAYER.combat_data.get_total_hp()
 	)
 func _update_mana_ball_sprite():
 	_update_ball_sprite(
 		_mana_ball,
-		Main.MY_PLAYER.combat_data.current_mana,
-		Main.MY_PLAYER.combat_data.get_total_mana()
+		GameManager.MY_PLAYER.combat_data.current_mana,
+		GameManager.MY_PLAYER.combat_data.get_total_mana()
 	)
 func _update_ball_sprite(ball_sprite: Sprite2D, current_value: int, max_value: int) -> void:
 	var percent: float = clamp(current_value / float(max_value), 0.0, 1.0)

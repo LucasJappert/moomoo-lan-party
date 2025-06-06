@@ -1,4 +1,4 @@
-class_name Main
+class_name MyMain
 
 extends Node2D
 
@@ -7,8 +7,7 @@ const PLAYER_SCENE = preload("res://scenes/entity/player_scene.tscn")
 static var GLOBAL_MOUSE_POSITION: Vector2 = Vector2.ZERO
 static var VIEWPORT_MOUSE_POSITION: Vector2 = Vector2.ZERO
 static var SCREEN_SIZE: Vector2 = Vector2.ZERO
-static var MY_PLAYER: Player
-static var MY_PLAYER_ID: int = -1
+@onready var gui_scene: CanvasLayer = $GuiScene
 const HOSTED_GAME = true # In this version of Moomoo this is always true
 
 @onready var player_spawner = $PlayerSpawner

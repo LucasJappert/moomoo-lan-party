@@ -125,6 +125,7 @@ MY TODOs: 🔵🟡✅
 - ✅ Add target avatar at the top left
 - ✅ Print FPS (drops below 60 when laptop is plugged in)
 - ✅ Move and attack target when out of range doing nothing.
+- ✅ Update my player's avatar and the entities being attacked.
 - 🟡 Start implementing experience and leveling logic
 - 🟡 Start building ingame UI
 - 🟡 Set first hero types

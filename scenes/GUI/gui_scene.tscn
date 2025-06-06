@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dywrecu6pml77"]
+[gd_scene load_steps=9 format=3 uid="uid://dywrecu6pml77"]
 
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="1_gbqeo"]
 [ext_resource type="Script" uid="uid://0x16271fub0a" path="res://scripts/GUI/gui_scene.gd" id="1_li5rb"]
@@ -173,10 +173,6 @@ cache/0/32/0/scale = 1.0
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_acekp"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_acekp"]
-atlas = ExtResource("1_gbqeo")
-region = Rect2(288, 459, 64, 64)
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_li5rb"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_li5rb"]
@@ -244,12 +240,61 @@ offset_right = 263.0
 offset_bottom = 66.0
 color = Color(0, 0.4, 0.8, 1)
 
-[node name="Avatar" type="Sprite2D" parent="PanelTL"]
+[node name="TargetAvatarBg" type="Sprite2D" parent="PanelTL"]
+texture_filter = 1
+position = Vector2(15, 10)
+scale = Vector2(0.430463, 0.430463)
+texture = ExtResource("1_gbqeo")
+centered = false
+region_enabled = true
+region_rect = Rect2(1157, 1897, 155, 151)
+
+[node name="TargetAvatar" type="Sprite2D" parent="PanelTL"]
+position = Vector2(48, 42)
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("1_gbqeo")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 64)
+
+[node name="AvatarGUI" type="Sprite2D" parent="PanelTL"]
 texture_filter = 1
 texture = ExtResource("1_gbqeo")
 centered = false
 region_enabled = true
 region_rect = Rect2(1760, 1440, 288, 96)
+
+[node name="TargetLevel" type="Label" parent="PanelTL"]
+layout_mode = 2
+offset_left = 51.0
+offset_top = 66.0
+offset_right = 72.0
+offset_bottom = 89.0
+theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "22"
+horizontal_alignment = 1
+
+[node name="TargetCurrentHp" type="Label" parent="PanelTL"]
+layout_mode = 2
+offset_left = 86.0
+offset_top = 27.0
+offset_right = 200.0
+offset_bottom = 47.0
+theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 14
+text = "22"
+
+[node name="TargetCurrentMana" type="Label" parent="PanelTL"]
+layout_mode = 2
+offset_left = 86.0
+offset_top = 48.0
+offset_right = 200.0
+offset_bottom = 68.0
+theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 14
+text = "22"
 
 [node name="PanelBR" type="Panel" parent="."]
 offset_left = 1184.0
@@ -273,6 +318,7 @@ region_enabled = true
 region_rect = Rect2(1312, 1792, 736, 256)
 
 [node name="LabelMana" type="Label" parent="PanelBR"]
+layout_mode = 0
 offset_left = 31.0
 offset_top = 132.0
 offset_right = 171.0
@@ -317,13 +363,12 @@ offset_right = 166.0
 offset_bottom = 181.0
 color = Color(0.118581, 0.118581, 0.118581, 1)
 
-[node name="Avatar" type="TextureRect" parent="PanelBL"]
-layout_mode = 0
-offset_left = 29.0
-offset_top = 48.0
-offset_right = 164.0
-offset_bottom = 179.0
-texture = SubResource("AtlasTexture_acekp")
+[node name="MyPlayerAvatar" type="Sprite2D" parent="PanelBL"]
+position = Vector2(96, 112)
+scale = Vector2(1.0625, 1.0625)
+texture = ExtResource("1_gbqeo")
+region_enabled = true
+region_rect = Rect2(256, 448, 128, 128)
 
 [node name="FullExpRect" type="ColorRect" parent="PanelBL"]
 layout_mode = 2
@@ -356,6 +401,7 @@ region_enabled = true
 region_rect = Rect2(1312, 1536, 736, 256)
 
 [node name="LabelHP" type="Label" parent="PanelBL"]
+layout_mode = 0
 offset_left = 564.0
 offset_top = 132.0
 offset_right = 704.0
@@ -615,4 +661,5 @@ unique_name_in_owner = true
 offset_left = 301.0
 offset_right = 378.0
 offset_bottom = 23.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "FPS:"
