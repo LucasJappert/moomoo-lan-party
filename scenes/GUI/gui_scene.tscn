@@ -2,8 +2,9 @@
 
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="1_gbqeo"]
 [ext_resource type="Script" uid="uid://0x16271fub0a" path="res://scripts/GUI/gui_scene.gd" id="1_li5rb"]
-[ext_resource type="PackedScene" uid="uid://buj7u3vemtwye" path="res://scenes/GUI/slot_over_skill_bar.tscn" id="3_acekp"]
+[ext_resource type="PackedScene" uid="uid://buj7u3vemtwye" path="res://scenes/GUI/skill_slot.tscn" id="3_acekp"]
 [ext_resource type="StyleBox" uid="uid://rxq74mic16cg" path="res://bg_label_stats.tres" id="4_0ehin"]
+[ext_resource type="PackedScene" uid="uid://bhbym0sv2knf8" path="res://scenes/general_objects/tooltip_scene.tscn" id="5_g80tl"]
 
 [sub_resource type="FontFile" id="FontFile_gbqeo"]
 subpixel_positioning = 0
@@ -173,11 +174,8 @@ cache/0/32/0/scale = 1.0
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_acekp"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_li5rb"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_li5rb"]
-atlas = ExtResource("1_gbqeo")
-region = Rect2(960, 1905, 1088, 143)
+[sub_resource type="CircleShape2D" id="CircleShape2D_g80tl"]
+radius = 77.4145
 
 [node name="GuiScene" type="CanvasLayer"]
 script = ExtResource("1_li5rb")
@@ -241,6 +239,7 @@ offset_bottom = 66.0
 color = Color(0, 0.4, 0.8, 1)
 
 [node name="TargetAvatarBg" type="Sprite2D" parent="PanelTL"]
+modulate = Color(0, 0, 0, 0.34902)
 texture_filter = 1
 position = Vector2(15, 10)
 scale = Vector2(0.430463, 0.430463)
@@ -296,63 +295,11 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 14
 text = "22"
 
-[node name="PanelBR" type="Panel" parent="."]
-offset_left = 1184.0
-offset_top = 824.0
-offset_right = 1920.0
-offset_bottom = 1080.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_acekp")
-
-[node name="ManaBall" type="Sprite2D" parent="PanelBR"]
-texture_filter = 1
-position = Vector2(27, 70)
-texture = ExtResource("1_gbqeo")
-centered = false
-region_enabled = true
-region_rect = Rect2(1157, 1897, 155, 151)
-
-[node name="Sprite" type="Sprite2D" parent="PanelBR"]
-texture = ExtResource("1_gbqeo")
-centered = false
-region_enabled = true
-region_rect = Rect2(1312, 1792, 736, 256)
-
-[node name="LabelMana" type="Label" parent="PanelBR"]
-layout_mode = 0
-offset_left = 31.0
-offset_top = 132.0
-offset_right = 171.0
-offset_bottom = 155.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 19
-text = "18.000 / 20.000"
-horizontal_alignment = 1
-vertical_alignment = 1
-text_overrun_behavior = 3
-
-[node name="SkillSlotsContainer" type="Node2D" parent="PanelBR"]
-position = Vector2(165, -5)
-
-[node name="SkillSlot1" parent="PanelBR/SkillSlotsContainer" instance=ExtResource("3_acekp")]
-position = Vector2(189, 100)
-scale = Vector2(1.312, 1.313)
-
-[node name="SkillSlot2" parent="PanelBR/SkillSlotsContainer" instance=ExtResource("3_acekp")]
-position = Vector2(297, 100)
-scale = Vector2(1.312, 1.312)
-
-[node name="SkillSlot3" parent="PanelBR/SkillSlotsContainer" instance=ExtResource("3_acekp")]
-position = Vector2(405, 100)
-scale = Vector2(1.312, 1.312)
-
-[node name="SkillSlot4" parent="PanelBR/SkillSlotsContainer" instance=ExtResource("3_acekp")]
-position = Vector2(513, 100)
-scale = Vector2(1.312, 1.312)
-
 [node name="PanelBL" type="Panel" parent="."]
 offset_top = 824.0
 offset_right = 736.0
 offset_bottom = 1080.0
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_acekp")
 
 [node name="BgAvatar" type="ColorRect" parent="PanelBL"]
@@ -386,7 +333,20 @@ offset_right = 630.0
 offset_bottom = 241.0
 color = Color(1.1792e-06, 0.524529, 0.107973, 1)
 
+[node name="LabelExp" type="Label" parent="PanelBL"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_left = 24.0
+offset_top = 215.0
+offset_right = 138.0
+offset_bottom = 241.0
+theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+text = "22"
+
 [node name="HpBall" type="Sprite2D" parent="PanelBL"]
+modulate = Color(0.8, 0, 0, 1)
 texture_filter = 1
 position = Vector2(554, 70)
 texture = ExtResource("1_gbqeo")
@@ -412,6 +372,15 @@ text = "18.000 / 20.000"
 horizontal_alignment = 1
 vertical_alignment = 1
 text_overrun_behavior = 3
+
+[node name="HpBallCircle" type="Area2D" parent="PanelBL"]
+unique_name_in_owner = true
+position = Vector2(633, 144)
+collision_mask = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PanelBL/HpBallCircle"]
+shape = SubResource("CircleShape2D_g80tl")
 
 [node name="ContainerStats1" type="VBoxContainer" parent="PanelBL"]
 layout_mode = 0
@@ -624,37 +593,77 @@ theme_override_font_sizes/font_size = 26
 text = "32"
 horizontal_alignment = 1
 
-[node name="SkillsBarContainer" type="Panel" parent="."]
-visible = false
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -544.0
-offset_top = -143.0
-offset_right = 544.0
-grow_horizontal = 2
-grow_vertical = 0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxEmpty_li5rb")
+[node name="PanelBR" type="Panel" parent="."]
+offset_left = 1184.0
+offset_top = 824.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_acekp")
 
-[node name="SkillsBar" type="TextureRect" parent="SkillsBarContainer"]
-visible = false
-layout_mode = 0
-texture = SubResource("AtlasTexture_li5rb")
+[node name="ManaBall" type="Sprite2D" parent="PanelBR"]
+modulate = Color(0, 0.4, 0.8, 1)
+texture_filter = 1
+position = Vector2(27, 70)
+texture = ExtResource("1_gbqeo")
+centered = false
+region_enabled = true
+region_rect = Rect2(1157, 1897, 155, 151)
 
-[node name="HpLabel" type="Label" parent="SkillsBarContainer"]
-visible = false
+[node name="Sprite" type="Sprite2D" parent="PanelBR"]
+texture = ExtResource("1_gbqeo")
+centered = false
+region_enabled = true
+region_rect = Rect2(1312, 1792, 736, 256)
+
+[node name="LabelMana" type="Label" parent="PanelBR"]
 layout_mode = 0
-offset_left = 5.0
-offset_top = 51.0
-offset_right = 133.0
-offset_bottom = 95.0
-text = "10.000/10.000"
+offset_left = 31.0
+offset_top = 132.0
+offset_right = 171.0
+offset_bottom = 155.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 19
+text = "18.000 / 20.000"
 horizontal_alignment = 1
 vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="SkillSlotsContainer" type="Node2D" parent="PanelBR"]
+position = Vector2(165, -5)
+
+[node name="SkillSlot1" parent="PanelBR/SkillSlotsContainer" instance=ExtResource("3_acekp")]
+offset_left = 146.0
+offset_top = 58.0
+offset_right = 231.0
+offset_bottom = 144.0
+
+[node name="SkillSlot2" parent="PanelBR/SkillSlotsContainer" instance=ExtResource("3_acekp")]
+offset_left = 254.0
+offset_top = 58.0
+offset_right = 339.0
+offset_bottom = 144.0
+
+[node name="SkillSlot3" parent="PanelBR/SkillSlotsContainer" instance=ExtResource("3_acekp")]
+offset_left = 362.0
+offset_top = 58.0
+offset_right = 447.0
+offset_bottom = 144.0
+
+[node name="SkillSlot4" parent="PanelBR/SkillSlotsContainer" instance=ExtResource("3_acekp")]
+offset_left = 470.0
+offset_top = 58.0
+offset_right = 555.0
+offset_bottom = 144.0
+
+[node name="ManaBallCircle" type="Area2D" parent="PanelBR"]
+unique_name_in_owner = true
+position = Vector2(104, 144)
+collision_mask = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PanelBR/ManaBallCircle"]
+shape = SubResource("CircleShape2D_g80tl")
 
 [node name="LabelFPS" type="Label" parent="."]
 unique_name_in_owner = true
@@ -663,3 +672,9 @@ offset_right = 378.0
 offset_bottom = 23.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "FPS:"
+
+[node name="MyTooltip" parent="." instance=ExtResource("5_g80tl")]
+offset_left = 661.0
+offset_top = 124.0
+offset_right = 661.0
+offset_bottom = 124.0

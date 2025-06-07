@@ -130,7 +130,8 @@ MY TODOs: 🔵🟡✅
 - 🟡 Start building ingame UI
 - 🟡 Set first hero types
 - 🟡 Start logic for strength, agility, and intelligence attributes
-- 🔵 Dibujar efectos de mi player
+- 🔵 Implement tooltip to show information when hovering over certain elements, such as skills.
+- Dibujar efectos de mi player
 - Agregar skill de velocidad de ataque de un 25%
 - Agregar skill de daño en area
 - Agregar skill de disparo multiple
@@ -141,6 +142,7 @@ MY TODOs: 🔵🟡✅
 - Configurar daños, hp, defensas, etc según el número de wave
 - Comenzar la escena para crear y unirse a salas
 - Agregar objetos mobiles sobre el terreno como plantas, bichos, nubes, etc.
+- Pruebas de multiclientes por el navegador
 - Agregar mas tipos de enemigos. El moomoo tendra unas 30 oleadas, cada oleada con 2 tipos de enemigos, entonces necesitariamos unos 60 tipos. Cada enemigo tendra 1 habilidad especial, pasiva o activa, por lo cual necesitaremos tambien unas 60 habilidades.
   Otra opción es crear unas 3 habilidades, y que los enemigos tendrían 3 de ellas asignadas aleatoriamente. De esta manera se podría crear una amplia variabilidad de combinaciones. Sumado a que cada enemigo tiene su tipo de ataque, su rango de ataque, velocidad de ataque, etc.
 - Agregar efectos de sangrado cada vez que una entidad recibo un daño

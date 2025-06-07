@@ -76,5 +76,13 @@ func spawn_moomoo() -> void:
 # region 	SETTERs
 func set_my_player(player: Player) -> void:
 	MY_PLAYER = player
-	my_main.gui_scene.set_my_player_avatar_region(player)
+	my_main.gui_scene.init_scene(player)
 # endregion SETTERs
+
+
+# region 	GETTERs
+func show_tooltip(title: String, text: String, panel_width: int = 0) -> void:
+	my_main.gui_scene.my_tooltip.show_me(title, text, panel_width)
+func hide_tooltip() -> void:
+	my_main.gui_scene.my_tooltip.hide_me()
+# endregion GETTERs

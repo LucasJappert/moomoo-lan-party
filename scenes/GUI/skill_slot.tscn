@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://buj7u3vemtwye"]
+
+[ext_resource type="Script" uid="uid://cwe3442jf13om" path="res://scripts/GUI/skill_slot.gd" id="1_0fsu4"]
+[ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="2_1knxt"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0fsu4"]
+atlas = ExtResource("2_1knxt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gayjm"]
+texture = ExtResource("2_1knxt")
+region_rect = Rect2(1120, 1984, 32, 32)
+
+[node name="SkillSlot" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 85.0
+offset_bottom = 86.0
+script = ExtResource("1_0fsu4")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+scale = Vector2(1.34375, 1.34375)
+texture = SubResource("AtlasTexture_0fsu4")
+centered = false
+region_enabled = true
+region_rect = Rect2(128, 1632, 64, 64)
+
+[node name="Hotkey" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -12.5
+offset_top = -10.0
+offset_right = 12.5
+offset_bottom = 13.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_styles/normal = SubResource("StyleBoxTexture_gayjm")
+text = "A"
+horizontal_alignment = 1
