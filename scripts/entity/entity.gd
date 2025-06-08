@@ -65,6 +65,10 @@ func _ready():
 func _post_ready():
 	hud._post_ready(self)
 	
+# region 	GETTERs
+func is_my_player() -> bool:
+	return false
+# endregion GETTERs
 
 func set_boss_level(_level: int) -> void:
 	_boss_level = _level

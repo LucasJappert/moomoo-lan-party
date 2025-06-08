@@ -13,10 +13,7 @@ static func preload_popups():
 		_pool.append(popup)
 
 static func get_popup():
-	if _pool.is_empty():
-		print("No more popups")
-		return
-		# return DAMAGE_POPUP_SCENE.instantiate()
+	if _pool.is_empty(): return # no more popups
 
 	return _pool.pop_back()
 

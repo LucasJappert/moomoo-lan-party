@@ -51,13 +51,12 @@ func add_effect(p_effect: CombatEffect) -> void:
 	# Should be called only on the server
 	var current_stacks = 0
 	for effect in get_effects():
-		if effect.name == p_effect.name: current_stacks += 1
+		if effect.effect_name == p_effect.effect_name: current_stacks += 1
 
-	if current_stacks >= p_effect.max_stacks:
-		return print("Combat effect ", p_effect.name, " reached max stacks: ", p_effect.max_stacks)
+	if current_stacks >= p_effect.max_stacks: return # print("Combat effect ", p_effect.effect_name, " reached max stacks: ", p_effect.max_stacks)
 
 	combat_effect_node.add_child(p_effect, true)
-	GameManager.my_main.gui_scene.add_gui_effect(p_effect)
+	if my_owner.is_my_player(): GameManager.my_main.gui_scene.add_gui_effect(p_effect)
 
 # TODO: Improve this get by creating a dictionary to quickly obtain active effects
 func get_effects() -> Array[CombatEffect]:
@@ -69,7 +68,12 @@ func get_effects() -> Array[CombatEffect]:
 
 func get_effect(effect_name: String) -> CombatEffect:
 	for effect in get_effects():
-		if effect.name == effect_name: return effect
+		if effect.effect_name == effect_name: return effect
+	return null
+
+func get_effect_by_unique_name(unique_name: String) -> CombatEffect:
+	for effect in get_effects():
+		if effect.unique_name_node == unique_name: return effect
 	return null
 
 # TODO: Review

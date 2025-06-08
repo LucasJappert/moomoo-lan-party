@@ -2,7 +2,8 @@ class_name CombatEffect
 
 extends CombatStats
 
-var max_stacks: int = 10
+var effect_name: String
+var unique_name_node: String
 var is_permanent: bool = false
 @export var _duration: float # In seconds
 var _elapsed: float = 0.0
@@ -40,8 +41,9 @@ static func _get_instance(p_name: String, duration: float, p_is_permanent: bool,
 	combat_effect.accumulate_combat_stats(stats)
 	combat_effect._duration = duration
 	combat_effect.is_permanent = p_is_permanent
-	combat_effect.name = p_name
-	combat_effect.max_stacks = 1 if p_is_permanent else 10
+	combat_effect.unique_name_node = StringHelpers.unique_id()
+	combat_effect.effect_name = p_name
+	combat_effect.max_stacks = stats.max_stacks
 	return combat_effect
 
 static func get_permanent_effect(p_name: String, stats: CombatStats = CombatStats.new()) -> CombatEffect:

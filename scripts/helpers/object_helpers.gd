@@ -18,16 +18,17 @@ static func deep_clone(source: Object) -> Object:
 
 	for prop in props:
 		var name = prop.name
-		if name == "script":
-			print("❗Cannot clone the 'script' property")
-			continue
+		if name == "script": continue # ❗Cannot clone the 'script' property
 
 		if prop.has("name") and prop.has("usage"):
 			var usage = prop.usage
 
-			if usage & PROPERTY_USAGE_STORAGE != 0 or usage & PROPERTY_USAGE_SCRIPT_VARIABLE != 0: # We only clone script variables (my properties) and godot properties like name
+			# print("Cloning property: ", name, " usage: ", usage)
+			var is_storage: bool = (usage & PROPERTY_USAGE_STORAGE) != 0
+			var is_script_var: bool = (usage & PROPERTY_USAGE_SCRIPT_VARIABLE) != 0
+			var is_explicit: bool = name == "name"
+			if is_storage or is_script_var or is_explicit:
 				if name != "script" and target.has_method("set"):
-					# print("Cloning property: ", name, " usage: ", usage)
 					var value = source.get(name)
 					target.set(name, _clone_value(value))
 

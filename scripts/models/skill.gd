@@ -66,14 +66,16 @@ static func initialize_skills() -> void:
 	_SKILLS[skill_name].magic_defense_percent = 0.3
 	_SKILLS[skill_name].physical_defense_percent = 0.3
 	_SKILLS[skill_name].apply_to_owner = true
+	_SKILLS[skill_name].max_stacks = 1
 	aux_text = StringHelpers.format_percent(_SKILLS[skill_name].magic_defense_percent)
 	_SKILLS[skill_name].description = "Reduces magic and physical defense by " + aux_text
 
 	skill_name = Names.BLESSING_OF_POWER
 	_SKILLS[skill_name] = Skill.new(skill_name, Skill.Type.PASSIVE)
 	_SKILLS[skill_name].region_rect = Rect2(1 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
-	_SKILLS[skill_name].physical_attack_power_percent = 0.5
+	_SKILLS[skill_name].physical_attack_power_percent = 0.25
 	_SKILLS[skill_name].apply_to_owner = true
+	_SKILLS[skill_name].max_stacks = 1
 	aux_text = StringHelpers.format_percent(_SKILLS[skill_name].physical_attack_power_percent)
 	_SKILLS[skill_name].description = "Increases physical attack power by " + aux_text
 
@@ -89,6 +91,7 @@ static func initialize_skills() -> void:
 	_SKILLS[skill_name].move_speed_percent = -0.1
 	_SKILLS[skill_name].freeze_duration = 4
 	_SKILLS[skill_name].apply_to_owner = false
+	_SKILLS[skill_name].max_stacks = 5
 	aux_text = StringHelpers.format_percent(_SKILLS[skill_name].attack_speed_percent)
 	aux_text1 = StringHelpers.format_float(_SKILLS[skill_name].freeze_duration)
 	_SKILLS[skill_name].description = "The attacker's icy touch partially freezes the target, reducing their movement and attack speed by " + aux_text + " for " + aux_text1 + " seconds."
@@ -99,6 +102,7 @@ static func initialize_skills() -> void:
 	_SKILLS[skill_name].stun_duration = 2
 	_SKILLS[skill_name].stun_chance = 0.25
 	_SKILLS[skill_name].apply_to_owner = false
+	_SKILLS[skill_name].max_stacks = 1
 	aux_text = StringHelpers.format_percent(_SKILLS[skill_name].stun_chance)
 	aux_text1 = StringHelpers.format_float(_SKILLS[skill_name].stun_duration)
 	_SKILLS[skill_name].description = "Has a " + aux_text + " chance to stun the target for " + aux_text1 + " seconds."

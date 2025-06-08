@@ -6,6 +6,8 @@ var _ORIGINAL_BALL_SIZE: Vector2
 var _ORIGINAL_BALL_POS_Y: float
 var _ORIGINAL_BALL_RECT_POS_Y: float
 
+var reseted_gui := false
+
 
 # region Panel TOP LEFT
 const _RECT_TARGET_MAX_HP = Rect2(81, 27, 189, 21)
@@ -90,10 +92,18 @@ func _ready() -> void:
 	)
 	%ManaBallCircle.connect("mouse_exited", func(): GameManager.hide_tooltip())
 
+func reset_gui() -> void:
+	_hp_label.text = str(0)
+	_mana_label.text = str(0)
+	reseted_gui = true
+
 func _process(_delta: float) -> void:
 	# TODO: we should instance the gui when the game starts (and we can access the player)
 	delta = _delta
-	if not GameManager.MY_PLAYER: return
+	if not GameManager.MY_PLAYER:
+		if not reseted_gui: reset_gui()
+		return
+	if reseted_gui: reseted_gui = false
 
 
 	var fps := int(1.0 / _delta)
@@ -127,7 +137,9 @@ func set_target_avatar_region(region_rect: Rect2) -> void:
 	_panelTL_avatar.region_rect = region_rect
 
 func add_gui_effect(effect: CombatEffect) -> void:
-	%MyEffectsContainer.add_effect(effect)
+	%MyEffectsScene.add_effect(effect)
+func get_gui_effects() -> Array[CombatEffect]:
+	return %MyEffectsScene.get_effects()
 # endregion SETTERS
 
 # region 	INTERNAL AUXILIARY METHODS

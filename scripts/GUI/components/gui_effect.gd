@@ -9,6 +9,7 @@ var is_permanent: bool = false
 var _duration: float = 0 # In seconds
 var _elapsed: float = 0
 var _effect: CombatEffect
+var unique
 
 static func get_instance(p_effect: CombatEffect) -> GuiEffect:
 	var gui_effect = SCENE.instantiate()
@@ -17,11 +18,8 @@ static func get_instance(p_effect: CombatEffect) -> GuiEffect:
 
 func _initialize(p_effect: CombatEffect) -> void:
 	_effect = ObjectHelpers.deep_clone(p_effect) as CombatEffect
-	# _effect = p_effect
 	is_permanent = _effect.is_permanent
 	_duration = _effect._duration
-
-	# seguir armando un metodo get_description para CombatStats y CombatEffect
 
 func _ready():
 	if not GameManager.MY_PLAYER: return
@@ -34,12 +32,16 @@ func _ready():
 		if _effect == null:
 			print("GuiEffect: Effect is null")
 			return
-		GameManager.show_tooltip(_effect.name, _effect.get_description(), 500)
+		GameManager.show_tooltip(_effect.effect_name, _effect.get_description(), 500)
 	)
 	%Area2D.connect("mouse_exited", func(): GameManager.hide_tooltip())
 
 func _process(delta: float):
+	if GameManager.MY_PLAYER == null: return
 	if is_permanent: return
 
 	_elapsed += delta
 	if _elapsed >= _duration: queue_free()
+
+	if GameManager.MY_PLAYER.combat_data.get_effect_by_unique_name(_effect.unique_name_node) == null:
+		queue_free()

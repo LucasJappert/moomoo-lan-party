@@ -27,6 +27,11 @@ func _ready():
 		MyCamera.update_camera_position(global_position)
 		GameManager.set_my_player(self)
 
+# region 	GETTERs
+func is_my_player() -> bool:
+	return player_id == GameManager.MY_PLAYER_ID
+# endregion GETTERs
+
 # region 	SETTERs
 func increment_current_exp(value: int) -> void:
 	current_exp += value
