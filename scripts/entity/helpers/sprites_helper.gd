@@ -1,9 +1,8 @@
-class_name SpritesAnimationHelper
+class_name SpritesHelper
 
 static var _ATLAS1 = load("res://assets/atlas1.png")
 
 const _PLAYERS_SCALE: float = 0.75
-
 const _ENEMIES_SCALE: float = 0.85
 
 static func set_entity_sprites(entity: Entity) -> void:
@@ -62,8 +61,17 @@ static func _add_animation(frames: SpriteFrames, name: String, regions: Array[Re
 		atlas_texture.region = region
 		frames.add_frame(name, atlas_texture)
 
-static func get_rect_region_of_sprite(sprite: AnimatedSprite2D) -> Rect2:
+static func get_region_rect_of_sprite(sprite: AnimatedSprite2D) -> Rect2:
 	var tex := sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
 	if tex is AtlasTexture:
 		return (tex as AtlasTexture).region
 	return Rect2()
+
+static func get_sprite_2d(region_rect: Rect2) -> Sprite2D:
+	var sprite := Sprite2D.new()
+	var atlas := AtlasTexture.new()
+	atlas.atlas = _ATLAS1
+	atlas.region = region_rect
+	sprite.texture = atlas
+	sprite.centered = true
+	return sprite

@@ -126,12 +126,12 @@ MY TODOs: 🔵🟡✅
 - ✅ Print FPS (drops below 60 when laptop is plugged in)
 - ✅ Move and attack target when out of range doing nothing.
 - ✅ Update my player's avatar and the entities being attacked.
+- ✅ Implement tooltip to show information when hovering over certain elements, such as skills.
 - 🟡 Start implementing experience and leveling logic
 - 🟡 Start building ingame UI
 - 🟡 Set first hero types
 - 🟡 Start logic for strength, agility, and intelligence attributes
-- 🔵 Implement tooltip to show information when hovering over certain elements, such as skills.
-- Dibujar efectos de mi player
+- 🔵 Draw effects of my player
 - Agregar skill de velocidad de ataque de un 25%
 - Agregar skill de daño en area
 - Agregar skill de disparo multiple

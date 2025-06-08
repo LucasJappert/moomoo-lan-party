@@ -1,0 +1,41 @@
+class_name GuiEffect
+
+extends Control
+
+const SCENE = preload("res://scenes/GUI/gui_effect_scene.tscn")
+
+@onready var _sprite = $Sprite2D
+var is_permanent: bool = false
+var _duration: float = 0 # In seconds
+var _elapsed: float = 0
+var _effect: CombatEffect
+
+static func get_instance(p_effect: CombatEffect) -> GuiEffect:
+	var gui_effect = SCENE.instantiate()
+	gui_effect._initialize(p_effect)
+	return gui_effect
+
+func _initialize(p_effect: CombatEffect) -> void:
+	_effect = p_effect
+	is_permanent = _effect.is_permanent
+	_duration = _effect._duration
+
+	# seguir armando un metodo get_description para CombatStats y CombatEffect
+
+func _ready():
+	if not GameManager.MY_PLAYER: return
+
+	var region_size = _effect._region_rect.size
+	_sprite.region_rect = _effect._region_rect
+	_sprite.scale = Vector2(32.0 / region_size.x, 32.0 / region_size.y)
+
+	%Area2D.connect("mouse_entered", func():
+		GameManager.show_tooltip(_effect.name, _effect.get_description(), 500)
+	)
+	%Area2D.connect("mouse_exited", func(): GameManager.hide_tooltip())
+
+func _process(delta: float):
+	if is_permanent: return
+
+	_elapsed += delta
+	if _elapsed >= _duration: queue_free()

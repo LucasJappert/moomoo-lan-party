@@ -51,7 +51,7 @@ var description: String = ""
 var is_learned: bool = true
 var apply_to_owner: bool = true
 
-var rect_region: Rect2 = Rect2()
+var region_rect: Rect2 = Rect2()
 
 func _init(_name: String, _type: Type):
 	name = _name
@@ -62,7 +62,7 @@ static func initialize_skills() -> void:
 	var aux_text: String
 	var aux_text1: String
 	_SKILLS[skill_name] = Skill.new(skill_name, Skill.Type.PASSIVE)
-	_SKILLS[skill_name].rect_region = Rect2(0 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
+	_SKILLS[skill_name].region_rect = Rect2(0 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_SKILLS[skill_name].magic_defense_percent = 0.3
 	_SKILLS[skill_name].physical_defense_percent = 0.3
 	_SKILLS[skill_name].apply_to_owner = true
@@ -71,7 +71,7 @@ static func initialize_skills() -> void:
 
 	skill_name = Names.BLESSING_OF_POWER
 	_SKILLS[skill_name] = Skill.new(skill_name, Skill.Type.PASSIVE)
-	_SKILLS[skill_name].rect_region = Rect2(1 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
+	_SKILLS[skill_name].region_rect = Rect2(1 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_SKILLS[skill_name].physical_attack_power_percent = 0.5
 	_SKILLS[skill_name].apply_to_owner = true
 	aux_text = StringHelpers.format_percent(_SKILLS[skill_name].physical_attack_power_percent)
@@ -79,12 +79,12 @@ static func initialize_skills() -> void:
 
 	skill_name = Names.MIRROR_DEMISE
 	_SKILLS[skill_name] = Skill.new(skill_name, Skill.Type.PASSIVE)
-	_SKILLS[skill_name].rect_region = Rect2(2 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
+	_SKILLS[skill_name].region_rect = Rect2(2 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_SKILLS[skill_name].description = "Upon death, splits into 4 copies with half the original HP."
 
 	skill_name = Names.FROZEN_TOUCH
 	_SKILLS[skill_name] = Skill.new(skill_name, Skill.Type.PASSIVE)
-	_SKILLS[skill_name].rect_region = Rect2(3 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
+	_SKILLS[skill_name].region_rect = Rect2(3 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_SKILLS[skill_name].attack_speed_percent = -0.1
 	_SKILLS[skill_name].move_speed_percent = -0.1
 	_SKILLS[skill_name].freeze_duration = 4
@@ -95,7 +95,7 @@ static func initialize_skills() -> void:
 
 	skill_name = Names.STUNNING_STRIKE
 	_SKILLS[skill_name] = Skill.new(skill_name, Skill.Type.PASSIVE)
-	_SKILLS[skill_name].rect_region = Rect2(4 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
+	_SKILLS[skill_name].region_rect = Rect2(4 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_SKILLS[skill_name].stun_duration = 2
 	_SKILLS[skill_name].stun_chance = 0.25
 	_SKILLS[skill_name].apply_to_owner = false
@@ -105,7 +105,7 @@ static func initialize_skills() -> void:
 
 	skill_name = Names.LIFESTEAL
 	_SKILLS[skill_name] = Skill.new(skill_name, Skill.Type.PASSIVE)
-	_SKILLS[skill_name].rect_region = Rect2(5 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
+	_SKILLS[skill_name].region_rect = Rect2(5 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_SKILLS[skill_name].life_steal_percent = 0.2
 	_SKILLS[skill_name].apply_to_owner = true
 	aux_text = StringHelpers.format_percent(_SKILLS[skill_name].life_steal_percent)
@@ -154,6 +154,8 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 	if _attacker_frozen_skill:
 		var attr = _attacker_frozen_skill.get_combat_stats_instance()
 		var effect = CombatEffect.get_temporal_effect(Names.FROZEN_TOUCH, attr.freeze_duration, attr)
+		effect.is_owner_friendly = false
+		effect.set_region_rect(_attacker_frozen_skill.region_rect)
 		_target.combat_data.add_effect(effect)
 # endregion .................... SKILLS LOGICS
 

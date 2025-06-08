@@ -14,15 +14,15 @@ const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapM
 @export var stun_chance: float = 0.0
 @export var stun_duration: float = 0.0 # In seconds
 @export var attack_range: int = 0
-@export var attack_speed: float = 0 # Attacks per second
 @export var physical_attack_power: int = 0
 @export var physical_attack_power_percent: float = 0
 @export var magic_attack_power: int = 0
 @export var magic_attack_power_percent: float = 0
-@export var freeze_duration: float = 0 # In seconds
-@export var move_speed: float = 0 # Tiles per second
+@export var attack_speed: float = 0 # Attacks per second
 @export var attack_speed_percent: float = 0
+@export var move_speed: float = 0 # Tiles per second
 @export var move_speed_percent: float = 0
+@export var freeze_duration: float = 0 # In seconds
 @export var life_steal_percent: float = 0
 @export var hp_regeneration_points: int = 0 # Points per second
 @export var mana_regeneration_points: int = 0 # Points per second
@@ -117,3 +117,83 @@ static func get_extra_stats_by_agility(_agi: int) -> CombatStats:
 	attr.evasion = _agi * 0.001 # 1000 of agility = 1 = 100% evasion
 	attr.physical_defense_percent = _agi * 0.001 # 1000 of agility = 1 = 100% defense
 	return attr
+
+# region 	GETTERs
+func get_description() -> String:
+	var description = ""
+
+	if hp != 0:
+		description += str("- HP: ", hp, "\n")
+	
+	if mana != 0:
+		description += str("- Mana: ", mana, "\n")
+
+	if physical_defense_percent != 0:
+		description += str("- Physical defense percent: ", StringHelpers.format_percent(physical_defense_percent), "\n")
+
+	if magic_defense_percent != 0:
+		description += str("- Magic defense percent: ", StringHelpers.format_percent(magic_defense_percent), "\n")
+
+	if evasion != 0:
+		description += str("- Evasion: ", StringHelpers.format_percent(evasion), "\n")
+
+	if crit_chance != 0:
+		description += str("- Crit chance: ", StringHelpers.format_percent(crit_chance), "\n")
+
+	if crit_multiplier != 0:
+		description += str("- Crit multiplier: ", StringHelpers.format_float(crit_multiplier), "\n")
+
+	if stun_chance != 0:
+		description += str("- Stun chance: ", StringHelpers.format_percent(stun_chance), "\n")
+
+	if stun_duration != 0:
+		description += str("- Stun duration: ", StringHelpers.format_float(stun_duration), "\n")
+
+	if attack_range != 0:
+		description += str("- Attack range: ", attack_range, "\n")
+
+	if physical_attack_power != 0:
+		description += str("- Physical attack power: ", physical_attack_power, "\n")
+
+	if physical_attack_power_percent != 0:
+		description += str("- Physical attack power percent: ", StringHelpers.format_percent(physical_attack_power_percent), "\n")
+
+	if magic_attack_power != 0:
+		description += str("- Magic attack power: ", magic_attack_power, "\n")
+
+	if magic_attack_power_percent != 0:
+		description += str("- Magic attack power percent: ", StringHelpers.format_percent(magic_attack_power_percent), "\n")
+
+	if attack_speed != 0:
+		description += str("- Attack speed: ", StringHelpers.format_float(attack_speed), "\n")
+
+	if attack_speed_percent != 0:
+		description += str("- Attack speed percent: ", StringHelpers.format_percent(attack_speed_percent), "\n")
+
+	if move_speed != 0:
+		description += str("- Move speed: ", StringHelpers.format_float(move_speed), "\n")
+
+	if move_speed_percent != 0:
+		description += str("- Move speed percent: ", StringHelpers.format_percent(move_speed_percent), "\n")
+
+	if freeze_duration != 0:
+		description += str("- Freeze duration: ", StringHelpers.format_float(freeze_duration), "\n")
+
+	if life_steal_percent != 0:
+		description += str("- Life steal percent: ", StringHelpers.format_percent(life_steal_percent), "\n")
+
+	if hp_regeneration_points != 0:
+		description += str("- HP regeneration points: ", hp_regeneration_points, "\n")
+
+	if mana_regeneration_points != 0:
+		description += str("- Mana regeneration points: ", mana_regeneration_points, "\n")
+
+	return description
+
+
+func get_total_move_speed() -> float:
+	return clamp(move_speed + (move_speed * move_speed_percent), 1, 20)
+
+func get_total_attack_speed() -> float:
+	return clamp(attack_speed + (attack_speed * attack_speed_percent), 0.1, 20)
+# endregion GETTERs

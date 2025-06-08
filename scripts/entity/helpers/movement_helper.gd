@@ -74,7 +74,7 @@ func _try_to_move(_delta: float) -> void:
 	var old_distance = target_pos - my_owner.global_position
 	var direction = old_distance.normalized()
 	# TODO: get_total_stats en Entity
-	var speed = my_owner.combat_data.get_total_stats().move_speed * MapManager.TILE_SIZE.x
+	var speed = my_owner.combat_data.get_total_stats().get_total_move_speed() * MapManager.TILE_SIZE.x
 	var velocity = direction * speed
 
 	var move_delta = velocity * _delta

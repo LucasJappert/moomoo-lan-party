@@ -88,7 +88,7 @@ func _client_physics_process(_delta: float) -> void:
 func _client_init() -> void:
 	if multiplayer.is_server() && not MyMain.HOSTED_GAME: return
 
-	SpritesAnimationHelper.set_entity_sprites(self)
+	SpritesHelper.set_entity_sprites(self)
 
 func _global_die():
 	# Implemented in Player and Enemy

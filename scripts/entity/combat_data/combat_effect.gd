@@ -6,6 +6,9 @@ var max_stacks: int = 10
 var is_permanent: bool = false
 @export var _duration: float # In seconds
 var _elapsed: float = 0.0
+var _region_rect: Rect2
+
+const STUN_RECT_REGION := Rect2(0, 608, 32, 17)
 
 # Only executed on the server
 
@@ -15,6 +18,20 @@ func _process(delta: float) -> void:
 	_elapsed += delta
 	if _elapsed >= _duration:
 		if multiplayer.is_server(): queue_free() # Only executed on the server
+
+func get_description() -> String:
+	var description = ""
+	if _duration > 0.0:
+		description += str("- Duration: ", StringHelpers.format_float(_duration), "s\n")
+
+	description += super.get_description()
+
+	description += str("- Max stacks: ", max_stacks, "\n")
+
+	return description
+
+func set_region_rect(rect: Rect2) -> void:
+	_region_rect = rect
 
 static func _get_instance(p_name: String, duration: float, p_is_permanent: bool, stats: CombatStats = CombatStats.new()) -> CombatEffect:
 	const SCENE = preload("res://scenes/entity/combat_data/combat_effect.tscn")
@@ -32,7 +49,6 @@ static func get_permanent_effect(p_name: String, stats: CombatStats = CombatStat
 static func get_temporal_effect(p_name: String, duration: float, stats: CombatStats = CombatStats.new()) -> CombatEffect:
 	return _get_instance(p_name, duration, false, stats)
 
-
 static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _di: DamageInfo) -> void:
 	# Should be called only on the server
 	var _attacker_stats = _attacker.combat_data.get_total_stats()
@@ -44,6 +60,7 @@ static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _d
 		stats.is_owner_friendly = false
 		var effect = CombatEffect.get_temporal_effect("Stun", stats.stun_duration, stats)
 		effect.max_stacks = 1
+		effect.set_region_rect(CombatEffect.STUN_RECT_REGION)
 		_receiver.combat_data.add_effect(effect)
 
 	# Lifesteal verification

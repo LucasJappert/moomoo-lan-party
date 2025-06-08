@@ -123,8 +123,11 @@ func _set_my_player_avatar_region(my_player: Player) -> void:
 	var rects = HeroTypes.get_rect_frames(my_player.hero_type)
 	_my_player_avatar.region_rect = rects[0]
 
-func set_target_avatar_region(rect_region: Rect2) -> void:
-	_panelTL_avatar.region_rect = rect_region
+func set_target_avatar_region(region_rect: Rect2) -> void:
+	_panelTL_avatar.region_rect = region_rect
+
+func add_gui_effect(effect: CombatEffect) -> void:
+	%MyEffectsContainer.add_effect(effect)
 # endregion SETTERS
 
 # region 	INTERNAL AUXILIARY METHODS
@@ -169,8 +172,8 @@ func _update_panel_bottom_left() -> void:
 	_stats1_lab1.text = str(total_stats.strength)
 	_stats1_lab2.text = str(total_stats.agility)
 	_stats1_lab3.text = str(total_stats.intelligence)
-	_stats1_lab4.text = StringHelpers.format_float(total_stats.move_speed) # str(total_stats.move_speed)
-	_stats1_lab5.text = StringHelpers.format_float(total_stats.attack_speed)
+	_stats1_lab4.text = StringHelpers.format_float(total_stats.get_total_move_speed())
+	_stats1_lab5.text = StringHelpers.format_float(total_stats.get_total_attack_speed())
 	_stats1_lab6.text = StringHelpers.format_percent(total_stats.life_steal_percent)
 
 	_stats2_lab1.text = StringHelpers.format_float(total_stats.physical_attack_power) + " / " + StringHelpers.format_float(total_stats.magic_attack_power)

@@ -49,13 +49,7 @@ func _try_update_health_bar():
 func _try_update_label():
 	if not _label_container.visible: return
 		
-	# _label.text = str(my_owner.combat_data.current_hp) + " - " + str(my_owner.combat_data.get_total_stats().attack_speed) + " - " + str(my_owner.combat_data.get_total_stats().move_speed)
-	# _label.text = str(my_owner.combat_data.current_hp)
 	if my_owner is Player: _label.text = str(my_owner.level)
-	# _label.text = str(my_owner.current_state)
-	# _label.text = str(my_owner.combat_data.get_effects().size())
-	_label.text = str(my_owner.combat_data.get_total_stats().attack_speed) + " - " + str(my_owner.combat_data.get_total_stats().move_speed)
-	# _label.text += " - " + str(MapManager.world_to_cell(my_owner.global_position))
 	pass
 
 func show_damage_heal_popup(text: String, color: Color = Color.RED):

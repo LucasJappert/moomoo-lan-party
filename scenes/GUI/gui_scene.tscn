@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://dywrecu6pml77"]
+[gd_scene load_steps=10 format=3 uid="uid://dywrecu6pml77"]
 
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="1_gbqeo"]
 [ext_resource type="Script" uid="uid://0x16271fub0a" path="res://scripts/GUI/gui_scene.gd" id="1_li5rb"]
 [ext_resource type="PackedScene" uid="uid://buj7u3vemtwye" path="res://scenes/GUI/skill_slot.tscn" id="3_acekp"]
 [ext_resource type="StyleBox" uid="uid://rxq74mic16cg" path="res://bg_label_stats.tres" id="4_0ehin"]
+[ext_resource type="PackedScene" uid="uid://c1csmsd22qmft" path="res://scenes/GUI/my_effects_scene.tscn" id="4_fo7ei"]
 [ext_resource type="PackedScene" uid="uid://bhbym0sv2knf8" path="res://scenes/general_objects/tooltip_scene.tscn" id="5_g80tl"]
 
 [sub_resource type="FontFile" id="FontFile_gbqeo"]
@@ -592,6 +593,14 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 26
 text = "32"
 horizontal_alignment = 1
+
+[node name="MyEffectsContainer" parent="PanelBL" instance=ExtResource("4_fo7ei")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 1.0
+offset_top = -25.0
+offset_right = 320.0
+offset_bottom = 7.0
 
 [node name="PanelBR" type="Panel" parent="."]
 offset_left = 1184.0

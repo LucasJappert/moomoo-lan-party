@@ -57,6 +57,7 @@ func add_effect(p_effect: CombatEffect) -> void:
 		return print("Combat effect ", p_effect.name, " reached max stacks: ", p_effect.max_stacks)
 
 	combat_effect_node.add_child(p_effect, true)
+	GameManager.my_main.gui_scene.add_gui_effect(p_effect)
 
 # TODO: Improve this get by creating a dictionary to quickly obtain active effects
 func get_effects() -> Array[CombatEffect]:
@@ -144,9 +145,11 @@ func register_attacker(attacker: Entity) -> void:
 
 func set_target(_target: Entity) -> void:
 	_target_entity = _target
+	if _target == null: return
+	
 	my_owner.movement_helper.update_path_to_entity(_target)
-	var rect_region = SpritesAnimationHelper.get_rect_region_of_sprite(_target.sprite)
-	GameManager.my_main.gui_scene.set_target_avatar_region(rect_region)
+	var region_rect = SpritesHelper.get_region_rect_of_sprite(_target.sprite)
+	GameManager.my_main.gui_scene.set_target_avatar_region(region_rect)
 # endregion
 
 # region GETTERs
@@ -216,7 +219,7 @@ func can_physical_attack() -> bool:
 	if is_stunned(): return false # If stunned, can't attack
 
 	var now = Time.get_ticks_msec()
-	var interval_ms = 1000.0 / get_total_stats().attack_speed
+	var interval_ms = 1000.0 / get_total_stats().get_total_attack_speed()
 	return now - last_physical_hit_time >= interval_ms # If enough time has passed, can attack
 # endregion
 
@@ -246,6 +249,7 @@ func _try_to_add_effect_from_skills() -> void:
 		if get_effect(skill.name) != null: continue # Already has this effect
 
 		var new_effect = CombatEffect.get_permanent_effect(skill.name, skill.get_combat_stats_instance())
+		new_effect.set_region_rect(skill.region_rect)
 		add_effect(new_effect)
 
 func _actions_after_1_second(_delta: float) -> void:
@@ -319,14 +323,14 @@ func try_to_remove_obsolete_stun_animation():
 
 func apply_frost_hit_animation():
 	const sprite_size = Vector2(32, 32)
-	var frames = SpritesAnimationHelper.get_sprite_frames(Vector2(0, 576), sprite_size, 11, 30, false)
+	var frames = SpritesHelper.get_sprite_frames(Vector2(0, 576), sprite_size, 11, 30, false)
 	spawn_front_fx(frames, "frost_hit")
 
 func apply_stun_animation():
 	if animation_active(_ANIMATED_SPRITE_STUN_NAME): return
-	const sprite_size = Vector2(32, 17)
+	var sprite_size = CombatEffect.STUN_RECT_REGION.size
 	var sprite_position = Vector2(0, my_owner.hud.my_health_bar.position.y + 10)
-	var frames = SpritesAnimationHelper.get_sprite_frames(Vector2(0, 608), sprite_size, 14, 30, true)
+	var frames = SpritesHelper.get_sprite_frames(CombatEffect.STUN_RECT_REGION.position, sprite_size, 14, 30, true)
 	spawn_front_fx(frames, _ANIMATED_SPRITE_STUN_NAME, sprite_position)
 
 func spawn_front_fx(frames: SpriteFrames, animated_sprite_name: String, sprite_position: Vector2 = Vector2.ZERO):
