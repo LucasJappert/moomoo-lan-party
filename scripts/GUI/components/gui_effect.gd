@@ -16,7 +16,8 @@ static func get_instance(p_effect: CombatEffect) -> GuiEffect:
 	return gui_effect
 
 func _initialize(p_effect: CombatEffect) -> void:
-	_effect = p_effect
+	_effect = ObjectHelpers.deep_clone(p_effect) as CombatEffect
+	# _effect = p_effect
 	is_permanent = _effect.is_permanent
 	_duration = _effect._duration
 
@@ -30,6 +31,9 @@ func _ready():
 	_sprite.scale = Vector2(32.0 / region_size.x, 32.0 / region_size.y)
 
 	%Area2D.connect("mouse_entered", func():
+		if _effect == null:
+			print("GuiEffect: Effect is null")
+			return
 		GameManager.show_tooltip(_effect.name, _effect.get_description(), 500)
 	)
 	%Area2D.connect("mouse_exited", func(): GameManager.hide_tooltip())

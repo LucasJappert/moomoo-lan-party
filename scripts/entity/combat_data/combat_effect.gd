@@ -33,6 +33,7 @@ func get_description() -> String:
 func set_region_rect(rect: Rect2) -> void:
 	_region_rect = rect
 
+
 static func _get_instance(p_name: String, duration: float, p_is_permanent: bool, stats: CombatStats = CombatStats.new()) -> CombatEffect:
 	const SCENE = preload("res://scenes/entity/combat_data/combat_effect.tscn")
 	var combat_effect = SCENE.instantiate()
