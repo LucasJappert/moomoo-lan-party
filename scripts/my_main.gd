@@ -41,7 +41,6 @@ func _init_player_spawner():
 
 func _spawn_custom(data: Dictionary) -> Node:
 	var player = PLAYER_SCENE.instantiate()
-	var player_id: int = data["player_id"]
-	player.set_player_id(player_id)
-	player.get_client_inputs().set_multiplayer_authority(player_id)
+	player.set_player(data)
+	player.get_client_inputs().set_multiplayer_authority(player.player_id)
 	return player

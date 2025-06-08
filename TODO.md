@@ -127,11 +127,12 @@ MY TODOs: 🔵🟡✅
 - ✅ Move and attack target when out of range doing nothing.
 - ✅ Update my player's avatar and the entities being attacked.
 - ✅ Implement tooltip to show information when hovering over certain elements, such as skills.
+- ✅ Draw effects of my player
 - 🟡 Start implementing experience and leveling logic
 - 🟡 Start building ingame UI
 - 🟡 Set first hero types
 - 🟡 Start logic for strength, agility, and intelligence attributes
-- 🔵 Draw effects of my player
+- 🔵 Draw effects of my target
 - Agregar skill de velocidad de ataque de un 25%
 - Agregar skill de daño en area
 - Agregar skill de disparo multiple

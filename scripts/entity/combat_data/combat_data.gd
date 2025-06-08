@@ -2,6 +2,7 @@ class_name CombatData
 
 extends CombatStats
 
+
 @onready var combat_effect_node = $CombatEffectNode
 
 @export var base_hp: int = 100
@@ -28,6 +29,25 @@ func _ready() -> void:
 	if multiplayer.is_server() == false:
 		set_process(false)
 
+	# Agregamos una señal para cuando se agrega un hijo a combat_effect_node
+	combat_effect_node.connect("child_entered_tree", func(p_effect: CombatEffect):
+		if !GameManager.MY_PLAYER: return
+
+		if my_owner.is_my_player(): GameManager.my_main.gui_scene.add_effect_to_my_effects(p_effect)
+
+		var target_entity_of_my_player = GameManager.MY_PLAYER.combat_data._target_entity
+		if target_entity_of_my_player:
+			if target_entity_of_my_player.id == my_owner.id:
+				GameManager.my_main.gui_scene.add_effect_to_target_effects(p_effect)
+	)
+	# combat_effect_node.child_entered.connect(func(p_effect: CombatEffect):
+	# 	print("Combat effect added: ", p_effect.effect_name)
+	# 	if my_owner.is_my_player(): GameManager.my_main.gui_scene.add_effect_to_my_effects(p_effect)
+	# 	# if my_owner.is_my_player():
+	# 	# 	var effect = child as CombatEffect
+	# 	# 	my_owner.hud.my_effects.add_effect(effect)
+	# )
+
 func _process(_delta: float):
 	_try_to_add_effect_from_skills()
 
@@ -42,7 +62,7 @@ func _process(_delta: float):
 					nearest_enemy = GlobalsEntityHelpers.get_nearest_entity(my_owner.global_position, GameManager.get_enemies(), my_owner.area_vision_shape.shape.radius)
 					my_owner.combat_data.set_target(nearest_enemy)
 
-
+# TODO: Remove and use GlobalsEntityHelpers.find_entity_owner_from
 func set_my_owner(_owner: Entity) -> void:
 	my_owner = _owner
 	pass
@@ -56,7 +76,6 @@ func add_effect(p_effect: CombatEffect) -> void:
 	if current_stacks >= p_effect.max_stacks: return # print("Combat effect ", p_effect.effect_name, " reached max stacks: ", p_effect.max_stacks)
 
 	combat_effect_node.add_child(p_effect, true)
-	if my_owner.is_my_player(): GameManager.my_main.gui_scene.add_gui_effect(p_effect)
 
 # TODO: Improve this get by creating a dictionary to quickly obtain active effects
 func get_effects() -> Array[CombatEffect]:
@@ -149,6 +168,7 @@ func register_attacker(attacker: Entity) -> void:
 
 func set_target(_target: Entity) -> void:
 	_target_entity = _target
+	EventBus.emit_new_target_selected(_target)
 	if _target == null: return
 	
 	my_owner.movement_helper.update_path_to_entity(_target)

@@ -21,6 +21,7 @@ GameManager="*res://scripts/globals/game_manager.gd"
 MultiplayerManager="*res://scripts/multiplayer_manager.gd"
 KeyboardController="*res://scripts/globals/keyboard_controller.gd"
 AStarGridManager="*res://scripts/helpers/AStarGridManager.gd"
+EventBus="*res://scripts/helpers/event_bus.gd"
 
 [display]
 

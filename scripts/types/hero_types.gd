@@ -71,7 +71,7 @@ static func initialize_hero(player: Player) -> void:
 	player.combat_data.evasion = 0.05
 	player.combat_data.crit_chance = 0.05
 	player.combat_data.crit_multiplier = 1.5
-	player.combat_data.attack_speed = 10
+	player.combat_data.attack_speed = 1
 	player.combat_data.physical_attack_power = 25
 	player.combat_data.magic_attack_power = 25
 	player.combat_data.move_speed = 5

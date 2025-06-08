@@ -9,8 +9,9 @@ var json_data: HeroTypes.JsonItem
 const MAX_LEVEL: int = 30
 static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 
-func set_player_id(value: int) -> void:
-	player_id = value
+func set_player(data: Dictionary) -> void:
+	player_id = data["player_id"]
+	hero_type = data["hero_type"]
 
 func get_client_inputs(): return %ClientInputs
 

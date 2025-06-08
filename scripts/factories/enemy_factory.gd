@@ -39,8 +39,8 @@ static func set_flame_cultist(_enemy: Enemy):
 	_enemy.combat_data.attack_range = 200
 	_enemy.combat_data.attack_type = AttackTypes.RANGED
 	_enemy.combat_data.projectile_type = Projectile.TYPES.FIREBALL
-	_enemy.combat_data.physical_attack_power = 2
-	_enemy.combat_data.attack_speed = 2
+	_enemy.combat_data.physical_attack_power = 1
+	_enemy.combat_data.attack_speed = 1
 	
 	_enemy.combat_data.skills.append_array([
 		Skill.get_skill(Skill.Names.LIFESTEAL),

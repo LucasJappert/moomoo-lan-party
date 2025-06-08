@@ -10,6 +10,7 @@ var _duration: float = 0 # In seconds
 var _elapsed: float = 0
 var _effect: CombatEffect
 var unique
+var my_owner: Entity
 
 static func get_instance(p_effect: CombatEffect) -> GuiEffect:
 	var gui_effect = SCENE.instantiate()
@@ -22,6 +23,7 @@ func _initialize(p_effect: CombatEffect) -> void:
 	_duration = _effect._duration
 
 func _ready():
+	my_owner = GlobalsEntityHelpers.find_entity_owner_from(self)
 	if not GameManager.MY_PLAYER: return
 
 	var region_size = _effect._region_rect.size
@@ -43,5 +45,16 @@ func _process(delta: float):
 	_elapsed += delta
 	if _elapsed >= _duration: queue_free()
 
-	if GameManager.MY_PLAYER.combat_data.get_effect_by_unique_name(_effect.unique_name_node) == null:
-		queue_free()
+	# _verify_existence_on_effects()
+
+
+func _verify_existence_on_effects() -> void:
+	if not my_owner: return
+
+	var exists_on_effects = true
+	if my_owner.is_my_player():
+		if GameManager.MY_PLAYER.combat_data.get_effect_by_unique_name(_effect.unique_name_node) == null:
+			exists_on_effects = false
+
+	if not exists_on_effects:
+			queue_free()

@@ -68,6 +68,8 @@ func _on_join_as_player_pressed() -> void:
 
 func _ready() -> void:
 	if multiplayer.is_server() && not MyMain.HOSTED_GAME: return
+	
+	EventBus.connect(EventBus.NEW_TARGET_SELECTED, func(_new_target): _update_panel_top_left(false))
 
 	%HostGameButton.connect("pressed", _on_host_game_pressed)
 	%JoinAsPlayerButton.connect("pressed", _on_join_as_player_pressed)
@@ -107,7 +109,7 @@ func _process(_delta: float) -> void:
 
 
 	var fps := int(1.0 / _delta)
-	if fps < 50: $LabelFPS.text = "FPS ⚠️: %d " % fps
+	if fps < 40: $LabelFPS.text = "FPS ⚠️: %d " % fps
 	else: $LabelFPS.text = "FPS: %d" % fps
 
 	_update_panel_top_left()
@@ -136,15 +138,15 @@ func _set_my_player_avatar_region(my_player: Player) -> void:
 func set_target_avatar_region(region_rect: Rect2) -> void:
 	_panelTL_avatar.region_rect = region_rect
 
-func add_gui_effect(effect: CombatEffect) -> void:
-	%MyEffectsScene.add_effect(effect)
-func get_gui_effects() -> Array[CombatEffect]:
-	return %MyEffectsScene.get_effects()
+func add_effect_to_my_effects(effect: CombatEffect) -> void:
+	%MyEffects.add_effect(effect)
+func add_effect_to_target_effects(effect: CombatEffect) -> void:
+	%TargetEffects.add_effect(effect)
 # endregion SETTERS
 
 # region 	INTERNAL AUXILIARY METHODS
 
-func _update_panel_top_left() -> void:
+func _update_panel_top_left(use_lerp: bool = true) -> void:
 	if not GameManager.MY_PLAYER.combat_data._target_entity:
 		_panel_tl.visible = false
 		return
@@ -156,18 +158,20 @@ func _update_panel_top_left() -> void:
 
 	var current_hp = target.combat_data.current_hp
 	var max_hp = target.combat_data.get_total_hp()
-	_target_rect_current_hp.size.x = _new_lerped_size(max_hp, current_hp, int(_RECT_TARGET_MAX_HP.size.x), _target_rect_current_hp.size.x)
+	_target_rect_current_hp.size.x = _new_lerped_size(max_hp, current_hp, int(_RECT_TARGET_MAX_HP.size.x), _target_rect_current_hp.size.x, use_lerp)
 	_label_target_current_hp.text = "%d/%d" % [current_hp, max_hp]
 
 	var current_mana = target.combat_data.current_mana
 	var max_mana = target.combat_data.get_total_mana()
-	_target_rect_current_mana.size.x = _new_lerped_size(max_mana, current_mana, int(_RECT_TARGET_MAX_MANA.size.x), _target_rect_current_mana.size.x)
+	_target_rect_current_mana.size.x = _new_lerped_size(max_mana, current_mana, int(_RECT_TARGET_MAX_MANA.size.x), _target_rect_current_mana.size.x, use_lerp)
 	_label_target_current_mana.text = "%d/%d" % [current_mana, max_mana]
 
-func _new_lerped_size(max_value: int, current_value: int, full_size: int, current_size: int) -> int:
+func _new_lerped_size(max_value: int, current_value: int, full_size: int, current_size: int, use_lerp: bool = true) -> int:
 	# Smooth interpolation (the 10.0 controls the speed, you can adjust it)
 	var target_percent: float = clamp(current_value / float(max_value), 0.0, 1.0)
 	var target_size := int(full_size * target_percent)
+
+	if not use_lerp: return target_size
 	return lerp(current_size, target_size, delta * 10.0)
 
 func _update_panel_bottom_left() -> void:

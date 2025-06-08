@@ -34,7 +34,8 @@ func _on_peer_disconnected(id):
 
 func _add_player_to_game(id):
 	var spawn_data = {
-		"player_id": id
+		"player_id": id,
+		"hero_type": HeroTypes.IRON_VEX if id == 1 else HeroTypes.LIORA_SUNVEIL
 	}
 	var main = get_tree().get_root().get_node("MyMain")
 	var new_player = main.player_spawner.spawn(spawn_data)
