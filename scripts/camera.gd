@@ -15,7 +15,7 @@ const CAMERA_SPEED := 800.0 # px/seg
 static func set_screen_size():
 	var screen_size = DisplayServer.screen_get_size(0)
 
-	var new_width = int(screen_size.x * 0.4)
+	var new_width = int(screen_size.x * 0.7)
 	var new_height = int(new_width * 9.0 / 16.0)
 
 	DisplayServer.window_set_size(Vector2i(new_width, new_height))

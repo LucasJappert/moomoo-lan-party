@@ -12,14 +12,26 @@ extends CombatStats
 @export var attack_type := AttackTypes.MELEE
 @export var projectile_type: String = Projectile.TYPES.NONE
 var skills: Array[Skill] = []
+var _my_owner: Entity
 
 var _1_second_timer: float = 0.0
+
 var _target_entity: Entity #
+@export var target_entity_name: String:
+	set(value):
+		if _target_entity_name == value: return
+		_target_entity_name = value
+		_target_entity = GameManager.get_entity(value)
+		
+		EventBus.emit_new_target_selected(GlobalsEntityHelpers.get_owner(self), _target_entity)
+		if _target_entity == null: return
+
+	get:
+		return _target_entity_name
+var _target_entity_name: String = ""
 
 var last_physical_hit_time: int = 0 # In milliseconds
 var nearest_enemy_focused: Entity
-
-var my_owner: Entity
 
 var last_damage_received_time: int = 0 # In milliseconds
 var latest_attacker: Entity
@@ -33,53 +45,60 @@ func _ready() -> void:
 	combat_effect_node.connect("child_entered_tree", func(p_effect: CombatEffect):
 		if !GameManager.MY_PLAYER: return
 
-		if my_owner.is_my_player(): GameManager.my_main.gui_scene.add_effect_to_my_effects(p_effect)
+		if my_owner().is_my_player(): GameManager.my_main.gui_scene.add_effect_to_my_effects(p_effect)
 
 		var target_entity_of_my_player = GameManager.MY_PLAYER.combat_data._target_entity
 		if target_entity_of_my_player:
-			if target_entity_of_my_player.id == my_owner.id:
+			if target_entity_of_my_player.name == my_owner().name:
 				GameManager.my_main.gui_scene.add_effect_to_target_effects(p_effect)
 	)
-	# combat_effect_node.child_entered.connect(func(p_effect: CombatEffect):
-	# 	print("Combat effect added: ", p_effect.effect_name)
-	# 	if my_owner.is_my_player(): GameManager.my_main.gui_scene.add_effect_to_my_effects(p_effect)
-	# 	# if my_owner.is_my_player():
-	# 	# 	var effect = child as CombatEffect
-	# 	# 	my_owner.hud.my_effects.add_effect(effect)
-	# )
 
+	%CombatEffectSpawner.spawn_function = func(effect_data: Dictionary) -> Node:
+		return CombatEffect.get_instance_from_dict(effect_data)
+
+# TODO: Improve this
 func _process(_delta: float):
 	_try_to_add_effect_from_skills()
 
 	_actions_after_1_second(_delta)
 	
-	# TODO: Improve this
-	if my_owner.combat_data._target_entity == null:
-		if my_owner.movement_helper.current_path.is_empty():
-			if my_owner.combat_data.latest_attacker:
-				if my_owner is Player:
+	if my_owner().combat_data._target_entity == null:
+		if my_owner().movement_helper.current_path.is_empty():
+			if my_owner().combat_data.latest_attacker:
+				if my_owner() is Player:
 					var nearest_enemy: Entity
-					nearest_enemy = GlobalsEntityHelpers.get_nearest_entity(my_owner.global_position, GameManager.get_enemies(), my_owner.area_vision_shape.shape.radius)
-					my_owner.combat_data.set_target(nearest_enemy)
+					nearest_enemy = GlobalsEntityHelpers.get_nearest_entity(my_owner().global_position, GameManager.get_enemies(), my_owner().area_vision_shape.shape.radius)
+					my_owner().combat_data.set_target(nearest_enemy)
 
-# TODO: Remove and use GlobalsEntityHelpers.find_entity_owner_from
-func set_my_owner(_owner: Entity) -> void:
-	my_owner = _owner
-	pass
+func my_owner() -> Entity:
+	if _my_owner: return _my_owner
+	_my_owner = GlobalsEntityHelpers.get_owner(self)
+	return _my_owner
 
 func add_effect(p_effect: CombatEffect) -> void:
 	# Should be called only on the server
 	var current_stacks = 0
+	var matching_effects: Array[CombatEffect] = []
+
 	for effect in get_effects():
-		if effect.effect_name == p_effect.effect_name: current_stacks += 1
+		if effect.effect_name == p_effect.effect_name:
+			current_stacks += 1
+			matching_effects.append(effect)
 
-	if current_stacks >= p_effect.max_stacks: return # print("Combat effect ", p_effect.effect_name, " reached max stacks: ", p_effect.max_stacks)
+	if current_stacks >= p_effect.max_stacks:
+		if not p_effect.keep_latest_stacks: return
 
-	combat_effect_node.add_child(p_effect, true)
+		matching_effects.sort_custom(func(a, b): return a._elapsed > b._elapsed) # Sort by _elapsed in descending order (oldest first)
+		var oldest_effect := matching_effects[0]
+		oldest_effect.delete_effect()
+
+	%CombatEffectSpawner.spawn(ObjectHelpers.to_dict(p_effect))
 
 # TODO: Improve this get by creating a dictionary to quickly obtain active effects
 func get_effects() -> Array[CombatEffect]:
 	var effects: Array[CombatEffect] = []
+	if not combat_effect_node: return effects
+
 	for child in combat_effect_node.get_children():
 		if child is CombatEffect:
 			effects.append(child as CombatEffect)
@@ -97,7 +116,7 @@ func get_effect_by_unique_name(unique_name: String) -> CombatEffect:
 
 # TODO: Review
 func _server_calculate_physical_damage(_target: Entity) -> void:
-	if my_owner.multiplayer.is_server() == false: return
+	if my_owner().multiplayer.is_server() == false: return
 	if _target == null: return
 
 	var critical_damage = 0
@@ -111,20 +130,18 @@ func _server_calculate_physical_damage(_target: Entity) -> void:
 	_di.critical = critical_damage
 	_di.projectile_type = projectile_type
 	_di.damage_type = DamageInfo.DamageType.PHYSICAL
-	_di.attacker_name = my_owner.name
+	_di.attacker_name = my_owner().name
 
-	_target.combat_data._server_receive_physical_damage(_di, my_owner)
+	_target.combat_data._server_receive_physical_damage(_di, my_owner())
 
 func _server_receive_physical_damage(_di: DamageInfo, _attacker: Entity) -> void:
-	if my_owner.multiplayer.is_server() == false: return
+	if my_owner().multiplayer.is_server() == false: return
 
 	# Evasion verification
 	if GlobalsEntityHelpers.roll_chance(get_total_stats().evasion):
 		# TODO: Crear un helper para enviar mensajes
-		var sm = ServerMessage.get_instance()
-		sm.message = "Dodge"
-		sm.color = Vector3(0, 0.5, 1)
-		my_owner.rpc("rpc_server_message", sm.to_dict())
+		var sm = ServerMessage.new("Dodge", Vector3(0, 0.5, 1))
+		my_owner().rpc("rpc_server_message", ObjectHelpers.to_dict(sm, true))
 		return
 
 	var damage_before_defense := _di.total_damage_heal
@@ -135,12 +152,12 @@ func _server_receive_physical_damage(_di: DamageInfo, _attacker: Entity) -> void
 
 	_di.total_damage_heal = total_damage
 
-	CombatEffect.actions_after_effective_hit(_attacker, my_owner, _di)
-	Skill.actions_after_effective_hit(_attacker, my_owner, _di)
+	CombatEffect.actions_after_effective_hit(_attacker, my_owner(), _di)
+	Skill.actions_after_effective_hit(_attacker, my_owner(), _di)
 
 	# print("Damage before defense: ", damage_before_defense, " reduced: ", reduced_damage, " total: ", total_damage, " critical: ", _di.critical)
 
-	my_owner.rpc("rpc_receive_damage_or_heal", _di.to_dict())
+	my_owner().rpc("rpc_receive_damage_or_heal", ObjectHelpers.to_dict(_di, true))
 
 	update_current_hp(-total_damage)
 
@@ -152,12 +169,12 @@ func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void
 	current_hp = clamp(current_hp, 0, get_total_hp())
 	
 	if current_hp <= 0:
-		Skill.actions_before_entity_death(my_owner, _attacker)
+		Skill.actions_before_entity_death(my_owner(), _attacker)
 		current_hp = 0
-		if my_owner is Enemy:
+		if my_owner() is Enemy:
 			for player in GameManager.get_players():
 				player.increment_current_exp(Enemy.get_enemy_exp_when_dead())
-		my_owner.rpc("rpc_die")
+		my_owner().rpc("rpc_die")
 
 func update_current_mana(value_to_increase: int) -> void:
 	current_mana = clamp(current_mana + value_to_increase, 0, get_total_mana())
@@ -167,13 +184,13 @@ func register_attacker(attacker: Entity) -> void:
 	last_damage_received_time = Time.get_ticks_msec()
 
 func set_target(_target: Entity) -> void:
+	# Used only by the server
+	target_entity_name = str(_target.name) if _target != null else ""
 	_target_entity = _target
-	EventBus.emit_new_target_selected(_target)
+
 	if _target == null: return
 	
-	my_owner.movement_helper.update_path_to_entity(_target)
-	var region_rect = SpritesHelper.get_region_rect_of_sprite(_target.sprite)
-	GameManager.my_main.gui_scene.set_target_avatar_region(region_rect)
+	my_owner().movement_helper.update_path_to_entity(_target)
 # endregion
 
 # region GETTERs
@@ -192,19 +209,22 @@ func is_stunned() -> bool:
 	for effect in get_effects():
 		if effect.stun_duration > 0 && not effect.is_owner_friendly: return true
 	return false
+
+func target_entity() -> Entity:
+	return GameManager.get_entity(target_entity_name)
 # endregion
 
 # region TRY PHISICAL ATTACK
 func try_physical_attack(_delta: float) -> bool:
-	if not my_owner.multiplayer.is_server(): return false
+	if not my_owner().multiplayer.is_server(): return false
 
-	if my_owner.velocity != Vector2.ZERO: return false
+	if my_owner().velocity != Vector2.ZERO: return false
 
 	# Priorize players over moomoo (only for enemies)
-	if _target_entity == GameManager.moomoo: _target_entity = _get_nearest_target_in_range_attack()
+	if _target_entity == GameManager.moomoo: set_target(_get_nearest_target_in_range_attack())
 
-	if not GlobalsEntityHelpers.is_target_in_attack_area(my_owner, _target_entity):
-		_target_entity = _get_nearest_target_in_range_attack()
+	if not GlobalsEntityHelpers.is_target_in_attack_area(my_owner(), _target_entity):
+		set_target(_get_nearest_target_in_range_attack())
 
 	if _target_entity == null: return false
 
@@ -217,55 +237,54 @@ func try_physical_attack(_delta: float) -> bool:
 
 func _get_nearest_target_in_range_attack():
 	var max_range = get_total_stats().attack_range
-	var start_pos = my_owner.global_position
-	if my_owner is Player:
+	var start_pos = my_owner().global_position
+	if my_owner() is Player:
 		return GlobalsEntityHelpers.get_nearest_entity(start_pos, GameManager.get_enemies(), max_range)
 
-	if my_owner is Enemy:
+	if my_owner() is Enemy:
 		# First we check if there is a player nearby, then if the moomoo is in attack range
 		var nearest_player = GlobalsEntityHelpers.get_nearest_entity(start_pos, GameManager.get_players(), max_range)
 		if nearest_player: return nearest_player
 
-		if GlobalsEntityHelpers.is_target_in_attack_area(my_owner, GameManager.moomoo): return GameManager.moomoo
+		if GlobalsEntityHelpers.is_target_in_attack_area(my_owner(), GameManager.moomoo): return GameManager.moomoo
 
 	return null
 
-func _execute_physical_attack():
-	match attack_type:
-		AttackTypes.RANGED:
-			Projectile.launch(my_owner, _target_entity, get_total_stats().physical_attack_power)
+func _execute_physical_attack() -> void:
+	if projectile_type == Projectile.TYPES.NONE:
+		return _server_calculate_physical_damage(_target_entity)
 
-		AttackTypes.MELEE:
-			_server_calculate_physical_damage(_target_entity)
+	Projectile.launch(my_owner(), _target_entity, get_total_stats().physical_attack_power)
+
 	
 func can_physical_attack() -> bool:
-	if my_owner.velocity != Vector2.ZERO: return false # If moving, can't attack
+	if my_owner().velocity != Vector2.ZERO: return false # If moving, can't attack
 	if is_stunned(): return false # If stunned, can't attack
 
 	var now = Time.get_ticks_msec()
 	var interval_ms = 1000.0 / get_total_stats().get_total_attack_speed()
 	return now - last_physical_hit_time >= interval_ms # If enough time has passed, can attack
-# endregion
+# endregion TRY PHISICAL ATTACK
 
 # region 	SERVER METHODS
 func global_receive_damage_or_heal(_di: DamageInfo):
 	var melee_attack = _di.projectile_type == Projectile.TYPES.NONE
 	var arrow_attack = _di.projectile_type == Projectile.TYPES.ARROW
 	if _di.critical > 0:
-		my_owner.hud.show_damage_heal_popup(str(- (_di.total_damage_heal - _di.critical)), Color(1, 0, 0))
-		my_owner.hud.show_damage_heal_popup(str(-_di.critical), Color(1, 1, 0))
+		my_owner().hud.show_damage_heal_popup(str(- (_di.total_damage_heal - _di.critical)), Color(1, 0, 0))
+		my_owner().hud.show_damage_heal_popup(str(-_di.critical), Color(1, 1, 0))
 		if arrow_attack: SoundManager.play_critical_arrow_shot()
 		if melee_attack: SoundManager.play_critical_melee_hit()
 	if _di.critical == 0 and _di.total_damage_heal > 0:
 		if melee_attack: SoundManager.play_melee_hit()
 
 	if _di.total_damage_heal < 0: # Heal
-		my_owner.hud.show_damage_heal_popup(str(abs(_di.total_damage_heal)), Color(0, 1, 0))
+		my_owner().hud.show_damage_heal_popup(str(abs(_di.total_damage_heal)), Color(0, 1, 0))
 	
 	register_attacker(_di.get_attacker())
 
 func _try_to_add_effect_from_skills() -> void:
-	if not my_owner is Player: return
+	if not my_owner() is Player: return
 	for skill in skills:
 		if skill.type != Skill.Type.PASSIVE: continue
 		if not skill.is_learned: continue
@@ -328,12 +347,12 @@ func _get_extra_stats_by_effects() -> CombatStats:
 # region Front Animations
 const _ANIMATED_SPRITE_STUN_NAME = "stun"
 func animation_active(animated_sprite_name: String) -> bool:
-	for animated_sprite in my_owner.front_animations_node.get_children():
+	for animated_sprite in my_owner().front_animations_node.get_children():
 		if animated_sprite is AnimatedSprite2D and animated_sprite.name == animated_sprite_name:
 			return true
 	return false
 func remove_animations(animated_sprite_name: String):
-	for child in my_owner.front_animations_node.get_children():
+	for child in my_owner().front_animations_node.get_children():
 		if child is AnimatedSprite2D and child.name == animated_sprite_name:
 			child.queue_free()
 func try_to_remove_obsolete_stun_animation():
@@ -353,7 +372,7 @@ func apply_frost_hit_animation():
 func apply_stun_animation():
 	if animation_active(_ANIMATED_SPRITE_STUN_NAME): return
 	var sprite_size = CombatEffect.STUN_RECT_REGION.size
-	var sprite_position = Vector2(0, my_owner.hud.my_health_bar.position.y + 10)
+	var sprite_position = Vector2(0, my_owner().hud.my_health_bar.position.y + 10)
 	var frames = SpritesHelper.get_sprite_frames(CombatEffect.STUN_RECT_REGION.position, sprite_size, 14, 30, true)
 	spawn_front_fx(frames, _ANIMATED_SPRITE_STUN_NAME, sprite_position)
 
@@ -362,7 +381,7 @@ func spawn_front_fx(frames: SpriteFrames, animated_sprite_name: String, sprite_p
 	sprite.position = sprite_position
 	sprite.sprite_frames = frames
 	sprite.name = animated_sprite_name
-	my_owner.front_animations_node.add_child(sprite, true)
+	my_owner().front_animations_node.add_child(sprite, true)
 	sprite.play()
 	sprite.animation_finished.connect(func(): sprite.queue_free())
 

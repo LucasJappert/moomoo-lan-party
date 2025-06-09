@@ -7,6 +7,7 @@ const SERVER_PORT = 8080
 const SERVER_IP = "127.0.0.1"
 
 func become_host():
+	GameManager.AM_I_HOST = true
 	var server = ENetMultiplayerPeer.new()
 	server.create_server(SERVER_PORT, 2)
 	print("Server running on port: " + str(SERVER_PORT))

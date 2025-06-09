@@ -85,7 +85,7 @@ func _try_draw_paths():
 				draw_rect(Rect2(pos - MapManager.TILE_SIZE / 2.0, MapManager.TILE_SIZE), Color(1, 1, 0, 0.5), true)
 				draw_string(font, pos, "X")
 
-func _try_draw_solid_cells(cell: Vector2i, pos: Vector2):
+func _try_draw_solid_cells(cell: Vector2, pos: Vector2):
 	if not _DRAW_SOLID_CELLS:
 		return
 

@@ -71,9 +71,9 @@ static func initialize_hero(player: Player) -> void:
 	player.combat_data.evasion = 0.05
 	player.combat_data.crit_chance = 0.05
 	player.combat_data.crit_multiplier = 1.5
-	player.combat_data.attack_speed = 1
-	player.combat_data.physical_attack_power = 25
-	player.combat_data.magic_attack_power = 25
+	player.combat_data.attack_speed = 10
+	player.combat_data.physical_attack_power = 7
+	player.combat_data.magic_attack_power = 7
 	player.combat_data.move_speed = 5
 	player.combat_data.agility = 10
 	player.combat_data.strength = 10
@@ -97,7 +97,12 @@ static func initialize_hero(player: Player) -> void:
 		]
 	
 	if player.hero_type == LIORA_SUNVEIL:
-		player.combat_data.skills = [Skill.get_skill(Skill.Names.LIFESTEAL)]
+		player.combat_data.skills = [
+			Skill.get_skill(Skill.Names.LIFESTEAL),
+			Skill.get_skill(Skill.Names.STUNNING_STRIKE),
+			Skill.get_skill(Skill.Names.SHIELDED_CORE),
+			Skill.get_skill(Skill.Names.FROZEN_TOUCH)
+		]
 	
 	if player.hero_type == THARNOK_THE_VERDANT:
 		player.combat_data.skills = [Skill.get_skill(Skill.Names.LIFESTEAL)]

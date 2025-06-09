@@ -61,6 +61,9 @@ static func world_to_cell(pos: Vector2) -> Vector2i:
 static func cell_to_world(cell: Vector2i) -> Vector2:
 	return Vector2(cell.x * TILE_SIZE.x + TILE_SIZE.x / 2, cell.y * TILE_SIZE.y + TILE_SIZE.y / 2)
 	
+static func cell_to_world_2i(cell: Vector2i) -> Vector2i:
+	return Vector2i(int(cell.x * TILE_SIZE.x + TILE_SIZE.x / 2), int(cell.y * TILE_SIZE.y + TILE_SIZE.y / 2))
+	
 static func set_cell_blocked(cell: Vector2i, blocked: bool):
 	if _astar_grid.is_in_boundsv(cell):
 		_astar_grid.set_point_solid(cell, blocked)

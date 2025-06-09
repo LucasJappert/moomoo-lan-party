@@ -22,7 +22,7 @@ scale = Vector2(1.34375, 1.34375)
 texture = SubResource("AtlasTexture_0fsu4")
 centered = false
 region_enabled = true
-region_rect = Rect2(128, 1632, 64, 64)
+region_rect = Rect2(1632, 1856, 64, 64)
 
 [node name="Hotkey" type="Label" parent="."]
 layout_mode = 1

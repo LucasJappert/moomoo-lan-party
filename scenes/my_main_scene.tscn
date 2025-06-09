@@ -85,7 +85,7 @@ z_index = 2
 z_as_relative = false
 y_sort_enabled = true
 
-[node name="EnemySpawner" type="MultiplayerSpawner" parent="."]
+[node name="EnemiesSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://cj8vdyvtjs0ju")
 spawn_path = NodePath("../Enemies")
 
@@ -94,7 +94,7 @@ z_index = 2
 z_as_relative = false
 y_sort_enabled = true
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+[node name="MoomooSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://cmpyg7b41x6im")
 spawn_path = NodePath("../Moomoo")
 
@@ -112,7 +112,7 @@ y_sort_enabled = true
 script = ExtResource("3_3ladc")
 font = SubResource("SystemFont_p57ef")
 
-[node name="ProjectiilesSpawner" type="MultiplayerSpawner" parent="."]
+[node name="ProjectilesSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://ppgdlw8ype7u")
 spawn_path = NodePath("../Projectiles")
 

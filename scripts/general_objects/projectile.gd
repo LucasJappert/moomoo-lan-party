@@ -80,7 +80,7 @@ func _server_move(delta: float):
 		return
 
 	if target_entity != null:
-		target_position = target_entity.projectile_zone.global_position
+		target_position = target_entity.global_position
 		direction = (target_position - position)
 		rotation = direction.angle()
 
@@ -91,6 +91,12 @@ func _server_move(delta: float):
 		if target_entity != null && origin_entity != null:
 			origin_entity.combat_data._server_calculate_physical_damage(target_entity)
 		queue_free()
+
+
+static func get_instance_from_dict(dict: Dictionary) -> Projectile:
+	var instance = PROJECTILE_SCENE.instantiate()
+	ObjectHelpers.from_dict(instance, dict)
+	return instance
 
 static func launch(_origin_entity: Entity, _target_entity: Entity, _damage: int):
 	var projectile = PROJECTILE_SCENE.instantiate()

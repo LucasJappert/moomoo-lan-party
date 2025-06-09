@@ -33,6 +33,7 @@ const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapM
 
 @export var is_owner_friendly: bool = true
 var max_stacks: int = 1
+var keep_latest_stacks: bool = true
 
 
 static func get_default_instance() -> CombatStats:

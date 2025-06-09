@@ -128,11 +128,19 @@ MY TODOs: 🔵🟡✅
 - ✅ Update my player's avatar and the entities being attacked.
 - ✅ Implement tooltip to show information when hovering over certain elements, such as skills.
 - ✅ Draw effects of my player
+- ✅ Draw effects of my target
+- ✅ Move to_dict and from_dict to a helper
+- ✅ Check synchronization of sprite projectiles
+- ✅ Refactor spawn functions
+- ✅ Fix sprite on target panel
 - 🟡 Start implementing experience and leveling logic
 - 🟡 Start building ingame UI
 - 🟡 Set first hero types
 - 🟡 Start logic for strength, agility, and intelligence attributes
-- 🔵 Draw effects of my target
+- 🔵 Encapsular lógica de get/set
+- 🔵 Corregir sincronizacion de objetos para los clientes que se unen a la sala.
+- 🔵 Ver movimientos pegados a Moomoo
+- 🔵 Corregir ataque cuando se cambia el target mientras se ya esta atacando a uno
 - Agregar skill de velocidad de ataque de un 25%
 - Agregar skill de daño en area
 - Agregar skill de disparo multiple

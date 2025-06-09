@@ -1,10 +1,9 @@
 class_name EnemyFactory
 
-static func get_enemy_instance(_enemy_type: String) -> Enemy:
+static func get_enemy_instance(_enemy_type: String = "") -> Enemy:
 	var enemy: Enemy = load("res://scenes/entity/enemy_scene.tscn").instantiate()
-
-	enemy.set_enemy_type(_enemy_type)
-
+	if not _enemy_type.is_empty():
+		enemy.set_enemy_type(_enemy_type)
 	return enemy
 
 # region INTERNAL METHODS
@@ -44,7 +43,8 @@ static func set_flame_cultist(_enemy: Enemy):
 	
 	_enemy.combat_data.skills.append_array([
 		Skill.get_skill(Skill.Names.LIFESTEAL),
-		Skill.get_skill(Skill.Names.FROZEN_TOUCH)
+		Skill.get_skill(Skill.Names.MIRROR_DEMISE),
+		# Skill.get_skill(Skill.Names.FROZEN_TOUCH)
 	])
 
 # endregion

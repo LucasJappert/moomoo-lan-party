@@ -142,14 +142,15 @@ static func actions_before_entity_death(_dead_entity: Entity, _attacker: Entity)
 			Vector2(-MapManager.TILE_SIZE.x, MapManager.TILE_SIZE.y)
 		]
 		for i in range(4):
-			var new_enemy = EnemyFactory.get_enemy_instance(_dead_entity.enemy_type)
+			# var new_enemy = EnemyFactory.get_enemy_instance(_dead_entity.enemy_type)
+			var new_enemy = Enemy.get_instance_from_dict(ObjectHelpers.to_dict(_dead_entity))
 			new_enemy.replicated = true
 			new_enemy.position = _dead_entity.position + target_tiles[i]
-			GameManager.add_enemy(new_enemy)
-
 			# We need set combat_data props after the enemy is added to the scene
 			new_enemy.combat_data.base_hp = new_enemy.combat_data.get_total_hp() * 0.5
 			new_enemy.combat_data.current_hp = new_enemy.combat_data.base_hp
+			GameManager.add_enemy(new_enemy)
+
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
 	# Should be called only on the server

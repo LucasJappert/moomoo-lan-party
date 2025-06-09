@@ -55,6 +55,13 @@ func _on_every_timer_500ms():
 	var nearest_player = get_nearest_player_inside_vision()
 	movement_helper.try_set_current_path_for_enemy(nearest_player)
 
+# region 	GETTERs
+
+static func get_instance_from_dict(dict: Dictionary) -> Enemy:
+	var instance = EnemyFactory.get_enemy_instance()
+	ObjectHelpers.from_dict(instance, dict)
+	return instance
+# endregion GETTERs
 
 static func get_enemy_exp_when_dead() -> int:
 	if _exp_when_dead > 0: return _exp_when_dead

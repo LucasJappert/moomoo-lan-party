@@ -25,10 +25,11 @@ static func get_nearest_entity(start_pos: Vector2, entities: Array[Entity], max_
 static func roll_chance(_chance: float) -> bool:
 	return randf() <= _chance
 
-static func find_entity_owner_from(node: Node) -> Entity:
+static func get_owner(node: Node, max_depth: int = 10) -> Entity:
 	var current := node.get_parent()
-	while current != null:
-		if current is Entity:
-			return current
+	var current_depth := 0
+	while current != null and current_depth < max_depth:
+		if current is Entity: return current
 		current = current.get_parent()
+		current_depth += 1
 	return null

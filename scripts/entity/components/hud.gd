@@ -19,7 +19,7 @@ func _post_ready(_entity: Entity):
 	my_owner = _entity
 	_is_moomoo = my_owner is Moomoo
 
-	_label_container.visible = false
+	# _label_container.visible = false
 	_label_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.text = my_owner.name
@@ -49,7 +49,8 @@ func _try_update_health_bar():
 func _try_update_label():
 	if not _label_container.visible: return
 		
-	if my_owner is Player: _label.text = str(my_owner.level)
+	_label.text = my_owner.combat_data.target_entity_name
+	_label.text = str(my_owner.combat_data.get_effects().size())
 	pass
 
 func show_damage_heal_popup(text: String, color: Color = Color.RED):

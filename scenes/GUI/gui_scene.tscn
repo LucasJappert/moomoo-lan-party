@@ -342,18 +342,6 @@ offset_right = 630.0
 offset_bottom = 241.0
 color = Color(1.1792e-06, 0.524529, 0.107973, 1)
 
-[node name="LabelExp" type="Label" parent="PanelBL"]
-unique_name_in_owner = true
-layout_mode = 2
-offset_left = 24.0
-offset_top = 215.0
-offset_right = 138.0
-offset_bottom = 241.0
-theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 18
-text = "22"
-
 [node name="HpBall" type="Sprite2D" parent="PanelBL"]
 modulate = Color(0.8, 0, 0, 1)
 texture_filter = 1
@@ -601,6 +589,18 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 26
 text = "32"
 horizontal_alignment = 1
+
+[node name="LabelExp" type="Label" parent="PanelBL"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_left = 24.0
+offset_top = 215.0
+offset_right = 219.0
+offset_bottom = 241.0
+theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+text = "22"
 
 [node name="MyEffects" parent="PanelBL" instance=ExtResource("4_fo7ei")]
 unique_name_in_owner = true

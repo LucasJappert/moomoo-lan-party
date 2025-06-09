@@ -2,15 +2,20 @@ class_name GuiEffects
 
 extends HBoxContainer
 
+const TARGET_EFFECTS_INSTANCE = "TargetEffects"
+const MY_EFFECTS_INSTANCE = "MyEffects"
+
 const MARGIN_LEFT := 4
 
 var my_owner: Entity
 
 func _ready() -> void:
 	clean_effects()
-	EventBus.connect(EventBus.NEW_TARGET_SELECTED, func(new_target): _on_new_target_selected(new_target))
+	EventBus.connect(EventBus.NEW_TARGET_SELECTED, func(_owner: Entity, _target: Entity): _on_new_target_selected(_owner, _target))
 
-func _on_new_target_selected(_p_target: Entity) -> void:
+func _on_new_target_selected(_owner: Entity, _target: Entity) -> void:
+	if name != TARGET_EFFECTS_INSTANCE: return
+	if not _owner.is_my_player(): return
 	clean_effects()
 
 func _process(_delta: float) -> void:

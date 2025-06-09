@@ -23,7 +23,7 @@ func _initialize(p_effect: CombatEffect) -> void:
 	_duration = _effect._duration
 
 func _ready():
-	my_owner = GlobalsEntityHelpers.find_entity_owner_from(self)
+	my_owner = GlobalsEntityHelpers.get_owner(self)
 	if not GameManager.MY_PLAYER: return
 
 	var region_size = _effect._region_rect.size
@@ -45,16 +45,15 @@ func _process(delta: float):
 	_elapsed += delta
 	if _elapsed >= _duration: queue_free()
 
-	# _verify_existence_on_effects()
-
+	_verify_existence_on_effects()
 
 func _verify_existence_on_effects() -> void:
-	if not my_owner: return
-
-	var exists_on_effects = true
-	if my_owner.is_my_player():
+	if get_parent().name == GuiEffects.MY_EFFECTS_INSTANCE:
 		if GameManager.MY_PLAYER.combat_data.get_effect_by_unique_name(_effect.unique_name_node) == null:
-			exists_on_effects = false
-
-	if not exists_on_effects:
-			queue_free()
+			return queue_free()
+	
+	if get_parent().name == GuiEffects.TARGET_EFFECTS_INSTANCE:
+		var target = GameManager.MY_PLAYER.combat_data.target_entity()
+		if target == null: return
+		if target.combat_data.get_effect_by_unique_name(_effect.unique_name_node) == null:
+			return queue_free()

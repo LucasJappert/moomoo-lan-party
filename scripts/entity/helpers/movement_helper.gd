@@ -26,11 +26,6 @@ func update_path_to_entity(target: Entity):
 	var target_cell = MapManager.world_to_cell(target.global_position)
 	update_path(target_cell)
 
-func server_physics_process(_delta: float) -> void:
-	if not my_owner.multiplayer.is_server(): return
-
-	_try_to_move(_delta)
-
 
 func _stop_movement() -> void:
 	my_owner.velocity = Vector2.ZERO
@@ -49,6 +44,11 @@ func try_set_current_path_for_enemy(player: Entity):
 	var from_cell = MapManager.world_to_cell(target_pos if target_pos != null else my_owner.global_position)
 	var to_cell = MapManager.world_to_cell(_target_entity.global_position)
 	current_path = MapManager.find_path(from_cell, to_cell)
+
+func server_physics_process(_delta: float) -> void:
+	if not my_owner.multiplayer.is_server(): return
+
+	_try_to_move(_delta)
 
 func _try_to_move(_delta: float) -> void:
 	if GlobalsEntityHelpers.is_target_in_attack_area(my_owner, _target_entity):

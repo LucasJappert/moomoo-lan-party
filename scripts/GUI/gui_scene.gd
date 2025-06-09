@@ -69,7 +69,7 @@ func _on_join_as_player_pressed() -> void:
 func _ready() -> void:
 	if multiplayer.is_server() && not MyMain.HOSTED_GAME: return
 	
-	EventBus.connect(EventBus.NEW_TARGET_SELECTED, func(_new_target): _update_panel_top_left(false))
+	EventBus.connect(EventBus.NEW_TARGET_SELECTED, func(_owner: Entity, _target: Entity): _on_new_target_selected(_owner, _target))
 
 	%HostGameButton.connect("pressed", _on_host_game_pressed)
 	%JoinAsPlayerButton.connect("pressed", _on_join_as_player_pressed)
@@ -139,14 +139,27 @@ func set_target_avatar_region(region_rect: Rect2) -> void:
 	_panelTL_avatar.region_rect = region_rect
 
 func add_effect_to_my_effects(effect: CombatEffect) -> void:
+	print("Adding effect to my effects: ", effect)
 	%MyEffects.add_effect(effect)
 func add_effect_to_target_effects(effect: CombatEffect) -> void:
 	%TargetEffects.add_effect(effect)
+
+func _on_new_target_selected(_owner: Entity, _target: Entity) -> void:
+	if not _owner.is_my_player(): return
+
+	_update_panel_top_left(false)
+
+	if _target:
+		var region_rect = SpritesHelper.get_region_rect_of_sprite(_target.sprite)
+		GameManager.my_main.gui_scene.set_target_avatar_region(region_rect)
+
+
 # endregion SETTERS
 
 # region 	INTERNAL AUXILIARY METHODS
 
 func _update_panel_top_left(use_lerp: bool = true) -> void:
+	if not GameManager.MY_PLAYER: return
 	if not GameManager.MY_PLAYER.combat_data._target_entity:
 		_panel_tl.visible = false
 		return

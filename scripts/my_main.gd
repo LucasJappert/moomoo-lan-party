@@ -8,6 +8,9 @@ static var GLOBAL_MOUSE_POSITION: Vector2 = Vector2.ZERO
 static var VIEWPORT_MOUSE_POSITION: Vector2 = Vector2.ZERO
 static var SCREEN_SIZE: Vector2 = Vector2.ZERO
 @onready var gui_scene: CanvasLayer = $GuiScene
+@onready var projectiles_spawner = $ProjectilesSpawner
+@onready var enemies_spawner = $EnemiesSpawner
+@onready var moomoo_spawner = $MoomooSpawner
 const HOSTED_GAME = true # In this version of Moomoo this is always true
 
 @onready var player_spawner = $PlayerSpawner

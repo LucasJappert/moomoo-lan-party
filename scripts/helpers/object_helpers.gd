@@ -53,3 +53,29 @@ static func _clone_value(value):
 			return clone
 		_:
 			return value
+
+static func to_dict(obj: Object, just_my_vars: bool = false) -> Dictionary:
+	var dict := {}
+	for prop in obj.get_property_list():
+		var name = prop.name
+		var usage = prop.usage
+
+		var is_script_var: bool = (usage & PROPERTY_USAGE_SCRIPT_VARIABLE) != 0
+		if just_my_vars:
+			if is_script_var:
+				dict[name] = obj.get(name)
+			continue
+
+		var is_storage: bool = (usage & PROPERTY_USAGE_STORAGE) != 0
+		var is_explicit: bool = name == "name"
+		if is_storage or is_script_var or is_explicit:
+			dict[name] = obj.get(name)
+	return dict
+
+
+static func from_dict(obj: Object, data: Dictionary) -> void:
+	var prop_names := obj.get_property_list().map(func(p): return p.name)
+	for key in data:
+		if key == "script": continue
+		if not key in prop_names: continue
+		obj.set(key, data[key])

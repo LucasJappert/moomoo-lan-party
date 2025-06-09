@@ -23,10 +23,6 @@ func _unhandled_input(event):
 			var mouse_position = player.get_global_mouse_position()
 			print("Client left_click_mouse_pos: ", mouse_position)
 
-	# if event is InputEventMouseMotion:
-	# 	var mouse_position = player.get_global_mouse_position()
-	# 	MapManager.set_hovered_cell(MapManager.world_to_cell(mouse_position))
-
 
 func _on_right_click(mouse_position: Vector2):
 	if not SHIFT_PRESSED and AreaHovered.hovered_entity is Enemy:
@@ -46,7 +42,3 @@ func notify_to_server_the_right_click_on_entity(_target_entity_name: String):
 	# Always run in server
 	var target_entity = GameManager.entities[_target_entity_name]
 	player.combat_data.set_target(target_entity)
-
-	# var is_in_attack_range = GlobalsEntityHelpers.is_target_in_attack_area(player, target_entity)
-	# if is_in_attack_range: player.movement_helper.clean_path()
-	# if not is_in_attack_range: player.movement_helper.update_path_to_entity(target_entity)

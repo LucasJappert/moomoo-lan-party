@@ -31,14 +31,14 @@ var movement_helper: MovementHelper
 
 @rpc("authority", "call_local")
 func rpc_server_message(data: Dictionary):
-	var sm = ServerMessage.get_instance()
-	sm.from_dict(data)
-	hud.show_popup(sm.message, Color(sm.color.x, sm.color.y, sm.color.z))
+	var sm = ServerMessage.new()
+	ObjectHelpers.from_dict(sm, data)
+	hud.show_popup(sm.message, sm.get_color())
 
 @rpc("authority", "call_local")
 func rpc_receive_damage_or_heal(data: Dictionary):
 	var di = DamageInfo.get_instance()
-	di.from_dict(data)
+	ObjectHelpers.from_dict(di, data)
 	combat_data.global_receive_damage_or_heal(di)
 
 @rpc("authority", "call_local")
@@ -48,16 +48,12 @@ func rpc_die():
 	_global_die()
 
 func _init() -> void:
-	# combat_data = load("res://scenes/entity/combat_data/combat_data.tscn").instantiate()
-	# add_child(combat_data)
-	# print("_init Entity name: ", name, " combat_data.current_hp: ", combat_data.current_hp)
-	pass
+	combat_data = CombatData.new()
 
 func _ready():
 	collision_layer = 1
 	collision_mask = 1
 	movement_helper = MovementHelper.new(self)
-	combat_data.set_my_owner(self)
 	area_attack_shape.shape = area_attack_shape.shape.duplicate() # to avoid changing the original shape
 	_client_init()
 	call_deferred("_post_ready")
