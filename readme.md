@@ -60,12 +60,6 @@ Below are screenshots and images showing the progress of MooMoo LAN Party over t
 
 ### 📅 2024-06-13
 
--
-
-![](.images/image5.png)
-
-### 📅 2024-05-21
-
 - ✅ Implement camera movement with mouse (not fixed to player)
 - ✅ Move towards target when player wants to attack an enemy but is out of range.
 - ✅ Add life-stealing skill.
@@ -100,6 +94,17 @@ Below are screenshots and images showing the progress of MooMoo LAN Party over t
 
 ![](.images/image7.png)
 ![](.images/image8.png)
+
+### 📅 2024-05-21
+
+- Major improvements in pathfinding using AStarGrid2D.
+- Significant terrain design enhancements, adding trees and other decorations like cacti, plants, etc.
+- Created our own health bar.
+- Implemented the first stage of projectiles, currently arrows.
+- Implemented the initial melee and ranged attack system, including attack logic between enemies and players.
+- Created the first types of enemies.
+
+![](.images/image5.png)
 
 ### 📅 2024-05-15
 
