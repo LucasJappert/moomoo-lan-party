@@ -1,13 +1,11 @@
 class_name CombatData
 
-extends CombatStats
-
+extends Node
 
 @onready var combat_effect_node = $CombatEffectNode
 
-@export var base_hp: int = 100
+var stats: CombatStats = CombatStats.new()
 @export var current_hp: int = 100
-@export var base_mana: int = 100
 @export var current_mana: int = 100
 @export var attack_type := AttackTypes.MELEE
 @export var projectile_type: String = Projectile.TYPES.NONE
@@ -37,7 +35,7 @@ var last_damage_received_time: int = 0 # In milliseconds
 var latest_attacker: Entity
 
 func _ready() -> void:
-	initialize_default_values()
+	stats.initialize_default_values() # TODO: Review this... Why dont use get_default_instance()?
 	if multiplayer.is_server() == false:
 		set_process(false)
 
@@ -58,6 +56,10 @@ func _ready() -> void:
 
 # TODO: Improve this
 func _process(_delta: float):
+	if not my_owner(): return
+
+	try_physical_attack(_delta)
+
 	_try_to_add_effect_from_skills()
 
 	_actions_after_1_second(_delta)
@@ -86,13 +88,14 @@ func add_effect(p_effect: CombatEffect) -> void:
 			matching_effects.append(effect)
 
 	if current_stacks >= p_effect.max_stacks:
-		if not p_effect.keep_latest_stacks: return
+		if not p_effect.stats.keep_latest_stacks: return
 
 		matching_effects.sort_custom(func(a, b): return a._elapsed > b._elapsed) # Sort by _elapsed in descending order (oldest first)
 		var oldest_effect := matching_effects[0]
 		oldest_effect.delete_effect()
 
 	%CombatEffectSpawner.spawn(ObjectHelpers.to_dict(p_effect))
+	p_effect.queue_free()
 
 # TODO: Improve this get by creating a dictionary to quickly obtain active effects
 func get_effects() -> Array[CombatEffect]:
@@ -120,9 +123,10 @@ func _server_calculate_physical_damage(_target: Entity) -> void:
 	if _target == null: return
 
 	var critical_damage = 0
-	if GlobalsEntityHelpers.roll_chance(crit_chance):
-		critical_damage = get_total_stats().physical_attack_power * crit_multiplier
-	var total_damage = get_total_stats().physical_attack_power + critical_damage
+	var total_stats = get_total_stats()
+	if GlobalsEntityHelpers.roll_chance(total_stats.crit_chance):
+		critical_damage = total_stats.physical_attack_power * total_stats.crit_multiplier
+	var total_damage = total_stats.physical_attack_power + critical_damage
 	# print("Normal power: ", physical_attack_power, " Extra power: ", extra_power, " Total total_damage: ", total_damage)
 
 	var _di = DamageInfo.get_instance()
@@ -138,15 +142,16 @@ func _server_receive_physical_damage(_di: DamageInfo, _attacker: Entity) -> void
 	if my_owner().multiplayer.is_server() == false: return
 
 	# Evasion verification
-	if GlobalsEntityHelpers.roll_chance(get_total_stats().evasion):
+	var total_stats = get_total_stats()
+	if GlobalsEntityHelpers.roll_chance(total_stats.evasion):
 		# TODO: Crear un helper para enviar mensajes
 		var sm = ServerMessage.new("Dodge", Vector3(0, 0.5, 1))
 		my_owner().rpc("rpc_server_message", ObjectHelpers.to_dict(sm, true))
 		return
 
 	var damage_before_defense := _di.total_damage_heal
-	var reduced_damage := int(get_total_stats().physical_defense_percent * damage_before_defense)
-	_di.critical = _di.critical - int(get_total_stats().physical_defense_percent * _di.critical)
+	var reduced_damage := int(total_stats.physical_defense_percent * damage_before_defense)
+	_di.critical = _di.critical - int(total_stats.physical_defense_percent * _di.critical)
 	var total_damage: int = _di.total_damage_heal - reduced_damage
 	if total_damage < 0: total_damage = 0
 
@@ -196,18 +201,18 @@ func set_target(_target: Entity) -> void:
 # region GETTERs
 func get_skill(skill_name: String) -> Skill:
 	for skill in skills:
-		if skill.name == skill_name: return skill
+		if skill.skill_name == skill_name: return skill
 	return null
 
 func get_total_hp() -> int:
-	return base_hp + get_total_stats().hp
+	return get_total_stats().hp
 
 func get_total_mana() -> int:
-	return base_mana + get_total_stats().mana
+	return get_total_stats().mana
 
 func is_stunned() -> bool:
 	for effect in get_effects():
-		if effect.stun_duration > 0 && not effect.is_owner_friendly: return true
+		if effect.stats.stun_duration > 0 && not effect.is_owner_friendly: return true
 	return false
 
 func target_entity() -> Entity:
@@ -255,9 +260,9 @@ func _execute_physical_attack() -> void:
 		return _server_calculate_physical_damage(_target_entity)
 
 	Projectile.launch(my_owner(), _target_entity, get_total_stats().physical_attack_power)
-
-	
+		
 func can_physical_attack() -> bool:
+	if not my_owner().can_attack: return false
 	if my_owner().velocity != Vector2.ZERO: return false # If moving, can't attack
 	if is_stunned(): return false # If stunned, can't attack
 
@@ -289,9 +294,9 @@ func _try_to_add_effect_from_skills() -> void:
 		if skill.type != Skill.Type.PASSIVE: continue
 		if not skill.is_learned: continue
 		if not skill.apply_to_owner: continue
-		if get_effect(skill.name) != null: continue # Already has this effect
+		if get_effect(skill.skill_name) != null: continue # Already has this effect
 
-		var new_effect = CombatEffect.get_permanent_effect(skill.name, skill.get_combat_stats_instance())
+		var new_effect = CombatEffect.get_permanent_effect(skill.skill_name, skill.max_stacks, skill.stats)
 		new_effect.set_region_rect(skill.region_rect)
 		add_effect(new_effect)
 
@@ -327,18 +332,18 @@ func _apply_mana_regen(_stats: CombatStats) -> void:
 
 func get_total_stats() -> CombatStats:
 	# This function returns the total of all stats, including extras from effects and extras from attributes
-	var base_stats = get_total_stats_including_extras_by_attributes()
-	var stats_by_effects = _get_extra_stats_by_effects().get_total_stats_including_extras_by_attributes()
+	var _total_stats := CombatStats.new()
+	_total_stats.accumulate_combat_stats(stats.get_total_stats_including_extras_by_attributes())
+	_total_stats.accumulate_combat_stats(_get_extra_stats_by_effects().get_total_stats_including_extras_by_attributes())
 
-	var total_stats = base_stats.accumulate_combat_stats(stats_by_effects)
-	return total_stats
+	return _total_stats
 
 func _get_extra_stats_by_effects() -> CombatStats:
 	var extra_stats = CombatStats.new()
 	for effect in get_effects():
-		if effect.stun_duration > 0 && not effect.is_owner_friendly:
+		if effect.stats.stun_duration > 0 && not effect.is_owner_friendly:
 			continue # Do not add stun stats if it is an effect that is hostile to the owner
-		extra_stats.accumulate_combat_stats(effect.get_combat_stats_instance())
+		extra_stats.accumulate_combat_stats(effect.stats)
 	return extra_stats
 
 

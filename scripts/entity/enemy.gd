@@ -30,7 +30,6 @@ func _ready_for_server():
 	add_child(timer_500ms)
 
 func set_combat_data():
-	if combat_data == null: combat_data = CombatData.new()
 	match enemy_type:
 		EnemyTypes.FROST_REVENANT:
 			EnemyFactory.set_frost_revenant(self)
@@ -42,8 +41,8 @@ func set_combat_data():
 			print("Unknown enemy type: " + enemy_type)
 			return false
 
-	if combat_data.attack_range < CombatStats.MIN_ATTACK_RANGE:
-		combat_data.attack_range = CombatStats.MIN_ATTACK_RANGE
+	if combat_data.stats.attack_range < CombatStats.MIN_ATTACK_RANGE:
+		combat_data.stats.attack_range = CombatStats.MIN_ATTACK_RANGE
 	combat_data.current_hp = combat_data.get_total_hp()
 		
 	return true

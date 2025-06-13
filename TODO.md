@@ -133,14 +133,17 @@ MY TODOs: 🔵🟡✅
 - ✅ Check synchronization of sprite projectiles
 - ✅ Refactor spawn functions
 - ✅ Fix sprite on target panel
+- ✅ Remove extends Node from CombatStats. Free unused objects. Significant memory improvement.
+- ✅ Remove basemana and basehp and move them to stats.
+- ✅ Fix object synchronization for clients that join the room.
 - 🟡 Start implementing experience and leveling logic
 - 🟡 Start building ingame UI
 - 🟡 Set first hero types
 - 🟡 Start logic for strength, agility, and intelligence attributes
-- 🔵 Encapsular lógica de get/set
-- 🔵 Corregir sincronizacion de objetos para los clientes que se unen a la sala.
 - 🔵 Ver movimientos pegados a Moomoo
 - 🔵 Corregir ataque cuando se cambia el target mientras se ya esta atacando a uno
+- Agregar skill activo de rayo
+- Agregar items de pociones de hp (tres niveles, +1 regenera 200 de hp, +2 regenera 500 y +3 regenera 2000)
 - Agregar skill de velocidad de ataque de un 25%
 - Agregar skill de daño en area
 - Agregar skill de disparo multiple
@@ -156,4 +159,5 @@ MY TODOs: 🔵🟡✅
   Otra opción es crear unas 3 habilidades, y que los enemigos tendrían 3 de ellas asignadas aleatoriamente. De esta manera se podría crear una amplia variabilidad de combinaciones. Sumado a que cada enemigo tiene su tipo de ataque, su rango de ataque, velocidad de ataque, etc.
 - Agregar efectos de sangrado cada vez que una entidad recibo un daño
 - Agregar mas tipos de héroes. En esta primera etapa bastaría con 10 diferentes tipos con sus respectivas 4 habilidades y una ulti.
+- Encapsular lógica de get/set
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.

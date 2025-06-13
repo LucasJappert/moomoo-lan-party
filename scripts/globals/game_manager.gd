@@ -15,7 +15,7 @@ var MY_PLAYER_ID: int = -1
 var AM_I_HOST = false
 
 func _ready():
-	my_main = get_tree().root.get_node("MyMain")
+	my_main = get_tree().get_root().get_node("MyMain")
 	enemies_node = get_tree().root.get_node("MyMain/Enemies")
 	players_node = get_tree().root.get_node("MyMain/Players")
 	moomoo_node = get_tree().root.get_node("MyMain/Moomoo")
@@ -33,7 +33,8 @@ func _ready():
 
 	call_deferred("_init_projectiles_spawner")
 	call_deferred("_init_enemies_spawner")
-	call_deferred("_init_moomoo_spawner")
+	# call_deferred("_init_moomoo_spawner")
+	# my_main.moomoo_spawner.spawn_function = Callable(self, "_spawn_custom_moomoo")
 	
 
 func _init_projectiles_spawner() -> void:
@@ -45,8 +46,9 @@ func _init_enemies_spawner() -> void:
 		return Enemy.get_instance_from_dict(data)
 
 func _init_moomoo_spawner() -> void:
-	my_main.moomoo_spawner.spawn_function = func(data: Dictionary) -> Node:
-		return Moomoo.get_instance_from_dict(data)
+	my_main.moomoo_spawner.spawn_function = Callable(self, "_spawn_custom_moomoo")
+	# my_main.moomoo_spawner.spawn_function = func(data: Dictionary) -> Node:
+	# 	return Moomoo.get_instance_from_dict(data)
 
 func _process(delta: float) -> void:
 	CursorManager._static_process(delta)
@@ -55,6 +57,7 @@ func _process(delta: float) -> void:
 
 func add_enemy(enemy: Enemy) -> void:
 	my_main.enemies_spawner.spawn(ObjectHelpers.to_dict(enemy))
+	enemy.queue_free()
 
 func add_my_tree(my_tree: MyTree) -> void:
 	my_trees_node.add_child(my_tree, true)
@@ -97,9 +100,8 @@ func add_decoration(sprite: Sprite2D) -> void:
 	decorations.add_child(sprite, true)
 
 func spawn_moomoo() -> void:
-	moomoo = Moomoo.get_instance()
-	my_main.moomoo_spawner.spawn(ObjectHelpers.to_dict(moomoo))
-	MapManager.set_cell_blocked_from_world(GameManager.moomoo.global_position, true)
+	moomoo = GameManager.my_main.moomoo_spawner.spawn({})
+	print("Moomoo spawned: ", moomoo)
 
 # region 	SETTERs
 func set_my_player(player: Player) -> void:

@@ -1,11 +1,14 @@
+class_name GUI
+
 extends CanvasLayer
 
 @onready var my_tooltip = $MyTooltip
 
+static var SHOW_DEBUG_DATA = true
+
 var _ORIGINAL_BALL_SIZE: Vector2
 var _ORIGINAL_BALL_POS_Y: float
 var _ORIGINAL_BALL_RECT_POS_Y: float
-
 var reseted_gui := false
 
 
@@ -107,14 +110,10 @@ func _process(_delta: float) -> void:
 		return
 	if reseted_gui: reseted_gui = false
 
-
-	var fps := int(1.0 / _delta)
-	if fps < 40: $LabelFPS.text = "FPS ⚠️: %d " % fps
-	else: $LabelFPS.text = "FPS: %d" % fps
-
 	_update_panel_top_left()
-	_update_panel_bottom_left()
-	_update_panel_bottom_right()
+	_update_panel_bottom_left() # 3388 a 3427
+	_update_panel_bottom_right() # 3427 a 3453
+	_update_auxiliary_labels(_delta)
 
 
 # region	SETTERS
@@ -247,4 +246,45 @@ func _update_ball_sprite(ball_sprite: Sprite2D, current_value: int, max_value: i
 
 	ball_sprite.position.y = _ORIGINAL_BALL_POS_Y + crop_from_top
 
+func _update_auxiliary_labels(_delta: float) -> void:
+	if not SHOW_DEBUG_DATA: return
+	
+	# var fps := int(1.0 / _delta)
+	# if fps < 40: %LabelFPS.text = "FPS ⚠️: %d " % fps
+	# else: %LabelFPS.text = "FPS: %d" % fps
+	var mem_static_mb = Performance.get_monitor(Performance.MEMORY_STATIC) / (1024.0 * 1024.0)
+	var fps = Performance.get_monitor(Performance.TIME_FPS)
+	var frame_time = Performance.get_monitor(Performance.TIME_PROCESS)
+	var physics_time = Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS)
+	# var process_time = Performance.get_monitor(Performance.TIME_PROCESS)
+	var object_count = Performance.get_monitor(Performance.OBJECT_COUNT)
+	var node_count = Performance.get_monitor(Performance.OBJECT_NODE_COUNT)
+	var resource_count = Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT)
+	var draw_calls = Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
+	var vertices = Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)
+	var video_mem = Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / (1024.0 * 1024.0)
+	var tex_mem = Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED) / (1024.0 * 1024.0)
+	var buf_mem = Performance.get_monitor(Performance.RENDER_BUFFER_MEM_USED) / (1024.0 * 1024.0)
+
+	var text := """
+📊 Rendimiento:
+🔹 Memoria (estática): %.2f MB
+🔹 FPS: %.0f
+🔹 Frame Time: %.4fs
+🔹 Physics Time: %.4fs
+🔹 Objetos: %d
+🔹 Nodos: %d
+🔹 Recursos: %d
+🔹 Draw Calls: %d
+🔹 Primitivas: %d
+🔹 VRAM total: %.2f MB
+🔹 Texturas VRAM: %.2f MB
+🔹 Buffers VRAM: %.2f MB
+""" % [
+	mem_static_mb, fps, frame_time, physics_time,
+	object_count, node_count, resource_count,
+	draw_calls, vertices, video_mem, tex_mem, buf_mem
+]
+
+	%AuxiliaryLabel.text = text
 # endregion INTERNAL AUXILIARY METHODS

@@ -70,6 +70,7 @@ static func to_dict(obj: Object, just_my_vars: bool = false) -> Dictionary:
 		var is_explicit: bool = name == "name"
 		if is_storage or is_script_var or is_explicit:
 			dict[name] = obj.get(name)
+			
 	return dict
 
 

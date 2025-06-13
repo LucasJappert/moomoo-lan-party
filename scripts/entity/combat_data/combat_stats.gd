@@ -1,6 +1,7 @@
 class_name CombatStats
 
-extends Node
+# extends Node
+extends RefCounted
 
 const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapManager.TILE_SIZE.y, 2))) + 1
 
@@ -32,7 +33,6 @@ const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapM
 @export var intelligence: int = 0
 
 @export var is_owner_friendly: bool = true
-var max_stacks: int = 1
 var keep_latest_stacks: bool = true
 
 
@@ -70,7 +70,6 @@ func accumulate_combat_stats(stats: CombatStats) -> CombatStats:
 	hp_regeneration_points += stats.hp_regeneration_points
 	mana_regeneration_points += stats.mana_regeneration_points
 	is_owner_friendly = stats.is_owner_friendly
-	max_stacks = stats.max_stacks
 
 	agility += stats.agility
 	strength += stats.strength
@@ -116,7 +115,7 @@ static func get_extra_stats_by_intelligence(_int: int) -> CombatStats:
 
 static func get_extra_stats_by_agility(_agi: int) -> CombatStats:
 	var attr = CombatStats.new()
-	attr.attack_speed = _agi * 0.1
+	attr.attack_speed = _agi * 0.025
 	attr.evasion = _agi * 0.001 # 1000 of agility = 1 = 100% evasion
 	attr.physical_defense_percent = _agi * 0.001 # 1000 of agility = 1 = 100% defense
 	return attr

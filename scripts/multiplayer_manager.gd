@@ -38,8 +38,7 @@ func _add_player_to_game(id):
 		"player_id": id,
 		"hero_type": HeroTypes.IRON_VEX if id == 1 else HeroTypes.LIORA_SUNVEIL
 	}
-	var main = get_tree().get_root().get_node("MyMain")
-	var new_player = main.player_spawner.spawn(spawn_data)
+	var new_player = GameManager.my_main.player_spawner.spawn(spawn_data)
 	GameManager.add_entity(new_player)
 	print("Added player: " + new_player.name, " id: " + str(id))
 	print("Total players: " + str(GameManager.players_node.get_child_count()))

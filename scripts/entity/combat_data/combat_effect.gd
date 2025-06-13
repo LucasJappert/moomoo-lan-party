@@ -1,18 +1,18 @@
 class_name CombatEffect
 
-extends CombatStats
+extends Node
 
+const SCENE = preload("res://scenes/entity/combat_data/combat_effect.tscn")
 var effect_name: String
 var unique_name_node: String
 var is_permanent: bool = false
 @export var _duration: float # In seconds
 var _elapsed: float = 0.0
 var _region_rect: Rect2
-
+var max_stacks: int = 1
+var stats: CombatStats = CombatStats.new()
 
 const STUN_RECT_REGION := Rect2(0, 608, 32, 17)
-
-# Only executed on the server
 
 func _process(delta: float) -> void:
 	if is_permanent: return
@@ -27,7 +27,7 @@ func get_description() -> String:
 	if _duration > 0.0:
 		description += str("- Duration: ", StringHelpers.format_float(_duration), "s\n")
 
-	description += super.get_description()
+	description += stats.get_description()
 
 	description += str("- Max stacks: ", max_stacks, "\n")
 
@@ -49,27 +49,25 @@ func delete_effect() -> void:
 
 
 static func get_instance_from_dict(dict: Dictionary) -> CombatEffect:
-	const SCENE = preload("res://scenes/entity/combat_data/combat_effect.tscn")
 	var combat_effect = SCENE.instantiate()
 	ObjectHelpers.from_dict(combat_effect, dict)
 	return combat_effect
 
-static func _get_instance(p_name: String, duration: float, p_is_permanent: bool, stats: CombatStats = CombatStats.new()) -> CombatEffect:
-	const SCENE = preload("res://scenes/entity/combat_data/combat_effect.tscn")
+static func _get_instance(p_name: String, duration: float, p_is_permanent: bool, _max_stacks: int, _stats: CombatStats) -> CombatEffect:
 	var combat_effect = SCENE.instantiate()
-	combat_effect.accumulate_combat_stats(stats)
+	combat_effect.max_stacks = _max_stacks
+	if _stats: combat_effect.stats = _stats
 	combat_effect._duration = duration
 	combat_effect.is_permanent = p_is_permanent
 	combat_effect.unique_name_node = StringHelpers.unique_id()
 	combat_effect.effect_name = p_name
-	combat_effect.max_stacks = stats.max_stacks
 	return combat_effect
 
-static func get_permanent_effect(p_name: String, stats: CombatStats = CombatStats.new()) -> CombatEffect:
-	return _get_instance(p_name, 0.0, true, stats)
+static func get_permanent_effect(p_name: String, _max_stacks: int, _stats: CombatStats) -> CombatEffect:
+	return _get_instance(p_name, 0.0, true, _max_stacks, _stats)
 
-static func get_temporal_effect(p_name: String, duration: float, stats: CombatStats = CombatStats.new()) -> CombatEffect:
-	return _get_instance(p_name, duration, false, stats)
+static func get_temporal_effect(p_name: String, duration: float, _max_stacks: int, _stats: CombatStats) -> CombatEffect:
+	return _get_instance(p_name, duration, false, _max_stacks, _stats)
 
 static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _di: DamageInfo) -> void:
 	# Should be called only on the server
@@ -77,11 +75,10 @@ static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _d
 
 	# Stun verification, we need it after the evasion check
 	if GlobalsEntityHelpers.roll_chance(_attacker_stats.stun_chance):
-		var stats = CombatStats.new()
-		stats.stun_duration = _attacker_stats.stun_duration
-		stats.is_owner_friendly = false
-		var effect = CombatEffect.get_temporal_effect("Stun", stats.stun_duration, stats)
-		effect.max_stacks = 1
+		var _stats = CombatStats.new()
+		_stats.stun_duration = _attacker_stats.stun_duration
+		_stats.is_owner_friendly = false
+		var effect = CombatEffect.get_temporal_effect("Stun", _stats.stun_duration, 1, _stats)
 		effect.set_region_rect(CombatEffect.STUN_RECT_REGION)
 		_receiver.combat_data.add_effect(effect)
 

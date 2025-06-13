@@ -14,6 +14,7 @@ extends CharacterBody2D
 @onready var front_animations_node = $FrontAnimationsNode
 
 var sprite_heigth: float = 0
+var can_attack: bool = true
 
 var id: int = 0
 
@@ -47,9 +48,6 @@ func rpc_die():
 	print("Multiplayer: ", multiplayer.is_server())
 	_global_die()
 
-func _init() -> void:
-	combat_data = CombatData.new()
-
 func _ready():
 	collision_layer = 1
 	collision_mask = 1
@@ -74,7 +72,6 @@ func _set_area_attack_shape_radius() -> void:
 
 func _process(_delta: float) -> void:
 	EntityState._process(self)
-	combat_data.try_physical_attack(_delta)
 
 func _physics_process(_delta):
 	movement_helper.server_physics_process(_delta)

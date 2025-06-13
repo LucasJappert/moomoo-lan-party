@@ -20,6 +20,7 @@ func _process(_delta):
 	if GameManager.MY_PLAYER != null:
 		hovered_cell = MapManager.world_to_cell(MyMain.GLOBAL_MOUSE_POSITION)
 		
+		
 	queue_redraw()
 
 

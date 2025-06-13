@@ -3,6 +3,7 @@ class_name MyMain
 extends Node2D
 
 const PLAYER_SCENE = preload("res://scenes/entity/player_scene.tscn")
+# const MOOMOO_SCENE = preload("res://scenes/entity/moomoo_scene.tscn")
 
 static var GLOBAL_MOUSE_POSITION: Vector2 = Vector2.ZERO
 static var VIEWPORT_MOUSE_POSITION: Vector2 = Vector2.ZERO
@@ -25,6 +26,7 @@ func _ready() -> void:
 	MyCamera.create_camera()
 
 	call_deferred("_init_player_spawner")
+	call_deferred("_init_moomoo_spawner")
 
 	MyTree.spawn_trees()
 
@@ -47,3 +49,9 @@ func _spawn_custom(data: Dictionary) -> Node:
 	player.set_player(data)
 	player.get_client_inputs().set_multiplayer_authority(player.player_id)
 	return player
+	
+func _init_moomoo_spawner():
+	moomoo_spawner.spawn_function = Callable(self, "_spawn_custom_moomoo")
+	
+func _spawn_custom_moomoo(data: Dictionary = {}) -> Node:
+	return Moomoo.get_instance_from_dict(data)
