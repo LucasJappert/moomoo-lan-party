@@ -70,7 +70,7 @@ func _process(_delta: float):
 				if my_owner() is Player:
 					var nearest_enemy: Entity
 					nearest_enemy = GlobalsEntityHelpers.get_nearest_entity(my_owner().global_position, GameManager.get_enemies(), my_owner().area_vision_shape.shape.radius)
-					my_owner().combat_data.set_target(nearest_enemy)
+					my_owner().combat_data.set_target_entity(nearest_enemy)
 
 func my_owner() -> Entity:
 	if _my_owner: return _my_owner
@@ -188,14 +188,13 @@ func register_attacker(attacker: Entity) -> void:
 	latest_attacker = attacker
 	last_damage_received_time = Time.get_ticks_msec()
 
-func set_target(_target: Entity) -> void:
+func set_target_entity(_target: Entity) -> void:
 	# Used only by the server
+	if _target == _target_entity: return
+
 	target_entity_name = str(_target.name) if _target != null else ""
 	_target_entity = _target
 
-	if _target == null: return
-	
-	my_owner().movement_helper.update_path_to_entity(_target)
 # endregion
 
 # region GETTERs
@@ -215,7 +214,7 @@ func is_stunned() -> bool:
 		if effect.stats.stun_duration > 0 && not effect.is_owner_friendly: return true
 	return false
 
-func target_entity() -> Entity:
+func get_target_entity() -> Entity:
 	return GameManager.get_entity(target_entity_name)
 # endregion
 
@@ -226,10 +225,10 @@ func try_physical_attack(_delta: float) -> bool:
 	if my_owner().velocity != Vector2.ZERO: return false
 
 	# Priorize players over moomoo (only for enemies)
-	if _target_entity == GameManager.moomoo: set_target(_get_nearest_target_in_range_attack())
+	if _target_entity == GameManager.moomoo: set_target_entity(_get_nearest_target_in_range_attack())
 
-	if not GlobalsEntityHelpers.is_target_in_attack_area(my_owner(), _target_entity):
-		set_target(_get_nearest_target_in_range_attack())
+	if not GlobalsEntityHelpers.is_target_in_attack_range(my_owner(), _target_entity):
+		set_target_entity(_get_nearest_target_in_range_attack())
 
 	if _target_entity == null: return false
 
@@ -251,7 +250,7 @@ func _get_nearest_target_in_range_attack():
 		var nearest_player = GlobalsEntityHelpers.get_nearest_entity(start_pos, GameManager.get_players(), max_range)
 		if nearest_player: return nearest_player
 
-		if GlobalsEntityHelpers.is_target_in_attack_area(my_owner(), GameManager.moomoo): return GameManager.moomoo
+		if GlobalsEntityHelpers.is_target_in_attack_range(my_owner(), GameManager.moomoo): return GameManager.moomoo
 
 	return null
 

@@ -6,9 +6,9 @@ extends Node2D
 @export var solid_cell_color: Color = Color(1, 0, 0, 0.5)
 var hovered_cell: Vector2i
 const _DRAW_GRID := false
+const _DRAW_SOLID_CELLS := false
 const _PRINT_COORDINATES := false
 const _DRAW_PATHS := false
-const _DRAW_SOLID_CELLS := false
 const _DRAW_MOUSE_HOVERED_CELL := true
 
 func _ready():

@@ -34,11 +34,11 @@ func _on_right_click(mouse_position: Vector2):
 
 @rpc("authority", "call_local")
 func try_to_move(_target_cell: Vector2i):
-	# TODO: Review target_pos = target_cell
-	player.movement_helper.update_path(_target_cell)
+	player.movement_helper.set_target_cell(_target_cell)
 
 @rpc("authority", "call_local")
 func notify_to_server_the_right_click_on_entity(_target_entity_name: String):
 	# Always run in server
 	var target_entity = GameManager.entities[_target_entity_name]
-	player.combat_data.set_target(target_entity)
+	player.combat_data.set_target_entity(target_entity)
+	player.movement_helper.set_target_entity(target_entity)

@@ -136,13 +136,14 @@ MY TODOs: 🔵🟡✅
 - ✅ Remove extends Node from CombatStats. Free unused objects. Significant memory improvement.
 - ✅ Remove basemana and basehp and move them to stats.
 - ✅ Fix object synchronization for clients that join the room.
+- ✅ Fix stuck movements when near Moomoo
+- ✅ Correct attack when changing target while already attacking another one
 - 🟡 Start implementing experience and leveling logic
 - 🟡 Start building ingame UI
 - 🟡 Set first hero types
 - 🟡 Start logic for strength, agility, and intelligence attributes
-- 🔵 Ver movimientos pegados a Moomoo
 - 🔵 Ver problema de conexion de clientes a la sala desde la web
-- 🔵 Corregir ataque cuando se cambia el target mientras se ya esta atacando a uno
+- Permitir movimientos en diagonal cuando es posible
 - Agregar skill activo de rayo
 - Agregar items de pociones de hp (tres niveles, +1 regenera 200 de hp, +2 regenera 500 y +3 regenera 2000)
 - Agregar skill de velocidad de ataque de un 25%

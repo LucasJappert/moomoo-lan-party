@@ -267,24 +267,27 @@ func _update_auxiliary_labels(_delta: float) -> void:
 	var buf_mem = Performance.get_monitor(Performance.RENDER_BUFFER_MEM_USED) / (1024.0 * 1024.0)
 
 	var text := """
-📊 Rendimiento:
-🔹 Memoria (estática): %.2f MB
-🔹 FPS: %.0f
-🔹 Frame Time: %.4fs
-🔹 Physics Time: %.4fs
-🔹 Objetos: %d
-🔹 Nodos: %d
-🔹 Recursos: %d
-🔹 Draw Calls: %d
-🔹 Primitivas: %d
-🔹 VRAM total: %.2f MB
-🔹 Texturas VRAM: %.2f MB
-🔹 Buffers VRAM: %.2f MB
-""" % [
-	mem_static_mb, fps, frame_time, physics_time,
-	object_count, node_count, resource_count,
-	draw_calls, vertices, video_mem, tex_mem, buf_mem
-]
+	📊 Debug info:
+	🔹 My position: %s
+	🔹 Memory (static): %.2f MB
+	🔹 FPS: %.0f
+	🔹 Frame Time: %.4fs
+	🔹 Physics Time: %.4fs
+	🔹 Objects: %d
+	🔹 Nodes: %d
+	🔹 Resources: %d
+	🔹 Draw Calls: %d
+	🔹 Primitives: %d
+	🔹 Total VRAM: %.2f MB
+	🔹 Textures VRAM: %.2f MB
+	🔹 Buffers VRAM: %.2f MB
+	""" % [
+		MapManager.world_to_cell(GameManager.MY_PLAYER.global_position),
+		mem_static_mb, fps, frame_time, physics_time,
+		object_count, node_count, resource_count,
+		draw_calls, vertices, video_mem, tex_mem, buf_mem
+	]
+
 
 	%AuxiliaryLabel.text = text
 # endregion INTERNAL AUXILIARY METHODS

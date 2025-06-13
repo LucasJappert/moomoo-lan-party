@@ -19,7 +19,7 @@ func _post_ready(_entity: Entity):
 	my_owner = _entity
 	_is_moomoo = my_owner is Moomoo
 
-	# _label_container.visible = false
+	_label_container.visible = false
 	_label_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.text = my_owner.name

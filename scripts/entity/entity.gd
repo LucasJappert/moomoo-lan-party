@@ -74,7 +74,7 @@ func _process(_delta: float) -> void:
 	EntityState._process(self)
 
 func _physics_process(_delta):
-	movement_helper.server_physics_process(_delta)
+	movement_helper._physics_process(_delta) # we need this because movement_helper is not a child node
 	_client_physics_process(_delta)
 
 func _client_physics_process(_delta: float) -> void:
