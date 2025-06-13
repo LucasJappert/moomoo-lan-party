@@ -27,7 +27,7 @@
 			"name": "Launch: Both Instances",
 			"configurations": [
 				"GDScript: Instance 1",
-				// "GDScript: Instance 2"
+				"GDScript: Instance 2"
 			]
 		}
 	]
