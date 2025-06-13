@@ -100,15 +100,15 @@ MY TODOs: 🔵🟡✅
 - ✅ Comenzar a agregar algunos sonidos de hits, criticos, etc.
 - ✅ Ocultar barra de vida en enemigos si no reciben daño
 - ✅ Setear sprites por codigo en enemigos
-- ✅ Aplicar skills únicamente en enemigos bosses (4 bosses por oleada)
-- ✅ Implementar nuevos tipos de proyectiles
-- ✅ Criticos en color amarillo
-- ✅ Implementar sistema para agregar efectos en el tiempo (útiles para buffs, debuffs, etc). Clase CombatEffect.
-- ✅ Implementar skill de reducción de ataque y movimiento con freeze.
-- ✅ Ver bug de velocidad de ataque de mi pj cuando esta stuneado/frezeado varias veces
-- ✅ Implementar skill con chances de stun y su respectiva animación.
-- ✅ Revisar hover sobre enemigos y dar un color rojizo a los enemigos hovereados.
-- ✅ Detener movimiento y atacar cuando se hace click para atacar a un enemigo
+- ✅ Apply skills only on boss enemies (4 bosses per wave)
+- ✅ Implement new types of projectiles
+- ✅ Critical hits in yellow color
+- ✅ Implement system for adding effects over time (useful for buffs, debuffs, etc). Class CombatEffect.
+- ✅ Implement skill of reducing attack and movement with freeze.
+- ✅ Check bug of attack speed of my pj when it is stuned/frozen several times
+- ✅ Implement skill with chances of stun and its respective animation.
+- ✅ Review hover over enemies and give a reddish color to hovered enemies.
+- ✅ Stop movement and attack when clicking to attack an enemy
 - ✅ Implement camera movement with mouse (not fixed to player)
 - ✅ Move towards target when player wants to attack an enemy but is out of range.
 - ✅ Add life-stealing skill.
