@@ -4,33 +4,39 @@ extends Node
 
 static var camera: Camera2D # Store the camera
 static var _zoom_level := 1.3 # Initial zoom
-static var _zoom_step := 0.1 # Amount of zoom per scroll
+static var _zoom_step := 0.05 # Amount of zoom per scroll
 static var _zoom_min := 0.7 # Minimum zoom
 static var _zoom_max := 10.0 # Maximum zoom
+
+const _bounds := Rect2(-100, -500, 1600, 1600) # x, y, width, height
+const EDGE_MARGIN := 20
+const CAMERA_SPEED := 800.0 # px/seg
 
 static func set_screen_size():
 	var screen_size = DisplayServer.screen_get_size(0)
 
-	var new_width = int(screen_size.x * 0.4)
+	var new_width = int(screen_size.x * 0.7)
 	var new_height = int(new_width * 9.0 / 16.0)
 
 	DisplayServer.window_set_size(Vector2i(new_width, new_height))
 
 	var pos_x = screen_size.x - new_width
-	var pos_y = screen_size.y - new_height
+	var pos_y = 200
 	DisplayServer.window_set_position(Vector2i(pos_x, pos_y))
 
-static func create_camera(my_player: Player):
-	var new_camera = Camera2D.new()
-	MyCamera.camera = new_camera
+static func create_camera(spawn_position: Vector2 = Moomoo.SPAWN_POSITION):
+	MyCamera.camera = Camera2D.new()
 
-	new_camera.position = Vector2.ZERO
-	new_camera.zoom = Vector2.ONE * _zoom_level
+	MyCamera.camera.position = MapManager.cell_to_world(spawn_position)
 
-	my_player.add_child(new_camera)
+	MyCamera.camera.zoom = Vector2.ONE * _zoom_level
 
-	new_camera.make_current()
-	print("Camera added to player: " + str(my_player.name))
+	GameManager.add_child(MyCamera.camera)
+
+	MyCamera.camera.make_current()
+
+static func update_camera_position(pos: Vector2):
+	camera.position = pos
 
 static func try_update_zoom(event: InputEvent):
 	if camera == null:
@@ -43,4 +49,36 @@ static func try_update_zoom(event: InputEvent):
 	elif event.button_index == MOUSE_BUTTON_WHEEL_UP:
 		_zoom_level = min(_zoom_level + _zoom_step, _zoom_max)
 
+	snapped(_zoom_level, 0.001)
+
 	camera.zoom = Vector2.ONE * _zoom_level
+
+static func process(delta: float) -> void:
+	if not camera or GameManager.MY_PLAYER_ID < 0: return
+
+	var window_is_focused = DisplayServer.window_is_focused()
+	var window_is_minimized = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_MINIMIZED
+	if not window_is_focused or window_is_minimized: return
+
+	var window_is_maximized = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_MAXIMIZED
+
+	if window_is_focused && not window_is_maximized:
+		if MyMain.VIEWPORT_MOUSE_POSITION.x < 0 or MyMain.VIEWPORT_MOUSE_POSITION.x > MyMain.SCREEN_SIZE.x: return
+		if MyMain.VIEWPORT_MOUSE_POSITION.y < 0 or MyMain.VIEWPORT_MOUSE_POSITION.y > MyMain.SCREEN_SIZE.y: return
+
+	var direction := Vector2.ZERO
+
+	if MyMain.VIEWPORT_MOUSE_POSITION.x <= EDGE_MARGIN:
+		direction.x -= 1
+	elif MyMain.VIEWPORT_MOUSE_POSITION.x >= MyMain.SCREEN_SIZE.x - EDGE_MARGIN:
+		direction.x += 1
+
+	if MyMain.VIEWPORT_MOUSE_POSITION.y <= EDGE_MARGIN:
+		direction.y -= 1
+	elif MyMain.VIEWPORT_MOUSE_POSITION.y >= MyMain.SCREEN_SIZE.y - EDGE_MARGIN:
+		direction.y += 1
+
+	if direction == Vector2.ZERO: return
+	
+	camera.global_position += direction.normalized() * CAMERA_SPEED * delta
+	camera.global_position = camera.global_position.clamp(_bounds.position, _bounds.position + _bounds.size)

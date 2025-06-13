@@ -1,11 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://dh82ovsrtutto"]
+[gd_scene load_steps=19 format=3 uid="uid://dh82ovsrtutto"]
 
 [ext_resource type="Script" uid="uid://ki4w4rg4wu1r" path="res://scripts/entity/entity.gd" id="1_0bgvt"]
-[ext_resource type="Texture2D" uid="uid://1fiupmgkejum" path="res://assets/enemies/1.png" id="2_odnte"]
+[ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="3_8707b"]
 [ext_resource type="Script" uid="uid://d3sm32sl44mdm" path="res://scripts/entity/components/hud.gd" id="3_wjrb4"]
-[ext_resource type="SpriteFrames" uid="uid://ccusg0tasqe8s" path="res://assets/enemies/fire_mage.tres" id="4_odnte"]
 [ext_resource type="PackedScene" uid="uid://1myskyslafks" path="res://scenes/entity/combat_data/combat_data.tscn" id="5_wjrb4"]
 [ext_resource type="Script" uid="uid://gdkfgib81pvd" path="res://scripts/entity/components/area_hovered.gd" id="6_8707b"]
+[ext_resource type="Script" uid="uid://db742u3k35mx7" path="res://scripts/entity/components/front_animations_node.gd" id="6_os1up"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_odnte"]
 properties/0/path = NodePath(".:position")
@@ -14,15 +14,18 @@ properties/0/replication_mode = 2
 properties/1/path = NodePath(".:direction")
 properties/1/spawn = true
 properties/1/replication_mode = 2
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_wjrb4"]
-radius = 300.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_5ixpm"]
-radius = 16.0
+properties/2/path = NodePath(".:current_state")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:_boss_level")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath(".:level")
+properties/4/spawn = true
+properties/4/replication_mode = 1
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8707b"]
-bg_color = Color(0.109341, 0.109341, 0.109341, 1)
+bg_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
@@ -30,28 +33,60 @@ corner_radius_bottom_left = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_os1up"]
 bg_color = Color(0, 0.514293, 0.163191, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gchfm"]
-bg_color = Color(0.133333, 0.133333, 0.133333, 0)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+[sub_resource type="CircleShape2D" id="CircleShape2D_wjrb4"]
+radius = 300.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5ixpm"]
+radius = 16.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_idfl5"]
 radius = 32.0
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_os1up"]
-radius = 17.0
-height = 54.0
+[sub_resource type="AtlasTexture" id="AtlasTexture_t1n4x"]
+atlas = ExtResource("3_8707b")
+region = Rect2(512, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gvpxe"]
+atlas = ExtResource("3_8707b")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fmw7b"]
+atlas = ExtResource("3_8707b")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_os1up"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t1n4x")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gvpxe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fmw7b")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8707b"]
 radius = 2.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_os1up"]
+radius = 17.0
+height = 54.0
 
 [node name="Entity" type="CharacterBody2D"]
 script = ExtResource("1_0bgvt")
@@ -59,58 +94,51 @@ script = ExtResource("1_0bgvt")
 [node name="EntitySynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_odnte")
 
-[node name="AreaVision" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaVision"]
-shape = SubResource("CircleShape2D_wjrb4")
-debug_color = Color(100, 98.907, 100, 0)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_5ixpm")
-debug_color = Color(0, 0.6, 0.7, 0.052)
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-visible = false
-position = Vector2(1, -26)
-scale = Vector2(0.625, 0.625)
-texture = ExtResource("2_odnte")
-
 [node name="HUD" type="Node2D" parent="."]
 script = ExtResource("3_wjrb4")
 
 [node name="MyHealthBar" type="Node2D" parent="HUD"]
+position = Vector2(0, -52)
 
 [node name="BgBlack" type="Panel" parent="HUD/MyHealthBar"]
-offset_left = -31.0
-offset_top = -71.0
-offset_right = 31.0
-offset_bottom = -63.0
+offset_left = -20.0
+offset_top = -2.0
+offset_right = 22.0
+offset_bottom = 2.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_8707b")
 
 [node name="CurrentBar" type="Panel" parent="HUD/MyHealthBar"]
-offset_left = -30.0
-offset_top = -70.0
-offset_right = 30.0
-offset_bottom = -64.0
+offset_left = -19.0
+offset_top = -1.0
+offset_right = 21.0
+offset_bottom = 1.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_os1up")
 
-[node name="Border" type="Panel" parent="HUD/MyHealthBar"]
-offset_left = -31.0
-offset_top = -71.0
-offset_right = 31.0
-offset_bottom = -63.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_gchfm")
+[node name="DamagePopupContainer" type="Node2D" parent="HUD"]
+z_index = 3
+z_as_relative = false
+y_sort_enabled = true
 
-[node name="Label" type="Label" parent="HUD"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -27.0
-offset_top = 12.0
-offset_right = 27.0
-offset_bottom = 35.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="PanelContainer" type="PanelContainer" parent="HUD"]
+offset_left = -23.0
+offset_top = 13.0
+offset_right = 23.0
+offset_bottom = 36.0
+mouse_default_cursor_shape = 3
+
+[node name="Label" type="Label" parent="HUD/PanelContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="AreaVision" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaVision"]
+shape = SubResource("CircleShape2D_wjrb4")
+debug_color = Color(100, 98.9059, 100, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_5ixpm")
+debug_color = Color(0, 0.6, 0.7, 0.052)
 
 [node name="AreaAttack" type="Area2D" parent="."]
 
@@ -120,18 +148,8 @@ debug_color = Color(0.98, 0, 0.408, 0)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -24)
-sprite_frames = ExtResource("4_odnte")
-animation = &"walk"
-
-[node name="CombatData" parent="." instance=ExtResource("5_wjrb4")]
-
-[node name="AreaHovered" type="Area2D" parent="."]
-script = ExtResource("6_8707b")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaHovered"]
-position = Vector2(0, -19)
-shape = SubResource("CapsuleShape2D_os1up")
-debug_color = Color(1.92523e-07, 0.642713, 0.312982, 0.096)
+sprite_frames = SubResource("SpriteFrames_os1up")
+animation = &"idle"
 
 [node name="ProjectileZone" type="Area2D" parent="."]
 
@@ -139,3 +157,18 @@ debug_color = Color(1.92523e-07, 0.642713, 0.312982, 0.096)
 position = Vector2(0, -13)
 shape = SubResource("CircleShape2D_8707b")
 debug_color = Color(1, 1, 1, 0.054)
+
+[node name="CombatData" parent="." instance=ExtResource("5_wjrb4")]
+
+[node name="FrontAnimationsNode" type="Node2D" parent="."]
+script = ExtResource("6_os1up")
+
+[node name="AreaHovered" type="Area2D" parent="."]
+script = ExtResource("6_8707b")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaHovered"]
+light_mask = 4
+visibility_layer = 4
+position = Vector2(0, -19)
+shape = SubResource("CapsuleShape2D_os1up")
+debug_color = Color(1.92523e-07, 0.642713, 0.312982, 0.096)

@@ -1,20 +1,21 @@
-class_name Enemy
-
 extends Entity
 
+class_name Enemy
+
 @export var enemy_type: String
+static var _exp_when_dead: int = 0
 
 var timer_500ms: Timer
 
 func _ready():
 	super._ready()
 
-	EnemyFactory.set_combat_data_by_enemy_type(self)
+	set_combat_data()
+			
+	# if _boss_level == 0: combat_data.skills.clear() # Remove skills from non-boss enemies
 
 	# We need to update the radius of the attack area node here as it enters the scene
 	_set_area_attack_shape_radius()
-
-	mov_speed = 60
 
 	_ready_for_server()
 	
@@ -28,46 +29,49 @@ func _ready_for_server():
 	timer_500ms.timeout.connect(_on_every_timer_500ms)
 	add_child(timer_500ms)
 
+func set_combat_data():
+	match enemy_type:
+		EnemyTypes.FROST_REVENANT:
+			EnemyFactory.set_frost_revenant(self)
+		EnemyTypes.WARDEN_OF_DECAY:
+			EnemyFactory.set_warden_of_decay(self)
+		EnemyTypes.FLAME_CULTIST:
+			EnemyFactory.set_flame_cultist(self)
+		_:
+			print("Unknown enemy type: " + enemy_type)
+			return false
+
+	if combat_data.stats.attack_range < CombatStats.MIN_ATTACK_RANGE:
+		combat_data.stats.attack_range = CombatStats.MIN_ATTACK_RANGE
+	combat_data.current_hp = combat_data.get_total_hp()
+		
+	return true
 	
 func set_enemy_type(_enemy_type: String) -> void:
 	enemy_type = _enemy_type
 
-func _load_sprite():
-	# TODO: Load this assets from a new module Resources
-	sprite.frames = load("res://assets/enemies/" + enemy_type + ".tres")
-	pass
-
-func _process(_delta: float) -> void:
-	_server_process(_delta)
-
-func _server_process(_delta: float):
-	if not multiplayer.is_server():
-		return
-
-	combat_data._try_enemy_phisical_attack(_delta)
-
 func _on_every_timer_500ms():
-	_try_set_current_path()
+	var nearest_player = get_nearest_player_inside_vision()
+	movement_helper.try_set_current_path_for_enemy(nearest_player)
 
-func _try_set_current_path():
-	target_entity = _get_nearest_player_inside_vision()
+# region 	GETTERs
 
-	if target_entity == null:
-		target_entity = GameManager.moomoo
+static func get_instance_from_dict(dict: Dictionary) -> Enemy:
+	var instance = EnemyFactory.get_enemy_instance()
+	ObjectHelpers.from_dict(instance, dict)
+	return instance
+# endregion GETTERs
 
-	if target_entity == null:
-		return
+static func get_enemy_exp_when_dead() -> int:
+	if _exp_when_dead > 0: return _exp_when_dead
 
-	if GlobalsEntityHelpers.is_target_entity_in_attack_area(self):
-		current_path = []
-		return
+	var player_total_accumulated_exp: int = Player.get_total_accumulated_exp()
+	_exp_when_dead = int(player_total_accumulated_exp / float(EnemiesWavesController.TOTAL_ENEMIES_TO_CREATE))
 
-	var from_cell = MapManager.world_to_cell(target_pos if target_pos != null else global_position)
-	var to_cell = MapManager.world_to_cell(target_entity.global_position)
-	current_path = MapManager.find_path(from_cell, to_cell)
+	return _exp_when_dead
 
-func _get_nearest_player_inside_vision():
-	var closest_player: Node2D = null
+func get_nearest_player_inside_vision() -> Entity:
+	var closest_player: Entity
 	var closest_distance := INF
 
 	for player in GameManager.get_players():
@@ -80,6 +84,3 @@ func _get_nearest_player_inside_vision():
 			closest_player = player
 
 	return closest_player
-
-func _get_acceptable_distance():
-	return area_attack_shape.shape.radius + target_entity.collision_shape.shape.radius

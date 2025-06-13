@@ -92,15 +92,73 @@ This file tracks upcoming features and tasks in development. Contributions are w
 
 Let’s build MooMoo LAN Party together! 🐮
 
-MY TODOs:
+MY TODOs: 🔵🟡✅
 
 - ✅ Mejorar el mapa agregando árboles, cercas, etc.
 - ✅ Corregir movimientos en diagonal cuando en realidad no se deberia permitir si los tiles adyacentes estan bloqueados.
 - ✅ Agregar plantas sobre el terreno, como cactus, utilizando un unico atlas.
-- Agregar efectos de sangrado cada vez que una entidad recibo un daño
-- Comenzar con la interfaz de usuario ingame
+- ✅ Comenzar a agregar algunos sonidos de hits, criticos, etc.
+- ✅ Ocultar barra de vida en enemigos si no reciben daño
+- ✅ Setear sprites por codigo en enemigos
+- ✅ Apply skills only on boss enemies (4 bosses per wave)
+- ✅ Implement new types of projectiles
+- ✅ Critical hits in yellow color
+- ✅ Implement system for adding effects over time (useful for buffs, debuffs, etc). Class CombatEffect.
+- ✅ Implement skill of reducing attack and movement with freeze.
+- ✅ Check bug of attack speed of my pj when it is stuned/frozen several times
+- ✅ Implement skill with chances of stun and its respective animation.
+- ✅ Review hover over enemies and give a reddish color to hovered enemies.
+- ✅ Stop movement and attack when clicking to attack an enemy
+- ✅ Implement camera movement with mouse (not fixed to player)
+- ✅ Move towards target when player wants to attack an enemy but is out of range.
+- ✅ Add life-stealing skill.
+- ✅ Implement skills in enemies (also useful for heroes later)
+- ✅ Set sprites by code in heroes
+- ✅ Sync Moomoo
+- ✅ Start drawing the 4 abilities on the bottom bar
+- ✅ Start showing my player stats
+- ✅ Fix sprite position in enemies
+- ✅ Draw avatar in the left panel and the hero's name
+- ✅ Shift + click function to move to a tile
+- ✅ Fix clicks outside grid
+- ✅ Implement regeneration logic for health and mana
+- ✅ Add target avatar at the top left
+- ✅ Print FPS (drops below 60 when laptop is plugged in)
+- ✅ Move and attack target when out of range doing nothing.
+- ✅ Update my player's avatar and the entities being attacked.
+- ✅ Implement tooltip to show information when hovering over certain elements, such as skills.
+- ✅ Draw effects of my player
+- ✅ Draw effects of my target
+- ✅ Move to_dict and from_dict to a helper
+- ✅ Check synchronization of sprite projectiles
+- ✅ Refactor spawn functions
+- ✅ Fix sprite on target panel
+- ✅ Remove extends Node from CombatStats. Free unused objects. Significant memory improvement.
+- ✅ Remove basemana and basehp and move them to stats.
+- ✅ Fix object synchronization for clients that join the room.
+- 🟡 Start implementing experience and leveling logic
+- 🟡 Start building ingame UI
+- 🟡 Set first hero types
+- 🟡 Start logic for strength, agility, and intelligence attributes
+- 🔵 Ver movimientos pegados a Moomoo
+- 🔵 Ver problema de conexion de clientes a la sala desde la web
+- 🔵 Corregir ataque cuando se cambia el target mientras se ya esta atacando a uno
+- Agregar skill activo de rayo
+- Agregar items de pociones de hp (tres niveles, +1 regenera 200 de hp, +2 regenera 500 y +3 regenera 2000)
+- Agregar skill de velocidad de ataque de un 25%
+- Agregar skill de daño en area
+- Agregar skill de disparo multiple
+- Agregar skill que causa un x2 cuando el ataque es por la espalda del enemigo.
+- Agregar skill que cada 5 ataques regenera el 5% de la vida total a todos los aliados
+- Implementar animaciones varias como congelamiento, sangrado, sobre entidades
+- Implementar animaciones sobre tiles, como fuego, sanacion, congelamiento.
+- Configurar daños, hp, defensas, etc según el número de wave
 - Comenzar la escena para crear y unirse a salas
 - Agregar objetos mobiles sobre el terreno como plantas, bichos, nubes, etc.
+- Pruebas de multiclientes por el navegador
 - Agregar mas tipos de enemigos. El moomoo tendra unas 30 oleadas, cada oleada con 2 tipos de enemigos, entonces necesitariamos unos 60 tipos. Cada enemigo tendra 1 habilidad especial, pasiva o activa, por lo cual necesitaremos tambien unas 60 habilidades.
   Otra opción es crear unas 3 habilidades, y que los enemigos tendrían 3 de ellas asignadas aleatoriamente. De esta manera se podría crear una amplia variabilidad de combinaciones. Sumado a que cada enemigo tiene su tipo de ataque, su rango de ataque, velocidad de ataque, etc.
+- Agregar efectos de sangrado cada vez que una entidad recibo un daño
 - Agregar mas tipos de héroes. En esta primera etapa bastaría con 10 diferentes tipos con sus respectivas 4 habilidades y una ulti.
+- Encapsular lógica de get/set
+- Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.

@@ -24,9 +24,30 @@ static func initialize():
 			var cell = Vector2i(x, y)
 			_astar_grid.set_point_solid(cell, false)
 
+static func find_nearest_valid_point(target: Vector2i) -> Vector2i:
+	var closest_point := Vector2i.ZERO
+	var min_distance := INF
+
+	for y in range(grid_origin.y, grid_origin.y + grid_height):
+		for x in range(grid_origin.x, grid_origin.x + grid_width):
+			var point := Vector2i(x, y)
+			if _astar_grid.is_point_solid(point):
+				continue
+
+			var dist := target.distance_squared_to(point)
+			if dist < min_distance:
+				min_distance = dist
+				closest_point = point
+
+	return closest_point
+
 static func find_path(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
-	if not _astar_grid.is_in_boundsv(start) or not _astar_grid.is_in_boundsv(end):
-		return []
+	if not _astar_grid.is_in_boundsv(start): return []
+
+	# Adjust the destination point if it is out of the grid
+	if not _astar_grid.is_in_boundsv(end):
+		end = find_nearest_valid_point(end)
+
 	var path: Array[Vector2i] = _astar_grid.get_id_path(start, end, true)
 	if path.is_empty():
 		return []
@@ -39,6 +60,9 @@ static func world_to_cell(pos: Vector2) -> Vector2i:
 
 static func cell_to_world(cell: Vector2i) -> Vector2:
 	return Vector2(cell.x * TILE_SIZE.x + TILE_SIZE.x / 2, cell.y * TILE_SIZE.y + TILE_SIZE.y / 2)
+	
+static func cell_to_world_2i(cell: Vector2i) -> Vector2i:
+	return Vector2i(int(cell.x * TILE_SIZE.x + TILE_SIZE.x / 2), int(cell.y * TILE_SIZE.y + TILE_SIZE.y / 2))
 	
 static func set_cell_blocked(cell: Vector2i, blocked: bool):
 	if _astar_grid.is_in_boundsv(cell):

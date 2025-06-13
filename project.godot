@@ -17,24 +17,27 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+GameManager="*res://scripts/globals/game_manager.gd"
 MultiplayerManager="*res://scripts/multiplayer_manager.gd"
 KeyboardController="*res://scripts/globals/keyboard_controller.gd"
 AStarGridManager="*res://scripts/helpers/AStarGridManager.gd"
-GameManager="*res://scripts/globals/game_manager.gd"
+EventBus="*res://scripts/helpers/event_bus.gd"
 
 [display]
 
-window/size/viewport_width=1280
-window/size/viewport_height=720
+window/size/viewport_width=1920
+window/size/viewport_height=1080
 window/size/always_on_top=true
 window/stretch/mode="viewport"
+window/stretch/aspect="ignore"
 
 [file_customization]
 
 folder_colors={
 "res://assets/": "green",
 "res://scenes/": "purple",
-"res://scripts/": "blue"
+"res://scripts/": "blue",
+"res://sounds/": "orange"
 }
 
 [rendering]

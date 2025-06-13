@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://c1csmsd22qmft"]
+
+[ext_resource type="Script" uid="uid://cymd2dlfjm76a" path="res://scripts/GUI/components/gui_effects.gd" id="1_rpqu7"]
+[ext_resource type="PackedScene" uid="uid://b8an1mw28601v" path="res://scenes/GUI/gui_effect_scene.tscn" id="2_4mmvk"]
+
+[node name="GuiEffects" type="HBoxContainer"]
+custom_minimum_size = Vector2(100, 32)
+offset_right = 392.0
+offset_bottom = 32.0
+mouse_filter = 2
+theme_override_constants/separation = 4
+script = ExtResource("1_rpqu7")
+
+[node name="GuiEffectScene" parent="." instance=ExtResource("2_4mmvk")]
+layout_mode = 2
+
+[node name="GuiEffectScene2" parent="." instance=ExtResource("2_4mmvk")]
+layout_mode = 2

@@ -58,16 +58,48 @@ Built with ❤️ and cows by **Lucas Jappert** and the MooMoo LAN community.
 
 Below are screenshots and images showing the progress of MooMoo LAN Party over time. This section will be updated as new features and visuals are added.
 
-### 📅 2024-05-21
+### 📅 2024-06-13
 
-- Major improvements in pathfinding using AStarGrid2D.
-- Significant terrain design enhancements, adding trees and other decorations like cacti, plants, etc.
-- Created our own health bar.
-- Implemented the first stage of projectiles, currently arrows.
-- Implemented the initial melee and ranged attack system, including attack logic between enemies and players.
-- Created the first types of enemies.
+-
 
 ![](.images/image5.png)
+
+### 📅 2024-05-21
+
+- ✅ Implement camera movement with mouse (not fixed to player)
+- ✅ Move towards target when player wants to attack an enemy but is out of range.
+- ✅ Add life-stealing skill.
+- ✅ Implement skills in enemies (also useful for heroes later)
+- ✅ Set sprites by code in heroes
+- ✅ Sync Moomoo
+- ✅ Start drawing the 4 abilities on the bottom bar
+- ✅ Start showing my player stats
+- ✅ Fix sprite position in enemies
+- ✅ Draw avatar in the left panel and the hero's name
+- ✅ Shift + click function to move to a tile
+- ✅ Fix clicks outside grid
+- ✅ Implement regeneration logic for health and mana
+- ✅ Add target avatar at the top left
+- ✅ Print FPS (drops below 60 when laptop is plugged in)
+- ✅ Move and attack target when out of range doing nothing.
+- ✅ Update my player's avatar and the entities being attacked.
+- ✅ Implement tooltip to show information when hovering over certain elements, such as skills.
+- ✅ Draw effects of my player
+- ✅ Draw effects of my target
+- ✅ Move to_dict and from_dict to a helper
+- ✅ Check synchronization of sprite projectiles
+- ✅ Refactor spawn functions
+- ✅ Fix sprite on target panel
+- ✅ Remove extends Node from CombatStats. Free unused objects. Significant memory improvement.
+- ✅ Remove basemana and basehp and move them to stats.
+- ✅ Fix object synchronization for clients that join the room.
+- 🟡 Start implementing experience and leveling logic
+- 🟡 Start building ingame UI
+- 🟡 Set first hero types
+- 🟡 Start logic for strength, agility, and intelligence attributes
+
+![](.images/image7.png)
+![](.images/image8.png)
 
 ### 📅 2024-05-15
 

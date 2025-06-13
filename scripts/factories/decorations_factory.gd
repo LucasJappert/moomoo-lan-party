@@ -27,7 +27,7 @@ static func add_random_decorations(start: Vector2i, grid_size: Vector2i, get_cel
 	var random_sample := Utilities.get_random_sample(cells, sample_fraction)
 	for cell in random_sample:
 		var sprite = _create_decoration_sprite(decoration_types[randi_range(0, decoration_types.size() - 1)])
-		sprite.global_position = MapManager.cell_to_world(cell) + Vector2(randi_range(-16, 16), randi_range(-16, 16))
+		sprite.global_position = MapManager.cell_to_world_2i(cell) + Vector2i(randi_range(-16, 16), randi_range(-16, 16))
 		sprite.flip_h = randi() % 2 == 0
 		GameManager.add_decoration(sprite)
 

@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dkipwvhrhwoqt"]
 
-[ext_resource type="Texture2D" uid="uid://7bivb8pijf4n" path="res://assets/bg-moomoo.png" id="1_4vrcr"]
+[ext_resource type="Texture2D" uid="uid://byue2qc2jec2t" path="res://assets/bg-moomoo6.png" id="1_4vrcr"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pswtb"]
 
@@ -24,15 +24,15 @@ offset_bottom = 720.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_pswtb")
 
 [node name="Bg-moomoo" type="Sprite2D" parent="Panel"]
-position = Vector2(639.779, 359.875)
-scale = Vector2(0.844439, 0.703369)
+position = Vector2(640, 360)
+scale = Vector2(0.833333, 0.703125)
 texture = ExtResource("1_4vrcr")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-offset_left = 488.0
-offset_top = 197.0
-offset_right = 737.0
-offset_bottom = 321.0
+offset_left = 18.0
+offset_top = 15.0
+offset_right = 267.0
+offset_bottom = 139.0
 
 [node name="ButtonCreateRoom" type="Button" parent="VBoxContainer"]
 layout_mode = 2
