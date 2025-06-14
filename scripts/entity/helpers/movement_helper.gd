@@ -7,11 +7,15 @@ var _target_cell
 var current_path: Array[Vector2i] = []
 var current_cell = null
 var _attack_mode_mode = false
+var _can_move := true
 
 func _init(p_owner: Entity):
 	my_owner = p_owner
+	if my_owner is Moomoo: _can_move = false
+
 
 func _physics_process(_delta: float) -> void:
+	if not _can_move: return
 	if not GameManager.AM_I_HOST: return
 
 	_try_to_move(_delta)
@@ -51,7 +55,9 @@ func set_target_cell(target_cell: Vector2i) -> void:
 	update_path()
 
 func update_path() -> void:
-	if _target_cell == null && _target_entity == null: return _clean_movements()
+	if _target_cell == null && _target_entity == null:
+		if my_owner.combat_data.latest_attacker == null: return _clean_movements()
+		set_target_entity(my_owner.combat_data.latest_attacker)
 
 	var from_pos = current_target_pos if current_target_pos else my_owner.global_position
 	var from_cell = MapManager.world_to_cell(from_pos)

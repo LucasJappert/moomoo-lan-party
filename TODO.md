@@ -142,7 +142,6 @@ MY TODOs: 🔵🟡✅
 - 🟡 Start building ingame UI
 - 🟡 Set first hero types
 - 🟡 Start logic for strength, agility, and intelligence attributes
-- 🔵 Ver problema de conexion de clientes a la sala desde la web
 - Mantener relacion aspecto de 16:9
 - Permitir movimientos en diagonal cuando es posible
 - Agregar skill activo de rayo
