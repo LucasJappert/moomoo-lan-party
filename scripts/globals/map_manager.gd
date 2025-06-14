@@ -1,6 +1,7 @@
 class_name MapManager
 
-const TILE_SIZE: Vector2 = Vector2(32, 32)
+const TILE_SIZE_INT: int = 32
+const TILE_SIZE: Vector2 = Vector2(TILE_SIZE_INT, TILE_SIZE_INT)
 const PLAYER_CELL_SPAWN: Vector2i = Vector2i(20, 12)
 
 const grid_width: int = 56
@@ -15,7 +16,7 @@ static func initialize():
 	_astar_grid.cell_size = TILE_SIZE
 	_astar_grid.offset = Vector2(grid_origin.x * TILE_SIZE.x, grid_origin.y * TILE_SIZE.y) # ← 🔥 clave
 	_astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
-	_astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
+	_astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ALWAYS
 
 	_astar_grid.update()
 
@@ -54,6 +55,69 @@ static func find_path(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
 		
 	path.remove_at(0) # Remove start from path
 	return path
+
+static var counter: int = 0
+
+static func my_find_path(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
+	var now = Time.get_ticks_msec()
+	counter += 1
+	print("counter: ", counter)
+	if not _astar_grid.is_in_boundsv(start) or not _astar_grid.is_in_boundsv(end):
+		return []
+
+	var open_set: Array[Vector2i] = [start]
+	var came_from := {}
+	var g_score := {}
+	var f_score := {}
+	g_score[start] = 0
+	f_score[start] = start.distance_to(end)
+
+	while not open_set.is_empty():
+		open_set.sort_custom(func(a, b): return f_score.get(a, INF) < f_score.get(b, INF))
+		var current: Vector2i = open_set.pop_front()
+
+		if current == end:
+			var path: Array[Vector2i] = [current]
+			while came_from.has(current):
+				current = came_from[current]
+				path.push_front(current)
+			path.remove_at(0) # opcional: quitar el punto de partida
+			return path
+
+		for neighbor in _get_walkable_neighbors(current):
+			var tentative_g = g_score.get(current, INF) + (1.0 if abs(current.x - neighbor.x) + abs(current.y - neighbor.y) == 1 else 1.4)
+			if tentative_g < g_score.get(neighbor, INF):
+				came_from[neighbor] = current
+				g_score[neighbor] = tentative_g
+				f_score[neighbor] = tentative_g + neighbor.distance_to(end)
+				if not neighbor in open_set:
+					open_set.append(neighbor)
+
+	print("Time: ", Time.get_ticks_msec() - now)
+	return []
+
+static func _get_walkable_neighbors(cell: Vector2i) -> Array[Vector2i]:
+	var directions = [
+		Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), # cardinales
+		Vector2i(1, -1), Vector2i(1, 1), Vector2i(-1, 1), Vector2i(-1, -1) # diagonales
+	]
+
+	var neighbors: Array[Vector2i] = []
+	for dir in directions:
+		var neighbor = cell + dir
+		if not _astar_grid.is_in_boundsv(neighbor) or is_cell_blocked(neighbor):
+			continue
+
+		if abs(dir.x) == 1 and abs(dir.y) == 1:
+			var ortho1 = cell + Vector2i(dir.x, 0)
+			var ortho2 = cell + Vector2i(0, dir.y)
+			if is_cell_blocked(ortho1) and is_cell_blocked(ortho2):
+				continue
+
+		neighbors.append(neighbor)
+
+	return neighbors
+
 
 static func world_to_cell(pos: Vector2) -> Vector2i:
 	return Vector2i(floor(pos.x / TILE_SIZE.x), floor(pos.y / TILE_SIZE.y))

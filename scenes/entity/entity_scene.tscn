@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dh82ovsrtutto"]
+[gd_scene load_steps=21 format=3 uid="uid://dh82ovsrtutto"]
 
 [ext_resource type="Script" uid="uid://ki4w4rg4wu1r" path="res://scripts/entity/entity.gd" id="1_0bgvt"]
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="3_8707b"]
@@ -84,6 +84,21 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_8707b"]
 radius = 2.0
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_8707b"]
+atlas = ExtResource("3_8707b")
+region = Rect2(192, 640, 64, 96)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gchfm"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8707b")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_os1up"]
 radius = 17.0
 height = 54.0
@@ -162,6 +177,9 @@ debug_color = Color(1, 1, 1, 0.054)
 
 [node name="FrontAnimationsNode" type="Node2D" parent="."]
 script = ExtResource("6_os1up")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="FrontAnimationsNode"]
+sprite_frames = SubResource("SpriteFrames_gchfm")
 
 [node name="AreaHovered" type="Area2D" parent="."]
 script = ExtResource("6_8707b")

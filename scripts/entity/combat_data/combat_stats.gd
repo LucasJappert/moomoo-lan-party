@@ -32,6 +32,8 @@ const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapM
 @export var strength: int = 0
 @export var intelligence: int = 0
 
+var custom_damage_heal: CustomDamageHeal = CustomDamageHeal.new()
+
 @export var is_owner_friendly: bool = true
 var keep_latest_stacks: bool = true
 
@@ -47,6 +49,7 @@ static func get_default_instance() -> CombatStats:
 	return attr
 
 func accumulate_combat_stats(stats: CombatStats) -> CombatStats:
+	custom_damage_heal.accumulate_props(stats.custom_damage_heal)
 	hp += stats.hp
 	mana += stats.mana
 	physical_defense_percent += stats.physical_defense_percent

@@ -31,6 +31,6 @@ static func start_wave() -> void:
 			var is_boss = (i == ENEMIES_BY_ZONE - 1)
 			enemy._boss_level = _wave_number if is_boss else 0
 				
-			# enemy.can_attack = false
+			enemy.can_attack = false
 			GameManager.add_enemy(enemy)
-			# return
+			return

@@ -15,7 +15,7 @@ func _ready():
 
 func _on_mouse_entered():
 	if not skill: return
-	GameManager.show_tooltip(skill.skill_name, skill.description)
+	GameManager.show_tooltip(skill.skill_name, skill.get_description())
 
 func _on_mouse_exited():
 	if not skill: return

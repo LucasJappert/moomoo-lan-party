@@ -1,7 +1,5 @@
 class_name Skill
 
-enum Type {ACTIVE, PASSIVE}
-
 const Names = {
 	SHIELDED_CORE = "Shielded Core", # ✅
 	BLESSING_OF_POWER = "Blessing of Power", # ✅
@@ -9,6 +7,7 @@ const Names = {
 	MIRROR_DEMISE = "Mirror Demise", # ✅
 	FROZEN_TOUCH = "Frozen Touch", # ✅
 	STUNNING_STRIKE = "Stunning Strike", # ✅
+	STORM_STRIKE = "Storm Strike", # ✅
 	MANA_SCORCHER = "Mana Scorcher",
 	DIVINE_SHIELD = "Divine Shield",
 	ENERGY_ABSORPTION = "Energy Absorption",
@@ -43,27 +42,33 @@ const frame_size = 64
 const _ATLAS_START_POS = Vector2(0, 1632)
 
 var skill_name: String
-var type: Type = Type.ACTIVE
-var cooldown: float = 0
-var mana_cost: float = 0
+var type: String = SkillType.PASSIVE
+var cooldown: float = 0 # In seconds
+var mana_cost: int = 0
 var description: String = ""
 var is_learned: bool = true
 var apply_to_owner: bool = true
 var max_stacks: int = 1
 var stats: CombatStats = CombatStats.new()
+var damage_type: String = DamageType.PHYSICAL
+var max_targets: int = 1
 
 var region_rect: Rect2 = Rect2()
+var _last_used_time: float = - INF
 
-func _init(_name: String, _type: Type):
+func _init(_name: String = "", _type: String = SkillType.PASSIVE):
 	skill_name = _name
 	type = _type
 
 static func initialize_skills() -> void:
-	var aux_skill_name = Names.SHIELDED_CORE
+	var aux_skill_name = ""
 	var aux_text: String
 	var aux_text1: String
 	var _skill: Skill
-	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, Skill.Type.PASSIVE)
+
+	# region SKILL SHIELDED_CORE
+	aux_skill_name = Names.SHIELDED_CORE
+	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
 	_skill = _SKILLS[aux_skill_name]
 	_skill.region_rect = Rect2(0 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_skill.max_stacks = 1
@@ -72,9 +77,11 @@ static func initialize_skills() -> void:
 	_skill.stats.physical_defense_percent = 0.3
 	aux_text = StringHelpers.format_percent(_skill.stats.magic_defense_percent)
 	_skill.description = "Reduces magic and physical defense by " + aux_text
+	# endregion
 
+	# region SKILL BLESSING_OF_POWER
 	aux_skill_name = Names.BLESSING_OF_POWER
-	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, Skill.Type.PASSIVE)
+	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
 	_skill = _SKILLS[aux_skill_name]
 	_skill.region_rect = Rect2(1 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_skill.max_stacks = 1
@@ -82,15 +89,19 @@ static func initialize_skills() -> void:
 	_skill.stats.physical_attack_power_percent = 0.25
 	aux_text = StringHelpers.format_percent(_skill.stats.physical_attack_power_percent)
 	_skill.description = "Increases physical attack power by " + aux_text
+	# endregion
 
+	# region SKILL MIRROR_DEMISE
 	aux_skill_name = Names.MIRROR_DEMISE
-	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, Skill.Type.PASSIVE)
+	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
 	_skill = _SKILLS[aux_skill_name]
 	_skill.region_rect = Rect2(2 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_skill.description = "Upon death, splits into 4 copies with half the original HP."
+	# endregion
 
+	# region SKILL FROZEN_TOUCH
 	aux_skill_name = Names.FROZEN_TOUCH
-	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, Skill.Type.PASSIVE)
+	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
 	_skill = _SKILLS[aux_skill_name]
 	_skill.region_rect = Rect2(3 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_skill.apply_to_owner = false
@@ -101,9 +112,11 @@ static func initialize_skills() -> void:
 	aux_text = StringHelpers.format_percent(_skill.stats.attack_speed_percent)
 	aux_text1 = StringHelpers.format_float(_skill.stats.freeze_duration)
 	_SKILLS[aux_skill_name].description = "The attacker's icy touch partially freezes the target, reducing their movement and attack speed by " + aux_text + " for " + aux_text1 + " seconds."
+	# endregion
 
+	# region SKILL STUNNING_STRIKE
 	aux_skill_name = Names.STUNNING_STRIKE
-	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, Skill.Type.PASSIVE)
+	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
 	_skill = _SKILLS[aux_skill_name]
 	_skill.region_rect = Rect2(4 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_skill.apply_to_owner = false
@@ -113,31 +126,94 @@ static func initialize_skills() -> void:
 	aux_text = StringHelpers.format_percent(_skill.stats.stun_chance)
 	aux_text1 = StringHelpers.format_float(_skill.stats.stun_duration)
 	_SKILLS[aux_skill_name].description = "Has a " + aux_text + " chance to stun the target for " + aux_text1 + " seconds."
+	# endregion
 
+	# region SKILL LIFESTEAL
 	aux_skill_name = Names.LIFESTEAL
-	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, Skill.Type.PASSIVE)
+	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
 	_skill = _SKILLS[aux_skill_name]
 	_skill.region_rect = Rect2(5 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_skill.apply_to_owner = true
 	_skill.stats.life_steal_percent = 0.2
 	aux_text = StringHelpers.format_percent(_skill.stats.life_steal_percent)
 	_skill.description = "Steals " + aux_text + " of dealt damage as life."
+	# endregion
+
+	# region SKILL STORM_STRIKE
+	aux_skill_name = Names.STORM_STRIKE
+	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.ACTIVE)
+	_skill = _SKILLS[aux_skill_name]
+	_skill.mana_cost = 20
+	_skill.cooldown = 2
+	_skill.region_rect = Rect2(_ATLAS_START_POS.x + frame_size * 0, _ATLAS_START_POS.y + frame_size * 1, frame_size, frame_size)
+	_skill.apply_to_owner = false
+	_skill.stats.custom_damage_heal.base_damage_heal = 30
+	_skill.stats.custom_damage_heal.extra_value_by_intelligence = 0.2
+	_skill.damage_type = DamageType.MAGIC
+	_skill.max_targets = 5
+	aux_text = StringHelpers.format_float(_skill.stats.custom_damage_heal.base_damage_heal)
+	aux_text1 = StringHelpers.format_percent(_skill.stats.custom_damage_heal.extra_value_by_intelligence)
+	_skill.description = "Calls down a bolt of arcane lightning, dealing " + aux_text + " base magic damage, plus an additional " + aux_text1 + " of the caster's total Intelligence to multiple targets."
+	# endregion
 
 # region :::::::::::::::::::: GETTERs
 
-static func get_skill(_skill_name: String) -> Skill:
+static func get_skill(_skill_name: String, new_copy: bool = true) -> Skill:
 	if _SKILLS.is_empty(): initialize_skills()
 	
-	return _SKILLS[_skill_name]
+	if not new_copy: return _SKILLS[_skill_name]
+
+	return ObjectHelpers.deep_clone(_SKILLS[_skill_name]) as Skill
 
 static func get_mana_scorcher() -> Skill:
-	var skill = Skill.new(Names.MANA_SCORCHER, Skill.Type.ACTIVE)
+	var skill = Skill.new(Names.MANA_SCORCHER, SkillType.ACTIVE)
 	skill.description = "Burns 50% of the target's mana, dealing 25% of that as physical damage."
 	return skill
+
+func get_description() -> String:
+	var result = description + "\n"
+	
+	if mana_cost > 0:
+		result += str("- Mana cost: ", mana_cost, "\n")
+
+	if cooldown > 0.0:
+		result += str("- Cooldown: ", StringHelpers.format_float(cooldown), "s\n")
+
+	if max_targets > 1:
+		result += "- Max targets: " + str(max_targets) + "\n"
+
+	if max_stacks > 1:
+		result += "- Max stacks: " + str(max_stacks) + "\n"
+
+	result += "- Damage type: " + damage_type + "\n"
+
+	return result
+
+func can_use(my_owner: Entity) -> bool:
+	if not is_learned: return false
+	if my_owner.combat_data.current_mana < mana_cost: return false
+
+	var now := Time.get_ticks_msec() / 1000.0
+	return (now - _last_used_time) >= cooldown
+
+func get_remaining_cooldown() -> float:
+	var now := Time.get_ticks_msec() / 1000.0
+	var elapsed := now - _last_used_time
+	return max(0.0, cooldown - elapsed)
+
 # endregion ................. GETTERs
 
-# region :::::::::::::::::::: SKILLS LOGICS
 
+# region :::::::::::::::::::: SETTERs
+
+func use(my_owner: Entity, target_entity: Entity) -> void:
+	if not can_use(my_owner): return
+
+	_last_used_time = Time.get_ticks_msec() / 1000.0
+
+	if skill_name == Names.STORM_STRIKE: _apply_storm_strike(my_owner, target_entity)
+# endregion ................. SETTERs
+# region :::::::::::::::::::: SKILLS LOGICS
 static func actions_before_entity_death(_dead_entity: Entity, _attacker: Entity) -> void:
 	if not _dead_entity is Enemy: return
 	if _dead_entity.replicated: return
@@ -159,7 +235,6 @@ static func actions_before_entity_death(_dead_entity: Entity, _attacker: Entity)
 			new_enemy.combat_data.current_hp = new_enemy.combat_data.stats.hp
 			GameManager.add_enemy(new_enemy)
 
-
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
 	# Should be called only on the server
 	# Freeze verification
@@ -170,8 +245,30 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 		effect.stats.is_owner_friendly = false
 		effect.set_region_rect(_attacker_frozen_skill.region_rect)
 		_target.combat_data.add_effect(effect)
-# endregion .................... SKILLS LOGICS
 
+func _apply_storm_strike(_attacker: Entity, _target: Entity) -> void:
+	var attacker_stats = _attacker.combat_data.get_total_stats()
+	var total_damage_heal = stats.custom_damage_heal.get_total_damage_heal(attacker_stats.agility, attacker_stats.strength, attacker_stats.intelligence)
+
+	var targets = [_target]
+	var enemies = GameManager.get_enemies()
+	targets.append_array(GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, max_targets - 1, enemies, MapManager.TILE_SIZE_INT * 6))
+
+	for target in targets:
+		var _di := DamageInfo.new(total_damage_heal, damage_type)
+		var critical_damage = _attacker.combat_data.try_critical_hit(total_damage_heal)
+		var total_damage = total_damage_heal + critical_damage
+
+		_di.total_damage_heal = total_damage
+		_di.critical = critical_damage
+		_di.projectile_type = Projectile.TYPES.NONE
+		_di.damage_type = DamageType.MAGIC
+		_di.attacker_name = _attacker.name
+
+		_target.combat_data._server_receive_damage(_di, _attacker)
+
+
+# endregion .................... SKILLS LOGICS
 # Skill("Mana Scorcher", "Active", 40, 8, "Burns 50% of the target's mana, dealing 25% of that as physical damage."),
 # Skill("Divine Shield", "Active", 60, 12, "Summons a divine shield making the caster immune to all damage for 5 seconds."),
 # Skill("Energy Absorption", "Active", 50, 10, "Creates a shield that absorbs 25% of incoming damage and releases it in an area after 5 seconds."),

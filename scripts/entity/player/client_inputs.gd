@@ -16,12 +16,11 @@ func _process(_delta: float) -> void:
 
 func _unhandled_input(event):
 	if event is InputEventMouseButton and event.pressed:
+		var mouse_position = player.get_global_mouse_position()
 		if event.button_index == MOUSE_BUTTON_RIGHT:
-			var mouse_position = player.get_global_mouse_position()
 			_on_right_click(mouse_position)
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			var mouse_position = player.get_global_mouse_position()
-			print("Client left_click_mouse_pos: ", mouse_position)
+			_on_left_click(mouse_position)
 
 
 func _on_right_click(mouse_position: Vector2):
@@ -30,6 +29,12 @@ func _on_right_click(mouse_position: Vector2):
 
 	var _target_cell = MapManager.world_to_cell(mouse_position)
 	rpc_id(1, "try_to_move", _target_cell)
+
+func _on_left_click(mouse_position: Vector2):
+	print("Client left_click_mouse_pos: ", mouse_position)
+	if not AreaHovered.hovered_entity is Enemy: return
+
+	rpc_id(1, "notify_to_server_the_left_click_on_entity", AreaHovered.hovered_entity.name)
 
 
 @rpc("authority", "call_local")
@@ -42,3 +47,10 @@ func notify_to_server_the_right_click_on_entity(_target_entity_name: String):
 	var target_entity = GameManager.entities[_target_entity_name]
 	player.combat_data.set_target_entity(target_entity)
 	player.movement_helper.set_target_entity(target_entity)
+	
+@rpc("authority", "call_local")
+func notify_to_server_the_left_click_on_entity(_target_entity_name: String):
+	# Always run in server
+	var target_entity = GameManager.entities[_target_entity_name]
+	player.combat_data.set_target_entity(target_entity)
+	player.combat_data.skills[0].use(player, target_entity)

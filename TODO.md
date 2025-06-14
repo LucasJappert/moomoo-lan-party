@@ -94,56 +94,6 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- ✅ Mejorar el mapa agregando árboles, cercas, etc.
-- ✅ Corregir movimientos en diagonal cuando en realidad no se deberia permitir si los tiles adyacentes estan bloqueados.
-- ✅ Agregar plantas sobre el terreno, como cactus, utilizando un unico atlas.
-- ✅ Comenzar a agregar algunos sonidos de hits, criticos, etc.
-- ✅ Ocultar barra de vida en enemigos si no reciben daño
-- ✅ Setear sprites por codigo en enemigos
-- ✅ Apply skills only on boss enemies (4 bosses per wave)
-- ✅ Implement new types of projectiles
-- ✅ Critical hits in yellow color
-- ✅ Implement system for adding effects over time (useful for buffs, debuffs, etc). Class CombatEffect.
-- ✅ Implement skill of reducing attack and movement with freeze.
-- ✅ Check bug of attack speed of my pj when it is stuned/frozen several times
-- ✅ Implement skill with chances of stun and its respective animation.
-- ✅ Review hover over enemies and give a reddish color to hovered enemies.
-- ✅ Stop movement and attack when clicking to attack an enemy
-- ✅ Implement camera movement with mouse (not fixed to player)
-- ✅ Move towards target when player wants to attack an enemy but is out of range.
-- ✅ Add life-stealing skill.
-- ✅ Implement skills in enemies (also useful for heroes later)
-- ✅ Set sprites by code in heroes
-- ✅ Sync Moomoo
-- ✅ Start drawing the 4 abilities on the bottom bar
-- ✅ Start showing my player stats
-- ✅ Fix sprite position in enemies
-- ✅ Draw avatar in the left panel and the hero's name
-- ✅ Shift + click function to move to a tile
-- ✅ Fix clicks outside grid
-- ✅ Implement regeneration logic for health and mana
-- ✅ Add target avatar at the top left
-- ✅ Print FPS (drops below 60 when laptop is plugged in)
-- ✅ Move and attack target when out of range doing nothing.
-- ✅ Update my player's avatar and the entities being attacked.
-- ✅ Implement tooltip to show information when hovering over certain elements, such as skills.
-- ✅ Draw effects of my player
-- ✅ Draw effects of my target
-- ✅ Move to_dict and from_dict to a helper
-- ✅ Check synchronization of sprite projectiles
-- ✅ Refactor spawn functions
-- ✅ Fix sprite on target panel
-- ✅ Remove extends Node from CombatStats. Free unused objects. Significant memory improvement.
-- ✅ Remove basemana and basehp and move them to stats.
-- ✅ Fix object synchronization for clients that join the room.
-- ✅ Fix stuck movements when near Moomoo
-- ✅ Correct attack when changing target while already attacking another one
-- 🟡 Start implementing experience and leveling logic
-- 🟡 Start building ingame UI
-- 🟡 Set first hero types
-- 🟡 Start logic for strength, agility, and intelligence attributes
-- Mantener relacion aspecto de 16:9
-- Permitir movimientos en diagonal cuando es posible
 - Agregar skill activo de rayo
 - Agregar items de pociones de hp (tres niveles, +1 regenera 200 de hp, +2 regenera 500 y +3 regenera 2000)
 - Agregar skill de velocidad de ataque de un 25%
@@ -163,3 +113,49 @@ MY TODOs: 🔵🟡✅
 - Agregar mas tipos de héroes. En esta primera etapa bastaría con 10 diferentes tipos con sus respectivas 4 habilidades y una ulti.
 - Encapsular lógica de get/set
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+- ✅ Allow diagonal movements when possible
+- ✅ Maintain an aspect ratio of 16:9
+- ✅ Correct attack when changing target while already attacking another one
+- ✅ Fix stuck movements when near Moomoo
+- ✅ Fix object synchronization for clients that join the room.
+- ✅ Remove basemana and basehp and move them to stats.
+- ✅ Remove extends Node from CombatStats. Free unused objects. Significant memory improvement.
+- ✅ Fix sprite on target panel
+- ✅ Refactor spawn functions
+- ✅ Check synchronization of sprite projectiles
+- ✅ Move to_dict and from_dict to a helper
+- ✅ Draw effects of my target
+- ✅ Draw effects of my player
+- ✅ Implement tooltip to show information when hovering over certain elements, such as skills.
+- ✅ Update my player's avatar and the entities being attacked.
+- ✅ Move and attack target when out of range doing nothing.
+- ✅ Print FPS (drops below 60 when laptop is plugged in)
+- ✅ Add target avatar at the top left
+- ✅ Implement regeneration logic for health and mana
+- ✅ Fix clicks outside grid
+- ✅ Shift + click function to move to a tile
+- ✅ Draw avatar in the left panel and the hero's name
+- ✅ Fix sprite position in enemies
+- ✅ Start logic for strength, agility, and intelligence attributes
+- ✅ Set first hero types
+- ✅ Start building ingame UI
+- ✅ Start implementing experience and leveling logic
+- ✅ Set sprites by code in heroes
+- ✅ Sync Moomoo
+- ✅ Start drawing the 4 abilities on the bottom bar
+- ✅ Start showing my player stats
+- ✅ Move towards target when player wants to attack an enemy but is out of range.
+- ✅ Implement camera movement with mouse (not fixed to player)
+- ✅ Stop movement and attack when clicking to attack an enemy
+- ✅ Review hover over enemies and give a reddish color to hovered enemies.
+- ✅ Check bug of attack speed of my pj when it is stuned/frozen several times
+- ✅ Implement skill with chances of stun and its respective animation.
+- ✅ Implement system for adding effects over time (useful for buffs, debuffs, etc). Class CombatEffect.
+- ✅ Critical hits in yellow color
+- ✅ Implement new types of projectiles
+- ✅ Apply skills only on boss enemies (4 bosses per wave)
+- ✅ Ocultar barra de vida en enemigos si no reciben daño
+- ✅ Comenzar a agregar algunos sonidos de hits, criticos, etc.
+- ✅ Agregar plantas sobre el terreno, como cactus, utilizando un unico atlas.
+- ✅ Corregir movimientos en diagonal cuando en realidad no se deberia permitir si los tiles adyacentes estan bloqueados.
+- ✅ Agregar objetos mobiles sobre el terreno

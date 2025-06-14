@@ -1,7 +1,7 @@
 extends Node
 class_name SoundManager
 
-static var _MUTED := true
+static var _MUTED := false
 const MAX_PLAYERS := 10
 static var _players: Array[AudioStreamPlayer] = []
 static var _initialized := false
@@ -76,3 +76,6 @@ static func play_melee_hit(volume: float = -15.0):
 
 static func play_critical_melee_hit(volume: float = -5.0):
 	_play_sfx("res://sounds/hits/critic_melee.wav", volume, 1)
+
+static func play_lightning_spell(volume: float = -15.0):
+	_play_sfx("res://sounds/spells/lightning.wav", volume, 4)

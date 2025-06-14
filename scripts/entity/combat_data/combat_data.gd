@@ -34,6 +34,8 @@ var nearest_enemy_focused: Entity
 var last_damage_received_time: int = 0 # In milliseconds
 var latest_attacker: Entity
 
+var charged_skill: Skill
+
 func _ready() -> void:
 	stats.initialize_default_values() # TODO: Review this... Why dont use get_default_instance()?
 	if multiplayer.is_server() == false:
@@ -117,54 +119,51 @@ func get_effect_by_unique_name(unique_name: String) -> CombatEffect:
 		if effect.unique_name_node == unique_name: return effect
 	return null
 
-# TODO: Review
-func _server_calculate_physical_damage(_target: Entity) -> void:
-	if my_owner().multiplayer.is_server() == false: return
-	if _target == null: return
-
+func try_critical_hit(base_value: int) -> int:
 	var critical_damage = 0
 	var total_stats = get_total_stats()
 	if GlobalsEntityHelpers.roll_chance(total_stats.crit_chance):
-		critical_damage = total_stats.physical_attack_power * total_stats.crit_multiplier
-	var total_damage = total_stats.physical_attack_power + critical_damage
-	# print("Normal power: ", physical_attack_power, " Extra power: ", extra_power, " Total total_damage: ", total_damage)
+		critical_damage = base_value * total_stats.crit_multiplier
+	return critical_damage
+
+
+# TODO: Review
+func _server_execute_physical_damage(_target: Entity) -> void:
+	if my_owner().multiplayer.is_server() == false: return
+	if _target == null: return
+
+	var total_stats = get_total_stats()
+	var base_damage = total_stats.physical_attack_power
+	base_damage += base_damage * total_stats.physical_attack_power_percent
+	
+	var critical_damage = try_critical_hit(base_damage)
+	var total_damage = base_damage + critical_damage
 
 	var _di = DamageInfo.get_instance()
 	_di.total_damage_heal = total_damage
 	_di.critical = critical_damage
 	_di.projectile_type = projectile_type
-	_di.damage_type = DamageInfo.DamageType.PHYSICAL
+	_di.damage_type = DamageType.PHYSICAL
 	_di.attacker_name = my_owner().name
 
-	_target.combat_data._server_receive_physical_damage(_di, my_owner())
+	_target.combat_data._server_receive_damage(_di, my_owner())
 
-func _server_receive_physical_damage(_di: DamageInfo, _attacker: Entity) -> void:
+
+func _server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	if my_owner().multiplayer.is_server() == false: return
 
-	# Evasion verification
 	var total_stats = get_total_stats()
-	if GlobalsEntityHelpers.roll_chance(total_stats.evasion):
-		# TODO: Crear un helper para enviar mensajes
-		var sm = ServerMessage.new("Dodge", Vector3(0, 0.5, 1))
-		my_owner().rpc("rpc_server_message", ObjectHelpers.to_dict(sm, true))
-		return
+	
+	if _check_evade(_di, total_stats): return # Evasion verification (only for physical damage)
 
-	var damage_before_defense := _di.total_damage_heal
-	var reduced_damage := int(total_stats.physical_defense_percent * damage_before_defense)
-	_di.critical = _di.critical - int(total_stats.physical_defense_percent * _di.critical)
-	var total_damage: int = _di.total_damage_heal - reduced_damage
-	if total_damage < 0: total_damage = 0
-
-	_di.total_damage_heal = total_damage
+	_apply_defenses(_di, total_stats)
 
 	CombatEffect.actions_after_effective_hit(_attacker, my_owner(), _di)
 	Skill.actions_after_effective_hit(_attacker, my_owner(), _di)
 
-	# print("Damage before defense: ", damage_before_defense, " reduced: ", reduced_damage, " total: ", total_damage, " critical: ", _di.critical)
-
 	my_owner().rpc("rpc_receive_damage_or_heal", ObjectHelpers.to_dict(_di, true))
 
-	update_current_hp(-total_damage)
+	update_current_hp(-_di.total_damage_heal)
 
 # region SETTERs
 func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void:
@@ -198,6 +197,35 @@ func set_target_entity(_target: Entity) -> void:
 # endregion
 
 # region GETTERs
+func _check_evade(_di: DamageInfo, total_stats: CombatStats) -> bool:
+	if _di.damage_type != DamageType.PHYSICAL: return false # Evasion verification (only for physical damage)
+
+	if not GlobalsEntityHelpers.roll_chance(total_stats.evasion): return false
+
+	# TODO: Crear un helper para enviar mensajes
+	var sm = ServerMessage.new("Dodge", Vector3(0, 0.5, 1))
+	my_owner().rpc("rpc_server_message", ObjectHelpers.to_dict(sm, true))
+
+	return true
+
+
+func _apply_defenses(_di: DamageInfo, total_stats: CombatStats) -> void:
+	var damage_before_defense := _di.total_damage_heal
+
+	if _di.damage_type == DamageType.PHYSICAL:
+		var reduced_damage := int(total_stats.physical_defense_percent * damage_before_defense)
+		_di.critical = _di.critical - int(total_stats.physical_defense_percent * _di.critical)
+		var total_damage: int = _di.total_damage_heal - reduced_damage
+		if total_damage < 0: total_damage = 0
+		_di.total_damage_heal = total_damage
+
+	if _di.damage_type == DamageType.MAGIC:
+		var reduced_damage := int(total_stats.magic_defense_percent * damage_before_defense)
+		_di.critical = _di.critical - int(total_stats.magic_defense_percent * _di.critical)
+		var total_damage: int = _di.total_damage_heal - reduced_damage
+		if total_damage < 0: total_damage = 0
+		_di.total_damage_heal = total_damage
+
 func get_skill(skill_name: String) -> Skill:
 	for skill in skills:
 		if skill.skill_name == skill_name: return skill
@@ -216,6 +244,11 @@ func is_stunned() -> bool:
 
 func get_target_entity() -> Entity:
 	return GameManager.get_entity(target_entity_name)
+
+func charge_skill(index: int) -> void:
+	if skills[index].is_learned == false: return
+
+	charged_skill = skills[index]
 # endregion
 
 # region TRY PHISICAL ATTACK
@@ -256,7 +289,7 @@ func _get_nearest_target_in_range_attack():
 
 func _execute_physical_attack() -> void:
 	if projectile_type == Projectile.TYPES.NONE:
-		return _server_calculate_physical_damage(_target_entity)
+		return _server_execute_physical_damage(_target_entity)
 
 	Projectile.launch(my_owner(), _target_entity, get_total_stats().physical_attack_power)
 		
@@ -290,7 +323,7 @@ func global_receive_damage_or_heal(_di: DamageInfo):
 func _try_to_add_effect_from_skills() -> void:
 	if not my_owner() is Player: return
 	for skill in skills:
-		if skill.type != Skill.Type.PASSIVE: continue
+		if skill.type != SkillType.PASSIVE: continue
 		if not skill.is_learned: continue
 		if not skill.apply_to_owner: continue
 		if get_effect(skill.skill_name) != null: continue # Already has this effect
@@ -368,6 +401,9 @@ func try_to_remove_obsolete_stun_animation():
 
 	remove_animations(_ANIMATED_SPRITE_STUN_NAME)
 
+func _get_position_of_bottom_of_the_cell(sprite_size: Vector2) -> Vector2:
+	return Vector2(0, -sprite_size.y * 0.5 + MapManager.TILE_SIZE.y * 0.7)
+
 func apply_frost_hit_animation():
 	const sprite_size = Vector2(32, 32)
 	var frames = SpritesHelper.get_sprite_frames(Vector2(0, 576), sprite_size, 11, 30, false)
@@ -376,9 +412,15 @@ func apply_frost_hit_animation():
 func apply_stun_animation():
 	if animation_active(_ANIMATED_SPRITE_STUN_NAME): return
 	var sprite_size = CombatEffect.STUN_RECT_REGION.size
-	var sprite_position = Vector2(0, my_owner().hud.my_health_bar.position.y + 10)
 	var frames = SpritesHelper.get_sprite_frames(CombatEffect.STUN_RECT_REGION.position, sprite_size, 14, 30, true)
+	var sprite_position = Vector2(0, my_owner().hud.my_health_bar.position.y + 10)
 	spawn_front_fx(frames, _ANIMATED_SPRITE_STUN_NAME, sprite_position)
+
+func apply_lightning_animation():
+	var sprite_size = Vector2(64, 96)
+	var frames = SpritesHelper.get_sprite_frames(Vector2(0, 640), sprite_size, 12, 25, false)
+	spawn_front_fx(frames, "lightning", _get_position_of_bottom_of_the_cell(sprite_size))
+	SoundManager.play_lightning_spell()
 
 func spawn_front_fx(frames: SpriteFrames, animated_sprite_name: String, sprite_position: Vector2 = Vector2.ZERO):
 	var sprite := AnimatedSprite2D.new()

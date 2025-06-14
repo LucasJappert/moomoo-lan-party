@@ -53,6 +53,8 @@ func _ready():
 	collision_mask = 1
 	movement_helper = MovementHelper.new(self)
 	area_attack_shape.shape = area_attack_shape.shape.duplicate() # to avoid changing the original shape
+	for child in front_animations_node.get_children():
+		child.queue_free()
 	_client_init()
 	call_deferred("_post_ready")
 
