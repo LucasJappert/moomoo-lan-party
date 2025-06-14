@@ -143,6 +143,7 @@ MY TODOs: 🔵🟡✅
 - 🟡 Set first hero types
 - 🟡 Start logic for strength, agility, and intelligence attributes
 - 🔵 Ver problema de conexion de clientes a la sala desde la web
+- Mantener relacion aspecto de 16:9
 - Permitir movimientos en diagonal cuando es posible
 - Agregar skill activo de rayo
 - Agregar items de pociones de hp (tres niveles, +1 regenera 200 de hp, +2 regenera 500 y +3 regenera 2000)
