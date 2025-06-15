@@ -35,6 +35,18 @@ offset_right = 12.5
 offset_bottom = 13.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_styles/normal = SubResource("StyleBoxTexture_gayjm")
 text = "A"
 horizontal_alignment = 1
+
+[node name="LabelCoolDown" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 2.0
+offset_top = 63.0
+offset_right = 86.0
+offset_bottom = 86.0
+theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "1.2"

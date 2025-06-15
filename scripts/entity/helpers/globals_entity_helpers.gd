@@ -34,10 +34,12 @@ static func get_owner(node: Node, max_depth: int = 10) -> Entity:
 		current_depth += 1
 	return null
 
-static func get_closest_entities(origin: Vector2, max_targets: int, entities: Array[Entity], max_distance: float = MapManager.TILE_SIZE_INT * 5) -> Array[Entity]:
+static func get_closest_entities(origin: Vector2, max_targets: int, entities: Array[Entity], max_distance: float = MapManager.TILE_SIZE_INT * 5, excluded_entities: Array[Entity] = []) -> Array[Entity]:
 	var sorted: Array[Entity] = []
 
 	for entity in entities:
+		if entity in excluded_entities:
+			continue
 		var dist_sq := entity.global_position.distance_squared_to(origin)
 
 		if max_distance >= 0.0 and dist_sq > max_distance * max_distance: continue # out of range

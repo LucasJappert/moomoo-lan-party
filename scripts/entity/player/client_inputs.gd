@@ -22,6 +22,13 @@ func _unhandled_input(event):
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			_on_left_click(mouse_position)
 
+	if event is InputEventKey and event.pressed:
+		rpc_id(1, "notify_to_server_key_pressed", event.keycode)
+		# if event.keycode == KEY_ESCAPE:
+		# 	print("Escape pressed")
+
+		# if event.keycode == KEY_A:
+			
 
 func _on_right_click(mouse_position: Vector2):
 	if not SHIFT_PRESSED and AreaHovered.hovered_entity is Enemy:
@@ -32,9 +39,9 @@ func _on_right_click(mouse_position: Vector2):
 
 func _on_left_click(mouse_position: Vector2):
 	print("Client left_click_mouse_pos: ", mouse_position)
-	if not AreaHovered.hovered_entity is Enemy: return
 
-	rpc_id(1, "notify_to_server_the_left_click_on_entity", AreaHovered.hovered_entity.name)
+	var target_entity = AreaHovered.hovered_entity
+	rpc_id(1, "notify_to_server_the_left_click", target_entity.name if target_entity else "")
 
 
 @rpc("authority", "call_local")
@@ -49,8 +56,15 @@ func notify_to_server_the_right_click_on_entity(_target_entity_name: String):
 	player.movement_helper.set_target_entity(target_entity)
 	
 @rpc("authority", "call_local")
-func notify_to_server_the_left_click_on_entity(_target_entity_name: String):
+func notify_to_server_the_left_click(_target_entity_name: String):
 	# Always run in server
 	var target_entity = GameManager.entities[_target_entity_name]
-	player.combat_data.set_target_entity(target_entity)
-	player.combat_data.skills[0].use(player, target_entity)
+
+	if target_entity: player.combat_data.set_target_entity(target_entity)
+
+	player.combat_data.use_charged_skill()
+
+@rpc("authority", "call_local")
+func notify_to_server_key_pressed(_keycode: int):
+	if _keycode == KEY_A:
+		player.combat_data.charge_skill(0)

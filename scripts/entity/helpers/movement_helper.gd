@@ -6,7 +6,7 @@ var _target_entity: Entity
 var _target_cell
 var current_path: Array[Vector2i] = []
 var current_cell = null
-var _attack_mode_mode = false
+var _attack_move = false
 var _can_move := true
 
 func _init(p_owner: Entity):
@@ -25,7 +25,7 @@ func clean_path() -> void:
 	current_path = []
 
 func set_attack_mode_mode(p_value: bool) -> void:
-	_attack_mode_mode = p_value
+	_attack_move = p_value
 
 func _stop_movements() -> void:
 	current_target_pos = null
@@ -36,7 +36,7 @@ func _clean_movements() -> void:
 	_target_cell = null
 	_target_entity = null
 	current_path = []
-	_attack_mode_mode = false
+	set_attack_mode_mode(false)
 
 func set_target_entity(target: Entity) -> void:
 	if target == _target_entity: return
@@ -45,7 +45,7 @@ func set_target_entity(target: Entity) -> void:
 
 	if target == null: return
 
-	_attack_mode_mode = true
+	set_attack_mode_mode(true)
 	_target_entity = target
 	update_path()
 
@@ -56,14 +56,12 @@ func set_target_cell(target_cell: Vector2i) -> void:
 	my_owner.combat_data.register_attacker(null)
 
 func update_path() -> void:
-	if _target_cell == null && _target_entity == null:
-		if my_owner.combat_data.latest_attacker == null: return _clean_movements()
-		set_target_entity(my_owner.combat_data.latest_attacker)
+	if _target_cell == null && _target_entity == null: return _clean_movements()
 
 	var from_pos = current_target_pos if current_target_pos else my_owner.global_position
 	var from_cell = MapManager.world_to_cell(from_pos)
 	var target_cell = _target_cell if _target_cell else MapManager.world_to_cell(_target_entity.global_position)
-	current_path = MapManager.my_find_path(from_cell, target_cell)
+	current_path = MapManager.find_path(from_cell, target_cell)
 
 # endregion SETTERs
 
@@ -74,7 +72,8 @@ func _try_set_next_current_target_pos() -> void:
 
 	if my_owner.combat_data.is_stunned(): return
 
-	if _attack_mode_mode:
+	if _attack_move:
+		# Return if the target is in attack range (dont move, just attack)
 		var target_in_attack_range = GlobalsEntityHelpers.is_target_in_attack_range(my_owner, my_owner.combat_data.get_target_entity())
 		if target_in_attack_range: return
 
@@ -86,10 +85,24 @@ func _try_set_next_current_target_pos() -> void:
 	current_target_pos = MapManager.cell_to_world(next_target_cell)
 	current_path.remove_at(0)
 
+func _try_to_update_target_from_latest_attacker():
+	if _target_cell or _target_entity: return
+	if not my_owner.combat_data.latest_attacker: return
+
+	if my_owner is Enemy: return # Enemies should always have a target (Moomoo by default)
+
+	var nearest_enemy: Entity
+	if my_owner is Player:
+		nearest_enemy = GlobalsEntityHelpers.get_nearest_entity(my_owner.global_position, GameManager.get_enemies(), my_owner.area_vision_shape.shape.radius)
+
+	set_target_entity(nearest_enemy)
+	my_owner.combat_data.set_target_entity(nearest_enemy)
 
 func _try_to_move(_delta: float) -> void:
-	# if _attack_mode_mode && GlobalsEntityHelpers.is_target_in_attack_range(my_owner, my_owner.combat_data.get_target_entity()):
+	# if _attack_move && GlobalsEntityHelpers.is_target_in_attack_range(my_owner, my_owner.combat_data.get_target_entity()):
 	# 	_clean_movements()
+	_try_to_update_target_from_latest_attacker()
+
 	if current_target_pos == null: _try_set_next_current_target_pos()
 	if current_target_pos == null: return _stop_movements()
 

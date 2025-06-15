@@ -65,14 +65,6 @@ func _process(_delta: float):
 	_try_to_add_effect_from_skills()
 
 	_actions_after_1_second(_delta)
-	
-	if my_owner().combat_data._target_entity == null:
-		if my_owner().movement_helper.current_path.is_empty():
-			if my_owner().combat_data.latest_attacker:
-				if my_owner() is Player:
-					var nearest_enemy: Entity
-					nearest_enemy = GlobalsEntityHelpers.get_nearest_entity(my_owner().global_position, GameManager.get_enemies(), my_owner().area_vision_shape.shape.radius)
-					my_owner().combat_data.set_target_entity(nearest_enemy)
 
 func my_owner() -> Entity:
 	if _my_owner: return _my_owner
@@ -125,7 +117,6 @@ func try_critical_hit(base_value: int) -> int:
 	if GlobalsEntityHelpers.roll_chance(total_stats.crit_chance):
 		critical_damage = base_value * total_stats.crit_multiplier
 	return critical_damage
-
 
 # TODO: Review
 func _server_execute_physical_damage(_target: Entity) -> void:
@@ -187,13 +178,27 @@ func register_attacker(attacker: Entity) -> void:
 	latest_attacker = attacker
 	last_damage_received_time = Time.get_ticks_msec()
 
-func set_target_entity(_target: Entity) -> void:
-	# Used only by the server
+func set_target_entity(_target: Entity) -> void: # Used only by the server
 	if _target == _target_entity: return
 
 	target_entity_name = str(_target.name) if _target != null else ""
 	_target_entity = _target
 
+func charge_skill(index: int) -> void:
+	if skills[index].is_learned == false: return
+
+	print("Charging skill: ", skills[index].skill_name)
+	charged_skill = skills[index]
+func uncharge_skill() -> void:
+	charged_skill = null
+	print("Uncharging skill")
+
+func use_charged_skill() -> void:
+	if charged_skill == null: return
+
+	charged_skill.use(my_owner(), _target_entity)
+
+	uncharge_skill()
 # endregion
 
 # region GETTERs
@@ -207,7 +212,6 @@ func _check_evade(_di: DamageInfo, total_stats: CombatStats) -> bool:
 	my_owner().rpc("rpc_server_message", ObjectHelpers.to_dict(sm, true))
 
 	return true
-
 
 func _apply_defenses(_di: DamageInfo, total_stats: CombatStats) -> void:
 	var damage_before_defense := _di.total_damage_heal
@@ -245,23 +249,15 @@ func is_stunned() -> bool:
 func get_target_entity() -> Entity:
 	return GameManager.get_entity(target_entity_name)
 
-func charge_skill(index: int) -> void:
-	if skills[index].is_learned == false: return
-
-	charged_skill = skills[index]
-# endregion
+# endregion GETTERs
 
 # region TRY PHISICAL ATTACK
 func try_physical_attack(_delta: float) -> bool:
 	if not my_owner().multiplayer.is_server(): return false
 
 	if my_owner().velocity != Vector2.ZERO: return false
-
-	# Priorize players over moomoo (only for enemies)
-	if _target_entity == GameManager.moomoo: set_target_entity(_get_nearest_target_in_range_attack())
-
-	if not GlobalsEntityHelpers.is_target_in_attack_range(my_owner(), _target_entity):
-		set_target_entity(_get_nearest_target_in_range_attack())
+	
+	if _target_entity == GameManager.moomoo: set_target_entity(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
 
 	if _target_entity == null: return false
 
@@ -300,7 +296,11 @@ func can_physical_attack() -> bool:
 
 	var now = Time.get_ticks_msec()
 	var interval_ms = 1000.0 / get_total_stats().get_total_attack_speed()
-	return now - last_physical_hit_time >= interval_ms # If enough time has passed, can attack
+	if now - last_physical_hit_time < interval_ms: return false # If enough time has passed, can attack
+
+	if not GlobalsEntityHelpers.is_target_in_attack_range(my_owner(), _target_entity): return false
+
+	return true
 # endregion TRY PHISICAL ATTACK
 
 # region 	SERVER METHODS
@@ -378,6 +378,8 @@ func _get_extra_stats_by_effects() -> CombatStats:
 		extra_stats.accumulate_combat_stats(effect.stats)
 	return extra_stats
 
+func get_attack_range() -> int:
+	return get_total_stats().attack_range
 
 # endregion GETTERs
 

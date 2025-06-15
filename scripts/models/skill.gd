@@ -209,9 +209,12 @@ func get_remaining_cooldown() -> float:
 func use(my_owner: Entity, target_entity: Entity) -> void:
 	if not can_use(my_owner): return
 
+	if skill_name == Names.STORM_STRIKE:
+		if not _apply_storm_strike(my_owner, target_entity): return
+
 	_last_used_time = Time.get_ticks_msec() / 1000.0
 
-	if skill_name == Names.STORM_STRIKE: _apply_storm_strike(my_owner, target_entity)
+	my_owner.combat_data.update_current_mana(-mana_cost)
 # endregion ................. SETTERs
 # region :::::::::::::::::::: SKILLS LOGICS
 static func actions_before_entity_death(_dead_entity: Entity, _attacker: Entity) -> void:
@@ -246,13 +249,18 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 		effect.set_region_rect(_attacker_frozen_skill.region_rect)
 		_target.combat_data.add_effect(effect)
 
-func _apply_storm_strike(_attacker: Entity, _target: Entity) -> void:
+func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:
+	if not _target: return false
+
+	if _attacker is Player and not _target is Enemy: return false
+	if _attacker is Enemy and not (_target is Player or _target is Moomoo): return false
+
 	var attacker_stats = _attacker.combat_data.get_total_stats()
 	var total_damage_heal = stats.custom_damage_heal.get_total_damage_heal(attacker_stats.agility, attacker_stats.strength, attacker_stats.intelligence)
 
 	var targets = [_target]
 	var enemies = GameManager.get_enemies()
-	targets.append_array(GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, max_targets - 1, enemies, MapManager.TILE_SIZE_INT * 6))
+	targets.append_array(GlobalsEntityHelpers.get_closest_entities(_target.global_position, max_targets - 1, enemies, MapManager.TILE_SIZE_INT * 6, [_target]))
 
 	for target in targets:
 		var _di := DamageInfo.new(total_damage_heal, damage_type)
@@ -265,7 +273,10 @@ func _apply_storm_strike(_attacker: Entity, _target: Entity) -> void:
 		_di.damage_type = DamageType.MAGIC
 		_di.attacker_name = _attacker.name
 
-		_target.combat_data._server_receive_damage(_di, _attacker)
+		target.combat_data._server_receive_damage(_di, _attacker)
+		target.combat_data.apply_lightning_animation()
+	
+	return true
 
 
 # endregion .................... SKILLS LOGICS

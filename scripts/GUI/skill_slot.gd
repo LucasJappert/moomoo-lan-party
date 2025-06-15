@@ -26,3 +26,13 @@ func initialize(p_skill: Skill, _slot_number: int):
 	slot_number = _slot_number
 	hotkey.text = HOTKEY_BY_SLOT[slot_number - 1]
 	sprite.region_rect = skill.region_rect
+
+func _process(_delta: float) -> void:
+	if not skill: return
+
+	var remaining_cooldown := skill.get_remaining_cooldown()
+	if remaining_cooldown > 0:
+		%LabelCoolDown.visible = true
+		%LabelCoolDown.text = StringHelpers.format_float(remaining_cooldown)
+	else:
+		%LabelCoolDown.visible = false
