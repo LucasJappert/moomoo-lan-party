@@ -86,6 +86,7 @@ func _try_set_next_current_target_pos() -> void:
 	current_path.remove_at(0)
 
 func _try_to_update_target_from_latest_attacker():
+	if my_owner.combat_data.keep_ground: return
 	if _target_cell or _target_entity: return
 	if not my_owner.combat_data.latest_attacker: return
 

@@ -94,7 +94,7 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- 🔵 Implementar detener autoataques con la Q
+- ✅ Implement maintain terrain with Q
 - Crear escena para crear y unirse a salas.
 - Agregar items de pociones de hp (tres niveles, +1 regenera 200 de hp, +2 regenera 500 y +3 regenera 2000)
 - Agregar skill de velocidad de ataque de un 25%

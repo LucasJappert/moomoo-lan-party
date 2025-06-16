@@ -59,5 +59,14 @@ func _on_left_click(_target_entity_name: String):
 func _on_key_pressed(_keycode: int):
 	if _keycode == KEY_A:
 		player.combat_data.charge_skill(0)
+	if _keycode == KEY_S:
+		player.combat_data.charge_skill(1)
+	if _keycode == KEY_D:
+		player.combat_data.charge_skill(2)
+	if _keycode == KEY_F:
+		player.combat_data.charge_skill(3)
+
+	if _keycode == KEY_Q:
+		player.combat_data.toogle_keep_ground()
 
 # endregion SERVER MESSAGES RECEIVED FROM CLIENT

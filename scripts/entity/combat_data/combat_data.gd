@@ -35,6 +35,7 @@ var last_damage_received_time: int = 0 # In milliseconds
 var latest_attacker: Entity
 
 var charged_skill: Skill
+var keep_ground: bool = false
 
 func _ready() -> void:
 	stats.initialize_default_values() # TODO: Review this... Why dont use get_default_instance()?
@@ -161,6 +162,7 @@ func set_target_entity(_target: Entity) -> void: # Used only by the server
 
 func charge_skill(index: int) -> void:
 	if skills[index].is_learned == false: return
+	if skills[index].type == SkillType.PASSIVE: return
 
 	print("Charging skill: ", skills[index].skill_name)
 	charged_skill = skills[index]
@@ -174,7 +176,10 @@ func use_charged_skill() -> void:
 	charged_skill.use(my_owner(), _target_entity)
 
 	uncharge_skill()
-# endregion
+
+func toogle_keep_ground() -> void:
+	keep_ground = not keep_ground
+# endregion SETTERs
 
 # region GETTERs
 
