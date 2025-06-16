@@ -94,9 +94,8 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- Ver sincronizacion de efectos en el target
+- 🔵 Implementar detener autoataques con la Q
 - Crear escena para crear y unirse a salas.
-- implementar detener autoataques con la Q
 - Agregar items de pociones de hp (tres niveles, +1 regenera 200 de hp, +2 regenera 500 y +3 regenera 2000)
 - Agregar skill de velocidad de ataque de un 25%
 - Agregar skill de daño en area
@@ -116,6 +115,7 @@ MY TODOs: 🔵🟡✅
 - Encapsular lógica de get/set
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+- ✅ Check synchronization of effects on the target (solved with \_add_current_effects() method).
 - ✅ Sync animations with RPC messages
 - ✅ Add active skill of lightning and implement the necessary features in the skill slot (such as remaining time for use)
 - ✅ Allow diagonal movements when possible

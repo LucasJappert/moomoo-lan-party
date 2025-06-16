@@ -86,7 +86,7 @@ static func initialize_hero(player: Player) -> void:
 		player.combat_data.stats.hp = 600
 		stats.evasion = 0.1
 		stats.agility = 10
-		stats.strength = 150
+		stats.strength = 15
 		stats.intelligence = 10
 		player.combat_data.skills = [
 			Skill.get_skill(Skill.Names.STORM_STRIKE),

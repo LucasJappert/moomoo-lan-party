@@ -47,7 +47,11 @@ func _on_left_click(_target_entity_name: String):
 	# Always run in server
 	var target_entity = GameManager.get_entity(_target_entity_name)
 
-	if target_entity: player.combat_data.set_target_entity(target_entity)
+	if target_entity:
+		print("effects: ", target_entity.combat_data.get_effects())
+		print("entity name: ", target_entity.name)
+
+	player.combat_data.set_target_entity(target_entity)
 
 	player.combat_data.use_charged_skill()
 
