@@ -113,6 +113,10 @@ func _server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	update_current_hp(-_di.total_damage_heal)
 
 # region SETTERs
+func set_attack_type_according_to_projectile_type() -> void:
+	attack_type = AttackTypes.MELEE
+	if projectile_type != Projectile.TYPES.NONE:
+		attack_type = AttackTypes.RANGED
 func add_effect(p_effect: CombatEffect) -> void:
 	# Should be called only on the server
 	var current_stacks = 0

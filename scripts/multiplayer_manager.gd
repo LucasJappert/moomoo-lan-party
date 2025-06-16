@@ -23,6 +23,8 @@ func become_client():
 	var client = ENetMultiplayerPeer.new()
 	client.create_client(SERVER_IP, SERVER_PORT)
 	multiplayer.multiplayer_peer = client
+	var enet_peer = client.get_peer(1)
+	enet_peer.set_timeout(0, 0, 30_000)
 	GameManager.MY_PLAYER_ID = multiplayer.get_unique_id()
 
 func _on_peer_connected(id):
@@ -36,7 +38,7 @@ func _on_peer_disconnected(id):
 func _add_player_to_game(id):
 	var spawn_data = {
 		"player_id": id,
-		"hero_type": HeroTypes.IRON_VEX if id == 1 else HeroTypes.LIORA_SUNVEIL
+		"hero_type": HeroTypes.IRON_VEX if id == 1 else HeroTypes.VARRIK_DUSKHOLLOW
 	}
 	var new_player = GameManager.my_main.player_spawner.spawn(spawn_data)
 	GameManager.add_entity(new_player)

@@ -35,6 +35,7 @@ func _ready():
 	collision_layer = 1
 	collision_mask = 1
 	movement_helper = MovementHelper.new(self)
+	combat_data.set_attack_type_according_to_projectile_type()
 	area_attack_shape.shape = area_attack_shape.shape.duplicate() # to avoid changing the original shape
 	for child in front_animations_node.get_children():
 		child.queue_free()
