@@ -29,24 +29,7 @@ var movement_helper: MovementHelper
 @export var _boss_level: int = 0
 @export var level: int = 1
 
-
-@rpc("authority", "call_local")
-func rpc_server_message(data: Dictionary):
-	var sm = ServerMessage.new()
-	ObjectHelpers.from_dict(sm, data)
-	hud.show_popup(sm.message, sm.get_color())
-
-@rpc("authority", "call_local")
-func rpc_receive_damage_or_heal(data: Dictionary):
-	var di = DamageInfo.get_instance()
-	ObjectHelpers.from_dict(di, data)
-	combat_data.global_receive_damage_or_heal(di)
-
-@rpc("authority", "call_local")
-func rpc_die():
-	print("⚔️ Entity died")
-	print("Multiplayer: ", multiplayer.is_server())
-	_global_die()
+@onready var rpc_handler: RpcHandler = $RpcHandler
 
 func _ready():
 	collision_layer = 1
@@ -60,18 +43,8 @@ func _ready():
 
 func _post_ready():
 	hud._post_ready(self)
+	rpc_handler.initialize()
 	
-# region 	GETTERs
-func is_my_player() -> bool:
-	return false
-# endregion GETTERs
-
-func set_boss_level(_level: int) -> void:
-	_boss_level = _level
-
-func _set_area_attack_shape_radius() -> void:
-	area_attack_shape.shape.radius = combat_data.get_total_stats().attack_range
-
 func _process(_delta: float) -> void:
 	EntityState._process(self)
 
@@ -84,13 +57,30 @@ func _client_physics_process(_delta: float) -> void:
 		
 	sprite.flip_h = direction.x < 0
 
+
+# region 	GETTERs
+func is_my_player() -> bool: return false
+# endregion GETTERs
+
+# region 	SETTERs
+func set_boss_level(_level: int) -> void:
+	_boss_level = _level
+
+func _set_area_attack_shape_radius() -> void:
+	area_attack_shape.shape.radius = combat_data.get_total_stats().attack_range
+
 func _client_init() -> void:
 	if multiplayer.is_server() && not MyMain.HOSTED_GAME: return
 
 	SpritesHelper.set_entity_sprites(self)
 
+# endregion SETTERs
+
+# region OTHERS
 func _global_die():
 	# Implemented in Player and Enemy
 	# if multiplayer.is_server(): GameManager.remove_entity(self)
 	GameManager.remove_entity(self)
 	print("GameManager: " + str(GameManager.entities))
+
+# endregion OTHERS

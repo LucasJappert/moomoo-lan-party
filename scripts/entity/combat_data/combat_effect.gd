@@ -90,7 +90,7 @@ static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _d
 			if total_heal > 0:
 				var new_di = DamageInfo.get_instance()
 				new_di.total_damage_heal = - total_heal
-				_attacker.rpc("rpc_receive_damage_or_heal", ObjectHelpers.to_dict(new_di, true))
+				_attacker.rpc_handler.receive_damage_or_heal(ObjectHelpers.to_dict(new_di, true))
 				_attacker.combat_data.update_current_hp(total_heal)
 
 	return

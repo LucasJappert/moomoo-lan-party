@@ -207,7 +207,7 @@ func get_remaining_cooldown() -> float:
 # region :::::::::::::::::::: SETTERs
 
 func use(my_owner: Entity, target_entity: Entity) -> void:
-	if not can_use(my_owner): return
+	if not can_use(my_owner): return print("Cannot use skill: ", skill_name)
 
 	if skill_name == Names.STORM_STRIKE:
 		if not _apply_storm_strike(my_owner, target_entity): return
@@ -274,7 +274,7 @@ func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:
 		_di.attacker_name = _attacker.name
 
 		target.combat_data._server_receive_damage(_di, _attacker)
-		target.combat_data.apply_lightning_animation()
+		target.rpc_handler.add_animation(AnimationsHelper.ANIMATION_NAMES.LIGHTNING)
 	
 	return true
 

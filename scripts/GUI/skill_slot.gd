@@ -25,6 +25,7 @@ func initialize(p_skill: Skill, _slot_number: int):
 	skill = p_skill
 	slot_number = _slot_number
 	hotkey.text = HOTKEY_BY_SLOT[slot_number - 1]
+	if skill.type == SkillType.PASSIVE: hotkey.visible = false
 	sprite.region_rect = skill.region_rect
 
 func _process(_delta: float) -> void:
