@@ -94,8 +94,10 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
+- 🔵 Add hp potion items (three levels, +1 restores 200 hp, +2 restores 500, and +3 restores 2000). Consider item synchronization.
+- Sistema de progreso de habilidades al avanzar de niveles, incremento automático de stats base
 - Crear escena para crear y unirse a salas.
-- Agregar items de pociones de hp (tres niveles, +1 regenera 200 de hp, +2 regenera 500 y +3 regenera 2000)
+- Agregar skill que invoca esqueletos luego de matar a un enemigo
 - Agregar skill de velocidad de ataque de un 25%
 - Agregar skill de daño en area
 - Agregar skill de disparo multiple

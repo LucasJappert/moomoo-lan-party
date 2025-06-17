@@ -69,4 +69,18 @@ func _on_key_pressed(_keycode: int):
 	if _keycode == KEY_Q:
 		player.combat_data.toogle_keep_ground()
 
+	# TODO: Improve this
+	if _keycode == KEY_1:
+		player.combat_data.use_item(1)
+	if _keycode == KEY_2:
+		player.combat_data.use_item(2)
+	if _keycode == KEY_3:
+		player.combat_data.use_item(3)
+	if _keycode == KEY_4:
+		player.combat_data.use_item(4)
+	if _keycode == KEY_5:
+		player.combat_data.use_item(5)
+	if _keycode == KEY_6:
+		player.combat_data.use_item(6)
+
 # endregion SERVER MESSAGES RECEIVED FROM CLIENT

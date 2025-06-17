@@ -55,4 +55,12 @@ func _on_add_animation(data: Dictionary):
 	ObjectHelpers.from_dict(message, data)
 	AnimationsHelper.apply_animation(message, _my_owner)
 
+func send_item_updated(slot_item_info: SlotItemInfo):
+	var data = ObjectHelpers.to_dict(slot_item_info)
+	rpc("_on_slot_item_info_updated", data)
+@rpc("authority", "call_local")
+func _on_slot_item_info_updated(data: Dictionary):
+	var slot_item_info := SlotItemInfo.new()
+	ObjectHelpers.from_dict(slot_item_info, data)
+	_my_owner.combat_data.item_updated_by_rpc(slot_item_info)
 # endregion CLIENTS MESSAGES RECEIVED FROM SERVER

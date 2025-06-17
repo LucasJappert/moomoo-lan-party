@@ -185,7 +185,8 @@ func get_description() -> String:
 	if max_stacks > 1:
 		result += "- Max stacks: " + str(max_stacks) + "\n"
 
-	result += "- Damage type: " + damage_type + "\n"
+	if damage_type != DamageType.NONE:
+		result += "- Damage type: " + str(damage_type) + "\n"
 
 	return result
 

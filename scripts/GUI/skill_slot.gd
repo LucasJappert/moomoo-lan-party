@@ -34,6 +34,6 @@ func _process(_delta: float) -> void:
 	var remaining_cooldown := skill.get_remaining_cooldown()
 	if remaining_cooldown > 0:
 		%LabelCoolDown.visible = true
-		%LabelCoolDown.text = StringHelpers.format_float(remaining_cooldown)
+		%LabelCoolDown.text = StringHelpers.format_float(remaining_cooldown, 1)
 	else:
 		%LabelCoolDown.visible = false

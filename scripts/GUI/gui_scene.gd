@@ -10,6 +10,7 @@ var _ORIGINAL_BALL_SIZE: Vector2
 var _ORIGINAL_BALL_POS_Y: float
 var _ORIGINAL_BALL_RECT_POS_Y: float
 var reseted_gui := false
+@onready var text_ip = %TextIP
 
 
 # region Panel TOP LEFT
@@ -51,25 +52,15 @@ const EXP_BAR_FULL_SIZE = Vector2i(612, 27)
 @onready var _mana_ball = $PanelBR/ManaBall
 @onready var _mana_label = $PanelBR/LabelMana
 @onready var _skill_slots_container = $PanelBR/SkillSlotsContainer
+@onready var _item_slots_container: ItemSlotsContainer = $PanelBR/ItemSlotsContainer
 # endregion
 
 var _player_skills: Array[Skill] = []
 var delta: float
 
-
-func _on_host_game_pressed() -> void:
-	%MultiplayerHUD.hide()
-	MultiplayerManager.become_host()
-	GameManager.spawn_moomoo()
-	
-	EnemiesWavesController.start_wave()
-	
-func _on_join_as_player_pressed() -> void:
-	%MultiplayerHUD.hide()
-	MultiplayerManager.become_client()
-
-
 func _ready() -> void:
+	text_ip.text = "127.0.0.1"
+	# tailscale IP = 100.99.208.97
 	if multiplayer.is_server() && not MyMain.HOSTED_GAME: return
 	
 	EventBus.connect(EventBus.NEW_TARGET_SELECTED, func(_owner: Entity, _target: Entity): _on_new_target_selected(_owner, _target))
@@ -97,6 +88,19 @@ func _ready() -> void:
 	)
 	%ManaBallCircle.connect("mouse_exited", func(): GameManager.hide_tooltip())
 
+
+func _on_host_game_pressed() -> void:
+	%MultiplayerHUD.hide()
+	MultiplayerManager.become_host()
+	GameManager.spawn_moomoo()
+	
+	EnemiesWavesController.start_wave()
+	
+func _on_join_as_player_pressed() -> void:
+	%MultiplayerHUD.hide()
+	MultiplayerManager.become_client()
+
+
 func reset_gui() -> void:
 	_hp_label.text = str(0)
 	_mana_label.text = str(0)
@@ -119,11 +123,11 @@ func _process(_delta: float) -> void:
 # region	SETTERS
 func init_scene(player: Player) -> void:
 	_set_my_player_avatar_region(player)
-	_set_skills(player.combat_data.skills)
+	_set_skills()
 
-func _set_skills(skills: Array[Skill]) -> void:
+func _set_skills() -> void:
 	if _player_skills.is_empty():
-		_player_skills = GameManager.MY_PLAYER.combat_data.skills
+		_player_skills = GameManager.MY_PLAYER.combat_data._skills
 	
 	var skill_slots = _skill_slots_container.get_children() as Array[SkillSlot]
 	for i in range(skill_slots.size()):
@@ -151,9 +155,13 @@ func _on_new_target_selected(_owner: Entity, _target: Entity) -> void:
 	if _target:
 		var region_rect = SpritesHelper.get_region_rect_of_sprite(_target.sprite)
 		GameManager.my_main.gui_scene.set_target_avatar_region(region_rect)
-
-
 # endregion SETTERS
+
+# region	GETTERs
+func get_items() -> Array[SlotItem]:
+	return _item_slots_container.get_children() as Array[SlotItem]
+# endregion GETTERs
+
 
 # region 	INTERNAL AUXILIARY METHODS
 
@@ -182,6 +190,9 @@ func _new_lerped_size(max_value: int, current_value: int, full_size: int, curren
 	# Smooth interpolation (the 10.0 controls the speed, you can adjust it)
 	var target_percent: float = clamp(current_value / float(max_value), 0.0, 1.0)
 	var target_size := int(full_size * target_percent)
+	if target_percent == 1.0:
+		target_size = full_size
+		return target_size
 
 	if not use_lerp: return target_size
 	return lerp(current_size, target_size, delta * 10.0)

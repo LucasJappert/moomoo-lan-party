@@ -45,6 +45,7 @@ func _ready():
 func _post_ready():
 	hud._post_ready(self)
 	rpc_handler.initialize()
+	combat_data._post_ready()
 	
 func _process(_delta: float) -> void:
 	EntityState._process(self)

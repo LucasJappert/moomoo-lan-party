@@ -55,6 +55,7 @@ static func _clone_value(value):
 			return value
 
 static func to_dict(obj: Object, just_my_vars: bool = false) -> Dictionary:
+	if not obj: return {}
 	var dict := {}
 	for prop in obj.get_property_list():
 		var name = prop.name
@@ -80,3 +81,10 @@ static func from_dict(obj: Object, data: Dictionary) -> void:
 		if key == "script": continue
 		if not key in prop_names: continue
 		obj.set(key, data[key])
+
+static func array_to_dict_array(array: Array, just_my_vars: bool = false) -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	for obj in array:
+		if obj == null: continue
+		result.append(to_dict(obj, just_my_vars))
+	return result

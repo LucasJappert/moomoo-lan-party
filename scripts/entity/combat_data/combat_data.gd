@@ -9,7 +9,8 @@ var stats: CombatStats = CombatStats.new()
 @export var current_mana: int = 100
 @export var attack_type := AttackTypes.MELEE
 @export var projectile_type: String = Projectile.TYPES.NONE
-var skills: Array[Skill] = []
+var _skills: Array[Skill] = []
+var _items: Array[SlotItemInfo] = [] # We use 6 slots
 var _my_owner: Entity
 
 var _1_second_timer: float = 0.0
@@ -39,6 +40,11 @@ var keep_ground: bool = false
 
 func _ready() -> void:
 	stats.initialize_default_values() # TODO: Review this... Why dont use get_default_instance()?
+
+	# Initialize items
+	_items.clear()
+	for i in range(SlotItem.HOTKEY_BY_SLOT.size()): _items.append(SlotItemInfo.new(null, i + 1))
+
 	if multiplayer.is_server() == false:
 		set_process(false)
 
@@ -56,6 +62,13 @@ func _ready() -> void:
 
 	%CombatEffectSpawner.spawn_function = func(effect_data: Dictionary) -> Node:
 		return CombatEffect.get_instance_from_dict(effect_data)
+
+func _post_ready() -> void:
+	# At the moment, the player is the only entity that has items
+	if my_owner() is Player == false: return
+	
+	for item in _items:
+		my_owner().rpc_handler.send_item_updated(item) # Send items to clients
 
 # TODO: Improve this
 func _process(_delta: float):
@@ -113,6 +126,28 @@ func _server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	update_current_hp(-_di.total_damage_heal)
 
 # region SETTERs
+func add_item(_slot_item_info: SlotItemInfo) -> bool:
+	if _slot_item_info.position > 0:
+		_items[_slot_item_info.position - 1] = _slot_item_info
+		return true
+
+	for i in range(_items.size()):
+		if _items[i].item == null:
+			_slot_item_info.position = i + 1
+			_items[i] = _slot_item_info
+			return true
+
+	return false
+
+func use_item(position: int) -> void: # Called from _on_key_pressed
+	if _items[position - 1] == null: return print("No item in slot: ", position)
+
+	_items[position - 1].use_item(my_owner(), null)
+
+func item_updated_by_rpc(slot_item_info: SlotItemInfo) -> void:
+	_items[slot_item_info.position - 1] = slot_item_info
+	EventBus.emit_item_updated(my_owner(), slot_item_info, null)
+
 func set_attack_type_according_to_projectile_type() -> void:
 	attack_type = AttackTypes.MELEE
 	if projectile_type != Projectile.TYPES.NONE:
@@ -138,6 +173,7 @@ func add_effect(p_effect: CombatEffect) -> void:
 	p_effect.queue_free()
 
 func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void:
+	if value_to_increase == 0: return
 	if current_hp <= 0: return
 	
 	current_hp += value_to_increase
@@ -152,6 +188,7 @@ func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void
 		my_owner().rpc_handler.die()
 
 func update_current_mana(value_to_increase: int) -> void:
+	if value_to_increase == 0: return
 	current_mana = clamp(current_mana + value_to_increase, 0, get_total_mana())
 
 func register_attacker(attacker: Entity) -> void:
@@ -165,11 +202,11 @@ func set_target_entity(_target: Entity) -> void: # Used only by the server
 	_target_entity = _target
 
 func charge_skill(index: int) -> void:
-	if skills[index].is_learned == false: return
-	if skills[index].type == SkillType.PASSIVE: return
+	if _skills[index].is_learned == false: return
+	if _skills[index].type == SkillType.PASSIVE: return
 
-	print("Charging skill: ", skills[index].skill_name)
-	charged_skill = skills[index]
+	print("Charging skill: ", _skills[index].skill_name)
+	charged_skill = _skills[index]
 func uncharge_skill() -> void:
 	charged_skill = null
 	print("Uncharging skill")
@@ -260,7 +297,7 @@ func _apply_defenses(_di: DamageInfo, total_stats: CombatStats) -> void:
 		_di.total_damage_heal = total_damage
 
 func get_skill(skill_name: String) -> Skill:
-	for skill in skills:
+	for skill in _skills:
 		if skill.skill_name == skill_name: return skill
 	return null
 
@@ -278,6 +315,9 @@ func is_stunned() -> bool:
 func get_target_entity() -> Entity:
 	return GameManager.get_entity(target_entity_name)
 
+# TODO: Ver de obtener de la GUI
+func get_items() -> Array[SlotItemInfo]:
+	return _items
 # endregion GETTERs
 
 # region TRY PHISICAL ATTACK
@@ -351,7 +391,7 @@ func global_receive_damage_or_heal(_di: DamageInfo):
 
 func _try_to_add_effect_from_skills() -> void:
 	if not my_owner() is Player: return
-	for skill in skills:
+	for skill in _skills:
 		if skill.type != SkillType.PASSIVE: continue
 		if not skill.is_learned: continue
 		if not skill.apply_to_owner: continue
