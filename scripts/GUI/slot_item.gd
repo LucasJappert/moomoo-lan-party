@@ -43,7 +43,9 @@ func set_info(slot_item_info: SlotItemInfo):
 func update():
 	_update_sprite()
 	hotkey.text = HOTKEY_BY_SLOT[info.position - 1]
-	label_amount.text = str(info.quantity) if info.item else ""
+	if info.item && info.quantity > 1:
+		label_amount.text = str(info.quantity)
+	else: label_amount.text = ""
 
 func _update_sprite():
 	if not info.item:

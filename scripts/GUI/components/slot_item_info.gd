@@ -38,7 +38,6 @@ func _aux_after_use(_my_owner: Entity, _target: Entity = null) -> void:
 
 	_my_owner.rpc_handler.send_item_updated(self)
 
-
 func can_use(my_owner: Entity) -> bool:
 	if quantity <= 0: return false
 

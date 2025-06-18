@@ -6,7 +6,8 @@ const Names = {
 	HEALTH_POTION_III = "Health Potion III",
 	MANA_POTION_I = "Mana Potion I",
 	MANA_POTION_II = "Mana Potion II",
-	MANA_POTION_III = "Mana Potion III"
+	MANA_POTION_III = "Mana Potion III",
+	STUNNING_EDGE = "Stunning Edge"
 }
 
 static var _ITEMS: Dictionary[String, Item]
@@ -39,6 +40,15 @@ static func initialize_items() -> void:
 	# var aux_text: String
 	# var aux_text1: String
 	var _item: Item
+
+	# region ITEM STUNNING_EDGE
+	aux_item_name = Names.STUNNING_EDGE
+	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.PASSIVE)
+	_item = _ITEMS[aux_item_name]
+	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 3, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
+	_item.stats.stun_chance = 0.25
+	_item.stats.stun_duration = 1
+	# endregion
 
 	# region ITEM HEALTH_POTION_I
 	aux_item_name = Names.HEALTH_POTION_I
@@ -121,7 +131,14 @@ static func get_item(_item_name: String, new_copy: bool = true) -> Item:
 	return ObjectHelpers.deep_clone(_ITEMS[_item_name]) as Item
 
 func get_description() -> String:
-	var result = description + "\n"
+	var result = ""
+
+	if description: result += description + "\n"
+	
+	result += stats.get_description()
+	
+	if stats.mana > 0:
+		result += str("- Mana: ", stats.mana, "\n")
 
 	if cost > 0:
 		result += str("- Cost: ", cost, "\n")
