@@ -48,6 +48,7 @@ var mana_cost: int = 0
 var description: String = ""
 var is_learned: bool = true
 var apply_to_owner: bool = true
+var create_effect: bool = false
 var max_stacks: int = 1
 var stats: CombatStats = CombatStats.new()
 var damage_type: String = DamageType.PHYSICAL
@@ -73,6 +74,7 @@ static func initialize_skills() -> void:
 	_skill.region_rect = Rect2(0 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_skill.max_stacks = 1
 	_skill.apply_to_owner = true
+	_skill.create_effect = true
 	_skill.stats.magic_defense_percent = 0.3
 	_skill.stats.physical_defense_percent = 0.3
 	aux_text = StringHelpers.format_percent(_skill.stats.magic_defense_percent)
@@ -86,6 +88,7 @@ static func initialize_skills() -> void:
 	_skill.region_rect = Rect2(1 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_skill.max_stacks = 1
 	_skill.apply_to_owner = true
+	_skill.create_effect = true
 	_skill.stats.physical_attack_power_percent = 0.25
 	aux_text = StringHelpers.format_percent(_skill.stats.physical_attack_power_percent)
 	_skill.description = "Increases physical attack power by " + aux_text
@@ -119,7 +122,7 @@ static func initialize_skills() -> void:
 	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
 	_skill = _SKILLS[aux_skill_name]
 	_skill.region_rect = Rect2(4 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
-	_skill.apply_to_owner = false
+	_skill.apply_to_owner = true
 	_skill.max_stacks = 1
 	_skill.stats.stun_duration = 2
 	_skill.stats.stun_chance = 0.25
@@ -134,6 +137,7 @@ static func initialize_skills() -> void:
 	_skill = _SKILLS[aux_skill_name]
 	_skill.region_rect = Rect2(5 * frame_size + _ATLAS_START_POS.x, _ATLAS_START_POS.y, frame_size, frame_size)
 	_skill.apply_to_owner = true
+	_skill.create_effect = true
 	_skill.stats.life_steal_percent = 0.2
 	aux_text = StringHelpers.format_percent(_skill.stats.life_steal_percent)
 	_skill.description = "Steals " + aux_text + " of dealt damage as life."

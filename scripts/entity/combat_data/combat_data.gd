@@ -84,13 +84,6 @@ func _process(_delta: float):
 
 	_actions_after_1_second(_delta)
 
-func try_critical_hit(base_value: int) -> int:
-	var critical_damage = 0
-	var total_stats = get_total_stats()
-	if GlobalsEntityHelpers.roll_chance(total_stats.crit_chance):
-		critical_damage = base_value * total_stats.crit_multiplier
-	return critical_damage
-
 # TODO: Review
 func _server_execute_physical_damage(_target: Entity) -> void:
 	if my_owner().multiplayer.is_server() == false: return
@@ -130,6 +123,21 @@ func _server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	update_current_hp(-_di.total_damage_heal)
 
 # region SETTERs
+func _update_effects_from_items() -> void:
+	if my_owner() is Player == false: return
+
+	for slot_item_info in _items:
+		var item = slot_item_info.item
+		if item == null: continue
+		if not item.apply_to_owner: continue
+		if slot_item_info.is_consumable: continue
+		if item.type != SkillType.PASSIVE: continue
+
+		if get_effect(item.item_name): continue # Already has this effect
+
+		var new_effect = CombatEffect.get_permanent_effect(item.item_name, item.max_stacks, item.stats)
+		new_effect.set_region_rect(item.region_rect)
+		add_effect(new_effect)
 func add_item(_slot_item_info: SlotItemInfo) -> bool:
 	if _slot_item_info.position > 0:
 		_items[_slot_item_info.position - 1] = _slot_item_info
@@ -150,12 +158,14 @@ func use_item(position: int) -> void: # Called from _on_key_pressed
 
 func item_updated_by_rpc(slot_item_info: SlotItemInfo) -> void:
 	_items[slot_item_info.position - 1] = slot_item_info
+	# _update_effects_from_items()
 	EventBus.emit_item_updated(my_owner(), slot_item_info, null)
 
 func set_attack_type_according_to_projectile_type() -> void:
 	attack_type = AttackTypes.MELEE
 	if projectile_type != Projectile.TYPES.NONE:
 		attack_type = AttackTypes.RANGED
+
 func add_effect(p_effect: CombatEffect) -> void:
 	# Should be called only on the server
 	var current_stacks = 0
@@ -227,21 +237,45 @@ func toogle_keep_ground() -> void:
 # endregion SETTERs
 
 # region GETTERs
+func try_critical_hit(base_value: int) -> int:
+	var critical_damage = 0
+	var total_stats = get_total_stats()
+	if GlobalsEntityHelpers.roll_chance(total_stats.crit_chance):
+		critical_damage = base_value * total_stats.crit_multiplier
+	return critical_damage
 
 func get_total_stats() -> CombatStats:
 	# This function returns the total of all stats, including extras from effects and extras from attributes
 	var _total_stats := CombatStats.new()
 	_total_stats.accumulate_combat_stats(stats.get_total_stats_including_extras_by_attributes())
+	
 	_total_stats.accumulate_combat_stats(_get_extra_stats_by_effects().get_total_stats_including_extras_by_attributes())
+	_total_stats.accumulate_combat_stats(_get_extra_stats_by_skills().get_total_stats_including_extras_by_attributes())
+	_total_stats.accumulate_combat_stats(_get_extra_stats_by_items().get_total_stats_including_extras_by_attributes())
 
 	return _total_stats
 
 func _get_extra_stats_by_effects() -> CombatStats:
 	var extra_stats = CombatStats.new()
 	for effect in get_effects():
-		if effect.stats.stun_duration > 0 && not effect.is_owner_friendly:
-			continue # Do not add stun stats if it is an effect that is hostile to the owner
+		if effect.stats.apply_stun(): continue # Do not add stun stats if it is an effect that is hostile to the owner
 		extra_stats.accumulate_combat_stats(effect.stats)
+	return extra_stats
+
+func _get_extra_stats_by_skills() -> CombatStats:
+	var extra_stats = CombatStats.new()
+	for skill in _skills:
+		if skill.create_effect: continue
+		if skill.stats.apply_stun(): continue # Do not add stun stats if it is an effect that is hostile to the owner
+		extra_stats.accumulate_combat_stats(skill.stats)
+	return extra_stats
+
+func _get_extra_stats_by_items() -> CombatStats:
+	var extra_stats = CombatStats.new()
+	for slot_item_info in _items:
+		if slot_item_info.item == null: continue
+		if slot_item_info.item.stats.apply_stun(): continue # Do not add stun stats if it is an effect that is hostile to the owner
+		extra_stats.accumulate_combat_stats(slot_item_info.item.stats)
 	return extra_stats
 
 func get_attack_range() -> int:
@@ -313,13 +347,12 @@ func get_total_mana() -> int:
 
 func is_stunned() -> bool:
 	for effect in get_effects():
-		if effect.stats.stun_duration > 0 && not effect.is_owner_friendly: return true
+		if effect.stats.apply_stun(): return true
 	return false
 
 func get_target_entity() -> Entity:
 	return GameManager.get_entity(target_entity_name)
 
-# TODO: Ver de obtener de la GUI
 func get_items() -> Array[SlotItemInfo]:
 	return _items
 # endregion GETTERs
@@ -398,8 +431,9 @@ func _try_to_add_effect_from_skills() -> void:
 	for skill in _skills:
 		if skill.type != SkillType.PASSIVE: continue
 		if not skill.is_learned: continue
-		if not skill.apply_to_owner: continue
-		if get_effect(skill.skill_name) != null: continue # Already has this effect
+		if not skill.create_effect: continue
+		if not skill.stats.is_owner_friendly: continue
+		if get_effect(skill.skill_name): continue # Already has this effect
 
 		var new_effect = CombatEffect.get_permanent_effect(skill.skill_name, skill.max_stacks, skill.stats)
 		new_effect.set_region_rect(skill.region_rect)

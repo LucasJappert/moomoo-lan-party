@@ -46,8 +46,8 @@ static func initialize_items() -> void:
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.PASSIVE)
 	_item = _ITEMS[aux_item_name]
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 3, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
-	_item.stats.stun_chance = 0.25
-	_item.stats.stun_duration = 1
+	_item.stats.stun_chance = 0.2
+	_item.stats.stun_duration = 1.5
 	# endregion
 
 	# region ITEM HEALTH_POTION_I

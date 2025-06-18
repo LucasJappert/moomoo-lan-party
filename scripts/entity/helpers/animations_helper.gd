@@ -11,7 +11,7 @@ static func try_to_remove_obsolete_stun_animation(target: Entity):
 	if not animation_stun_active: return
 	
 	for effect in target.combat_data.get_effects():
-		if effect.stun_duration > 0: return
+		if effect.stats.apply_stun(): return
 
 	_remove_animations(target, ANIMATION_NAMES.STUN)
 

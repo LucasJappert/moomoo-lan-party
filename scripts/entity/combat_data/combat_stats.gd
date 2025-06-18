@@ -124,6 +124,10 @@ static func get_extra_stats_by_agility(_agi: int) -> CombatStats:
 	return attr
 
 # region 	GETTERs
+func apply_stun() -> bool:
+	if stun_duration > 0 && is_owner_friendly == false: return true
+
+	return false
 
 func get_description() -> String:
 	var description = ""
@@ -153,7 +157,7 @@ func get_description() -> String:
 		description += str("- Stun chance: ", StringHelpers.format_percent(stun_chance), "\n")
 
 	if stun_duration != 0:
-		description += str("- Stun duration: ", StringHelpers.format_float(stun_duration), "\n")
+		description += str("- Stun duration: ", StringHelpers.format_float(stun_duration), "s\n")
 
 	if attack_range != 0:
 		description += str("- Attack range: ", attack_range, "\n")

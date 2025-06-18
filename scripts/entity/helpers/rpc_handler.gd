@@ -59,7 +59,6 @@ func _on_add_animation(data: Dictionary):
 
 func send_item_updated(slot_item_info: SlotItemInfo) -> void:
 	if not GameManager.AM_I_HOST: return print("Not host")
-
 	var data = ObjectHelpers.to_dict(slot_item_info, true)
 	rpc("_on_slot_item_info_updated", data)
 @rpc("authority", "call_local")
