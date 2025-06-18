@@ -50,9 +50,13 @@ func set_combat_data():
 func set_enemy_type(_enemy_type: String) -> void:
 	enemy_type = _enemy_type
 
-func _on_every_timer_500ms():
+func _on_every_timer_500ms() -> void:
+	var target: Entity = GameManager.moomoo
 	var nearest_player = get_nearest_player_inside_vision()
-	movement_helper.try_set_current_path_for_enemy(nearest_player)
+	if nearest_player: target = nearest_player
+	
+	combat_data.set_target_entity(target)
+	movement_helper.set_target_entity(target)
 
 # region 	GETTERs
 

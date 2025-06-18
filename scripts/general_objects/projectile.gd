@@ -7,8 +7,8 @@ const PROJECTILE_SCENE = preload("res://scenes/general_objects/projectile.tscn")
 var speed: float = 400.0
 var direction := Vector2.ZERO
 var target_position := Vector2.ZERO
-var origin_entity: Entity
-var target_entity: Entity
+var origin_entity_name: String
+var target_entity_name: String
 var damage: int
 var _type = TYPES.ARROW
 @onready var _animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -72,6 +72,12 @@ func _get_arrow_frames() -> SpriteFrames:
 	SpritesHelper._add_animation(frames, "default", rects)
 	return frames
 
+func _get_target_entity() -> Entity:
+	return GameManager.get_entity(target_entity_name)
+
+func _get_origin_entity() -> Entity:
+	return GameManager.get_entity(origin_entity_name)
+
 func _physics_process(delta: float) -> void:
 	_server_move(delta)
 
@@ -79,8 +85,8 @@ func _server_move(delta: float):
 	if not multiplayer.is_server():
 		return
 
-	if target_entity != null:
-		target_position = target_entity.global_position
+	if _get_target_entity() != null:
+		target_position = _get_target_entity().global_position
 		direction = (target_position - position)
 		rotation = direction.angle()
 
@@ -88,8 +94,8 @@ func _server_move(delta: float):
 		position += direction.normalized() * speed * delta
 
 	if position.distance_to(target_position) < 10:
-		if target_entity != null && origin_entity != null:
-			origin_entity.combat_data._server_calculate_physical_damage(target_entity)
+		if _get_target_entity() != null && _get_origin_entity() != null:
+			_get_origin_entity().combat_data._server_execute_physical_damage(_get_target_entity())
 		queue_free()
 
 
@@ -102,8 +108,8 @@ static func launch(_origin_entity: Entity, _target_entity: Entity, _damage: int)
 	var projectile = PROJECTILE_SCENE.instantiate()
 	projectile.set_type(_origin_entity.combat_data.projectile_type)
 	projectile.damage = _damage
-	projectile.origin_entity = _origin_entity
-	projectile.target_entity = _target_entity
+	projectile.origin_entity_name = _origin_entity.name
+	projectile.target_entity_name = _target_entity.name
 	projectile.position = _origin_entity.projectile_zone.global_position
 	projectile.target_position = _target_entity.projectile_zone.global_position
 	projectile.direction = (projectile.target_position - projectile.position).normalized()

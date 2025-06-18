@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dywrecu6pml77"]
+[gd_scene load_steps=13 format=3 uid="uid://dywrecu6pml77"]
 
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="1_gbqeo"]
 [ext_resource type="Script" uid="uid://0x16271fub0a" path="res://scripts/GUI/gui_scene.gd" id="1_li5rb"]
@@ -6,6 +6,11 @@
 [ext_resource type="StyleBox" uid="uid://rxq74mic16cg" path="res://bg_label_stats.tres" id="4_0ehin"]
 [ext_resource type="PackedScene" uid="uid://c1csmsd22qmft" path="res://scenes/GUI/gui_effects_scene.tscn" id="4_fo7ei"]
 [ext_resource type="PackedScene" uid="uid://bhbym0sv2knf8" path="res://scenes/general_objects/tooltip_scene.tscn" id="5_g80tl"]
+[ext_resource type="Script" uid="uid://csnhbkb1cdu7g" path="res://scripts/GUI/components/item_slots_container.gd" id="6_7pojj"]
+[ext_resource type="PackedScene" uid="uid://dcn21jl37cx7s" path="res://scenes/GUI/slot_item.tscn" id="6_itjmd"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fo7ei"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="FontFile" id="FontFile_gbqeo"]
 subpixel_positioning = 0
@@ -195,27 +200,38 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_bottom = 90.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fo7ei")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MultiplayerHUD/Panel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
-
-[node name="HostGameButton" type="Button" parent="MultiplayerHUD/Panel/VBoxContainer"]
+[node name="HostGameButton" type="Button" parent="MultiplayerHUD/Panel"]
 unique_name_in_owner = true
 layout_mode = 2
+offset_top = 1.0
+offset_right = 403.0
+offset_bottom = 54.0
 theme_override_font_sizes/font_size = 32
 text = "Host new game"
 
-[node name="JoinAsPlayerButton" type="Button" parent="MultiplayerHUD/Panel/VBoxContainer"]
+[node name="TextIP" type="LineEdit" parent="MultiplayerHUD/Panel"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 111.0
+offset_right = 402.0
+offset_bottom = 155.0
+theme_override_font_sizes/font_size = 26
+text = "100.99.208.97"
+placeholder_text = "IP:"
+alignment = 1
+clear_button_enabled = true
+
+[node name="JoinAsPlayerButton" type="Button" parent="MultiplayerHUD/Panel"]
 unique_name_in_owner = true
 layout_mode = 2
+offset_top = 157.0
+offset_right = 403.0
+offset_bottom = 209.0
 theme_override_fonts/font = SubResource("FontFile_gbqeo")
 theme_override_font_sizes/font_size = 32
 text = "Join as Player"
@@ -672,6 +688,45 @@ offset_left = 470.0
 offset_top = 58.0
 offset_right = 555.0
 offset_bottom = 144.0
+
+[node name="ItemSlotsContainer" type="Node2D" parent="PanelBR"]
+script = ExtResource("6_7pojj")
+
+[node name="ItemSlot1" parent="PanelBR/ItemSlotsContainer" instance=ExtResource("6_itjmd")]
+offset_left = 305.0
+offset_top = 185.0
+offset_right = 360.0
+offset_bottom = 240.0
+
+[node name="ItemSlot2" parent="PanelBR/ItemSlotsContainer" instance=ExtResource("6_itjmd")]
+offset_left = 377.0
+offset_top = 185.0
+offset_right = 432.0
+offset_bottom = 240.0
+
+[node name="ItemSlot3" parent="PanelBR/ItemSlotsContainer" instance=ExtResource("6_itjmd")]
+offset_left = 449.0
+offset_top = 185.0
+offset_right = 504.0
+offset_bottom = 240.0
+
+[node name="ItemSlot4" parent="PanelBR/ItemSlotsContainer" instance=ExtResource("6_itjmd")]
+offset_left = 521.0
+offset_top = 185.0
+offset_right = 576.0
+offset_bottom = 240.0
+
+[node name="ItemSlot5" parent="PanelBR/ItemSlotsContainer" instance=ExtResource("6_itjmd")]
+offset_left = 593.0
+offset_top = 185.0
+offset_right = 648.0
+offset_bottom = 240.0
+
+[node name="ItemSlot6" parent="PanelBR/ItemSlotsContainer" instance=ExtResource("6_itjmd")]
+offset_left = 665.0
+offset_top = 185.0
+offset_right = 720.0
+offset_bottom = 240.0
 
 [node name="ManaBallCircle" type="Area2D" parent="PanelBR"]
 unique_name_in_owner = true

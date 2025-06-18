@@ -1,7 +1,7 @@
 class_name GlobalsEntityHelpers
 
 
-static func is_target_in_attack_area(_entity: Entity, _target_entity) -> bool:
+static func is_target_in_attack_range(_entity: Entity, _target_entity) -> bool:
 	if ObjectHelpers.is_null(_target_entity): return false
 
 	var dist = _entity.global_position.distance_to(_target_entity.global_position)
@@ -33,3 +33,21 @@ static func get_owner(node: Node, max_depth: int = 10) -> Entity:
 		current = current.get_parent()
 		current_depth += 1
 	return null
+
+static func get_closest_entities(origin: Vector2, max_targets: int, entities: Array[Entity], max_distance: float = MapManager.TILE_SIZE_INT * 5, excluded_entities: Array[Entity] = []) -> Array[Entity]:
+	var sorted: Array[Entity] = []
+
+	for entity in entities:
+		if entity in excluded_entities:
+			continue
+		var dist_sq := entity.global_position.distance_squared_to(origin)
+
+		if max_distance >= 0.0 and dist_sq > max_distance * max_distance: continue # out of range
+
+		sorted.append(entity)
+
+	sorted.sort_custom(func(a: Entity, b: Entity) -> bool:
+		return a.global_position.distance_squared_to(origin) < b.global_position.distance_squared_to(origin)
+	)
+
+	return sorted.slice(0, max_targets)

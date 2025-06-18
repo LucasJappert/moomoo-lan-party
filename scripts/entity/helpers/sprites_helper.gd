@@ -19,10 +19,10 @@ static func set_entity_sprites(entity: Entity) -> void:
 	entity.sprite_heigth = entity.sprite.sprite_frames.get_frame_texture("idle", 0).get_height() * entity.sprite.scale.y
 
 
-static func get_sprite_frames(start_region: Vector2, frame_size: Vector2, frames_size: int, speed: float, looped: bool) -> SpriteFrames:
+static func get_sprite_frames(start_region: Vector2, frame_size: Vector2, frames_number: int, speed: float, looped: bool) -> SpriteFrames:
 	var frames := SpriteFrames.new()
 	var regions: Array[Rect2] = []
-	for i in range(frames_size):
+	for i in range(frames_number):
 		var region := Rect2(Vector2(start_region.x + i * frame_size.x, start_region.y), frame_size)
 		regions.append(region)
 	_add_animation(frames, "default", regions)

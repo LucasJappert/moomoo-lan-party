@@ -17,6 +17,7 @@ func _on_new_target_selected(_owner: Entity, _target: Entity) -> void:
 	if name != TARGET_EFFECTS_INSTANCE: return
 	if not _owner.is_my_player(): return
 	clean_effects()
+	_add_current_effects(_target)
 
 func _process(_delta: float) -> void:
 	if GameManager.MY_PLAYER == null:
@@ -27,6 +28,11 @@ func _process(_delta: float) -> void:
 
 func add_effect(effect: CombatEffect) -> void:
 	add_child(GuiEffect.get_instance(effect), true)
+
+func _add_current_effects(target: Entity) -> void:
+	if not target: return
+	for effect in target.combat_data.get_effects():
+		add_effect(effect)
 
 func get_effects() -> Array[CombatEffect]:
 	var effects: Array[CombatEffect] = []

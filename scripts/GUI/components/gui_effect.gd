@@ -53,7 +53,7 @@ func _verify_existence_on_effects() -> void:
 			return queue_free()
 	
 	if get_parent().name == GuiEffects.TARGET_EFFECTS_INSTANCE:
-		var target = GameManager.MY_PLAYER.combat_data.target_entity()
+		var target = GameManager.MY_PLAYER.combat_data.get_target_entity()
 		if target == null: return
 		if target.combat_data.get_effect_by_unique_name(_effect.unique_name_node) == null:
 			return queue_free()

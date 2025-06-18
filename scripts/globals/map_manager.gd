@@ -1,6 +1,7 @@
 class_name MapManager
 
-const TILE_SIZE: Vector2 = Vector2(32, 32)
+const TILE_SIZE_INT: int = 32
+const TILE_SIZE: Vector2 = Vector2(TILE_SIZE_INT, TILE_SIZE_INT)
 const PLAYER_CELL_SPAWN: Vector2i = Vector2i(20, 12)
 
 const grid_width: int = 56
@@ -15,7 +16,7 @@ static func initialize():
 	_astar_grid.cell_size = TILE_SIZE
 	_astar_grid.offset = Vector2(grid_origin.x * TILE_SIZE.x, grid_origin.y * TILE_SIZE.y) # ← 🔥 clave
 	_astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
-	_astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
+	_astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_AT_LEAST_ONE_WALKABLE
 
 	_astar_grid.update()
 
@@ -54,6 +55,7 @@ static func find_path(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
 		
 	path.remove_at(0) # Remove start from path
 	return path
+
 
 static func world_to_cell(pos: Vector2) -> Vector2i:
 	return Vector2i(floor(pos.x / TILE_SIZE.x), floor(pos.y / TILE_SIZE.y))

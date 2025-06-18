@@ -32,6 +32,8 @@ const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapM
 @export var strength: int = 0
 @export var intelligence: int = 0
 
+var custom_damage_heal: CustomDamageHeal = CustomDamageHeal.new()
+
 @export var is_owner_friendly: bool = true
 var keep_latest_stacks: bool = true
 
@@ -47,6 +49,7 @@ static func get_default_instance() -> CombatStats:
 	return attr
 
 func accumulate_combat_stats(stats: CombatStats) -> CombatStats:
+	custom_damage_heal.accumulate_props(stats.custom_damage_heal)
 	hp += stats.hp
 	mana += stats.mana
 	physical_defense_percent += stats.physical_defense_percent
@@ -121,6 +124,11 @@ static func get_extra_stats_by_agility(_agi: int) -> CombatStats:
 	return attr
 
 # region 	GETTERs
+func apply_stun() -> bool:
+	if stun_duration > 0 && is_owner_friendly == false: return true
+
+	return false
+
 func get_description() -> String:
 	var description = ""
 
@@ -149,7 +157,7 @@ func get_description() -> String:
 		description += str("- Stun chance: ", StringHelpers.format_percent(stun_chance), "\n")
 
 	if stun_duration != 0:
-		description += str("- Stun duration: ", StringHelpers.format_float(stun_duration), "\n")
+		description += str("- Stun duration: ", StringHelpers.format_float(stun_duration), "s\n")
 
 	if attack_range != 0:
 		description += str("- Attack range: ", attack_range, "\n")
@@ -191,7 +199,6 @@ func get_description() -> String:
 		description += str("- Mana regeneration points: ", mana_regeneration_points, "\n")
 
 	return description
-
 
 func get_total_move_speed() -> float:
 	return clamp(move_speed + (move_speed * move_speed_percent), 1, 20)

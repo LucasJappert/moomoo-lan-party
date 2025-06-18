@@ -7,16 +7,16 @@ func _ready():
 
 func _on_child_added(effect: CombatEffect):
 	if effect.stats.freeze_duration > 0:
-		my_owner().combat_data.apply_frost_hit_animation()
+		AnimationsHelper.apply_frost_hit_animation(my_owner())
 
-	if effect.stats.stun_duration > 0:
-		my_owner().combat_data.apply_stun_animation()
+	if effect.stats.apply_stun():
+		AnimationsHelper.apply_stun_animation(my_owner())
 
 	effect.tree_exited.connect(func(): _on_child_removed(effect))
 
 func _on_child_removed(effect: CombatEffect):
-	if effect.stats.stun_duration > 0:
-		my_owner().combat_data.try_to_remove_obsolete_stun_animation()
+	if effect.stats.apply_stun():
+		AnimationsHelper.try_to_remove_obsolete_stun_animation(my_owner())
 
 func my_owner() -> Entity:
 	if _my_owner: return _my_owner

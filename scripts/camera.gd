@@ -12,6 +12,10 @@ const _bounds := Rect2(-100, -500, 1600, 1600) # x, y, width, height
 const EDGE_MARGIN := 20
 const CAMERA_SPEED := 800.0 # px/seg
 
+static var _is_dragging := false
+static var _last_mouse_position := Vector2.ZERO
+
+
 static func set_screen_size():
 	var screen_size = DisplayServer.screen_get_size(0)
 
@@ -53,32 +57,14 @@ static func try_update_zoom(event: InputEvent):
 
 	camera.zoom = Vector2.ONE * _zoom_level
 
-static func process(delta: float) -> void:
-	if not camera or GameManager.MY_PLAYER_ID < 0: return
-
-	var window_is_focused = DisplayServer.window_is_focused()
-	var window_is_minimized = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_MINIMIZED
-	if not window_is_focused or window_is_minimized: return
-
-	var window_is_maximized = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_MAXIMIZED
-
-	if window_is_focused && not window_is_maximized:
-		if MyMain.VIEWPORT_MOUSE_POSITION.x < 0 or MyMain.VIEWPORT_MOUSE_POSITION.x > MyMain.SCREEN_SIZE.x: return
-		if MyMain.VIEWPORT_MOUSE_POSITION.y < 0 or MyMain.VIEWPORT_MOUSE_POSITION.y > MyMain.SCREEN_SIZE.y: return
-
-	var direction := Vector2.ZERO
-
-	if MyMain.VIEWPORT_MOUSE_POSITION.x <= EDGE_MARGIN:
-		direction.x -= 1
-	elif MyMain.VIEWPORT_MOUSE_POSITION.x >= MyMain.SCREEN_SIZE.x - EDGE_MARGIN:
-		direction.x += 1
-
-	if MyMain.VIEWPORT_MOUSE_POSITION.y <= EDGE_MARGIN:
-		direction.y -= 1
-	elif MyMain.VIEWPORT_MOUSE_POSITION.y >= MyMain.SCREEN_SIZE.y - EDGE_MARGIN:
-		direction.y += 1
-
-	if direction == Vector2.ZERO: return
-	
-	camera.global_position += direction.normalized() * CAMERA_SPEED * delta
-	camera.global_position = camera.global_position.clamp(_bounds.position, _bounds.position + _bounds.size)
+static func handle_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_MIDDLE:
+			_is_dragging = event.pressed
+			if _is_dragging:
+				_last_mouse_position = event.position
+	elif event is InputEventMouseMotion and _is_dragging:
+		var delta = event.position - _last_mouse_position
+		_last_mouse_position = event.position
+		camera.global_position -= delta / camera.zoom
+		camera.global_position = camera.global_position.clamp(_bounds.position, _bounds.position + _bounds.size)

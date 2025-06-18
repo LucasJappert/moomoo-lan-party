@@ -52,7 +52,6 @@ func _init_moomoo_spawner() -> void:
 
 func _process(delta: float) -> void:
 	CursorManager._static_process(delta)
-	MyCamera.process(delta)
 
 
 func add_enemy(enemy: Enemy) -> void:
@@ -115,4 +114,5 @@ func show_tooltip(title: String, text: String, panel_width: int = 0) -> void:
 	my_main.gui_scene.my_tooltip.show_me(title, text, panel_width)
 func hide_tooltip() -> void:
 	my_main.gui_scene.my_tooltip.hide_me()
+func get_gui_scene() -> Node: return my_main.gui_scene
 # endregion GETTERs
