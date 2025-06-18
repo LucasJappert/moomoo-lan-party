@@ -40,11 +40,11 @@ func _ready():
 	for child in front_animations_node.get_children():
 		child.queue_free()
 	_client_init()
+	rpc_handler.initialize()
 	call_deferred("_post_ready")
 
 func _post_ready():
 	hud._post_ready(self)
-	rpc_handler.initialize()
 	combat_data._post_ready()
 	
 func _process(_delta: float) -> void:

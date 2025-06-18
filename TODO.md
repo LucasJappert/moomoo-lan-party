@@ -94,15 +94,22 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- 🔵 Add hp potion items (three levels, +1 restores 200 hp, +2 restores 500, and +3 restores 2000). Consider item synchronization.
-- Sistema de progreso de habilidades al avanzar de niveles, incremento automático de stats base
-- Crear escena para crear y unirse a salas.
+- 🔵 Agregar item que brinda 20% de chances de stunear a un enemigo
+- Mutear cuando se pierde el foco de la ventana del juego
+- Sistema de daños/curas en el tiempo
+- Sistema de lanzamiento de hechizos de enemigos
+- Agregar sonido de boses
 - Agregar skill que invoca esqueletos luego de matar a un enemigo
 - Agregar skill de velocidad de ataque de un 25%
 - Agregar skill de daño en area
 - Agregar skill de disparo multiple
 - Agregar skill que causa un x2 cuando el ataque es por la espalda del enemigo.
 - Agregar skill que cada 5 ataques regenera el 5% de la vida total a todos los aliados
+- Agregar skill que invoca copias de si mismo con cierta chance ante cada ataque
+- Sistema de rondas de enemigos aumentando las dificultades en cada oleada, cada 3 oleadas podríamos hacer una de solamente 4 boses
+- Sistema de progreso de habilidades al avanzar de niveles, incremento automático de stats base
+- Sistema de elección de Héroe
+- Crear escena para crear y unirse a salas.
 - Implementar animaciones varias como congelamiento, sangrado, sobre entidades
 - Implementar animaciones sobre tiles, como fuego, sanacion, congelamiento.
 - Configurar daños, hp, defensas, etc según el número de wave
@@ -116,6 +123,8 @@ MY TODOs: 🔵🟡✅
 - Encapsular lógica de get/set
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+- ✅ Fix item synchronization between clients. Remove the item when the quantity is 0.
+- ✅ Add hp potion items (three levels, +1 restores 200 hp, +2 restores 500, and +3 restores 2000). Consider item synchronization.
 - ✅ Implement maintain terrain with Q
 - ✅ Check synchronization of effects on the target (solved with \_add_current_effects() method).
 - ✅ Sync animations with RPC messages

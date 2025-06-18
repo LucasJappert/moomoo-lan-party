@@ -82,9 +82,10 @@ static func initialize_hero(player: Player) -> void:
 	stats.intelligence = 10
 	stats.attack_range = CombatStats.MIN_ATTACK_RANGE
 	# region Add some potions 
-	player.combat_data.add_item(SlotItemInfo.new(Item.get_item(Item.Names.HEALTH_POTION_I), 0, 20))
-	player.combat_data.add_item(SlotItemInfo.new(Item.get_item(Item.Names.MANA_POTION_I), 0, 20))
+	player.combat_data.add_item(SlotItemInfo.new(Item.get_item(Item.Names.HEALTH_POTION_I), 0, 1))
+	player.combat_data.add_item(SlotItemInfo.new(Item.get_item(Item.Names.MANA_POTION_I), 0, 1))
 	player.combat_data.add_item(SlotItemInfo.new(Item.get_item(Item.Names.HEALTH_POTION_II), 0, 20))
+	player.combat_data.add_item(SlotItemInfo.new(Item.get_item(Item.Names.HEALTH_POTION_III), 0, 20))
 	# endregion Add some potions
 
 	if player.hero_type == IRON_VEX:

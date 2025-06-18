@@ -32,13 +32,13 @@ static func set_warden_of_decay(_enemy: Enemy):
 static func set_flame_cultist(_enemy: Enemy):
 	if _enemy.enemy_type != EnemyTypes.FLAME_CULTIST: return false
 
-	_enemy.combat_data.stats.hp = 1010
+	_enemy.combat_data.stats.hp = 101000
 	_enemy.combat_data.attack_type = AttackTypes.RANGED
 	_enemy.combat_data.projectile_type = Projectile.TYPES.FIREBALL
 	_enemy.combat_data.stats.crit_chance = 0.2
 	_enemy.combat_data.stats.crit_multiplier = 1.5
 	_enemy.combat_data.stats.attack_range = 200
-	_enemy.combat_data.stats.physical_attack_power = 111
+	_enemy.combat_data.stats.physical_attack_power = 1
 	_enemy.combat_data.stats.attack_speed = 1
 	
 	_enemy.combat_data._skills.append_array([

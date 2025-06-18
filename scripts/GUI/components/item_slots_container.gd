@@ -11,6 +11,12 @@ func _ready():
 	
 	EventBus.connect(EventBus.ITEM_UPDATED, func(_owner: Entity, slot_item_info: SlotItemInfo, _target: Entity): _on_item_updated(_owner, slot_item_info, _target))
 
+func _process(_delta: float) -> void:
+	pass
+	# if GlobalsEntityHelpers.get_owner().is_my_player():
+	# 	for child in get_children():
+	# 		child.update()
+
 func _on_item_updated(_owner: Entity, slot_item_info: SlotItemInfo, _target: Entity) -> void:
 	if not _owner.is_my_player(): return
-	_slots_items[slot_item_info.position - 1].update(slot_item_info)
+	_slots_items[slot_item_info.position - 1].set_info(slot_item_info)

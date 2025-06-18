@@ -1,7 +1,7 @@
 extends Node
 class_name SoundManager
 
-static var _MUTED := false
+static var _MUTED := true
 const MAX_PLAYERS := 10
 static var _players: Array[AudioStreamPlayer] = []
 static var _initialized := false

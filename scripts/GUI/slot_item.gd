@@ -17,27 +17,6 @@ func _ready():
 	connect("mouse_entered", func(): _on_mouse_entered())
 	connect("mouse_exited", func(): _on_mouse_exited())
 
-func _on_mouse_entered():
-	if not info.item: return
-	GameManager.show_tooltip(info.item.item_name, info.item.get_description())
-
-func _on_mouse_exited():
-	if not info.item: return
-	GameManager.hide_tooltip()
-
-func update(slot_item_info: SlotItemInfo):
-	info = slot_item_info
-
-	update_sprite()
-	hotkey.text = HOTKEY_BY_SLOT[info.position - 1]
-	label_amount.text = str(info.quantity) if info.item else ""
-
-func update_sprite():
-	if not info.item: return
-
-	sprite.region_rect = info.item.region_rect
-	sprite.scale = size / sprite.region_rect.size
-
 func _process(_delta: float) -> void:
 	if not info.item: return
 
@@ -47,3 +26,30 @@ func _process(_delta: float) -> void:
 		label_cool_down.text = StringHelpers.format_float(remaining_cooldown, 1)
 	else:
 		label_cool_down.visible = false
+
+func _on_mouse_entered():
+	if not info.item: return
+	GameManager.show_tooltip(info.item.item_name, info.item.get_description())
+
+func _on_mouse_exited():
+	if not info.item: return
+	GameManager.hide_tooltip()
+
+func set_info(slot_item_info: SlotItemInfo):
+	info = slot_item_info
+
+	update()
+
+func update():
+	_update_sprite()
+	hotkey.text = HOTKEY_BY_SLOT[info.position - 1]
+	label_amount.text = str(info.quantity) if info.item else ""
+
+func _update_sprite():
+	if not info.item:
+		sprite.visible = false
+		return
+
+	sprite.visible = true
+	sprite.region_rect = info.item.region_rect
+	sprite.scale = size / sprite.region_rect.size

@@ -109,30 +109,6 @@ static func initialize_items() -> void:
 
 func set_last_used_time(last_used_time: float) -> void:
 	_last_used_time = last_used_time
-
-# func use_item(_my_owner: Entity, _target: Entity = null) -> void:
-# 	if not can_use(_my_owner): return print("Cannot use item: ", item_name)
-
-# 	var health_names = [Names.HEALTH_POTION_I, Names.HEALTH_POTION_II, Names.HEALTH_POTION_III]
-# 	if health_names.has(item_name):
-# 		_my_owner.combat_data.update_current_hp(stats.get_total_stats_including_extras_by_attributes().hp)
-
-# 	var mana_names = [Names.MANA_POTION_I, Names.MANA_POTION_II, Names.MANA_POTION_III]
-# 	if mana_names.has(item_name):
-# 		_my_owner.combat_data.update_current_mana(stats.get_total_stats_including_extras_by_attributes().mana)
-
-# 	_my_owner.combat_data.update_current_mana(-mana_cost)
-
-# 	_aux_after_use(_my_owner, _target)
-		
-# func _aux_after_use(_my_owner: Entity, _target: Entity = null) -> void:
-# 	_last_used_time = Time.get_ticks_msec() / 1000.0
-# 	amount -= 1
-# 	_my_owner.rpc_handler.send_item_updated(self)
-
-# 	if amount <= 0:
-# 		print("Removing item: ", item_name)
-		# _my_owner.combat_data.remove_item(item_name)
 # endregion ................. SETTERs
 
 
@@ -179,4 +155,5 @@ func get_remaining_cooldown() -> float:
 	var now := Time.get_ticks_msec() / 1000.0
 	var elapsed := now - _last_used_time
 	return max(0.0, cooldown - elapsed)
+
 # endregion ................. GETTERs

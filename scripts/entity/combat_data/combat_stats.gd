@@ -124,6 +124,7 @@ static func get_extra_stats_by_agility(_agi: int) -> CombatStats:
 	return attr
 
 # region 	GETTERs
+
 func get_description() -> String:
 	var description = ""
 
@@ -194,7 +195,6 @@ func get_description() -> String:
 		description += str("- Mana regeneration points: ", mana_regeneration_points, "\n")
 
 	return description
-
 
 func get_total_move_speed() -> float:
 	return clamp(move_speed + (move_speed * move_speed_percent), 1, 20)

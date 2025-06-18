@@ -67,7 +67,11 @@ func _post_ready() -> void:
 	# At the moment, the player is the only entity that has items
 	if my_owner() is Player == false: return
 	
+	if not GameManager.AM_I_HOST: return
+
 	for item in _items:
+		if my_owner().name == "Player2":
+			print("Item: ", item)
 		my_owner().rpc_handler.send_item_updated(item) # Send items to clients
 
 # TODO: Improve this
@@ -374,8 +378,8 @@ func can_physical_attack() -> bool:
 
 # region 	SERVER METHODS
 func global_receive_damage_or_heal(_di: DamageInfo):
-	var melee_attack = _di.projectile_type == Projectile.TYPES.NONE
-	var arrow_attack = _di.projectile_type == Projectile.TYPES.ARROW
+	var melee_attack = _di.projectile_type == Projectile.TYPES.NONE && _di.damage_type == DamageType.PHYSICAL
+	var arrow_attack = _di.projectile_type == Projectile.TYPES.ARROW && _di.damage_type == DamageType.PHYSICAL
 	if _di.critical > 0:
 		my_owner().hud.show_damage_heal_popup(str(- (_di.total_damage_heal - _di.critical)), Color(1, 0, 0))
 		my_owner().hud.show_damage_heal_popup(str(-_di.critical), Color(1, 1, 0))
