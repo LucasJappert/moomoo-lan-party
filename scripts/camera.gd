@@ -66,4 +66,5 @@ static func handle_input(event: InputEvent) -> void:
 	elif event is InputEventMouseMotion and _is_dragging:
 		var delta = event.position - _last_mouse_position
 		_last_mouse_position = event.position
-		camera.global_position -= delta * camera.zoom # Ajustado por zoom
+		camera.global_position -= delta / camera.zoom
+		camera.global_position = camera.global_position.clamp(_bounds.position, _bounds.position + _bounds.size)

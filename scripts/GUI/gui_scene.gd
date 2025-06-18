@@ -4,7 +4,7 @@ extends CanvasLayer
 
 @onready var my_tooltip = $MyTooltip
 
-static var SHOW_DEBUG_DATA = true
+static var SHOW_DEBUG_DATA = false
 
 var _ORIGINAL_BALL_SIZE: Vector2
 var _ORIGINAL_BALL_POS_Y: float
@@ -258,13 +258,14 @@ func _update_ball_sprite(ball_sprite: Sprite2D, current_value: int, max_value: i
 	ball_sprite.position.y = _ORIGINAL_BALL_POS_Y + crop_from_top
 
 func _update_auxiliary_labels(_delta: float) -> void:
-	if not SHOW_DEBUG_DATA: return
+	%LabelFPS.text = "FPS: %d" % Performance.get_monitor(Performance.TIME_FPS)
+	if not SHOW_DEBUG_DATA:
+		if %AuxiliaryLabel.visible: %AuxiliaryLabel.hide()
+		return
+
+	if not %AuxiliaryLabel.visible: %AuxiliaryLabel.show()
 	
-	# var fps := int(1.0 / _delta)
-	# if fps < 40: %LabelFPS.text = "FPS ⚠️: %d " % fps
-	# else: %LabelFPS.text = "FPS: %d" % fps
 	var mem_static_mb = Performance.get_monitor(Performance.MEMORY_STATIC) / (1024.0 * 1024.0)
-	var fps = Performance.get_monitor(Performance.TIME_FPS)
 	var frame_time = Performance.get_monitor(Performance.TIME_PROCESS)
 	var physics_time = Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS)
 	# var process_time = Performance.get_monitor(Performance.TIME_PROCESS)
@@ -281,7 +282,6 @@ func _update_auxiliary_labels(_delta: float) -> void:
 	📊 Debug info:
 	🔹 My position: %s
 	🔹 Memory (static): %.2f MB
-	🔹 FPS: %.0f
 	🔹 Frame Time: %.4fs
 	🔹 Physics Time: %.4fs
 	🔹 Objects: %d
@@ -294,7 +294,7 @@ func _update_auxiliary_labels(_delta: float) -> void:
 	🔹 Buffers VRAM: %.2f MB
 	""" % [
 		MapManager.world_to_cell(GameManager.MY_PLAYER.global_position),
-		mem_static_mb, fps, frame_time, physics_time,
+		mem_static_mb, frame_time, physics_time,
 		object_count, node_count, resource_count,
 		draw_calls, vertices, video_mem, tex_mem, buf_mem
 	]

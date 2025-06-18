@@ -248,7 +248,7 @@ func get_total_stats() -> CombatStats:
 	# This function returns the total of all stats, including extras from effects and extras from attributes
 	var _total_stats := CombatStats.new()
 	_total_stats.accumulate_combat_stats(stats.get_total_stats_including_extras_by_attributes())
-	
+
 	_total_stats.accumulate_combat_stats(_get_extra_stats_by_effects().get_total_stats_including_extras_by_attributes())
 	_total_stats.accumulate_combat_stats(_get_extra_stats_by_skills().get_total_stats_including_extras_by_attributes())
 	_total_stats.accumulate_combat_stats(_get_extra_stats_by_items().get_total_stats_including_extras_by_attributes())
@@ -273,7 +273,9 @@ func _get_extra_stats_by_skills() -> CombatStats:
 func _get_extra_stats_by_items() -> CombatStats:
 	var extra_stats = CombatStats.new()
 	for slot_item_info in _items:
+		if slot_item_info.is_consumable: continue
 		if slot_item_info.item == null: continue
+		if slot_item_info.item.type == SkillType.ACTIVE: continue
 		if slot_item_info.item.stats.apply_stun(): continue # Do not add stun stats if it is an effect that is hostile to the owner
 		extra_stats.accumulate_combat_stats(slot_item_info.item.stats)
 	return extra_stats

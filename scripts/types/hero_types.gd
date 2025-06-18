@@ -93,8 +93,8 @@ static func initialize_hero(player: Player) -> void:
 	if player.hero_type == IRON_VEX:
 		player.combat_data.stats.hp = 600
 		stats.evasion = 0.1
-		stats.agility = 100
-		stats.strength = 150
+		stats.agility = 10
+		stats.strength = 15
 		stats.intelligence = 10
 		player.combat_data._skills = [
 			Skill.get_skill(Skill.Names.STORM_STRIKE),
@@ -120,7 +120,7 @@ static func initialize_hero(player: Player) -> void:
 		player.combat_data._skills = [Skill.get_skill(Skill.Names.LIFESTEAL)]
 		
 	player.combat_data.stats = stats
-	player.combat_data.current_hp = int(player.combat_data.get_total_hp() * 0.9)
+	player.combat_data.current_hp = int(player.combat_data.get_total_hp())
 
 # [
 #   {
