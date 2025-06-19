@@ -94,7 +94,8 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- Sistema de progreso de habilidades al avanzar de niveles, incremento automático de stats base
+- 🔵 Sistema de progreso de habilidades al avanzar de niveles, incremento automático de stats base
+- Ordenar efectos por nombre
 - Agregar sonido de boses
 - Agregar sistema de selección de Héroe
 - Sistema de rondas de enemigos aumentando las dificultades en cada oleada, cada 3 oleadas podríamos hacer una de solamente 4 boses

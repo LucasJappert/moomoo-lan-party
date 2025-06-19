@@ -46,13 +46,14 @@ var type: String = SkillType.PASSIVE
 var cooldown: float = 0 # In seconds
 var mana_cost: int = 0
 var description: String = ""
-var is_learned: bool = true
 var apply_to_owner: bool = true
 var create_effect: bool = false
 var max_stacks: int = 1
 var stats: CombatStats = CombatStats.new()
 var damage_type: String = DamageType.PHYSICAL
 var max_targets: int = 1
+var available_levels: int = 3
+var learned_level: int = 0
 
 var region_rect: Rect2 = Rect2()
 var _last_used_time: float = - INF
@@ -147,13 +148,13 @@ static func initialize_skills() -> void:
 	aux_skill_name = Names.STORM_STRIKE
 	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.ACTIVE)
 	_skill = _SKILLS[aux_skill_name]
-	_skill.mana_cost = 20
-	_skill.cooldown = 2
 	_skill.region_rect = Rect2(_ATLAS_START_POS.x + frame_size * 0, _ATLAS_START_POS.y + frame_size * 1, frame_size, frame_size)
 	_skill.apply_to_owner = false
+	_skill.damage_type = DamageType.MAGIC
+	_skill.mana_cost = 20
+	_skill.cooldown = 2
 	_skill.stats.custom_damage_heal.base_damage_heal = 30
 	_skill.stats.custom_damage_heal.extra_value_by_intelligence = 0.2
-	_skill.damage_type = DamageType.MAGIC
 	_skill.max_targets = 5
 	aux_text = StringHelpers.format_float(_skill.stats.custom_damage_heal.base_damage_heal)
 	aux_text1 = StringHelpers.format_percent(_skill.stats.custom_damage_heal.extra_value_by_intelligence)
@@ -195,11 +196,10 @@ func get_description() -> String:
 	return result
 
 func can_use(my_owner: Entity) -> bool:
-	if not is_learned: return false
-	if my_owner.combat_data.current_mana < mana_cost: return false
+	if not learned_level: return false
+	if mana_cost > 0 and my_owner.combat_data.current_mana < mana_cost: return false
 
-	var now := Time.get_ticks_msec() / 1000.0
-	return (now - _last_used_time) >= cooldown
+	return get_remaining_cooldown() == 0
 
 func get_remaining_cooldown() -> float:
 	var now := Time.get_ticks_msec() / 1000.0

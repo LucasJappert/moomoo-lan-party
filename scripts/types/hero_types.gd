@@ -102,6 +102,7 @@ static func initialize_hero(player: Player) -> void:
 			Skill.get_skill(Skill.Names.STUNNING_STRIKE),
 			Skill.get_skill(Skill.Names.FROZEN_TOUCH)
 		]
+		# player.combat_data._skills[0].learned_level = 1
 	
 	if player.hero_type == LIORA_SUNVEIL:
 		player.combat_data._skills = [

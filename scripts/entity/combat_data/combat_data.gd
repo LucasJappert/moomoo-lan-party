@@ -200,8 +200,8 @@ func set_target_entity(_target: Entity) -> void: # Used only by the server
 	_target_entity = _target
 
 func charge_skill(index: int) -> void:
-	if _skills[index].is_learned == false: return
 	if _skills[index].type == SkillType.PASSIVE: return
+	if not _skills[index].can_use(my_owner()): return
 
 	print("Charging skill: ", _skills[index].skill_name)
 	charged_skill = _skills[index]
@@ -416,7 +416,7 @@ func _try_to_add_effect_from_skills() -> void:
 	if not my_owner() is Player: return
 	for skill in _skills:
 		if skill.type != SkillType.PASSIVE: continue
-		if not skill.is_learned: continue
+		if not skill.learned_level: continue
 		if not skill.create_effect: continue
 		if not skill.stats.is_owner_friendly: continue
 		if get_effect(skill.skill_name): continue # Already has this effect
