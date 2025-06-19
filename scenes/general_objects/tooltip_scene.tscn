@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3 uid="uid://bhbym0sv2knf8"]
+
+[ext_resource type="Script" uid="uid://bso257nrnnhgj" path="res://scripts/general_objects/my_tooltip.gd" id="1_vyso7"]
+[ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="2_jtx8c"]
+
+[node name="MyTooltip" type="Control"]
+top_level = true
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_vyso7")
+
+[node name="Panel" type="NinePatchRect" parent="."]
+layout_mode = 2
+offset_right = 200.0
+offset_bottom = 112.0
+texture = ExtResource("2_jtx8c")
+region_rect = Rect2(1056, 1952, 64, 64)
+patch_margin_left = 20
+patch_margin_top = 20
+patch_margin_right = 20
+patch_margin_bottom = 20
+
+[node name="Title" type="Label" parent="Panel"]
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 191.0
+offset_bottom = 31.0
+theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Title"
+
+[node name="Description" type="Label" parent="Panel"]
+layout_mode = 2
+offset_left = 12.0
+offset_top = 37.0
+offset_right = 189.0
+offset_bottom = 103.0
+theme_override_colors/font_color = Color(0.581033, 0.581033, 0.581033, 1)
+text = "asdad"
+autowrap_mode = 2

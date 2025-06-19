@@ -11,18 +11,18 @@ properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 2
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_s5kf1"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_5icix"]
 atlas = ExtResource("2_5icix")
-region = Rect2(0, 256, 32, 32)
+region = Rect2(0, 256, 64, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_6oe5n"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_s5kf1")
+"texture": SubResource("AtlasTexture_5icix")
 }],
 "loop": true,
-"name": &"default",
+"name": &"test",
 "speed": 5.0
 }]
 
@@ -34,4 +34,6 @@ replication_config = SubResource("SceneReplicationConfig_5icix")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 3
+scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_6oe5n")
+animation = &"test"

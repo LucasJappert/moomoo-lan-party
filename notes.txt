@@ -1,0 +1,200 @@
+Fila 1
+Frost Revenant
+Un guerrero no-muerto cubierto de escarcha eterna. Su espada congela el alma de sus víctimas.
+
+Warden of Decay
+Un caballero acorazado corrompido por la plaga. Su espada verde pudre todo lo que toca.
+
+Fila 2
+Orc Berserker
+Impulsado por la furia, este bruto carga al combate con fuerza salvaje.
+
+Lich Commander
+Un maestro de la magia de la muerte. Comanda legiones de esqueletos con su báculo dorado.
+
+Fila 3
+Boneguard
+Un guerrero esquelético resucitado para proteger ruinas antiguas. Lento pero imparable.
+
+Wraithmancer
+Combina hechicería con la no-muerte. Usa llamas azules para atormentar a sus enemigos desde lejos.
+
+Fila 4
+Dark Acolyte
+Un discípulo de la magia prohibida. Sus ojos brillan con ambición y odio.
+
+Nightfang Assassin
+Un asesino maestro entrenado en el arte del silencio. Más letal bajo la luz de la luna.
+
+
+
+Fila 1
+Flame Cultist
+Un fanático encapuchado que invoca fuego maldito. Su báculo arde con la furia de sus dioses.
+
+Mosswood Shaman
+Un hechicero del bosque cubierto de musgo y raíces. Controla la naturaleza para proteger su tierra.
+
+Fila 2
+Soulburn Skeleton
+Un esqueleto envuelto en fuego azul espiritual. Su mera presencia abrasa el alma de los vivos.
+
+Grave Warden
+Un guardián de antiguas tumbas. Su armadura encantada lo protege de cualquier daño físico.
+
+Fila 3
+Bogshade Adept
+Mago sombrío del pantano. Sus hechizos mezclan veneno y oscuridad para corroer lentamente a sus enemigos.
+
+Infernal Minotaur
+Una bestia demoníaca con hacha llameante. Su fuerza brutal arrasa todo a su paso.
+
+Fila 4
+Swamp Hexer
+Brujo corrompido por la ciénaga. Su magia venenosa debilita y envenena a distancia.
+
+Ashborn Gladiator
+Guerrero resucitado de las arenas del infierno. Usa fuego y cuchillas con destreza salvaje.
+
+
+
+Fila 1
+Ember Fiend
+Una criatura nacida del fuego oscuro. Ataca con llamas vivas desde su báculo infernal.
+
+Dusk Priestess
+Sacerdotisa de la noche que domina magia antigua. Invoca esferas de energía para repeler enemigos.
+
+Fila 2
+Blazeleaf Rogue
+Un elfo renegado que manipula el fuego. Ágil y peligroso, lanza cuchillas ardientes con precisión.
+
+Hellhorn Brute
+Demonio guerrero con puños de fuego. Su fuerza descomunal y temperamento salvaje lo hacen temido.
+
+Fila 3
+Crimson Archer
+Un arquero tenebroso con flechas mágicas. Nunca falla su disparo, ni siquiera en la oscuridad.
+
+Frostskin Goblin
+Un goblin infundido con magia de hielo. Aunque débil, congela a sus enemigos con rápidos hechizos.
+
+Fila 4
+Ghostblade
+Asesino espectral silencioso. Se mueve entre sombras y su cuchilla corta tanto carne como alma.
+
+Moonfang Duelist
+Guerrera elfa letal bajo la luz lunar. Ataca en rápidos combos con cuchillas dobles encantadas.
+
+
+Fila 1
+Venom Guard
+Un guerrero orco con lanza venenosa. Su contacto causa parálisis lenta y dolorosa.
+
+Rotpiercer
+Soldado en descomposición que maneja una lanza púrpura impregnada con energía oscura.
+
+Fila 2
+Ashen Knight
+Un caballero embrujado que blande una espada espectral. Protege antiguos reinos olvidados.
+
+Inferno Hornbeast
+Bestia infernal con un hacha de magma. Su fuerza y ferocidad destruyen cualquier defensa.
+
+Fila 3
+Silverblade Hunter
+Guerrera élfica precisa y letal. Especialista en eliminar enemigos mágicos con su hoja encantada.
+
+Cinderflame Wielder
+Hechicero del caos que controla el fuego como si fuera una extensión de su cuerpo.
+
+Fila 4
+Bone Bulwark
+Esqueleto con escudo encantado. Actúa como tanque no-muerto protegiendo a sus aliados caídos.
+
+Frostbone Warrior
+Guerrero esquelético imbuido con magia de hielo. Su maza inflige daño y ralentiza a sus enemigos.
+
+
+
+# 🌀 Activas
+# Shadow Strike – Golpe físico con +30% probabilidad de crítico y 150% de daño.
+
+# Arcane Pulse – Onda de energía mágica que daña a todos los enemigos cercanos.
+
+# Stunning Roar – Intenta aturdir a los enemigos en un área cercana.
+
+# Poison Arrow – Flecha que envenena al enemigo por varios segundos.
+
+# Quickstep – Aumenta evasión y velocidad de ataque por unos segundos.
+
+# Fireball – Lanza una bola de fuego que explota en área.
+
+# Frost Nova – Congela temporalmente a los enemigos cercanos.
+
+# Blink – Teletransporte a corta distancia.
+
+# Ground Slam – Golpe al suelo que daña y empuja enemigos alrededor.
+
+# Life Drain – Roba vida del enemigo y la transfiere al usuario.
+
+# Flame Dash – Avanza envuelto en fuego, dañando a quienes atraviesa.
+
+# Multi Shot – Dispara múltiples proyectiles a diferentes enemigos.
+
+# Thunder Clap – Descarga eléctrica que aturde a un objetivo.
+
+# Searing Blade – Aumenta el daño del próximo ataque cuerpo a cuerpo.
+
+# Guardian’s Shield – Absorbe daño durante unos segundos.
+
+# Whirlwind – Ataque giratorio que golpea a todos los enemigos cercanos.
+
+# Sniper Shot – Disparo con gran daño a larga distancia.
+
+# Crippling Trap – Coloca una trampa que reduce la velocidad y evasión.
+
+# Meteor Fall – Invoca un meteorito que cae sobre un área.
+
+# Heal Wave – Cura al usuario y a aliados cercanos.
+
+# 🌱 Pasivas
+# Thick Skin – Aumenta defensa física y mágica permanentemente.
+
+# Killer Instinct – Aumenta probabilidad de crítico contra enemigos heridos.
+
+# Battle Rhythm – Incrementa velocidad de ataque con cada golpe consecutivo.
+
+# Unyielding Will – Otorga un escudo al estar por debajo del 20% de vida.
+
+# Stun Mastery – Mejora la probabilidad y duración de aturdimientos.
+
+# Magic Efficiency – Reduce el costo de maná de habilidades mágicas.
+
+# Evasive Stance – Aumenta la evasión en combate cuerpo a cuerpo.
+
+# Fury – Incrementa daño a medida que se pierde vida.
+
+# Precision – Aumenta la precisión y reduce la evasión del enemigo.
+
+# Mana Leech – Recupera maná al infligir daño mágico.
+
+# Bloodthirst – Cura un pequeño porcentaje de HP al matar enemigos.
+
+# Arcane Resilience – Otorga resistencia al daño mágico.
+
+# Shielded Core – Reduce todo el daño recibido un 5%.
+
+# Adrenaline – Aumenta la velocidad de movimiento cuando se recibe daño.
+
+# Projectile Expert – Aumenta el alcance y daño de ataques con proyectiles.
+
+# Regeneration – Recupera lentamente HP con el tiempo.
+
+# Armor Breaker – Los ataques tienen chance de reducir la defensa del enemigo.
+
+# Spell Echo – Las habilidades mágicas tienen una probabilidad de duplicarse.
+
+# Stealth Mastery – Mejora evasión y daño al atacar desde el sigilo.
+
+# Explosive Death – Al morir, inflige daño a enemigos cercanos.

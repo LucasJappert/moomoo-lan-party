@@ -1,7 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://bs7blwah20esy"]
+[gd_scene load_steps=5 format=3 uid="uid://bs7blwah20esy"]
 
 [ext_resource type="PackedScene" uid="uid://dh82ovsrtutto" path="res://scenes/entity/entity_scene.tscn" id="1_wbrma"]
-[ext_resource type="Texture2D" uid="uid://b55rbh85p2cfw" path="res://assets/heros/1.png" id="2_uuy8k"]
 [ext_resource type="Script" uid="uid://q3chynnhllhm" path="res://scripts/entity/player/player.gd" id="2_ylf3p"]
 [ext_resource type="Script" uid="uid://dgo10xmu82ida" path="res://scripts/entity/player/client_inputs.gd" id="3_uyepr"]
 
@@ -9,10 +8,18 @@
 properties/0/path = NodePath(".:player_id")
 properties/0/spawn = true
 properties/0/replication_mode = 2
+properties/1/path = NodePath(".:current_exp")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:hero_type")
+properties/2/spawn = true
+properties/2/replication_mode = 2
 
 [node name="Player" instance=ExtResource("1_wbrma")]
 script = ExtResource("2_ylf3p")
 player_id = 0
+current_exp = 0
+hero_type = "Iron Vex"
 
 [node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="0"]
 replication_config = SubResource("SceneReplicationConfig_2y2wq")
@@ -21,9 +28,8 @@ replication_config = SubResource("SceneReplicationConfig_2y2wq")
 unique_name_in_owner = true
 script = ExtResource("3_uyepr")
 
-[node name="Sprite2D" parent="." index="5"]
-texture = ExtResource("2_uuy8k")
+[node name="MyHealthBar" parent="HUD" index="0"]
+position = Vector2(0, -62)
 
-[node name="Label" parent="HUD" index="2"]
-offset_top = 6.0
-offset_bottom = 29.0
+[node name="CollisionShape2D" parent="ProjectileZone" index="0"]
+position = Vector2(0, -25)

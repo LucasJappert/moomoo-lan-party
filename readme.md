@@ -58,6 +58,88 @@ Built with ❤️ and cows by **Lucas Jappert** and the MooMoo LAN community.
 
 Below are screenshots and images showing the progress of MooMoo LAN Party over time. This section will be updated as new features and visuals are added.
 
+### 📅 2024-06-18
+
+![](.images/image.png)
+
+- ✅ Add item that gives 20% chance to stun an enemy
+- ✅ Enable camera movement by holding down the mouse wheel
+- ✅ Fix item synchronization between clients. Remove the item when the quantity is 0.
+- ✅ Add hp potion items (three levels, +1 restores 200 hp, +2 restores 500, and +3 restores 2000). Consider item synchronization.
+- ✅ Implement maintain terrain with Q
+- ✅ Check synchronization of effects on the target (solved with \_add_current_effects() method).
+- ✅ Sync animations with RPC messages
+- ✅ Add active skill of lightning and implement the necessary features in the skill slot (such as remaining time for use)
+- ✅ Allow diagonal movements when possible
+- ✅ Maintain an aspect ratio of 16:9
+- ✅ Correct attack when changing target while already attacking another one
+- ✅ Fix stuck movements when near Moomoo
+- ✅ Fix object synchronization for clients that join the room.
+- ✅ Remove basemana and basehp and move them to stats.
+- ✅ Remove extends Node from CombatStats. Free unused objects. Significant memory improvement.
+- ✅ Fix sprite on target panel
+- ✅ Refactor spawn functions
+- ✅ Check synchronization of sprite projectiles
+- ✅ Move to_dict and from_dict to a helper
+- ✅ Draw effects of my target
+- ✅ Draw effects of my player
+- ✅ Implement tooltip to show information when hovering over certain elements, such as skills.
+- ✅ Update my player's avatar and the entities being attacked.
+- ✅ Move and attack target when out of range doing nothing.
+- ✅ Print FPS (drops below 60 when laptop is plugged in)
+- ✅ Add target avatar at the top left
+- ✅ Implement regeneration logic for health and mana
+- ✅ Fix clicks outside grid
+- ✅ Shift + click function to move to a tile
+- ✅ Draw avatar in the left panel and the hero's name
+- ✅ Fix sprite position in enemies
+- ✅ Start logic for strength, agility, and intelligence attributes
+- ✅ Set first hero types
+- ✅ Start building ingame UI
+- ✅ Start implementing experience and leveling logic
+- ✅ Set sprites by code in heroes
+- ✅ Sync Moomoo
+- ✅ Start drawing the 4 abilities on the bottom bar
+- ✅ Start showing my player stats
+- ✅ Move towards target when player wants to attack an enemy but is out of range.
+
+### 📅 2024-06-13
+
+- ✅ Implement camera movement with mouse (not fixed to player)
+- ✅ Move towards target when player wants to attack an enemy but is out of range.
+- ✅ Add life-stealing skill.
+- ✅ Implement skills in enemies (also useful for heroes later)
+- ✅ Set sprites by code in heroes
+- ✅ Sync Moomoo
+- ✅ Start drawing the 4 abilities on the bottom bar
+- ✅ Start showing my player stats
+- ✅ Fix sprite position in enemies
+- ✅ Draw avatar in the left panel and the hero's name
+- ✅ Shift + click function to move to a tile
+- ✅ Fix clicks outside grid
+- ✅ Implement regeneration logic for health and mana
+- ✅ Add target avatar at the top left
+- ✅ Print FPS (drops below 60 when laptop is plugged in)
+- ✅ Move and attack target when out of range doing nothing.
+- ✅ Update my player's avatar and the entities being attacked.
+- ✅ Implement tooltip to show information when hovering over certain elements, such as skills.
+- ✅ Draw effects of my player
+- ✅ Draw effects of my target
+- ✅ Move to_dict and from_dict to a helper
+- ✅ Check synchronization of sprite projectiles
+- ✅ Refactor spawn functions
+- ✅ Fix sprite on target panel
+- ✅ Remove extends Node from CombatStats. Free unused objects. Significant memory improvement.
+- ✅ Remove basemana and basehp and move them to stats.
+- ✅ Fix object synchronization for clients that join the room.
+- 🟡 Start implementing experience and leveling logic
+- 🟡 Start building ingame UI
+- 🟡 Set first hero types
+- 🟡 Start logic for strength, agility, and intelligence attributes
+
+![](.images/image7.png)
+![](.images/image8.png)
+
 ### 📅 2024-05-21
 
 - Major improvements in pathfinding using AStarGrid2D.

@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://b8an1mw28601v"]
+
+[ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="1_7450j"]
+[ext_resource type="Script" uid="uid://r13kggna2l5i" path="res://scripts/GUI/components/gui_effect.gd" id="1_vimh2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tcjjn"]
+atlas = ExtResource("1_7450j")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5q3c3"]
+size = Vector2(32, 32)
+
+[node name="GuiEffectScene" type="Control"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+script = ExtResource("1_vimh2")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = SubResource("AtlasTexture_tcjjn")
+centered = false
+region_enabled = true
+region_rect = Rect2(64, 1632, 64, 64)
+
+[node name="Area2D" type="Area2D" parent="."]
+unique_name_in_owner = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(16, 16)
+shape = SubResource("RectangleShape2D_5q3c3")

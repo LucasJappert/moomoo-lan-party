@@ -1,6 +1,7 @@
 class_name MapManager
 
-const TILE_SIZE: Vector2 = Vector2(32, 32)
+const TILE_SIZE_INT: int = 32
+const TILE_SIZE: Vector2 = Vector2(TILE_SIZE_INT, TILE_SIZE_INT)
 const PLAYER_CELL_SPAWN: Vector2i = Vector2i(20, 12)
 
 const grid_width: int = 56
@@ -15,7 +16,7 @@ static func initialize():
 	_astar_grid.cell_size = TILE_SIZE
 	_astar_grid.offset = Vector2(grid_origin.x * TILE_SIZE.x, grid_origin.y * TILE_SIZE.y) # ← 🔥 clave
 	_astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
-	_astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
+	_astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_AT_LEAST_ONE_WALKABLE
 
 	_astar_grid.update()
 
@@ -24,9 +25,30 @@ static func initialize():
 			var cell = Vector2i(x, y)
 			_astar_grid.set_point_solid(cell, false)
 
+static func find_nearest_valid_point(target: Vector2i) -> Vector2i:
+	var closest_point := Vector2i.ZERO
+	var min_distance := INF
+
+	for y in range(grid_origin.y, grid_origin.y + grid_height):
+		for x in range(grid_origin.x, grid_origin.x + grid_width):
+			var point := Vector2i(x, y)
+			if _astar_grid.is_point_solid(point):
+				continue
+
+			var dist := target.distance_squared_to(point)
+			if dist < min_distance:
+				min_distance = dist
+				closest_point = point
+
+	return closest_point
+
 static func find_path(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
-	if not _astar_grid.is_in_boundsv(start) or not _astar_grid.is_in_boundsv(end):
-		return []
+	if not _astar_grid.is_in_boundsv(start): return []
+
+	# Adjust the destination point if it is out of the grid
+	if not _astar_grid.is_in_boundsv(end):
+		end = find_nearest_valid_point(end)
+
 	var path: Array[Vector2i] = _astar_grid.get_id_path(start, end, true)
 	if path.is_empty():
 		return []
@@ -34,11 +56,15 @@ static func find_path(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
 	path.remove_at(0) # Remove start from path
 	return path
 
+
 static func world_to_cell(pos: Vector2) -> Vector2i:
 	return Vector2i(floor(pos.x / TILE_SIZE.x), floor(pos.y / TILE_SIZE.y))
 
 static func cell_to_world(cell: Vector2i) -> Vector2:
 	return Vector2(cell.x * TILE_SIZE.x + TILE_SIZE.x / 2, cell.y * TILE_SIZE.y + TILE_SIZE.y / 2)
+	
+static func cell_to_world_2i(cell: Vector2i) -> Vector2i:
+	return Vector2i(int(cell.x * TILE_SIZE.x + TILE_SIZE.x / 2), int(cell.y * TILE_SIZE.y + TILE_SIZE.y / 2))
 	
 static func set_cell_blocked(cell: Vector2i, blocked: bool):
 	if _astar_grid.is_in_boundsv(cell):
