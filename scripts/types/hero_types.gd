@@ -91,10 +91,10 @@ static func initialize_hero(player: Player) -> void:
 	# endregion Add some potions
 
 	if player.hero_type == IRON_VEX:
-		player.combat_data.stats.hp = 600
+		stats.hp = 600
 		stats.evasion = 0.1
 		stats.agility = 10
-		stats.strength = 15
+		stats.strength = 1
 		stats.intelligence = 10
 		player.combat_data._skills = [
 			Skill.get_skill(Skill.Names.STORM_STRIKE),

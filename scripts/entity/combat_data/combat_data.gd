@@ -123,21 +123,6 @@ func _server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	update_current_hp(-_di.total_damage_heal)
 
 # region SETTERs
-func _update_effects_from_items() -> void:
-	if my_owner() is Player == false: return
-
-	for slot_item_info in _items:
-		var item = slot_item_info.item
-		if item == null: continue
-		if not item.apply_to_owner: continue
-		if slot_item_info.is_consumable: continue
-		if item.type != SkillType.PASSIVE: continue
-
-		if get_effect(item.item_name): continue # Already has this effect
-
-		var new_effect = CombatEffect.get_permanent_effect(item.item_name, item.max_stacks, item.stats)
-		new_effect.set_region_rect(item.region_rect)
-		add_effect(new_effect)
 func add_item(_slot_item_info: SlotItemInfo) -> bool:
 	if _slot_item_info.position > 0:
 		_items[_slot_item_info.position - 1] = _slot_item_info
@@ -158,7 +143,6 @@ func use_item(position: int) -> void: # Called from _on_key_pressed
 
 func item_updated_by_rpc(slot_item_info: SlotItemInfo) -> void:
 	_items[slot_item_info.position - 1] = slot_item_info
-	# _update_effects_from_items()
 	EventBus.emit_item_updated(my_owner(), slot_item_info, null)
 
 func set_attack_type_according_to_projectile_type() -> void:

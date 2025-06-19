@@ -1,6 +1,7 @@
 extends Node
 class_name SoundManager
 
+const FORCE_MUTED := false
 static var _MUTED := false
 const MAX_PLAYERS := 10
 static var _players: Array[AudioStreamPlayer] = []
@@ -8,9 +9,11 @@ static var _initialized := false
 static var _playing_counts: Dictionary = {} # ← sonido_path : cantidad
 
 static func initialize():
-	if _initialized:
-		return
+	if _initialized: return
 
+	EventBus.connect(EventBus.WINDOW_FOCUSED, func(): _MUTED = false)
+	EventBus.connect(EventBus.WINDOW_UNFOCUSED, func(): _MUTED = true)
+	
 	for i in MAX_PLAYERS:
 		var player := AudioStreamPlayer.new()
 		player.bus = "Master"
@@ -21,8 +24,9 @@ static func initialize():
 	_initialized = true
 	print("✅ SoundManager initialized with %d players" % MAX_PLAYERS)
 
+
 static func _play_sfx(path: String, volume: float = 0.0, max_simultaneous: int = 2):
-	if _MUTED: return
+	if FORCE_MUTED or _MUTED: return
 	if not _initialized:
 		push_error("⚠️ SoundManager not initialized.")
 		return
@@ -56,7 +60,6 @@ static func _play_sfx(path: String, volume: float = 0.0, max_simultaneous: int =
 		if _playing_counts.has(path):
 			_playing_counts[path] = max(_playing_counts[path] - 1, 0)
 	)
-	
 
 static func _get_available_player() -> AudioStreamPlayer:
 	for player in _players:
