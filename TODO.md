@@ -94,7 +94,6 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- 🔵 Usar items clickeando desde el inventario
 - Sistema de progreso de habilidades al avanzar de niveles, incremento automático de stats base
 - Agregar sonido de boses
 - Agregar sistema de selección de Héroe
@@ -124,6 +123,7 @@ MY TODOs: 🔵🟡✅
 - Encapsular lógica de get/set
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+- ✅ Use items and skills by clicking from the inventory
 - ✅ Fix case when hero is in range of multiple enemies and doesn't change target if we click on a different enemy
 - ✅ Mute when losing focus on the game window
 - ✅ Add item that gives 20% chance to stun an enemy

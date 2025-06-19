@@ -7,8 +7,6 @@ extends Control
 var skill: Skill
 var slot_number: int
 
-var HOTKEY_BY_SLOT = ["A", "S", "D", "F"]
-
 func _ready():
 	connect("mouse_entered", func(): _on_mouse_entered())
 	connect("mouse_exited", func(): _on_mouse_exited())
@@ -21,10 +19,14 @@ func _on_mouse_exited():
 	if not skill: return
 	GameManager.hide_tooltip()
 
+func _gui_input(event):
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		KeyboardHelper.key_pressed(KeyboardHelper.SKILL_HOTKEYS[slot_number - 1], GameManager.MY_PLAYER)
+
 func initialize(p_skill: Skill, _slot_number: int):
 	skill = p_skill
 	slot_number = _slot_number
-	hotkey.text = HOTKEY_BY_SLOT[slot_number - 1]
+	hotkey.text = OS.get_keycode_string(KeyboardHelper.SKILL_HOTKEYS[slot_number - 1])
 	if skill.type == SkillType.PASSIVE: hotkey.visible = false
 	sprite.region_rect = skill.region_rect
 

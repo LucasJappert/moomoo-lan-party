@@ -3,6 +3,7 @@ class_name ClientInputs
 extends Node2D
 
 @onready var player: Player = get_parent()
+
 static var SHIFT_PRESSED = false
 
 func _ready():
@@ -59,30 +60,9 @@ func _on_left_click(_target_entity_name: String):
 
 @rpc("authority", "call_local")
 func _on_key_pressed(_keycode: int):
-	if _keycode == KEY_A:
-		player.combat_data.charge_skill(0)
-	if _keycode == KEY_S:
-		player.combat_data.charge_skill(1)
-	if _keycode == KEY_D:
-		player.combat_data.charge_skill(2)
-	if _keycode == KEY_F:
-		player.combat_data.charge_skill(3)
+	KeyboardHelper.key_pressed(_keycode, player)
 
-	if _keycode == KEY_Q:
-		player.combat_data.toogle_keep_ground()
-
-	# TODO: Improve this
-	if _keycode == KEY_1:
-		player.combat_data.use_item(1)
-	if _keycode == KEY_2:
-		player.combat_data.use_item(2)
-	if _keycode == KEY_3:
-		player.combat_data.use_item(3)
-	if _keycode == KEY_4:
-		player.combat_data.use_item(4)
-	if _keycode == KEY_5:
-		player.combat_data.use_item(5)
-	if _keycode == KEY_6:
-		player.combat_data.use_item(6)
-
+@rpc("authority", "call_local")
+func _on_inventory_slot_clicked(_position: int):
+	player.combat_data.use_item(_position)
 # endregion SERVER MESSAGES RECEIVED FROM CLIENT

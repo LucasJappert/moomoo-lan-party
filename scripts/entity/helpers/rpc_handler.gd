@@ -6,17 +6,15 @@ var _my_owner: Entity
 var _combat_data: CombatData
 var _hud: HUD
 
-# func _init(my_owner: Entity):
-# 	_my_owner = my_owner
-# 	_combat_data = _my_owner.combat_data
-# 	_hud = _my_owner.hud
 func initialize() -> void:
 	_my_owner = GlobalsEntityHelpers.get_owner(self)
 	_combat_data = _my_owner.combat_data
 	_hud = _my_owner.hud
 
 # region 	SERVER MESSAGES RECEIVED FROM CLIENT
-
+func key_pressed(keycode: int): rpc("_on_key_pressed", keycode)
+@rpc("authority", "call_local")
+func _on_key_pressed(keycode: int): _my_owner.key_pressed(keycode)
 # endregion SERVER MESSAGES RECEIVED FROM CLIENT
 
 

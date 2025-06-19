@@ -16,7 +16,6 @@ func _ready():
 	label_cool_down.visible = false
 	connect("mouse_entered", func(): _on_mouse_entered())
 	connect("mouse_exited", func(): _on_mouse_exited())
-
 func _process(_delta: float) -> void:
 	if not info.item: return
 
@@ -35,6 +34,10 @@ func _on_mouse_exited():
 	if not info.item: return
 	GameManager.hide_tooltip()
 
+func _gui_input(event):
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		KeyboardHelper.key_pressed(KeyboardHelper.INVENTORY_HOTKEYS[info.position - 1], GameManager.MY_PLAYER)
+		
 func set_info(slot_item_info: SlotItemInfo):
 	info = slot_item_info
 
@@ -42,7 +45,7 @@ func set_info(slot_item_info: SlotItemInfo):
 
 func update():
 	_update_sprite()
-	hotkey.text = HOTKEY_BY_SLOT[info.position - 1]
+	hotkey.text = OS.get_keycode_string(KeyboardHelper.INVENTORY_HOTKEYS[info.position - 1])
 	if info.item && info.quantity > 1:
 		label_amount.text = str(info.quantity)
 	else: label_amount.text = ""
