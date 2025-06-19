@@ -94,10 +94,14 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- Mutear cuando se pierde el foco de la ventana del juego
+- 🔵 Usar items clickeando desde el inventario
+- Sistema de progreso de habilidades al avanzar de niveles, incremento automático de stats base
+- Agregar sonido de boses
+- Agregar sistema de selección de Héroe
+- Sistema de rondas de enemigos aumentando las dificultades en cada oleada, cada 3 oleadas podríamos hacer una de solamente 4 boses
+- Agregar un score que tenga en cuenta la velocidad con que se avanza a cada oleada
 - Sistema de daños/curas en el tiempo
 - Sistema de lanzamiento de hechizos de enemigos
-- Agregar sonido de boses
 - Agregar skill que invoca esqueletos luego de matar a un enemigo
 - Agregar skill de velocidad de ataque de un 25%
 - Agregar skill de daño en area
@@ -105,8 +109,6 @@ MY TODOs: 🔵🟡✅
 - Agregar skill que causa un x2 cuando el ataque es por la espalda del enemigo.
 - Agregar skill que cada 5 ataques regenera el 5% de la vida total a todos los aliados
 - Agregar skill que invoca copias de si mismo con cierta chance ante cada ataque
-- Sistema de rondas de enemigos aumentando las dificultades en cada oleada, cada 3 oleadas podríamos hacer una de solamente 4 boses
-- Sistema de progreso de habilidades al avanzar de niveles, incremento automático de stats base
 - Sistema de elección de Héroe
 - Crear escena para crear y unirse a salas.
 - Implementar animaciones varias como congelamiento, sangrado, sobre entidades
@@ -122,6 +124,8 @@ MY TODOs: 🔵🟡✅
 - Encapsular lógica de get/set
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+- ✅ Fix case when hero is in range of multiple enemies and doesn't change target if we click on a different enemy
+- ✅ Mute when losing focus on the game window
 - ✅ Add item that gives 20% chance to stun an enemy
 - ✅ Enable camera movement by holding down the mouse wheel
 - ✅ Fix item synchronization between clients. Remove the item when the quantity is 0.

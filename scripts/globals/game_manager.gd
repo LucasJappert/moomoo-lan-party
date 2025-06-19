@@ -52,6 +52,7 @@ func _init_moomoo_spawner() -> void:
 
 func _process(delta: float) -> void:
 	CursorManager._static_process(delta)
+	WindowFocusWatcher._process(delta)
 
 
 func add_enemy(enemy: Enemy) -> void:

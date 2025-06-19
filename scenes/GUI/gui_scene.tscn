@@ -216,6 +216,7 @@ text = "Host new game"
 
 [node name="TextIP" type="LineEdit" parent="MultiplayerHUD/Panel"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 0
 offset_top = 111.0
 offset_right = 402.0
@@ -228,13 +229,14 @@ clear_button_enabled = true
 
 [node name="JoinAsPlayerButton" type="Button" parent="MultiplayerHUD/Panel"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 offset_top = 157.0
 offset_right = 403.0
 offset_bottom = 209.0
 theme_override_fonts/font = SubResource("FontFile_gbqeo")
 theme_override_font_sizes/font_size = 32
-text = "Join as Player"
+text = "Join as Player (beta)"
 
 [node name="PanelTL" type="Panel" parent="."]
 theme_override_styles/panel = SubResource("StyleBoxFlat_acekp")

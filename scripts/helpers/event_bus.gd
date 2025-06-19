@@ -1,5 +1,15 @@
 extends Node
 
+const WINDOW_FOCUSED := "window_focused"
+signal window_focused()
+func emit_window_focused() -> void:
+	emit_signal(WINDOW_FOCUSED)
+
+const WINDOW_UNFOCUSED := "window_unfocused"
+signal window_unfocused()
+func emit_window_unfocused() -> void:
+	emit_signal(WINDOW_UNFOCUSED)
+
 const NEW_TARGET_SELECTED := "new_target_selected"
 signal new_target_selected(p_owner: Entity, p_target: Entity)
 func emit_new_target_selected(p_owner: Entity, p_target: Entity):
