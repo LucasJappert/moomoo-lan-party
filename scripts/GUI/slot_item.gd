@@ -28,7 +28,7 @@ func _process(_delta: float) -> void:
 
 func _on_mouse_entered():
 	if not info.item: return
-	GameManager.show_tooltip(info.item.item_name, info.item.get_description())
+	GameManager.show_tooltip(info.item.my_name, info.item.get_description())
 
 func _on_mouse_exited():
 	if not info.item: return

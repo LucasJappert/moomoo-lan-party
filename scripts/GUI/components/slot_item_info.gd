@@ -14,12 +14,12 @@ func use_item(_my_owner: Entity, _target: Entity = null) -> void:
 	if not can_use(_my_owner): return print("Cannot use slot: ", position)
 
 	var health_names = [Item.Names.HEALTH_POTION_I, Item.Names.HEALTH_POTION_II, Item.Names.HEALTH_POTION_III]
-	if health_names.has(item.item_name):
+	if health_names.has(item.my_name):
 		if not _my_owner.combat_data.current_hp < _my_owner.combat_data.get_total_hp(): return
 		_my_owner.combat_data.update_current_hp(item.stats.get_total_stats_including_extras_by_attributes().hp)
 
 	var mana_names = [Item.Names.MANA_POTION_I, Item.Names.MANA_POTION_II, Item.Names.MANA_POTION_III]
-	if mana_names.has(item.item_name):
+	if mana_names.has(item.my_name):
 		if not _my_owner.combat_data.current_mana < _my_owner.combat_data.get_total_mana(): return
 		_my_owner.combat_data.update_current_mana(item.stats.get_total_stats_including_extras_by_attributes().mana)
 
@@ -29,7 +29,7 @@ func use_item(_my_owner: Entity, _target: Entity = null) -> void:
 func _aux_after_use(_my_owner: Entity, _target: Entity = null) -> void:
 	if item.mana_cost > 0: _my_owner.combat_data.update_current_mana(-item.mana_cost)
 
-	item.set_last_used_time(Time.get_ticks_msec() / 1000.0)
+	item.set_last_used_time()
 
 	quantity -= 1
 	if quantity <= 0:

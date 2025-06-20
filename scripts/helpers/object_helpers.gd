@@ -8,51 +8,14 @@ static func is_enemy(_entity) -> bool:
 	
 	return _entity is Enemy
 
-static func deep_clone(source: Object) -> Object:
-	if source == null or source.get_script() == null:
+static func deep_clone(original: Object) -> Object:
+	if original == null or original.get_script() == null:
 		push_error("❗ deep_clone: The object is not a valid instance or has no associated script.")
 		return null
 
-	var target = source.get_script().new()
-	var props = source.get_property_list()
+	var target = original.get_script().new()
 
-	for prop in props:
-		var name = prop.name
-		if name == "script": continue # ❗Cannot clone the 'script' property
-
-		if prop.has("name") and prop.has("usage"):
-			var usage = prop.usage
-
-			# print("Cloning property: ", name, " usage: ", usage)
-			var is_storage: bool = (usage & PROPERTY_USAGE_STORAGE) != 0
-			var is_script_var: bool = (usage & PROPERTY_USAGE_SCRIPT_VARIABLE) != 0
-			var is_explicit: bool = name == "name"
-			if is_storage or is_script_var or is_explicit:
-				if name != "script" and target.has_method("set"):
-					var value = source.get(name)
-					target.set(name, _clone_value(value))
-
-	return target
-
-static func _clone_value(value):
-	match typeof(value):
-		TYPE_OBJECT:
-			if value != null and value.has_method("get_script"):
-				return deep_clone(value)
-			else:
-				return value
-		TYPE_DICTIONARY:
-			var clone = {}
-			for k in value:
-				clone[k] = _clone_value(value[k])
-			return clone
-		TYPE_ARRAY:
-			var clone = []
-			for v in value:
-				clone.append(_clone_value(v))
-			return clone
-		_:
-			return value
+	return from_dict(target, to_dict(original))
 
 static func to_dict(obj: Object, just_my_vars: bool = false) -> Dictionary:
 	if not obj:
@@ -78,11 +41,14 @@ static func to_dict(obj: Object, just_my_vars: bool = false) -> Dictionary:
 				if value is Entity: continue # Ignore entities to prevent infinite loops
 				dict[name] = to_dict(value, just_my_vars) # Recursive call
 				continue
+			if typeof(value) == TYPE_ARRAY:
+				dict[name] = array_to_dict_array(value, just_my_vars)
+				continue
 			dict[name] = value
 
 	return dict
 
-static func from_dict(obj: Object, data: Dictionary) -> void:
+static func from_dict(obj: Object, data: Dictionary) -> Object:
 	var prop_names := obj.get_property_list().map(func(p): return p.name)
 	for key in data:
 		if key == "script": continue
@@ -93,9 +59,14 @@ static func from_dict(obj: Object, data: Dictionary) -> void:
 			from_dict(obj.get(key), value)
 			continue
 
+		if typeof(value) == TYPE_ARRAY:
+			for i in range(value.size()):
+				from_dict(obj.get(key)[i], value[i])
+			continue
 
 		obj.set(key, data[key])
 
+	return obj
 
 static func array_to_dict_array(array: Array, just_my_vars: bool = false) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []

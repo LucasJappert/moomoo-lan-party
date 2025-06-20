@@ -15,7 +15,7 @@ func initialize(p_skill: Skill, _slot_number: int):
 	skill = p_skill
 	slot_number = _slot_number
 	hotkey.text = OS.get_keycode_string(KeyboardHelper.SKILL_HOTKEYS[slot_number - 1])
-	if skill.type == SkillType.PASSIVE: hotkey.visible = false
+	if skill.item_skill_base[0].type == SkillType.PASSIVE: hotkey.visible = false
 	sprite.region_rect = skill.region_rect
 
 func _ready():
@@ -25,7 +25,7 @@ func _ready():
 
 func _on_mouse_entered():
 	if not skill: return
-	GameManager.show_tooltip(skill.skill_name, skill.get_description())
+	GameManager.show_tooltip(skill.item_skill_base[0].my_name, skill.get_description())
 
 func _on_mouse_exited():
 	if not skill: return

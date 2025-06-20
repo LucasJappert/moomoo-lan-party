@@ -200,10 +200,11 @@ func set_target_entity(_target: Entity) -> void: # Used only by the server
 	_target_entity = _target
 
 func charge_skill(index: int) -> void:
-	if _skills[index].type == SkillType.PASSIVE: return
+	if not _skills[index].learned_level: return
+	if _skills[index].get_learned_skill().type == SkillType.PASSIVE: return
 	if not _skills[index].can_use(my_owner()): return
 
-	print("Charging skill: ", _skills[index].skill_name)
+	print("Charging skill: ", _skills[index].get_learned_skill().my_name)
 	charged_skill = _skills[index]
 func uncharge_skill() -> void:
 	charged_skill = null
@@ -249,9 +250,11 @@ func _get_extra_stats_by_effects() -> CombatStats:
 func _get_extra_stats_by_skills() -> CombatStats:
 	var extra_stats = CombatStats.new()
 	for skill in _skills:
-		if skill.create_effect: continue
-		if skill.stats.apply_stun(): continue # Do not add stun stats if it is an effect that is hostile to the owner
-		extra_stats.accumulate_combat_stats(skill.stats)
+		var learned_skill = skill.get_learned_skill()
+		if not learned_skill: continue
+		if learned_skill.create_effect: continue
+		if learned_skill.stats.apply_stun(): continue # Do not add stun stats if it is an effect that is hostile to the owner
+		extra_stats.accumulate_combat_stats(learned_skill.stats)
 	return extra_stats
 
 func _get_extra_stats_by_items() -> CombatStats:
@@ -320,9 +323,10 @@ func _apply_defenses(_di: DamageInfo, total_stats: CombatStats) -> void:
 		if total_damage < 0: total_damage = 0
 		_di.total_damage_heal = total_damage
 
-func get_skill(skill_name: String) -> Skill:
+func get_skill(p_name: String) -> Skill:
 	for skill in _skills:
-		if skill.skill_name == skill_name: return skill
+		if not skill.learned_level: continue
+		if skill.get_learned_skill().my_name == p_name: return skill
 	return null
 
 func get_total_hp() -> int:
@@ -415,13 +419,14 @@ func global_receive_damage_or_heal(_di: DamageInfo):
 func _try_to_add_effect_from_skills() -> void:
 	if not my_owner() is Player: return
 	for skill in _skills:
-		if skill.type != SkillType.PASSIVE: continue
 		if not skill.learned_level: continue
-		if not skill.create_effect: continue
-		if not skill.stats.is_owner_friendly: continue
-		if get_effect(skill.skill_name): continue # Already has this effect
+		var skill_base = skill.get_learned_skill()
+		if skill_base.type != SkillType.PASSIVE: continue
+		if not skill_base.create_effect: continue
+		if not skill_base.stats.is_owner_friendly: continue
+		if get_effect(skill_base.my_name): continue # Already has this effect
 
-		var new_effect = CombatEffect.get_permanent_effect(skill.skill_name, skill.max_stacks, skill.stats)
+		var new_effect = CombatEffect.get_permanent_effect(skill_base.my_name, skill_base.max_stacks, skill_base.stats)
 		new_effect.set_region_rect(skill.region_rect)
 		add_effect(new_effect)
 
