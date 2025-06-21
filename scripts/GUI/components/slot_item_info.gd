@@ -1,11 +1,14 @@
 class_name SlotItemInfo
 
+extends MyInitAuxiliary
+
 var item: Item = null
 var position: int = 0
 var quantity: int = 1
 var is_consumable: bool = false
 
 func _init(p_item: Item = null, p_slot_number: int = 0, p_quantity: int = 1):
+	super._init()
 	item = p_item
 	position = p_slot_number
 	quantity = p_quantity

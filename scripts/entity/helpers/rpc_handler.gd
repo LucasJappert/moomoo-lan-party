@@ -15,10 +15,21 @@ func initialize() -> void:
 func key_pressed(keycode: int): rpc("_on_key_pressed", keycode)
 @rpc("authority", "call_local")
 func _on_key_pressed(keycode: int): _my_owner.key_pressed(keycode)
+
+func skill_uppgrade_button_pressed(slot_number: int): rpc("_on_skill_uppgrade_button_pressed", slot_number)
+@rpc("authority", "call_local")
+func _on_skill_uppgrade_button_pressed(slot_number: int):
+	print("_on_skill_uppgrade_button_pressed skill: ", slot_number)
+	_combat_data.upgrade_skill(slot_number)
 # endregion SERVER MESSAGES RECEIVED FROM CLIENT
 
 
 # region 	CLIENTS MESSAGES RECEIVED FROM SERVER
+func update_base_stats(new_stats_data: Dictionary): rpc("_on_update_base_stats", new_stats_data)
+@rpc("authority", "call_local")
+func _on_update_base_stats(new_stats_data: Dictionary):
+	_combat_data.update_base_stats(CombatStats.get_instance_from_dict(new_stats_data))
+
 func server_message(data: Dictionary): rpc("_on_server_message", data)
 @rpc("authority", "call_local")
 func _on_server_message(data: Dictionary):
@@ -47,7 +58,7 @@ func add_animation(anim_name: String, anim_speed: float = 25, repeat_count: int 
 	message.animation_name = anim_name
 	message.animation_speed = anim_speed
 	message.repeat_count = repeat_count
-	var data = ObjectHelpers.to_dict(message)
+	var data = ObjectHelpers.to_dict(message, true)
 	rpc("_on_add_animation", data)
 @rpc("authority", "call_local")
 func _on_add_animation(data: Dictionary):

@@ -20,6 +20,7 @@ var cost: int = 0
 var region_rect: Rect2 = Rect2()
 
 func _init(_name: String = "", _type: String = SkillType.PASSIVE):
+	super._init()
 	my_name = _name
 	type = _type
 

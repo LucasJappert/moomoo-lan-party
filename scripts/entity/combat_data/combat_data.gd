@@ -123,6 +123,9 @@ func _server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	update_current_hp(-_di.total_damage_heal)
 
 # region SETTERs
+func update_base_stats(new_stats: CombatStats) -> void:
+	stats = new_stats
+
 func add_item(_slot_item_info: SlotItemInfo) -> bool:
 	if _slot_item_info.position > 0:
 		_items[_slot_item_info.position - 1] = _slot_item_info
@@ -163,11 +166,13 @@ func add_effect(p_effect: CombatEffect) -> void:
 	if current_stacks >= p_effect.max_stacks:
 		if not p_effect.stats.keep_latest_stacks: return
 
-		matching_effects.sort_custom(func(a, b): return a._elapsed > b._elapsed) # Sort by _elapsed in descending order (oldest first)
-		var oldest_effect := matching_effects[0]
-		oldest_effect.delete_effect()
+		matching_effects.sort_custom(func(a, b): return a._elapsed > b._elapsed)
 
-	%CombatEffectSpawner.spawn(ObjectHelpers.to_dict(p_effect))
+		var effects_to_remove = current_stacks - p_effect.max_stacks + 1
+		for i in range(effects_to_remove):
+			matching_effects[i].delete_effect()
+
+	%CombatEffectSpawner.spawn(ObjectHelpers.to_dict(p_effect, true))
 	p_effect.queue_free()
 
 func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void:
@@ -209,6 +214,9 @@ func charge_skill(index: int) -> void:
 func uncharge_skill() -> void:
 	charged_skill = null
 	print("Uncharging skill")
+
+func upgrade_skill(slot_number: int) -> void:
+	_skills[slot_number - 1].try_to_upgrade(_my_owner)
 
 func use_charged_skill() -> void:
 	if charged_skill == null: return
@@ -328,6 +336,16 @@ func get_skill(p_name: String) -> Skill:
 		if not skill.learned_level: continue
 		if skill.get_learned_skill().my_name == p_name: return skill
 	return null
+	
+func get_learned_skill(p_name: String) -> ItemSkillBase:
+	for skill in _skills:
+		if not skill.learned_level: continue
+		if not skill.get_learned_skill(): continue
+		if skill.get_learned_skill().my_name == p_name: return skill.get_learned_skill()
+	return null
+
+func get_skill_by_index(index: int) -> Skill:
+	return _skills[index]
 
 func get_total_hp() -> int:
 	return get_total_stats().hp

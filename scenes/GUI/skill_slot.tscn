@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://buj7u3vemtwye"]
+[gd_scene load_steps=9 format=3 uid="uid://buj7u3vemtwye"]
 
 [ext_resource type="Script" uid="uid://cwe3442jf13om" path="res://scripts/GUI/skill_slot.gd" id="1_0fsu4"]
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="2_1knxt"]
@@ -9,6 +9,42 @@ atlas = ExtResource("2_1knxt")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gayjm"]
 texture = ExtResource("2_1knxt")
 region_rect = Rect2(1120, 1984, 32, 32)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0fsu4"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1knxt"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+shadow_color = Color(0.568973, 0.568973, 0.568973, 0.6)
+shadow_size = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bu30h"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+shadow_color = Color(0.568973, 0.568973, 0.568973, 0.6)
+shadow_size = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fesxh"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+shadow_color = Color(0.568973, 0.568973, 0.568973, 0.6)
+shadow_size = 1
 
 [node name="SkillSlot" type="Control"]
 layout_mode = 3
@@ -29,10 +65,10 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -12.5
-offset_top = -10.0
-offset_right = 12.5
-offset_bottom = 13.0
+offset_left = -50.5
+offset_top = -8.0
+offset_right = -25.5
+offset_bottom = 15.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -49,4 +85,55 @@ theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 21
 text = "1.2"
+horizontal_alignment = 1
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_top = 81.0
+offset_right = 86.0
+offset_bottom = 95.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_0fsu4")
+
+[node name="CenterContainer" type="CenterContainer" parent="Panel"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 0
+offset_top = 1.0
+offset_right = 86.0
+offset_bottom = 14.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/CenterContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="Panel1" type="Panel" parent="Panel/CenterContainer/HBoxContainer"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1knxt")
+
+[node name="Panel2" type="Panel" parent="Panel/CenterContainer/HBoxContainer"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bu30h")
+
+[node name="Panel3" type="Panel" parent="Panel/CenterContainer/HBoxContainer"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fesxh")
+
+[node name="UpgradeButton" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 26.5
+offset_top = -8.0
+offset_right = 51.5
+offset_bottom = 15.0
+grow_horizontal = 2
+mouse_filter = 0
+theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_styles/normal = SubResource("StyleBoxTexture_gayjm")
+text = "+"
 horizontal_alignment = 1

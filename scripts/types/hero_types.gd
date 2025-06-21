@@ -94,7 +94,7 @@ static func initialize_hero(player: Player) -> void:
 		stats.hp = 600
 		stats.evasion = 0.1
 		stats.agility = 10
-		stats.strength = 1
+		stats.strength = 150
 		stats.intelligence = 10
 		player.combat_data._skills = [
 			Skill.get_skill(Skill.Names.STORM_STRIKE),
@@ -102,7 +102,7 @@ static func initialize_hero(player: Player) -> void:
 			Skill.get_skill(Skill.Names.STUNNING_STRIKE),
 			Skill.get_skill(Skill.Names.FROZEN_TOUCH)
 		]
-		player.combat_data._skills[0].learned_level = 1
+		# player.combat_data._skills[0].learned_level = 2
 	
 	if player.hero_type == LIORA_SUNVEIL:
 		player.combat_data._skills = [
@@ -120,7 +120,6 @@ static func initialize_hero(player: Player) -> void:
 		player.combat_data.projectile_type = Projectile.TYPES.ARROW
 		player.combat_data._skills = [Skill.get_skill(Skill.Names.LIFESTEAL)]
 		
-	print(player.combat_data._skills[0].item_skill_base[0].description)
 	player.combat_data.stats = stats
 	player.combat_data.current_hp = int(player.combat_data.get_total_hp())
 

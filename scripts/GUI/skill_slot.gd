@@ -5,11 +5,16 @@ extends Control
 @onready var sprite = $Sprite
 @onready var hotkey = $Hotkey
 @onready var label_cool_down = $LabelCoolDown
+@onready var panel1 = $Panel/CenterContainer/HBoxContainer/Panel1
+@onready var panel2 = $Panel/CenterContainer/HBoxContainer/Panel2
+@onready var panel3 = $Panel/CenterContainer/HBoxContainer/Panel3
+@onready var upgrade_button = $UpgradeButton
 var skill: Skill
 var slot_number: int
-var current_color: Color = Color.WHITE
 const CAN_USE_COLOR = Color.WHITE
 const CANT_USE_COLOR = Color(0.5, 0.5, 0.5)
+var _STYLE_BLACK := StyleBoxFlat.new()
+var _STYLE_BEIGE := StyleBoxFlat.new()
 
 func initialize(p_skill: Skill, _slot_number: int):
 	skill = p_skill
@@ -18,10 +23,59 @@ func initialize(p_skill: Skill, _slot_number: int):
 	if skill.item_skill_base[0].type == SkillType.PASSIVE: hotkey.visible = false
 	sprite.region_rect = skill.region_rect
 
+	initialize_styles()
+	update_controls()
+	
 func _ready():
 	connect("mouse_entered", func(): _on_mouse_entered())
 	connect("mouse_exited", func(): _on_mouse_exited())
+
+	upgrade_button.gui_input.connect(func(event):
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			GameManager.MY_PLAYER.rpc_handler.skill_uppgrade_button_pressed(slot_number)
+		)
+
 	label_cool_down.visible = false
+	EventBus.connect_to_skill_upgraded(func(p_owner: Entity):
+		# The skill should have been updated by reference, since it's the same skill that emits the signal after updating itself
+		update_controls(p_owner)
+	)
+
+	EventBus.connect_to_skill_points_to_assign_changed(func(p_owner: Entity): update_controls(p_owner))
+		
+# region 	GETTERS
+
+# endregion GETTERS
+
+# region 	SETTERS
+func update_controls(p_owner: Entity = null):
+	if p_owner and not p_owner.is_my_player(): return
+	upgrade_button.visible = GameManager.MY_PLAYER.skill_points_to_assign > 0
+
+	var panels = [panel1, panel2, panel3]
+	for i in range(Skill.AVAILABLE_LEVELS):
+		if skill.learned_level > i:
+			panels[i].add_theme_stylebox_override("panel", _STYLE_BEIGE)
+			continue
+
+		panels[i].add_theme_stylebox_override("panel", _STYLE_BLACK)
+
+func initialize_styles():
+	# Fondo #000000
+	_STYLE_BLACK.bg_color = Color.BLACK
+	_STYLE_BLACK.set_border_width_all(2)
+	_STYLE_BLACK.border_color = Color.BLACK
+	_STYLE_BLACK.shadow_color = Color(1, 1, 1)
+	_STYLE_BLACK.shadow_size = 1
+
+	# Fondo #d3c5ac
+	_STYLE_BEIGE.bg_color = Color(0.8, 0.8, 0.7)
+	_STYLE_BEIGE.set_border_width_all(2)
+	_STYLE_BEIGE.border_color = Color.BLACK
+	_STYLE_BEIGE.shadow_color = Color(1, 1, 1)
+	_STYLE_BEIGE.shadow_size = 1
+# endregion SETTERS
+
 
 func _on_mouse_entered():
 	if not skill: return

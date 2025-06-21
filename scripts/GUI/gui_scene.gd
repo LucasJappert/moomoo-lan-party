@@ -142,13 +142,12 @@ func set_target_avatar_region(region_rect: Rect2) -> void:
 	_panelTL_avatar.region_rect = region_rect
 
 func add_effect_to_my_effects(effect: CombatEffect) -> void:
-	print("Adding effect to my effects: ", effect)
 	%MyEffects.add_effect(effect)
 func add_effect_to_target_effects(effect: CombatEffect) -> void:
 	%TargetEffects.add_effect(effect)
 
 func _on_new_target_selected(_owner: Entity, _target: Entity) -> void:
-	if not _owner.is_my_player(): return
+	if not _owner or not _owner.is_my_player(): return
 
 	_update_panel_top_left(false)
 

@@ -2,12 +2,17 @@ class_name Player
 
 extends Entity
 
+static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
+const MAX_LEVEL: int = 30
+var json_data: HeroTypes.JsonItem
 @export var player_id: int = 0
 @export var current_exp: int = 0
 @export var hero_type: String = HeroTypes.IRON_VEX
-var json_data: HeroTypes.JsonItem
-const MAX_LEVEL: int = 30
-static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
+@export var skill_points_to_assign: int:
+	set(_value):
+		skill_points_to_assign = _value
+		EventBus.emit_skill_points_to_assign_changed(self)
+
 
 func set_player(data: Dictionary) -> void:
 	player_id = data["player_id"]
@@ -41,13 +46,27 @@ func increment_current_exp(value: int) -> void:
 		var exp_needed := get_exp_per_level(level)
 		if current_exp < exp_needed: break
 		current_exp -= exp_needed
-		level += 1
-		print("🎉✨ LEVEL UP! You've reached Level %d! 🚀🔥" % level)
+		level_up()
 
-	# If the maximum level is reached, cap the experience
+func increment_skill_points_to_assign(value: int) -> void:
+	skill_points_to_assign = max(0, skill_points_to_assign + value)
+
+func level_up() -> void:
 	if level >= MAX_LEVEL:
-		level = MAX_LEVEL
 		current_exp = min(current_exp, get_exp_per_level(level))
+		return
+
+	print("🎉✨ LEVEL UP! You've reached Level %d! 🚀🔥" % level)
+	level += 1
+	increment_skill_points_to_assign(1)
+
+	# var stats_to_add = CombatStats.new()
+	# stats_to_add.strength += 2
+	# stats_to_add.agility += 2
+	# stats_to_add.intelligence += 2
+	# var new_stats = combat_data.stats.accumulate_combat_stats(stats_to_add)
+
+	# rpc_handler.update_base_stats(ObjectHelpers.to_dict(new_stats))
 
 # endregion SETTERs
 

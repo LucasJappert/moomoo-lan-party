@@ -1,5 +1,7 @@
 class_name Skill
 
+extends MyInitAuxiliary
+
 const Names = {
 	SHIELDED_CORE = "Shielded Core", # ✅
 	BLESSING_OF_POWER = "Blessing of Power", # ✅
@@ -48,7 +50,7 @@ var learned_level: int = 0
 var region_rect: Rect2 = Rect2()
 
 func _init(_name: String = "", _type: String = SkillType.PASSIVE):
-	print("Se creó un Skill")
+	super._init()
 	item_skill_base = []
 	for i in range(AVAILABLE_LEVELS):
 		item_skill_base.append(ItemSkillBase.new())
@@ -197,6 +199,14 @@ static func get_skill(_skill_name: String, new_copy: bool = true) -> Skill:
 	if new_copy: return ObjectHelpers.deep_clone(_SKILLS[_skill_name])
 	
 	return _SKILLS[_skill_name]
+	
+static func get_new_learned_skill(_skill_name: String, skill_level: int = 1) -> Skill:
+	if _SKILLS.is_empty(): initialize_skills()
+	
+	var result = ObjectHelpers.deep_clone(_SKILLS[_skill_name])
+	result.learned_level = skill_level
+	return result
+	
 
 static func get_mana_scorcher() -> Skill:
 	var skill = Skill.new(Names.MANA_SCORCHER, SkillType.ACTIVE)
@@ -246,6 +256,13 @@ func use(my_owner: Entity, target_entity: Entity) -> void:
 
 	my_owner.combat_data.update_current_mana(-get_learned_skill().mana_cost)
 
+func try_to_upgrade(my_owner: Entity) -> void:
+	if learned_level >= AVAILABLE_LEVELS: return
+
+	learned_level += 1
+	my_owner.increment_skill_points_to_assign(-1)
+	EventBus.emit_skill_upgraded(my_owner)
+
 # endregion ................. SETTERs
 
 # region :::::::::::::::::::: SKILLS LOGICS
@@ -253,7 +270,8 @@ static func actions_before_entity_death(_dead_entity: Entity, _attacker: Entity)
 	if not _dead_entity is Enemy: return
 	if _dead_entity.replicated: return
 
-	if _dead_entity.combat_data.get_skill(Names.MIRROR_DEMISE):
+	var mirror_skill = _dead_entity.combat_data.get_learned_skill(Names.MIRROR_DEMISE)
+	if mirror_skill:
 		var target_tiles = [
 			Vector2(-MapManager.TILE_SIZE.x, -MapManager.TILE_SIZE.y),
 			Vector2(MapManager.TILE_SIZE.x, -MapManager.TILE_SIZE.y),
@@ -262,7 +280,8 @@ static func actions_before_entity_death(_dead_entity: Entity, _attacker: Entity)
 		]
 		for i in range(4):
 			# var new_enemy = EnemyFactory.get_enemy_instance(_dead_entity.enemy_type)
-			var new_enemy = Enemy.get_instance_from_dict(ObjectHelpers.to_dict(_dead_entity))
+			# new_enemy.set_combat_data()
+			var new_enemy = ObjectHelpers.deep_clone(_dead_entity) as Enemy
 			new_enemy.replicated = true
 			new_enemy.position = _dead_entity.position + target_tiles[i]
 			# We need set combat_data props after the enemy is added to the scene
@@ -273,12 +292,12 @@ static func actions_before_entity_death(_dead_entity: Entity, _attacker: Entity)
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
 	# Should be called only on the server
 	# Freeze verification
-	var _attacker_frozen_skill = _attacker.combat_data.get_skill(Names.FROZEN_TOUCH)
-	if _attacker_frozen_skill:
-		var skill_stats = _attacker_frozen_skill.stats.get_combat_stats_instance()
-		var effect = CombatEffect.get_temporal_effect(Names.FROZEN_TOUCH, skill_stats.freeze_duration, _attacker_frozen_skill.max_stacks, skill_stats)
+	var frozen_skill = _attacker.combat_data.get_learned_skill(Names.FROZEN_TOUCH)
+	if frozen_skill:
+		var skill_stats = frozen_skill.stats.get_combat_stats_instance()
+		var effect = CombatEffect.get_temporal_effect(Names.FROZEN_TOUCH, skill_stats.freeze_duration, frozen_skill.max_stacks, skill_stats)
 		effect.stats.is_owner_friendly = false
-		effect.set_region_rect(_attacker_frozen_skill.region_rect)
+		effect.set_region_rect(Skill.get_skill(Names.FROZEN_TOUCH).region_rect)
 		_target.combat_data.add_effect(effect)
 
 func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:

@@ -31,6 +31,9 @@ var movement_helper: MovementHelper
 
 @onready var rpc_handler: RpcHandler = $RpcHandler
 
+func _init() -> void:
+	if not combat_data: combat_data = CombatData.new()
+
 func _ready():
 	collision_layer = 1
 	collision_mask = 1

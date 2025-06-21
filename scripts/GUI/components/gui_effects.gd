@@ -15,7 +15,7 @@ func _ready() -> void:
 
 func _on_new_target_selected(_owner: Entity, _target: Entity) -> void:
 	if name != TARGET_EFFECTS_INSTANCE: return
-	if not _owner.is_my_player(): return
+	if not _owner or not _owner.is_my_player(): return
 	clean_effects()
 	_add_current_effects(_target)
 

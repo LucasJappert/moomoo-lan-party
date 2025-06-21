@@ -37,6 +37,10 @@ var custom_damage_heal: CustomDamageHeal = CustomDamageHeal.new()
 @export var is_owner_friendly: bool = true
 var keep_latest_stacks: bool = true
 
+static func get_instance_from_dict(dict: Dictionary) -> CombatStats:
+	var instance = CombatStats.new()
+	ObjectHelpers.from_dict(instance, dict)
+	return instance
 
 static func get_default_instance() -> CombatStats:
 	var attr = CombatStats.new()

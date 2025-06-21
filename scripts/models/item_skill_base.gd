@@ -1,5 +1,7 @@
 class_name ItemSkillBase
 
+extends MyInitAuxiliary
+
 const FRAME_SIZE = 64
 
 var my_name: String
@@ -15,10 +17,8 @@ var apply_to_owner: bool = true
 var create_effect: bool = false
 var _last_used_time: float = - INF
 
-
-func _init() -> void:
-	print("Se creó un ItemSkillBase")
-	pass
+func _init():
+	super._init()
 
 func set_last_used_time() -> void:
 	_last_used_time = Time.get_ticks_msec() / 1000.0
