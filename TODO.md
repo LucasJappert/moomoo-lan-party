@@ -95,8 +95,8 @@ Let’s build MooMoo LAN Party together! 🐮
 MY TODOs: 🔵🟡✅
 
 - Brindar algo de exp cuando se ataca o cura
+- Sistema de lanzamiento de hechizos de enemigos
 - Mejoras para cuando hay gran cantidad de objetos en el mapa (revisar el pathfinding)
-- Agregar animación al pasar de nivel
 - Json de héroes
 - Ordenar efectos por nombre
 - Agregar sonido de boses
@@ -104,7 +104,6 @@ MY TODOs: 🔵🟡✅
 - Sistema de rondas de enemigos aumentando las dificultades en cada oleada, cada 3 oleadas podríamos hacer una de solamente 4 boses
 - Agregar un score que tenga en cuenta la velocidad con que se avanza a cada oleada
 - Sistema de daños/curas en el tiempo
-- Sistema de lanzamiento de hechizos de enemigos
 - Agregar skill que invoca esqueletos luego de matar a un enemigo
 - Agregar skill de velocidad de ataque de un 25%
 - Agregar skill de daño en area
@@ -127,6 +126,7 @@ MY TODOs: 🔵🟡✅
 - Encapsular lógica de get/set
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+- ✅ Add animation when leveling up
 - ✅ Skill progression system when leveling up, automatic increase of base stats, level-up animation
 - ✅ Improvements in object cloning (we can continue to enhance it)
 - ✅ Use items and skills by clicking from the inventory

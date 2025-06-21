@@ -61,6 +61,7 @@ func level_up() -> void:
 	level += 1
 	increment_skill_points_to_assign(1)
 	if is_my_player(): SoundManager.play_level_up()
+	
 
 	var stats_to_add = CombatStats.new()
 	stats_to_add.strength += 2
@@ -69,6 +70,8 @@ func level_up() -> void:
 	var new_stats = combat_data.stats.accumulate_combat_stats(stats_to_add)
 
 	rpc_handler.update_base_stats(ObjectHelpers.to_dict(new_stats))
+	
+	rpc_handler.add_animation(AnimationsHelper.ANIMATION_NAMES.LEVEL_UP)
 
 # endregion SETTERs
 
