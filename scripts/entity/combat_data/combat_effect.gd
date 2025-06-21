@@ -71,7 +71,7 @@ static func get_temporal_effect(p_name: String, duration: float, _max_stacks: in
 
 static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _di: DamageInfo) -> void:
 	# Should be called only on the server
-	var _attacker_stats = _attacker.combat_data.get_total_stats()
+	var _attacker_stats = _attacker.combat_data.cache_total_stats
 
 	# Stun verification, we need it after the evasion check
 	if GlobalsEntityHelpers.roll_chance(_attacker_stats.stun_chance):
@@ -84,7 +84,7 @@ static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _d
 
 	# Lifesteal verification
 	if _attacker.combat_data.current_hp < _attacker.combat_data.get_total_hp() && _di.total_damage_heal > 0:
-		var _attacker_life_steal_percent = _attacker.combat_data.get_total_stats().life_steal_percent
+		var _attacker_life_steal_percent = _attacker.combat_data.cache_total_stats.life_steal_percent
 		if _attacker_life_steal_percent > 0:
 			var total_heal = int(_di.total_damage_heal * _attacker_life_steal_percent)
 			if total_heal > 0:

@@ -43,6 +43,7 @@ func set_combat_data():
 
 	if combat_data.stats.attack_range < CombatStats.MIN_ATTACK_RANGE:
 		combat_data.stats.attack_range = CombatStats.MIN_ATTACK_RANGE
+	combat_data.update_cache_total_stats()
 	combat_data.current_hp = combat_data.get_total_hp()
 		
 	return true

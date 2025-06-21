@@ -1,8 +1,5 @@
 class_name CombatStats
 
-# extends Node
-extends RefCounted
-
 const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapManager.TILE_SIZE.y, 2))) + 1
 
 @export var hp: int = 0

@@ -49,8 +49,10 @@ func _ready():
 
 # region 	SETTERS
 func update_controls(p_owner: Entity = null):
-	if p_owner and not p_owner.is_my_player(): return
-	upgrade_button.visible = GameManager.MY_PLAYER.skill_points_to_assign > 0
+	if not skill: return
+	if not ObjectHelpers.is_my_player(p_owner): return
+	
+	upgrade_button.visible = p_owner.skill_points_to_assign > 0 && skill.learned_level < Skill.AVAILABLE_LEVELS
 
 	var panels = [panel1, panel2, panel3]
 	for i in range(Skill.AVAILABLE_LEVELS):

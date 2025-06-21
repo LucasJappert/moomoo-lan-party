@@ -45,12 +45,16 @@ func _ready() -> void:
 	_items.clear()
 	for i in range(SlotItem.HOTKEY_BY_SLOT.size()): _items.append(SlotItemInfo.new(null, i + 1))
 
+	update_cache_total_stats()
+
 	if multiplayer.is_server() == false:
 		set_process(false)
 
 	# Agregamos una señal para cuando se agrega un hijo a combat_effect_node
 	combat_effect_node.connect("child_entered_tree", func(p_effect: CombatEffect):
 		if !GameManager.MY_PLAYER: return
+
+		update_cache_total_stats()
 
 		if my_owner().is_my_player(): GameManager.my_main.gui_scene.add_effect_to_my_effects(p_effect)
 
@@ -70,8 +74,6 @@ func _post_ready() -> void:
 	if not GameManager.AM_I_HOST: return
 
 	for item in _items:
-		if my_owner().name == "Player2":
-			print("Item: ", item)
 		my_owner().rpc_handler.send_item_updated(item) # Send items to clients
 
 # TODO: Improve this
@@ -89,7 +91,7 @@ func _server_execute_physical_damage(_target: Entity) -> void:
 	if my_owner().multiplayer.is_server() == false: return
 	if _target == null: return
 
-	var total_stats = get_total_stats()
+	var total_stats = cache_total_stats
 	var base_damage = total_stats.physical_attack_power
 	base_damage += base_damage * total_stats.physical_attack_power_percent
 	
@@ -109,7 +111,7 @@ func _server_execute_physical_damage(_target: Entity) -> void:
 func _server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	if my_owner().multiplayer.is_server() == false: return
 
-	var total_stats = get_total_stats()
+	var total_stats = cache_total_stats
 	
 	if _check_evade(_di, total_stats): return # Evasion verification (only for physical damage)
 
@@ -125,16 +127,21 @@ func _server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 # region SETTERs
 func update_base_stats(new_stats: CombatStats) -> void:
 	stats = new_stats
+	update_cache_total_stats()
+
+func update_item(index: int, slot_item_info: SlotItemInfo) -> void:
+	_items[index] = slot_item_info
+	update_cache_total_stats() # Update the cache of total stats, which includes items
 
 func add_item(_slot_item_info: SlotItemInfo) -> bool:
 	if _slot_item_info.position > 0:
-		_items[_slot_item_info.position - 1] = _slot_item_info
+		update_item(_slot_item_info.position - 1, _slot_item_info)
 		return true
 
 	for i in range(_items.size()):
 		if _items[i].item == null:
 			_slot_item_info.position = i + 1
-			_items[i] = _slot_item_info
+			update_item(i, _slot_item_info)
 			return true
 
 	return false
@@ -145,7 +152,7 @@ func use_item(position: int) -> void: # Called from _on_key_pressed
 	_items[position - 1].use_item(my_owner(), null)
 
 func item_updated_by_rpc(slot_item_info: SlotItemInfo) -> void:
-	_items[slot_item_info.position - 1] = slot_item_info
+	update_item(slot_item_info.position - 1, slot_item_info)
 	EventBus.emit_item_updated(my_owner(), slot_item_info, null)
 
 func set_attack_type_according_to_projectile_type() -> void:
@@ -171,6 +178,7 @@ func add_effect(p_effect: CombatEffect) -> void:
 		var effects_to_remove = current_stacks - p_effect.max_stacks + 1
 		for i in range(effects_to_remove):
 			matching_effects[i].delete_effect()
+		update_cache_total_stats() # Update the cache of total stats, which includes effects
 
 	%CombatEffectSpawner.spawn(ObjectHelpers.to_dict(p_effect, true))
 	p_effect.queue_free()
@@ -217,9 +225,11 @@ func uncharge_skill() -> void:
 
 func upgrade_skill(slot_number: int) -> void:
 	_skills[slot_number - 1].try_to_upgrade(_my_owner)
+	update_cache_total_stats()
 
 func use_charged_skill() -> void:
 	if charged_skill == null: return
+	if ObjectHelpers.is_null(_target_entity): return
 
 	charged_skill.use(my_owner(), _target_entity)
 
@@ -232,12 +242,15 @@ func toogle_keep_ground() -> void:
 # region GETTERs
 func try_critical_hit(base_value: int) -> int:
 	var critical_damage = 0
-	var total_stats = get_total_stats()
+	var total_stats = cache_total_stats
 	if GlobalsEntityHelpers.roll_chance(total_stats.crit_chance):
 		critical_damage = base_value * total_stats.crit_multiplier
 	return critical_damage
 
-func get_total_stats() -> CombatStats:
+var cache_total_stats: CombatStats = CombatStats.new()
+func update_cache_total_stats() -> void:
+	cache_total_stats = _get_total_stats()
+func _get_total_stats() -> CombatStats:
 	# This function returns the total of all stats, including extras from effects and extras from attributes
 	var _total_stats := CombatStats.new()
 	_total_stats.accumulate_combat_stats(stats.get_total_stats_including_extras_by_attributes())
@@ -276,7 +289,7 @@ func _get_extra_stats_by_items() -> CombatStats:
 	return extra_stats
 
 func get_attack_range() -> int:
-	return get_total_stats().attack_range
+	return cache_total_stats.attack_range
 
 # TODO: Improve this get by creating a dictionary to quickly obtain active effects
 func get_effects() -> Array[CombatEffect]:
@@ -348,10 +361,10 @@ func get_skill_by_index(index: int) -> Skill:
 	return _skills[index]
 
 func get_total_hp() -> int:
-	return get_total_stats().hp
+	return cache_total_stats.hp
 
 func get_total_mana() -> int:
-	return get_total_stats().mana
+	return cache_total_stats.mana
 
 func is_stunned() -> bool:
 	for effect in get_effects():
@@ -383,7 +396,7 @@ func try_physical_attack(_delta: float) -> bool:
 	return true
 
 func _get_nearest_target_in_range_attack():
-	var max_range = get_total_stats().attack_range
+	var max_range = cache_total_stats.attack_range
 	var start_pos = my_owner().global_position
 	if my_owner() is Player:
 		return GlobalsEntityHelpers.get_nearest_entity(start_pos, GameManager.get_enemies(), max_range)
@@ -401,7 +414,7 @@ func _execute_physical_attack() -> void:
 	if projectile_type == Projectile.TYPES.NONE:
 		return _server_execute_physical_damage(_target_entity)
 
-	Projectile.launch(my_owner(), _target_entity, get_total_stats().physical_attack_power)
+	Projectile.launch(my_owner(), _target_entity, cache_total_stats.physical_attack_power)
 		
 func can_physical_attack() -> bool:
 	if not my_owner().can_attack: return false
@@ -409,7 +422,7 @@ func can_physical_attack() -> bool:
 	if is_stunned(): return false # If stunned, can't attack
 
 	var now = Time.get_ticks_msec()
-	var interval_ms = 1000.0 / get_total_stats().get_total_attack_speed()
+	var interval_ms = 1000.0 / cache_total_stats.get_total_attack_speed()
 	if now - last_physical_hit_time < interval_ms: return false # If enough time has passed, can attack
 
 	if not GlobalsEntityHelpers.is_target_in_attack_range(my_owner(), _target_entity): return false
@@ -454,7 +467,7 @@ func _actions_after_1_second(_delta: float) -> void:
 
 	_1_second_timer = 0.0
 
-	var my_owner_stats: CombatStats = get_total_stats()
+	var my_owner_stats: CombatStats = cache_total_stats
 	# HP and mana regen
 	_apply_hp_regen(my_owner_stats)
 	_apply_mana_regen(my_owner_stats)

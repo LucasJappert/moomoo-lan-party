@@ -43,7 +43,7 @@ static func set_flame_cultist(_enemy: Enemy):
 	
 	_enemy.combat_data._skills.append_array([
 		Skill.get_new_learned_skill(Skill.Names.LIFESTEAL),
-		Skill.get_new_learned_skill(Skill.Names.MIRROR_DEMISE),
+		# Skill.get_new_learned_skill(Skill.Names.MIRROR_DEMISE),
 		Skill.get_new_learned_skill(Skill.Names.FROZEN_TOUCH)
 	])
 

@@ -24,7 +24,7 @@ func _unhandled_input(event):
 	if event is InputEventMouseButton and event.pressed:
 		var mouse_position = player.get_global_mouse_position()
 		if event.button_index == MOUSE_BUTTON_RIGHT:
-			if not SHIFT_PRESSED and AreaHovered.hovered_entity is Enemy:
+			if not SHIFT_PRESSED and ObjectHelpers.is_enemy(AreaHovered.hovered_entity):
 				return rpc_id(1, "_on_right_click_on_entity", _get_hovered_entity_name())
 			rpc_id(1, "_on_try_to_move", MapManager.world_to_cell(mouse_position))
 		if event.button_index == MOUSE_BUTTON_LEFT:

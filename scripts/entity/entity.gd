@@ -72,7 +72,7 @@ func set_boss_level(_level: int) -> void:
 	_boss_level = _level
 
 func _set_area_attack_shape_radius() -> void:
-	area_attack_shape.shape.radius = combat_data.get_total_stats().attack_range
+	area_attack_shape.shape.radius = combat_data.cache_total_stats.attack_range
 
 func _client_init() -> void:
 	if multiplayer.is_server() && not MyMain.HOSTED_GAME: return

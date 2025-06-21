@@ -6,7 +6,7 @@ static func is_target_in_attack_range(_entity: Entity, _target_entity) -> bool:
 
 	var dist = _entity.global_position.distance_to(_target_entity.global_position)
 
-	return dist <= _entity.combat_data.get_total_stats().attack_range
+	return dist <= _entity.combat_data.cache_total_stats.attack_range
 
 static func get_nearest_entity(start_pos: Vector2, entities: Array[Entity], max_range: int) -> Entity:
 	var nearest_entity: Entity = null

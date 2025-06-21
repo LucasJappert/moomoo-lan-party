@@ -76,14 +76,14 @@ func _ready() -> void:
 
 	%HpBallCircle.connect("mouse_entered", func():
 		if not GameManager.MY_PLAYER: return
-		var regen_points = GameManager.MY_PLAYER.combat_data.get_total_stats().hp_regeneration_points
+		var regen_points = GameManager.MY_PLAYER.combat_data.cache_total_stats.hp_regeneration_points
 		GameManager.show_tooltip("HP regen", str(regen_points) + " points per second", 200)
 	)
 	%HpBallCircle.connect("mouse_exited", func(): GameManager.hide_tooltip())
 
 	%ManaBallCircle.connect("mouse_entered", func():
 		if not GameManager.MY_PLAYER: return
-		var regen_points = GameManager.MY_PLAYER.combat_data.get_total_stats().mana_regeneration_points
+		var regen_points = GameManager.MY_PLAYER.combat_data.cache_total_stats.mana_regeneration_points
 		GameManager.show_tooltip("Mana regen", str(regen_points) + " points per second", 200)
 	)
 	%ManaBallCircle.connect("mouse_exited", func(): GameManager.hide_tooltip())
@@ -206,7 +206,7 @@ func _update_panel_bottom_left() -> void:
 	_hero_alias.text = GameManager.MY_PLAYER.json_data.alias
 	_level.text = str(GameManager.MY_PLAYER.level)
 
-	var total_stats = GameManager.MY_PLAYER.combat_data.get_total_stats()
+	var total_stats = GameManager.MY_PLAYER.combat_data.cache_total_stats
 	_stats1_lab1.text = str(total_stats.strength)
 	_stats1_lab2.text = str(total_stats.agility)
 	_stats1_lab3.text = str(total_stats.intelligence)

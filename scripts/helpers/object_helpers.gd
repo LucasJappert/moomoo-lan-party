@@ -8,6 +8,11 @@ static func is_enemy(_entity) -> bool:
 	
 	return _entity is Enemy
 
+static func is_my_player(_entity) -> bool:
+	if is_null(_entity): return false
+	
+	return _entity is Player and _entity.is_my_player()
+
 const FUNDAMENTAL_PROPERTIES := ["position", "global_position", "rotation", "scale", "name"]
 
 static func deep_clone(original: Object) -> Object:

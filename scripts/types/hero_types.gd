@@ -120,7 +120,7 @@ static func initialize_hero(player: Player) -> void:
 		player.combat_data.projectile_type = Projectile.TYPES.ARROW
 		player.combat_data._skills = [Skill.get_skill(Skill.Names.LIFESTEAL)]
 		
-	player.combat_data.stats = stats
+	player.combat_data.update_base_stats(stats)
 	player.combat_data.current_hp = int(player.combat_data.get_total_hp())
 
 # [

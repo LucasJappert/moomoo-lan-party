@@ -286,6 +286,7 @@ static func actions_before_entity_death(_dead_entity: Entity, _attacker: Entity)
 			new_enemy.position = _dead_entity.position + target_tiles[i]
 			# We need set combat_data props after the enemy is added to the scene
 			new_enemy.combat_data.stats.hp = new_enemy.combat_data.get_total_hp() * 0.5
+			new_enemy.combat_data.update_cache_total_stats()
 			new_enemy.combat_data.current_hp = new_enemy.combat_data.stats.hp
 			GameManager.add_enemy(new_enemy)
 
@@ -297,7 +298,7 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 		var skill_stats = frozen_skill.stats.get_combat_stats_instance()
 		var effect = CombatEffect.get_temporal_effect(Names.FROZEN_TOUCH, skill_stats.freeze_duration, frozen_skill.max_stacks, skill_stats)
 		effect.stats.is_owner_friendly = false
-		effect.set_region_rect(Skill.get_skill(Names.FROZEN_TOUCH).region_rect)
+		effect.set_region_rect(Skill.get_skill(Names.FROZEN_TOUCH, false).region_rect)
 		_target.combat_data.add_effect(effect)
 
 func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:
@@ -307,7 +308,7 @@ func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:
 	if _attacker is Player and not _target is Enemy: return false
 	if _attacker is Enemy and not (_target is Player or _target is Moomoo): return false
 
-	var attacker_stats = _attacker.combat_data.get_total_stats()
+	var attacker_stats = _attacker.combat_data.cache_total_stats
 	var total_damage_heal = get_stats().custom_damage_heal.get_total_damage_heal(attacker_stats.agility, attacker_stats.strength, attacker_stats.intelligence)
 
 	var targets = [_target]

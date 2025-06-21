@@ -8,6 +8,7 @@ func _ready():
 	print("🐮 Moomoo ready")
 	super._ready()
 	combat_data.stats.hp = 1000000
+	combat_data.update_cache_total_stats()
 	combat_data.current_hp = combat_data.get_total_hp()
 
 # region 	GETTERs

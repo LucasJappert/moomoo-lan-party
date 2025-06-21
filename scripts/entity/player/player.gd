@@ -17,6 +17,7 @@ var json_data: HeroTypes.JsonItem
 func set_player(data: Dictionary) -> void:
 	player_id = data["player_id"]
 	hero_type = data["hero_type"]
+	skill_points_to_assign = 1
 
 func get_client_inputs(): return %ClientInputs
 
@@ -59,14 +60,15 @@ func level_up() -> void:
 	print("🎉✨ LEVEL UP! You've reached Level %d! 🚀🔥" % level)
 	level += 1
 	increment_skill_points_to_assign(1)
+	if is_my_player(): SoundManager.play_level_up()
 
-	# var stats_to_add = CombatStats.new()
-	# stats_to_add.strength += 2
-	# stats_to_add.agility += 2
-	# stats_to_add.intelligence += 2
-	# var new_stats = combat_data.stats.accumulate_combat_stats(stats_to_add)
+	var stats_to_add = CombatStats.new()
+	stats_to_add.strength += 2
+	stats_to_add.agility += 2
+	stats_to_add.intelligence += 2
+	var new_stats = combat_data.stats.accumulate_combat_stats(stats_to_add)
 
-	# rpc_handler.update_base_stats(ObjectHelpers.to_dict(new_stats))
+	rpc_handler.update_base_stats(ObjectHelpers.to_dict(new_stats))
 
 # endregion SETTERs
 
