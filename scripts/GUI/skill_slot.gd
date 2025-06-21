@@ -2,6 +2,12 @@ class_name SkillSlot
 
 extends Control
 
+const SKILL_LEVEL_REQUIREMENTS := {
+	1: 0, # Level 1 of the skill can be learned from the beginning
+	2: 3, # Level 2 of the skill can be learned at level 3
+	3: 5, # Level 3 of the skill can be learned at level 5
+}
+
 @onready var sprite = $Sprite
 @onready var hotkey = $Hotkey
 @onready var label_cool_down = $LabelCoolDown
@@ -52,7 +58,15 @@ func update_controls(p_owner: Entity = null):
 	if not skill: return
 	if not ObjectHelpers.is_my_player(p_owner): return
 	
-	upgrade_button.visible = p_owner.skill_points_to_assign > 0 && skill.learned_level < Skill.AVAILABLE_LEVELS
+	# upgrade_button.visible = p_owner.skill_points_to_assign > 0 && skill.learned_level < Skill.AVAILABLE_LEVELS
+	var next_skill_level := skill.learned_level + 1
+	var level_requirement: int = SKILL_LEVEL_REQUIREMENTS.get(next_skill_level, INF)
+
+	upgrade_button.visible = (
+		p_owner.skill_points_to_assign > 0
+		&& skill.learned_level < Skill.AVAILABLE_LEVELS
+		&& p_owner.level >= level_requirement
+	)
 
 	var panels = [panel1, panel2, panel3]
 	for i in range(Skill.AVAILABLE_LEVELS):

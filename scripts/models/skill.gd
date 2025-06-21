@@ -57,6 +57,61 @@ func _init(_name: String = "", _type: String = SkillType.PASSIVE):
 		item_skill_base[i].my_name = _name
 		item_skill_base[i].type = _type
 
+# region :::::::::::::::::::: GETTERs
+
+static func get_skill(_skill_name: String, new_copy: bool = true) -> Skill:
+	if _SKILLS.is_empty(): initialize_skills()
+	
+	if new_copy: return ObjectHelpers.deep_clone(_SKILLS[_skill_name])
+	
+	return _SKILLS[_skill_name]
+	
+static func get_new_learned_skill(_skill_name: String, skill_level: int = 1) -> Skill:
+	if _SKILLS.is_empty(): initialize_skills()
+	
+	var result = ObjectHelpers.deep_clone(_SKILLS[_skill_name])
+	result.learned_level = skill_level
+	return result
+	
+
+static func get_mana_scorcher() -> Skill:
+	var skill = Skill.new(Names.MANA_SCORCHER, SkillType.ACTIVE)
+	skill.description = "Burns 50% of the target's mana, dealing 25% of that as physical damage."
+	return skill
+
+func get_learned_skill() -> ItemSkillBase:
+	if not learned_level: return null
+	return item_skill_base[learned_level - 1]
+
+func get_safe_learned_skill() -> ItemSkillBase:
+	if not learned_level: return item_skill_base[0]
+
+	return get_learned_skill()
+
+func get_stats() -> CombatStats:
+	return get_learned_skill().stats
+
+func get_max_targets() -> int:
+	return get_learned_skill().max_targets
+
+func get_description() -> String:
+	var result = get_safe_learned_skill().get_description()
+
+	return result
+
+func can_use(my_owner: Entity) -> bool:
+	if not learned_level: return false
+
+	return item_skill_base[learned_level - 1].can_use(my_owner)
+
+func get_remaining_cooldown() -> float:
+	if not learned_level: return 0
+	return get_learned_skill().get_remaining_cooldown()
+# endregion ................. GETTERs
+
+
+# region :::::::::::::::::::: SETTERs
+
 static func initialize_skills() -> void:
 	var aux_skill_name = ""
 	var aux_text: String; var aux_text1: String
@@ -175,7 +230,7 @@ static func initialize_skills() -> void:
 	int_array = [5, 6, 7]
 	for i in int_array.size():
 		_skill.item_skill_base[i].max_targets = int_array[i]
-	int_array = [30, 60, 120]
+	int_array = [20, 50, 100]
 	for i in int_array.size():
 		_skill.item_skill_base[i].stats.custom_damage_heal.base_damage_heal = int_array[i]
 	float_array = [0.2, 0.3, 0.4]
@@ -190,61 +245,6 @@ static func initialize_skills() -> void:
 		_skill.item_skill_base[i].description = "Calls down a bolt of arcane lightning, dealing " + aux_text + " base magic damage, plus an additional " + aux_text1 + " of the caster's total Intelligence to multiple targets."
 	
 	# endregion
-
-# region :::::::::::::::::::: GETTERs
-
-static func get_skill(_skill_name: String, new_copy: bool = true) -> Skill:
-	if _SKILLS.is_empty(): initialize_skills()
-	
-	if new_copy: return ObjectHelpers.deep_clone(_SKILLS[_skill_name])
-	
-	return _SKILLS[_skill_name]
-	
-static func get_new_learned_skill(_skill_name: String, skill_level: int = 1) -> Skill:
-	if _SKILLS.is_empty(): initialize_skills()
-	
-	var result = ObjectHelpers.deep_clone(_SKILLS[_skill_name])
-	result.learned_level = skill_level
-	return result
-	
-
-static func get_mana_scorcher() -> Skill:
-	var skill = Skill.new(Names.MANA_SCORCHER, SkillType.ACTIVE)
-	skill.description = "Burns 50% of the target's mana, dealing 25% of that as physical damage."
-	return skill
-
-func get_learned_skill() -> ItemSkillBase:
-	if not learned_level: return null
-	return item_skill_base[learned_level - 1]
-
-func get_safe_learned_skill() -> ItemSkillBase:
-	if not learned_level: return item_skill_base[0]
-
-	return get_learned_skill()
-
-func get_stats() -> CombatStats:
-	return get_learned_skill().stats
-
-func get_max_targets() -> int:
-	return get_learned_skill().max_targets
-
-func get_description() -> String:
-	var result = get_safe_learned_skill().get_description()
-
-	return result
-
-func can_use(my_owner: Entity) -> bool:
-	if not learned_level: return false
-
-	return item_skill_base[learned_level - 1].can_use(my_owner)
-
-func get_remaining_cooldown() -> float:
-	if not learned_level: return 0
-	return get_learned_skill().get_remaining_cooldown()
-# endregion ................. GETTERs
-
-
-# region :::::::::::::::::::: SETTERs
 
 func use(my_owner: Entity, target_entity: Entity) -> void:
 	if not can_use(my_owner): return print("Cannot use skill: ", get_learned_skill())
@@ -309,24 +309,24 @@ func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:
 	if _attacker is Enemy and not (_target is Player or _target is Moomoo): return false
 
 	var attacker_stats = _attacker.combat_data.cache_total_stats
-	var total_damage_heal = get_stats().custom_damage_heal.get_total_damage_heal(attacker_stats.agility, attacker_stats.strength, attacker_stats.intelligence)
+	var total_damage = get_stats().custom_damage_heal.get_total_damage_heal(attacker_stats.agility, attacker_stats.strength, attacker_stats.intelligence)
 
 	var targets = [_target]
 	var enemies = GameManager.get_enemies()
 	targets.append_array(GlobalsEntityHelpers.get_closest_entities(_target.global_position, get_max_targets() - 1, enemies, MapManager.TILE_SIZE_INT * 6, [_target]))
 
 	for target in targets:
-		var _di := DamageInfo.new(total_damage_heal, get_learned_skill().damage_type)
-		var critical_damage = _attacker.combat_data.try_critical_hit(total_damage_heal)
-		var total_damage = total_damage_heal + critical_damage
+		var _di := DamageInfo.new(total_damage, get_learned_skill().damage_type)
+		var critical_damage = _attacker.combat_data.try_critical_hit(total_damage)
+		var total_damage_and_crit = total_damage + critical_damage
 
-		_di.total_damage_heal = total_damage
+		_di.total_damage = total_damage_and_crit
 		_di.critical = critical_damage
 		_di.projectile_type = Projectile.TYPES.NONE
 		_di.damage_type = DamageType.MAGIC
 		_di.attacker_name = _attacker.name
 
-		target.combat_data._server_receive_damage(_di, _attacker)
+		target.combat_data.server_receive_damage(_di, _attacker)
 		target.rpc_handler.add_animation(AnimationsHelper.ANIMATION_NAMES.LIGHTNING)
 	
 	return true

@@ -82,10 +82,10 @@ static func initialize_hero(player: Player) -> void:
 	stats.intelligence = 10
 	stats.attack_range = CombatStats.MIN_ATTACK_RANGE
 	# region Add some potions 
-	# player.combat_data.add_item(SlotItemInfo.new(Item.get_item(Item.Names.HEALTH_POTION_I), 0, 1))
-	# player.combat_data.add_item(SlotItemInfo.new(Item.get_item(Item.Names.MANA_POTION_I), 0, 1))
+	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_I), 20))
+	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_I), 20))
 	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_II), 20))
-	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_III), 20))
+	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_II), 20))
 	player.combat_data.add_item(SlotItemInfo.get_non_consumable_slot_item(Item.get_item(Item.Names.STUNNING_EDGE)))
 
 	# endregion Add some potions
@@ -94,7 +94,7 @@ static func initialize_hero(player: Player) -> void:
 		stats.hp = 600
 		stats.evasion = 0.1
 		stats.agility = 10
-		stats.strength = 150
+		stats.strength = 12
 		stats.intelligence = 10
 		player.combat_data._skills = [
 			Skill.get_skill(Skill.Names.STORM_STRIKE),

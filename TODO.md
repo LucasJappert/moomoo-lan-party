@@ -94,7 +94,6 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- Brindar algo de exp cuando se ataca o cura
 - Sistema de lanzamiento de hechizos de enemigos
 - Mejoras para cuando hay gran cantidad de objetos en el mapa (revisar el pathfinding)
 - Json de héroes
@@ -126,6 +125,7 @@ MY TODOs: 🔵🟡✅
 - Encapsular lógica de get/set
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+- ✅ Provide some exp when attacking or healing
 - ✅ Add animation when leveling up
 - ✅ Skill progression system when leveling up, automatic increase of base stats, level-up animation
 - ✅ Improvements in object cloning (we can continue to enhance it)

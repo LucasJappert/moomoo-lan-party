@@ -99,16 +99,15 @@ func _server_execute_physical_damage(_target: Entity) -> void:
 	var total_damage = base_damage + critical_damage
 
 	var _di = DamageInfo.get_instance()
-	_di.total_damage_heal = total_damage
+	_di.total_damage = total_damage
 	_di.critical = critical_damage
 	_di.projectile_type = projectile_type
 	_di.damage_type = DamageType.PHYSICAL
 	_di.attacker_name = my_owner().name
 
-	_target.combat_data._server_receive_damage(_di, my_owner())
+	_target.combat_data.server_receive_damage(_di, my_owner())
 
-
-func _server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
+func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	if my_owner().multiplayer.is_server() == false: return
 
 	var total_stats = cache_total_stats
@@ -122,7 +121,7 @@ func _server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 
 	my_owner().rpc_handler.receive_damage_or_heal(ObjectHelpers.to_dict(_di, true))
 
-	update_current_hp(-_di.total_damage_heal)
+	update_current_hp(-_di.total_damage)
 
 # region SETTERs
 func update_base_stats(new_stats: CombatStats) -> void:
@@ -187,16 +186,24 @@ func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void
 	if value_to_increase == 0: return
 	if current_hp <= 0: return
 	
+	var exp_by_damage = min(current_hp, abs(value_to_increase)) * 0.25
 	current_hp += value_to_increase
 	current_hp = clamp(current_hp, 0, get_total_hp())
+
+	_try_to_give_experience_to_players(exp_by_damage) # Give experience when an enemy takes damage
 	
 	if current_hp <= 0:
 		Skill.actions_before_entity_death(my_owner(), _attacker)
 		current_hp = 0
-		if my_owner() is Enemy:
-			for player in GameManager.get_players():
-				player.increment_current_exp(Enemy.get_enemy_exp_when_dead())
+		_try_to_give_experience_to_players(Enemy.get_enemy_exp_when_dead()) # Give experience when an enemy dies
 		my_owner().rpc_handler.die()
+
+func _try_to_give_experience_to_players(_exp: int) -> void:
+	if not my_owner() is Enemy: return
+
+	for player in GameManager.get_players():
+		player.increment_current_exp(max(1, _exp))
+
 
 func update_current_mana(value_to_increase: int) -> void:
 	if value_to_increase == 0: return
@@ -328,21 +335,21 @@ func _check_evade(_di: DamageInfo, total_stats: CombatStats) -> bool:
 	return true
 
 func _apply_defenses(_di: DamageInfo, total_stats: CombatStats) -> void:
-	var damage_before_defense := _di.total_damage_heal
+	var damage_before_defense := _di.total_damage
 
 	if _di.damage_type == DamageType.PHYSICAL:
 		var reduced_damage := int(total_stats.physical_defense_percent * damage_before_defense)
 		_di.critical = _di.critical - int(total_stats.physical_defense_percent * _di.critical)
-		var total_damage: int = _di.total_damage_heal - reduced_damage
+		var total_damage: int = _di.total_damage - reduced_damage
 		if total_damage < 0: total_damage = 0
-		_di.total_damage_heal = total_damage
+		_di.total_damage = total_damage
 
 	if _di.damage_type == DamageType.MAGIC:
 		var reduced_damage := int(total_stats.magic_defense_percent * damage_before_defense)
 		_di.critical = _di.critical - int(total_stats.magic_defense_percent * _di.critical)
-		var total_damage: int = _di.total_damage_heal - reduced_damage
+		var total_damage: int = _di.total_damage - reduced_damage
 		if total_damage < 0: total_damage = 0
-		_di.total_damage_heal = total_damage
+		_di.total_damage = total_damage
 
 func get_skill(p_name: String) -> Skill:
 	for skill in _skills:
@@ -435,15 +442,15 @@ func global_receive_damage_or_heal(_di: DamageInfo):
 	var melee_attack = _di.projectile_type == Projectile.TYPES.NONE && _di.damage_type == DamageType.PHYSICAL
 	var arrow_attack = _di.projectile_type == Projectile.TYPES.ARROW && _di.damage_type == DamageType.PHYSICAL
 	if _di.critical > 0:
-		my_owner().hud.show_damage_heal_popup(str(- (_di.total_damage_heal - _di.critical)), Color(1, 0, 0))
+		my_owner().hud.show_damage_heal_popup(str(- (_di.total_damage - _di.critical)), Color(1, 0, 0))
 		my_owner().hud.show_damage_heal_popup(str(-_di.critical), Color(1, 1, 0))
 		if arrow_attack: SoundManager.play_critical_arrow_shot()
 		if melee_attack: SoundManager.play_critical_melee_hit()
-	if _di.critical == 0 and _di.total_damage_heal > 0:
+	if _di.critical == 0 and _di.total_damage > 0:
 		if melee_attack: SoundManager.play_melee_hit()
 
-	if _di.total_damage_heal < 0: # Heal
-		my_owner().hud.show_damage_heal_popup(str(abs(_di.total_damage_heal)), Color(0, 1, 0))
+	if _di.total_damage < 0: # Heal
+		my_owner().hud.show_damage_heal_popup(str(abs(_di.total_damage)), Color(0, 1, 0))
 	
 	register_attacker(_di.get_attacker())
 
