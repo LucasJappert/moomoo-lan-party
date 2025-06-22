@@ -32,7 +32,7 @@ var _target_entity_name: String = ""
 var last_physical_hit_time: int = 0 # In milliseconds
 var nearest_enemy_focused: Entity
 
-var last_damage_received_time: int = 0 # In milliseconds
+var last_damage_received_time: int = -1000000 # In milliseconds
 var latest_attacker: Entity
 
 var charged_skill: Skill

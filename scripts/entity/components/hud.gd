@@ -6,6 +6,7 @@ extends Node2D
 @onready var _label_container: PanelContainer = $PanelContainer
 @onready var _label: Label = $PanelContainer/Label
 const BAR_SIZE = 40.0
+const HIDE_BARS_AFTER_MILLISECONDS = 5000
 
 @onready var bars_container: Node2D = $BarsContainer
 @onready var _health_bg_black: Panel = $BarsContainer/MyHealthBar/BgBlack
@@ -32,7 +33,7 @@ func _post_ready(_entity: Entity):
 	var scale_diff := my_owner.sprite.scale.y - 1.0
 	bars_container.position.y = bars_container.position.y - (my_owner.sprite_heigth * percent * scale_diff)
 
-	visible = false
+	bars_container.visible = false
 
 	_health_bg_black.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_health_current_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -41,15 +42,12 @@ func _post_ready(_entity: Entity):
 
 func _process(_delta: float):
 	_try_update_label()
-	_try_update_visibility()
+	_try_update_bars_visibility()
 
-func _try_update_visibility():
+func _try_update_bars_visibility():
 	if ObjectHelpers.is_my_player(my_owner): return
 	
-	visible = my_owner.combat_data.latest_attacker != null
-
-	# _health_current_bar.size.x = my_owner.combat_data.current_hp * BAR_SIZE / my_owner.combat_data.get_total_hp()
-	# _mana_current_bar.size.x = my_owner.combat_data.current_mana * BAR_SIZE / my_owner.combat_data.get_total_mana()
+	bars_container.visible = Time.get_ticks_msec() - my_owner.combat_data.last_damage_received_time < HIDE_BARS_AFTER_MILLISECONDS
 
 func _try_update_label():
 	if not _label_container.visible: return
