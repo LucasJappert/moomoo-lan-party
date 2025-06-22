@@ -148,13 +148,31 @@ func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void
 
 	if _attacker: _try_to_give_experience_to_players(exp_by_damage) # Give experience when an enemy takes damage
 	
-	if current_hp <= 0:
-		Skill.actions_before_entity_death(my_owner(), _attacker)
-		current_hp = 0
-		_try_to_give_experience_to_players(Enemy.get_enemy_exp_when_dead()) # Give experience when an enemy dies
-		my_owner().rpc_handler.die()
+	_server_verify_death(_attacker)
 
 	my_owner().hud.update_health_bar()
+
+func _server_verify_death(_attacker: Entity) -> void:
+	if current_hp > 0: return
+
+	Skill.actions_before_entity_death(my_owner(), _attacker)
+	current_hp = 0
+	_try_to_give_experience_to_players(Enemy.get_enemy_exp_when_dead()) # Give experience when an enemy dies
+	my_owner().rpc_handler.die()
+	_try_to_add_gold_to_players(_attacker)
+
+func _try_to_give_experience_to_players(_exp: int) -> void:
+	if not my_owner() is Enemy: return
+
+	for player in GameManager.get_players():
+		player.increment_current_exp(max(1, _exp))
+
+func _try_to_add_gold_to_players(_attacker: Entity) -> void:
+	if _attacker is Player == false: return
+	
+	var earned_gold: int = 10 + 10 * my_owner()._boss_level
+	for player in GameManager.get_players():
+		player.increment_current_gold(earned_gold)
 
 func update_current_mana(value_to_increase: int) -> void:
 	if value_to_increase == 0: return
@@ -225,14 +243,6 @@ func _effects_updated() -> void:
 	for effect in get_effects():
 		if effect.stats.has_hostil_stun_effect(): is_stunned = true
 	if not is_stunned: AnimationsHelper.try_to_remove_obsolete_stun_animation(my_owner())
-
-
-func _try_to_give_experience_to_players(_exp: int) -> void:
-	if not my_owner() is Enemy: return
-
-	for player in GameManager.get_players():
-		player.increment_current_exp(max(1, _exp))
-
 
 func register_attacker(attacker: Entity) -> void:
 	latest_attacker = attacker

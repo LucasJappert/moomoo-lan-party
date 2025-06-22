@@ -8,6 +8,11 @@ var json_data: HeroTypes.JsonItem
 @export var player_id: int = 0
 @export var current_exp: int = 0
 @export var hero_type: String = HeroTypes.IRON_VEX
+@export var current_gold: int:
+	set(_value):
+		current_gold = _value
+		current_gold_string = StringHelpers.format_float(current_gold)
+var current_gold_string: String = ""
 @export var skill_points_to_assign: int:
 	set(_value):
 		skill_points_to_assign = _value
@@ -18,6 +23,7 @@ func set_player(data: Dictionary) -> void:
 	player_id = data["player_id"]
 	hero_type = data["hero_type"]
 	skill_points_to_assign = 1
+	current_gold = 500
 
 func get_client_inputs(): return %ClientInputs
 
@@ -73,6 +79,8 @@ func level_up() -> void:
 	
 	rpc_handler.add_animation(AnimationsHelper.ANIMATION_NAMES.LEVEL_UP)
 
+func increment_current_gold(value_to_increment: int) -> void:
+	current_gold += value_to_increment
 # endregion SETTERs
 
 static func get_exp_per_level(_level: int) -> int:

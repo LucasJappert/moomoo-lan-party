@@ -94,9 +94,7 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- Revisar target hovered
 - Sistema de puntos
-- Sumar oro a jugadores cuando muere un enemigo
 - Json de héroes
 - Ordenar efectos por nombre
 - Agregar sonido de boses
@@ -104,6 +102,7 @@ MY TODOs: 🔵🟡✅
 - Sistema de rondas de enemigos aumentando las dificultades en cada oleada, cada 3 oleadas podríamos hacer una de solamente 4 boses
 - Agregar un score que tenga en cuenta la velocidad con que se avanza a cada oleada
 - Sistema de daños/curas en el tiempo
+- Revisar target hovered cuando hay muchos enemigos
 - Agregar skill que invoca esqueletos luego de matar a un enemigo
 - Agregar skill de velocidad de ataque de un 25%
 - Agregar skill de daño en area
@@ -126,6 +125,7 @@ MY TODOs: 🔵🟡✅
 - Encapsular lógica de get/set
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+- ✅ Add gold to players when an enemy dies
 - ✅ Improvements for when there are many objects on the map (review the pathfinding). Still working on it.
 - ✅ Review exp when attacking an enemy
 - ✅ Enemy spellcasting system

@@ -737,6 +737,18 @@ monitorable = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelBR/ManaBallCircle"]
 shape = SubResource("CircleShape2D_g80tl")
 
+[node name="CurrentGold" type="Label" parent="PanelBR"]
+offset_left = 178.0
+offset_top = 201.0
+offset_right = 279.0
+offset_bottom = 237.0
+theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "999.999"
+vertical_alignment = 1
+text_overrun_behavior = 3
+
 [node name="MyTooltip" parent="." instance=ExtResource("5_g80tl")]
 offset_left = 661.0
 offset_top = 124.0

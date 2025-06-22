@@ -17,12 +17,16 @@ properties/2/replication_mode = 2
 properties/3/path = NodePath(".:skill_points_to_assign")
 properties/3/spawn = true
 properties/3/replication_mode = 2
+properties/4/path = NodePath(".:current_gold")
+properties/4/spawn = true
+properties/4/replication_mode = 2
 
 [node name="Player" instance=ExtResource("1_wbrma")]
 script = ExtResource("2_ylf3p")
 player_id = 0
 current_exp = 0
 hero_type = "Iron Vex"
+current_gold = 0
 skill_points_to_assign = 0
 
 [node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="0"]

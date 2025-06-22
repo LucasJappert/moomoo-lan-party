@@ -53,6 +53,7 @@ const EXP_BAR_FULL_SIZE = Vector2i(612, 27)
 @onready var _mana_label = $PanelBR/LabelMana
 @onready var _skill_slots_container = $PanelBR/SkillSlotsContainer
 @onready var _item_slots_container: ItemSlotsContainer = $PanelBR/ItemSlotsContainer
+@onready var _current_gold = $PanelBR/CurrentGold
 # endregion
 
 var _player_skills: Array[Skill] = []
@@ -73,6 +74,7 @@ func _ready() -> void:
 	_ORIGINAL_BALL_RECT_POS_Y = _hp_ball.region_rect.position.y
 
 	_current_exp_rect.size.y = EXP_BAR_FULL_SIZE.y
+	_current_gold.text = ""
 
 	%HpBallCircle.connect("mouse_entered", func():
 		if not GameManager.MY_PLAYER: return
@@ -222,6 +224,7 @@ func _update_panel_bottom_left() -> void:
 	_stats2_lab6.text = StringHelpers.format_percent(total_stats.crit_chance) + " (*" + StringHelpers.format_float(total_stats.crit_multiplier) + ")"
 
 func _update_panel_bottom_right() -> void:
+	_current_gold.text = GameManager.MY_PLAYER.current_gold_string
 	_mana_label.text = "%d/%d" % [GameManager.MY_PLAYER.combat_data.current_mana, GameManager.MY_PLAYER.combat_data.get_total_mana()]
 	_update_mana_ball_sprite()
 
