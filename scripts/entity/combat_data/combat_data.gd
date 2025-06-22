@@ -5,8 +5,8 @@ extends Node
 @onready var combat_effect_node = $CombatEffectNode
 
 var stats: CombatStats = CombatStats.new()
-@export var current_hp: int = 100
-@export var current_mana: int = 100
+@export var current_hp: int = 0
+@export var current_mana: int = 0
 @export var attack_type := AttackTypes.MELEE
 @export var projectile_type: String = Projectile.TYPES.NONE
 var _skills: Array[Skill] = []
@@ -37,8 +37,12 @@ var latest_attacker: Entity
 
 var charged_skill: Skill
 var keep_ground: bool = false
+var enemy_spell_caster: EnemySpellCaster
 
 func _ready() -> void:
+	if GameManager.AM_I_HOST == false:
+		set_process(false)
+
 	stats.initialize_default_values() # TODO: Review this... Why dont use get_default_instance()?
 
 	# Initialize items
@@ -52,9 +56,9 @@ func _ready() -> void:
 
 	# Agregamos una señal para cuando se agrega un hijo a combat_effect_node
 	combat_effect_node.connect("child_entered_tree", func(p_effect: CombatEffect):
-		if !GameManager.MY_PLAYER: return
-
 		update_cache_total_stats()
+
+		if !GameManager.MY_PLAYER: return
 
 		if my_owner().is_my_player(): GameManager.my_main.gui_scene.add_effect_to_my_effects(p_effect)
 
@@ -68,23 +72,28 @@ func _ready() -> void:
 		return CombatEffect.get_instance_from_dict(effect_data)
 
 func _post_ready() -> void:
-	# At the moment, the player is the only entity that has items
-	if my_owner() is Player == false: return
-	
 	if not GameManager.AM_I_HOST: return
+	
+	current_hp = int(get_total_hp())
+	current_mana = int(get_total_mana())
+
+	print("my_owner() name: ", my_owner().name)
+	if my_owner() is Enemy:
+		enemy_spell_caster = EnemySpellCaster.new(my_owner())
 
 	for item in _items:
 		my_owner().rpc_handler.send_item_updated(item) # Send items to clients
 
-# TODO: Improve this
-func _process(_delta: float):
+func _process(_delta: float): # Run only when it is the host
 	if not my_owner(): return
 
 	try_physical_attack(_delta)
 
-	_try_to_add_effect_from_skills()
+	_try_to_add_effect_from_skills() # TODO: Try to improve this (maybe using signals)
 
 	_actions_after_1_second(_delta)
+
+	if enemy_spell_caster: enemy_spell_caster._process(_delta)
 
 # TODO: Review
 func _server_execute_physical_damage(_target: Entity) -> void:
@@ -355,6 +364,9 @@ func _apply_defenses(_di: DamageInfo, total_stats: CombatStats) -> void:
 		if total_damage < 0: total_damage = 0
 		_di.total_damage = total_damage
 
+func get_skills() -> Array[Skill]:
+	return _skills
+
 func get_skill(p_name: String) -> Skill:
 	for skill in _skills:
 		if not skill.learned_level: continue
@@ -441,6 +453,7 @@ func can_physical_attack() -> bool:
 	return true
 # endregion TRY PHISICAL ATTACK
 
+
 # region 	SERVER METHODS
 func global_receive_damage_or_heal(_di: DamageInfo):
 	var melee_attack = _di.projectile_type == Projectile.TYPES.NONE && _di.damage_type == DamageType.PHYSICAL
@@ -459,7 +472,6 @@ func global_receive_damage_or_heal(_di: DamageInfo):
 	register_attacker(_di.get_attacker())
 
 func _try_to_add_effect_from_skills() -> void:
-	if not my_owner() is Player: return
 	for skill in _skills:
 		if not skill.learned_level: continue
 		var skill_base = skill.get_learned_skill()

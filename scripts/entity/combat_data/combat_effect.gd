@@ -86,7 +86,7 @@ static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _d
 	if _attacker.combat_data.current_hp < _attacker.combat_data.get_total_hp() && _di.total_damage > 0:
 		var _attacker_life_steal_percent = _attacker.combat_data.cache_total_stats.life_steal_percent
 		if _attacker_life_steal_percent > 0:
-			var total_heal = int(_di.total_damage * _attacker_life_steal_percent)
+			var total_heal = int(max(1, _di.total_damage * _attacker_life_steal_percent))
 			if total_heal > 0:
 				var new_di = DamageInfo.get_instance()
 				new_di.total_damage = - total_heal

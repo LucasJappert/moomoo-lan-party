@@ -94,7 +94,8 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- Sistema de lanzamiento de hechizos de enemigos
+- ✅ Enemy spellcasting system
+- Revisar exp cuando ataca un enemigo
 - Mejoras para cuando hay gran cantidad de objetos en el mapa (revisar el pathfinding)
 - Json de héroes
 - Ordenar efectos por nombre

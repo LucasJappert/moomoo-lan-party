@@ -304,16 +304,12 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:
 	if not _target: return false
 
-	# We could remove this logic
-	if _attacker is Player and not _target is Enemy: return false
-	if _attacker is Enemy and not (_target is Player or _target is Moomoo): return false
-
 	var attacker_stats = _attacker.combat_data.cache_total_stats
 	var total_damage = get_stats().custom_damage_heal.get_total_damage_heal(attacker_stats.agility, attacker_stats.strength, attacker_stats.intelligence)
 
 	var targets = [_target]
-	var enemies = GameManager.get_enemies()
-	targets.append_array(GlobalsEntityHelpers.get_closest_entities(_target.global_position, get_max_targets() - 1, enemies, MapManager.TILE_SIZE_INT * 6, [_target]))
+	var my_enemies = _attacker.get_my_enemies()
+	targets.append_array(GlobalsEntityHelpers.get_closest_entities(_target.global_position, get_max_targets() - 1, my_enemies, MapManager.TILE_SIZE_INT * 6, [_target]))
 
 	for target in targets:
 		var _di := DamageInfo.new(total_damage, get_learned_skill().damage_type)

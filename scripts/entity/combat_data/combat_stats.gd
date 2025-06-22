@@ -107,21 +107,21 @@ static func get_extra_stats_by_strength(_str: int) -> CombatStats:
 	var attr = CombatStats.new()
 	attr.hp = _str * 20
 	attr.hp_regeneration_points = _str * 0.1
-	attr.physical_attack_power = _str
+	attr.physical_attack_power = _str * 0.5
 	return attr
 
 static func get_extra_stats_by_intelligence(_int: int) -> CombatStats:
 	var attr = CombatStats.new()
-	attr.mana = _int * 12
+	attr.mana = _int * 5
 	attr.mana_regeneration_points = _int * 0.1
 	attr.magic_attack_power = _int
 	return attr
 
 static func get_extra_stats_by_agility(_agi: int) -> CombatStats:
 	var attr = CombatStats.new()
-	attr.attack_speed = _agi * 0.025
-	attr.evasion = _agi * 0.001 # 1000 of agility = 1 = 100% evasion
-	attr.physical_defense_percent = _agi * 0.001 # 1000 of agility = 1 = 100% defense
+	attr.attack_speed = _agi * 0.001 # 1000 of agility = 1 = Cada segundo 1 ataque
+	attr.evasion = _agi * 0.0002 # 5000 of agility = 1 = 100% evasion
+	attr.physical_defense_percent = _agi * 0.0002 # 5000 of agility = 1 = 100% defense
 	return attr
 
 # region 	GETTERs

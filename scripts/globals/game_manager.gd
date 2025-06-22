@@ -89,6 +89,8 @@ func get_players() -> Array[Entity]:
 func get_enemies() -> Array[Entity]:
 	return entities.values().filter(func(e): return e is Enemy)
 
+func get_moomoo() -> Entity: return moomoo
+
 func get_entity(entity_name: String) -> Entity:
 	return entities.get(entity_name)
 

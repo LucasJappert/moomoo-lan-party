@@ -7,7 +7,13 @@ static func get_enemy_instance(_enemy_type: String = "") -> Enemy:
 	return enemy
 
 # region INTERNAL METHODS
+static func _set_base_stats(_enemy: Enemy):
+	_enemy.combat_data.stats.agility = 4
+	_enemy.combat_data.stats.strength = 4
+	_enemy.combat_data.stats.intelligence = 4
+
 static func set_frost_revenant(_enemy: Enemy):
+	_set_base_stats(_enemy)
 	if _enemy.enemy_type != EnemyTypes.FROST_REVENANT: return false
 
 	_enemy.combat_data.stats.hp = 100
@@ -19,6 +25,7 @@ static func set_frost_revenant(_enemy: Enemy):
 	return true
 
 static func set_warden_of_decay(_enemy: Enemy):
+	_set_base_stats(_enemy)
 	if _enemy.enemy_type != EnemyTypes.WARDEN_OF_DECAY: return false
 
 	_enemy.combat_data.stats.hp = 120
@@ -30,6 +37,7 @@ static func set_warden_of_decay(_enemy: Enemy):
 	return true
 
 static func set_flame_cultist(_enemy: Enemy):
+	_set_base_stats(_enemy)
 	if _enemy.enemy_type != EnemyTypes.FLAME_CULTIST: return false
 
 	_enemy.combat_data.stats.hp = 150
@@ -44,7 +52,8 @@ static func set_flame_cultist(_enemy: Enemy):
 	_enemy.combat_data._skills.append_array([
 		Skill.get_new_learned_skill(Skill.Names.LIFESTEAL),
 		# Skill.get_new_learned_skill(Skill.Names.MIRROR_DEMISE),
-		Skill.get_new_learned_skill(Skill.Names.FROZEN_TOUCH)
+		# Skill.get_new_learned_skill(Skill.Names.FROZEN_TOUCH),
+		Skill.get_new_learned_skill(Skill.Names.STORM_STRIKE)
 	])
 
 # endregion

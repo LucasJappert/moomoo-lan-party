@@ -64,12 +64,10 @@ static func get_hero_json_data(hero_type: String) -> JsonItem:
 	return heros_json_data[hero_type]
 
 static func initialize_hero(player: Player) -> void:
-	player.combat_data.stats.hp = 400
-	player.combat_data.stats.mana = 100
 	player.json_data = HeroTypes.get_hero_json_data(player.hero_type)
 	var stats = CombatStats.new()
-	stats.physical_defense_percent = 0.1
-	stats.magic_defense_percent = 0.1
+	stats.physical_defense_percent = 0.2
+	stats.magic_defense_percent = 0.2
 	stats.evasion = 0.05
 	stats.crit_chance = 0.05
 	stats.crit_multiplier = 1.5
@@ -77,9 +75,9 @@ static func initialize_hero(player: Player) -> void:
 	stats.physical_attack_power = 7
 	stats.magic_attack_power = 7
 	stats.move_speed = 5
-	stats.agility = 10
-	stats.strength = 10
-	stats.intelligence = 10
+	stats.agility = 50
+	stats.strength = 50
+	stats.intelligence = 50
 	stats.attack_range = CombatStats.MIN_ATTACK_RANGE
 	# region Add some potions 
 	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_I), 20))
@@ -91,11 +89,10 @@ static func initialize_hero(player: Player) -> void:
 	# endregion Add some potions
 
 	if player.hero_type == IRON_VEX:
-		stats.hp = 600
 		stats.evasion = 0.1
-		stats.agility = 10
-		stats.strength = 12
-		stats.intelligence = 10
+		stats.agility = 50
+		stats.strength = 50
+		stats.intelligence = 50
 		player.combat_data._skills = [
 			Skill.get_skill(Skill.Names.STORM_STRIKE),
 			Skill.get_skill(Skill.Names.LIFESTEAL),
@@ -121,7 +118,6 @@ static func initialize_hero(player: Player) -> void:
 		player.combat_data._skills = [Skill.get_skill(Skill.Names.LIFESTEAL)]
 		
 	player.combat_data.update_base_stats(stats)
-	player.combat_data.current_hp = int(player.combat_data.get_total_hp())
 
 # [
 #   {

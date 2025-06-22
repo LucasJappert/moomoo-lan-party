@@ -65,6 +65,17 @@ func _client_physics_process(_delta: float) -> void:
 
 # region 	GETTERs
 func is_my_player() -> bool: return false
+
+func get_my_enemies() -> Array[Entity]:
+	if self is Player or self is Moomoo: return GameManager.get_enemies()
+
+	if self is Enemy:
+		var result: Array[Entity] = []
+		result.append_array(GameManager.get_players())
+		result.append(GameManager.get_moomoo())
+		return result
+		
+	return []
 # endregion GETTERs
 
 # region 	SETTERs
