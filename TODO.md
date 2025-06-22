@@ -94,8 +94,6 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- ✅ Enemy spellcasting system
-- Revisar exp cuando ataca un enemigo
 - Mejoras para cuando hay gran cantidad de objetos en el mapa (revisar el pathfinding)
 - Json de héroes
 - Ordenar efectos por nombre
@@ -126,6 +124,8 @@ MY TODOs: 🔵🟡✅
 - Encapsular lógica de get/set
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+- ✅ Review exp when attacking an enemy
+- ✅ Enemy spellcasting system
 - ✅ Verify that health and mana bars disappear after a certain time without taking damage
 - ✅ Show mana bar for enemies
   21/06/2025

@@ -73,7 +73,7 @@ func _ready() -> void:
 
 func _post_ready() -> void:
 	if not GameManager.AM_I_HOST: return
-	
+
 	current_hp = int(get_total_hp())
 	current_mana = int(get_total_mana())
 
@@ -130,19 +130,20 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 
 	my_owner().rpc_handler.receive_damage_or_heal(ObjectHelpers.to_dict(_di, true))
 
-	update_current_hp(-_di.total_damage)
+	update_current_hp(-_di.total_damage, _attacker)
 
 # region SETTERs
 
 func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void:
 	if value_to_increase == 0: return
 	if current_hp <= 0: return
+
 	
-	var exp_by_damage = min(current_hp, abs(value_to_increase)) * 0.25
+	var exp_by_damage = min(current_hp, abs(value_to_increase)) * 0.1
 	current_hp += value_to_increase
 	current_hp = clamp(current_hp, 0, get_total_hp())
 
-	_try_to_give_experience_to_players(exp_by_damage) # Give experience when an enemy takes damage
+	if _attacker: _try_to_give_experience_to_players(exp_by_damage) # Give experience when an enemy takes damage
 	
 	if current_hp <= 0:
 		Skill.actions_before_entity_death(my_owner(), _attacker)
