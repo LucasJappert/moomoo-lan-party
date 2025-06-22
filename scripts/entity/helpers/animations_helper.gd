@@ -31,7 +31,7 @@ static func apply_stun_animation(target: Entity):
 	if _animation_active(target, ANIMATION_NAMES.STUN): return
 	var sprite_size = CombatEffect.STUN_RECT_REGION.size
 	var frames = SpritesHelper.get_sprite_frames(CombatEffect.STUN_RECT_REGION.position, sprite_size, 14, 30, true)
-	var sprite_position = Vector2(0, target.hud.my_health_bar.position.y + 10)
+	var sprite_position = Vector2(0, target.hud.bars_container.position.y)
 	_spawn_front_animation(target, frames, ANIMATION_NAMES.STUN, sprite_position)
 
 static func _apply_level_up_animation(target: Entity):

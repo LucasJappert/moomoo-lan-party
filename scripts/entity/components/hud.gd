@@ -1,15 +1,19 @@
 class_name HUD
 
-extends Node
+extends Node2D
 
 # @onready var _health_bar: ProgressBar = $HealthBar
 @onready var _label_container: PanelContainer = $PanelContainer
 @onready var _label: Label = $PanelContainer/Label
-@onready var my_health_bar: Node2D = $MyHealthBar
 const BAR_SIZE = 40.0
-@onready var bg_black: Panel = $MyHealthBar/BgBlack
-@onready var current_bar: Panel = $MyHealthBar/CurrentBar
+
+@onready var bars_container: Node2D = $BarsContainer
+@onready var _health_bg_black: Panel = $BarsContainer/MyHealthBar/BgBlack
+@onready var _health_current_bar: Panel = $BarsContainer/MyHealthBar/CurrentBar
+@onready var _mana_bg_black: Panel = $BarsContainer/MyManaBar/BgBlack
+@onready var _mana_current_bar: Panel = $BarsContainer/MyManaBar/CurrentBar
 @onready var damage_popup_container = $DamagePopupContainer
+
 var my_owner: Entity
 var _is_moomoo = false
 const SHOW_DAMAGES_HEALS = true
@@ -24,27 +28,28 @@ func _post_ready(_entity: Entity):
 	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.text = my_owner.name
 
-	my_health_bar.position.y = my_owner.sprite.position.y - my_owner.sprite_heigth * 0.5
-	if my_owner is Enemy: my_health_bar.position.y -= 10
-	if my_owner is Player && my_owner.player_id == GameManager.MY_PLAYER_ID: my_health_bar.visible = false
+	var percent := 0.7
+	var scale_diff := my_owner.sprite.scale.y - 1.0
+	bars_container.position.y = bars_container.position.y - (my_owner.sprite_heigth * percent * scale_diff)
 
-	bg_black.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	current_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	visible = false
+
+	_health_bg_black.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_health_current_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_mana_bg_black.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_mana_current_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func _process(_delta: float):
 	_try_update_label()
-	_try_update_health_bar()
+	_try_update_visibility()
 
-func _try_update_health_bar():
-	if my_owner is Player && my_owner.player_id == GameManager.MY_PLAYER_ID: return
+func _try_update_visibility():
+	if ObjectHelpers.is_my_player(my_owner): return
 	
-	if my_owner.combat_data.latest_attacker == null:
-		if my_health_bar.visible: my_health_bar.visible = false
-		return
+	visible = my_owner.combat_data.latest_attacker != null
 
-	if not my_health_bar.visible: my_health_bar.visible = true
-
-	current_bar.size.x = my_owner.combat_data.current_hp * BAR_SIZE / my_owner.combat_data.get_total_hp()
+	# _health_current_bar.size.x = my_owner.combat_data.current_hp * BAR_SIZE / my_owner.combat_data.get_total_hp()
+	# _mana_current_bar.size.x = my_owner.combat_data.current_mana * BAR_SIZE / my_owner.combat_data.get_total_mana()
 
 func _try_update_label():
 	if not _label_container.visible: return
@@ -52,6 +57,12 @@ func _try_update_label():
 	_label.text = my_owner.combat_data.target_entity_name
 	_label.text = str(my_owner.combat_data.get_effects().size())
 	pass
+
+func update_health_bar():
+	_health_current_bar.size.x = my_owner.combat_data.current_hp * BAR_SIZE / my_owner.combat_data.get_total_hp()
+
+func update_mana_bar():
+	_mana_current_bar.size.x = my_owner.combat_data.current_mana * BAR_SIZE / my_owner.combat_data.get_total_mana()
 
 func show_damage_heal_popup(text: String, color: Color = Color.RED):
 	if not SHOW_DAMAGES_HEALS: return

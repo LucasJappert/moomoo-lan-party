@@ -94,6 +94,8 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
+- ✅ Show mana bar for enemies
+- Ver desaparición de barras de vida y mana cuando pasó cierto tiempo sin recibir daño
 - Sistema de lanzamiento de hechizos de enemigos
 - Mejoras para cuando hay gran cantidad de objetos en el mapa (revisar el pathfinding)
 - Json de héroes
@@ -125,6 +127,8 @@ MY TODOs: 🔵🟡✅
 - Encapsular lógica de get/set
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+- ✅ Show mana bar for enemies
+  21/06/2025
 - ✅ Provide some exp when attacking or healing
 - ✅ Add animation when leveling up
 - ✅ Skill progression system when leveling up, automatic increase of base stats, level-up animation

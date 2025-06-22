@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://dh82ovsrtutto"]
+[gd_scene load_steps=23 format=3 uid="uid://dh82ovsrtutto"]
 
 [ext_resource type="Script" uid="uid://ki4w4rg4wu1r" path="res://scripts/entity/entity.gd" id="1_0bgvt"]
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="3_8707b"]
@@ -24,20 +24,6 @@ properties/3/replication_mode = 1
 properties/4/path = NodePath(".:level")
 properties/4/spawn = true
 properties/4/replication_mode = 1
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8707b"]
-bg_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_os1up"]
-bg_color = Color(0, 0.514293, 0.163191, 1)
-corner_radius_top_left = 1
-corner_radius_top_right = 1
-corner_radius_bottom_right = 1
-corner_radius_bottom_left = 1
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_wjrb4"]
 radius = 300.0
@@ -85,6 +71,27 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_8707b"]
 radius = 2.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8707b"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gchfm"]
+bg_color = Color(0, 0.441623, 0.715716, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_os1up"]
+bg_color = Color(0, 0.514293, 0.163191, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_8707b"]
 atlas = ExtResource("3_8707b")
 region = Rect2(192, 640, 64, 96)
@@ -109,42 +116,6 @@ script = ExtResource("1_0bgvt")
 
 [node name="EntitySynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_odnte")
-
-[node name="HUD" type="Node2D" parent="."]
-script = ExtResource("3_wjrb4")
-
-[node name="MyHealthBar" type="Node2D" parent="HUD"]
-position = Vector2(0, -52)
-
-[node name="BgBlack" type="Panel" parent="HUD/MyHealthBar"]
-offset_left = -20.0
-offset_top = -2.0
-offset_right = 22.0
-offset_bottom = 2.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_8707b")
-
-[node name="CurrentBar" type="Panel" parent="HUD/MyHealthBar"]
-offset_left = -19.0
-offset_top = -1.0
-offset_right = 21.0
-offset_bottom = 1.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_os1up")
-
-[node name="DamagePopupContainer" type="Node2D" parent="HUD"]
-z_index = 3
-z_as_relative = false
-y_sort_enabled = true
-
-[node name="PanelContainer" type="PanelContainer" parent="HUD"]
-offset_left = -23.0
-offset_top = 13.0
-offset_right = 23.0
-offset_bottom = 36.0
-mouse_default_cursor_shape = 3
-
-[node name="Label" type="Label" parent="HUD/PanelContainer"]
-layout_mode = 2
-horizontal_alignment = 1
 
 [node name="AreaVision" type="Area2D" parent="."]
 
@@ -175,6 +146,62 @@ shape = SubResource("CircleShape2D_8707b")
 debug_color = Color(1, 1, 1, 0.054)
 
 [node name="CombatData" parent="." instance=ExtResource("5_wjrb4")]
+
+[node name="HUD" type="Node2D" parent="."]
+script = ExtResource("3_wjrb4")
+
+[node name="BarsContainer" type="Node2D" parent="HUD"]
+position = Vector2(0, -58)
+
+[node name="MyManaBar" type="Node2D" parent="HUD/BarsContainer"]
+position = Vector2(0, 1)
+
+[node name="BgBlack" type="Panel" parent="HUD/BarsContainer/MyManaBar"]
+offset_left = -20.0
+offset_top = -2.0
+offset_right = 22.0
+offset_bottom = 2.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_8707b")
+
+[node name="CurrentBar" type="Panel" parent="HUD/BarsContainer/MyManaBar"]
+offset_left = -19.0
+offset_top = -1.0
+offset_right = 21.0
+offset_bottom = 1.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_gchfm")
+
+[node name="MyHealthBar" type="Node2D" parent="HUD/BarsContainer"]
+position = Vector2(0, -2)
+
+[node name="BgBlack" type="Panel" parent="HUD/BarsContainer/MyHealthBar"]
+offset_left = -20.0
+offset_top = -2.0
+offset_right = 22.0
+offset_bottom = 2.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_8707b")
+
+[node name="CurrentBar" type="Panel" parent="HUD/BarsContainer/MyHealthBar"]
+offset_left = -19.0
+offset_top = -1.0
+offset_right = 21.0
+offset_bottom = 1.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_os1up")
+
+[node name="DamagePopupContainer" type="Node2D" parent="HUD"]
+z_index = 3
+z_as_relative = false
+y_sort_enabled = true
+
+[node name="PanelContainer" type="PanelContainer" parent="HUD"]
+offset_left = -23.0
+offset_top = 13.0
+offset_right = 23.0
+offset_bottom = 36.0
+mouse_default_cursor_shape = 3
+
+[node name="Label" type="Label" parent="HUD/PanelContainer"]
+layout_mode = 2
+horizontal_alignment = 1
 
 [node name="FrontAnimationsNode" type="Node2D" parent="."]
 script = ExtResource("6_os1up")

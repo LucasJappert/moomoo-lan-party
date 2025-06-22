@@ -124,6 +124,30 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	update_current_hp(-_di.total_damage)
 
 # region SETTERs
+
+func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void:
+	if value_to_increase == 0: return
+	if current_hp <= 0: return
+	
+	var exp_by_damage = min(current_hp, abs(value_to_increase)) * 0.25
+	current_hp += value_to_increase
+	current_hp = clamp(current_hp, 0, get_total_hp())
+
+	_try_to_give_experience_to_players(exp_by_damage) # Give experience when an enemy takes damage
+	
+	if current_hp <= 0:
+		Skill.actions_before_entity_death(my_owner(), _attacker)
+		current_hp = 0
+		_try_to_give_experience_to_players(Enemy.get_enemy_exp_when_dead()) # Give experience when an enemy dies
+		my_owner().rpc_handler.die()
+
+	my_owner().hud.update_health_bar()
+
+func update_current_mana(value_to_increase: int) -> void:
+	if value_to_increase == 0: return
+	current_mana = clamp(current_mana + value_to_increase, 0, get_total_mana())
+	my_owner().hud.update_mana_bar()
+
 func update_base_stats(new_stats: CombatStats) -> void:
 	stats = new_stats
 	update_cache_total_stats()
@@ -182,32 +206,12 @@ func add_effect(p_effect: CombatEffect) -> void:
 	%CombatEffectSpawner.spawn(ObjectHelpers.to_dict(p_effect, true))
 	p_effect.queue_free()
 
-func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void:
-	if value_to_increase == 0: return
-	if current_hp <= 0: return
-	
-	var exp_by_damage = min(current_hp, abs(value_to_increase)) * 0.25
-	current_hp += value_to_increase
-	current_hp = clamp(current_hp, 0, get_total_hp())
-
-	_try_to_give_experience_to_players(exp_by_damage) # Give experience when an enemy takes damage
-	
-	if current_hp <= 0:
-		Skill.actions_before_entity_death(my_owner(), _attacker)
-		current_hp = 0
-		_try_to_give_experience_to_players(Enemy.get_enemy_exp_when_dead()) # Give experience when an enemy dies
-		my_owner().rpc_handler.die()
-
 func _try_to_give_experience_to_players(_exp: int) -> void:
 	if not my_owner() is Enemy: return
 
 	for player in GameManager.get_players():
 		player.increment_current_exp(max(1, _exp))
 
-
-func update_current_mana(value_to_increase: int) -> void:
-	if value_to_increase == 0: return
-	current_mana = clamp(current_mana + value_to_increase, 0, get_total_mana())
 
 func register_attacker(attacker: Entity) -> void:
 	latest_attacker = attacker
