@@ -94,7 +94,9 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- Mejoras para cuando hay gran cantidad de objetos en el mapa (revisar el pathfinding)
+- Revisar target hovered
+- Sistema de puntos
+- Sumar oro a jugadores cuando muere un enemigo
 - Json de héroes
 - Ordenar efectos por nombre
 - Agregar sonido de boses
@@ -124,6 +126,7 @@ MY TODOs: 🔵🟡✅
 - Encapsular lógica de get/set
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+- ✅ Improvements for when there are many objects on the map (review the pathfinding). Still working on it.
 - ✅ Review exp when attacking an enemy
 - ✅ Enemy spellcasting system
 - ✅ Verify that health and mana bars disappear after a certain time without taking damage

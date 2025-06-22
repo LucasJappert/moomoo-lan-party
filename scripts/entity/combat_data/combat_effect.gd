@@ -19,8 +19,7 @@ func _process(delta: float) -> void:
 
 	_elapsed += delta
 	if _elapsed >= _duration:
-		if multiplayer.is_server():
-			queue_free() # Only executed on the server
+		if multiplayer.is_server(): queue_free() # Only executed on the server
 
 func get_description() -> String:
 	var description = ""

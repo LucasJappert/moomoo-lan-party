@@ -45,7 +45,7 @@ func _process(_delta: float):
 	_try_update_bars_visibility()
 
 func _try_update_bars_visibility():
-	if ObjectHelpers.is_my_player(my_owner): return
+	if my_owner.is_my_player(): return
 	
 	bars_container.visible = Time.get_ticks_msec() - my_owner.combat_data.last_damage_received_time < HIDE_BARS_AFTER_MILLISECONDS
 
@@ -53,7 +53,7 @@ func _try_update_label():
 	if not _label_container.visible: return
 		
 	_label.text = my_owner.combat_data.target_entity_name
-	_label.text = str(my_owner.combat_data.get_effects().size())
+	_label.text = str(my_owner.combat_data.is_stunned)
 	pass
 
 func update_health_bar():

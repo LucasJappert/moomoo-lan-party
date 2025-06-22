@@ -9,6 +9,7 @@ var stats: CombatStats = CombatStats.new()
 @export var current_mana: int = 0
 @export var attack_type := AttackTypes.MELEE
 @export var projectile_type: String = Projectile.TYPES.NONE
+@export var is_stunned: bool = false
 var _skills: Array[Skill] = []
 var _items: Array[SlotItemInfo] = [] # We use 6 slots
 var _my_owner: Entity
@@ -36,7 +37,7 @@ var last_damage_received_time: int = -1000000 # In milliseconds
 var latest_attacker: Entity
 
 var charged_skill: Skill
-var keep_ground: bool = false
+var keep_ground: bool = true
 var enemy_spell_caster: EnemySpellCaster
 
 func _ready() -> void:
@@ -56,8 +57,11 @@ func _ready() -> void:
 
 	# Agregamos una señal para cuando se agrega un hijo a combat_effect_node
 	combat_effect_node.connect("child_entered_tree", func(p_effect: CombatEffect):
-		update_cache_total_stats()
+		p_effect.connect("tree_exited", func(): _effects_updated())
 
+		_effects_updated()
+
+		#TODO: Improve this next lines
 		if !GameManager.MY_PLAYER: return
 
 		if my_owner().is_my_player(): GameManager.my_main.gui_scene.add_effect_to_my_effects(p_effect)
@@ -77,7 +81,6 @@ func _post_ready() -> void:
 	current_hp = int(get_total_hp())
 	current_mana = int(get_total_mana())
 
-	print("my_owner() name: ", my_owner().name)
 	if my_owner() is Enemy:
 		enemy_spell_caster = EnemySpellCaster.new(my_owner())
 
@@ -211,10 +214,18 @@ func add_effect(p_effect: CombatEffect) -> void:
 		var effects_to_remove = current_stacks - p_effect.max_stacks + 1
 		for i in range(effects_to_remove):
 			matching_effects[i].delete_effect()
-		update_cache_total_stats() # Update the cache of total stats, which includes effects
 
 	%CombatEffectSpawner.spawn(ObjectHelpers.to_dict(p_effect, true))
 	p_effect.queue_free()
+
+func _effects_updated() -> void:
+	update_cache_total_stats()
+
+	is_stunned = false
+	for effect in get_effects():
+		if effect.stats.has_hostil_stun_effect(): is_stunned = true
+	if not is_stunned: AnimationsHelper.try_to_remove_obsolete_stun_animation(my_owner())
+
 
 func _try_to_give_experience_to_players(_exp: int) -> void:
 	if not my_owner() is Enemy: return
@@ -285,7 +296,7 @@ func _get_total_stats() -> CombatStats:
 func _get_extra_stats_by_effects() -> CombatStats:
 	var extra_stats = CombatStats.new()
 	for effect in get_effects():
-		if effect.stats.apply_stun(): continue # Do not add stun stats if it is an effect that is hostile to the owner
+		if effect.stats.has_hostil_stun_effect(): continue # Do not add stun stats if it is an effect that is hostile to the owner
 		extra_stats.accumulate_combat_stats(effect.stats)
 	return extra_stats
 
@@ -295,7 +306,7 @@ func _get_extra_stats_by_skills() -> CombatStats:
 		var learned_skill = skill.get_learned_skill()
 		if not learned_skill: continue
 		if learned_skill.create_effect: continue
-		if learned_skill.stats.apply_stun(): continue # Do not add stun stats if it is an effect that is hostile to the owner
+		if learned_skill.stats.has_hostil_stun_effect(): continue # Do not add stun stats if it is an effect that is hostile to the owner
 		extra_stats.accumulate_combat_stats(learned_skill.stats)
 	return extra_stats
 
@@ -305,7 +316,7 @@ func _get_extra_stats_by_items() -> CombatStats:
 		if slot_item_info.is_consumable: continue
 		if slot_item_info.item == null: continue
 		if slot_item_info.item.type == SkillType.ACTIVE: continue
-		if slot_item_info.item.stats.apply_stun(): continue # Do not add stun stats if it is an effect that is hostile to the owner
+		if slot_item_info.item.stats.has_hostil_stun_effect(): continue # Do not add stun stats if it is an effect that is hostile to the owner
 		extra_stats.accumulate_combat_stats(slot_item_info.item.stats)
 	return extra_stats
 
@@ -313,6 +324,7 @@ func get_attack_range() -> int:
 	return cache_total_stats.attack_range
 
 # TODO: Improve this get by creating a dictionary to quickly obtain active effects
+# TODO: Also we could implements a cache variable by frame
 func get_effects() -> Array[CombatEffect]:
 	var effects: Array[CombatEffect] = []
 	if not combat_effect_node: return effects
@@ -390,11 +402,6 @@ func get_total_hp() -> int:
 func get_total_mana() -> int:
 	return cache_total_stats.mana
 
-func is_stunned() -> bool:
-	for effect in get_effects():
-		if effect.stats.apply_stun(): return true
-	return false
-
 func get_target_entity() -> Entity:
 	return GameManager.get_entity(target_entity_name)
 
@@ -406,7 +413,7 @@ func get_items() -> Array[SlotItemInfo]:
 func try_physical_attack(_delta: float) -> bool:
 	if not my_owner().multiplayer.is_server(): return false
 
-	if my_owner().velocity != Vector2.ZERO: return false
+	if my_owner().current_state != EntityState.StateEnum.IDLE: return false # Cant attack while moving
 	
 	if _target_entity == GameManager.moomoo: set_target_entity(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
 
@@ -443,7 +450,7 @@ func _execute_physical_attack() -> void:
 func can_physical_attack() -> bool:
 	if not my_owner().can_attack: return false
 	if my_owner().velocity != Vector2.ZERO: return false # If moving, can't attack
-	if is_stunned(): return false # If stunned, can't attack
+	if is_stunned: return false # If stunned, can't attack
 
 	var now = Time.get_ticks_msec()
 	var interval_ms = 1000.0 / cache_total_stats.get_total_attack_speed()

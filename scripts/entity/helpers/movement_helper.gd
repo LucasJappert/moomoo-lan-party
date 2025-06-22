@@ -8,6 +8,8 @@ var current_path: Array[Vector2i] = []
 var current_cell = null
 var _attack_move = false
 var _can_move := true
+var _last_current_path_update_time: float = - INF
+const _NEXT_PATH_RECALC_MS = 5000
 
 func _init(p_owner: Entity):
 	my_owner = p_owner
@@ -18,7 +20,13 @@ func _physics_process(_delta: float) -> void:
 	if not _can_move: return
 	if not GameManager.AM_I_HOST: return
 
-	_try_to_move(_delta)
+	_try_to_update_target_from_latest_attacker()
+
+	if current_target_pos == null: _try_set_next_current_target_pos()
+
+	if current_target_pos == null and my_owner.velocity != Vector2.ZERO: _stop_movements()
+
+	if current_target_pos: _try_to_move(_delta)
 
 # region 	SETTERs
 func clean_path() -> void:
@@ -51,12 +59,17 @@ func set_target_entity(target: Entity) -> void:
 
 func set_target_cell(target_cell: Vector2i) -> void:
 	_clean_movements()
-	_target_cell = target_cell
+	_target_cell = MapManager.get_valid_grid_cell(target_cell)
 	update_path()
 	my_owner.combat_data.register_attacker(null)
 
 func update_path() -> void:
-	if _target_cell == null && _target_entity == null: return _clean_movements()
+	if _target_cell == null && _target_entity == null: return
+
+	# We do the following to update the current_path (useful for refreshing the path when an enemy has a tile blocked in the current path)
+	if current_path.size() > 0:
+		if Time.get_ticks_msec() - _last_current_path_update_time < _NEXT_PATH_RECALC_MS: return
+		_last_current_path_update_time = Time.get_ticks_msec()
 
 	var from_pos = current_target_pos if current_target_pos else my_owner.global_position
 	var from_cell = MapManager.world_to_cell(from_pos)
@@ -66,16 +79,16 @@ func update_path() -> void:
 # endregion SETTERs
 
 func _try_set_next_current_target_pos() -> void:
-	update_path() # Intentamos recaucluar el path hacia el target, ya sea una entidad o una celda
+	update_path()
 
 	if current_path.is_empty(): return _clean_movements()
 
-	if my_owner.combat_data.is_stunned(): return
+	if my_owner.combat_data.is_stunned: return
 
 	if _attack_move:
 		# Return if the target is in attack range (dont move, just attack)
 		var target_in_attack_range = GlobalsEntityHelpers.is_target_in_attack_range(my_owner, my_owner.combat_data.get_target_entity())
-		if target_in_attack_range: return
+		if target_in_attack_range: return _clean_movements()
 
 	var next_target_cell = current_path[0]
 	if MapManager._astar_grid.is_point_solid(next_target_cell): return
@@ -88,28 +101,20 @@ func _try_set_next_current_target_pos() -> void:
 func _try_to_update_target_from_latest_attacker():
 	if my_owner.combat_data.keep_ground: return
 	if _target_cell or _target_entity: return
+	if not my_owner.combat_data.latest_attacker: return
+	if my_owner is Player == false: return # Enemies should always have a target (Moomoo by default)
+
+	# With the following logic, we ensure that our character moves towards the target (only if the target is out of attack range)
 	if my_owner.combat_data.get_target_entity():
 		if GlobalsEntityHelpers.is_target_in_attack_range(my_owner, my_owner.combat_data.get_target_entity()): return
-	if not my_owner.combat_data.latest_attacker: return
-
-	if my_owner is Enemy: return # Enemies should always have a target (Moomoo by default)
 
 	var nearest_enemy: Entity
-	if my_owner is Player:
-		nearest_enemy = GlobalsEntityHelpers.get_nearest_entity(my_owner.global_position, GameManager.get_enemies(), my_owner.area_vision_shape.shape.radius)
+	nearest_enemy = GlobalsEntityHelpers.get_nearest_entity(my_owner.global_position, GameManager.get_enemies(), my_owner.area_vision_shape.shape.radius)
 
 	set_target_entity(nearest_enemy)
 	my_owner.combat_data.set_target_entity(nearest_enemy)
 
 func _try_to_move(_delta: float) -> void:
-	# if _attack_move && GlobalsEntityHelpers.is_target_in_attack_range(my_owner, my_owner.combat_data.get_target_entity()):
-	# 	_clean_movements()
-	_try_to_update_target_from_latest_attacker()
-
-	if current_target_pos == null: _try_set_next_current_target_pos()
-	if current_target_pos == null: return _stop_movements()
-
-
 	var old_distance = current_target_pos - my_owner.global_position
 	var direction = old_distance.normalized()
 	# TODO: get_total_stats en Entity

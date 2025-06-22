@@ -89,6 +89,7 @@ static func initialize_hero(player: Player) -> void:
 	# endregion Add some potions
 
 	if player.hero_type == IRON_VEX:
+		stats.hp = 10000
 		stats.evasion = 0.1
 		stats.agility = 50
 		stats.strength = 50

@@ -43,15 +43,8 @@ static func find_nearest_valid_point(target: Vector2i) -> Vector2i:
 	return closest_point
 
 static func find_path(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
-	if not _astar_grid.is_in_boundsv(start): return []
-
-	# Adjust the destination point if it is out of the grid
-	if not _astar_grid.is_in_boundsv(end):
-		end = find_nearest_valid_point(end)
-
 	var path: Array[Vector2i] = _astar_grid.get_id_path(start, end, true)
-	if path.is_empty():
-		return []
+	if path.is_empty(): return []
 		
 	path.remove_at(0) # Remove start from path
 	return path
@@ -113,7 +106,11 @@ static func get_safe_cell(cell: Vector2i):
 
 	return null # Fallback, no free cell found within radius
 
+static func get_valid_grid_cell(cell: Vector2i) -> Vector2i:
+	if _astar_grid.is_in_boundsv(cell): return cell
 
+	return find_nearest_valid_point(cell)
+	
 static func get_grass_cells() -> Array[Vector2i]:
 	var grass_cell_type = Vector2i(0, 3)
 

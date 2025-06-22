@@ -11,7 +11,7 @@ static func _process(entity: Entity) -> void:
 static func _server_update(entity: Entity) -> void:
 	if not entity.multiplayer.is_server(): return
 	
-	if entity.combat_data.is_stunned(): return _server_set_current_state(entity, StateEnum.IDLE)
+	if entity.combat_data.is_stunned: return _server_set_current_state(entity, StateEnum.IDLE)
 
 	var is_moving := entity.velocity != Vector2.ZERO
 

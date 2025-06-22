@@ -125,7 +125,7 @@ static func get_extra_stats_by_agility(_agi: int) -> CombatStats:
 	return attr
 
 # region 	GETTERs
-func apply_stun() -> bool:
+func has_hostil_stun_effect() -> bool:
 	if stun_duration > 0 && is_owner_friendly == false: return true
 
 	return false

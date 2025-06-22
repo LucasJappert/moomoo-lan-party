@@ -1,7 +1,7 @@
 class_name EnemiesWavesController
 
 static var _wave_number: int = 0
-const ENEMIES_BY_ZONE = 6
+const ENEMIES_BY_ZONE = 7
 const TOTAL_WAVES = 20
 const _WAVE_DIRECTIONS = [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]
 static var TOTAL_ENEMIES_TO_CREATE: int = TOTAL_WAVES * ENEMIES_BY_ZONE * _WAVE_DIRECTIONS.size()
@@ -10,7 +10,7 @@ static func start_wave() -> void:
 	_wave_number += 1
 	print("Wave " + str(_wave_number) + " started!")
 
-	const TILES_DISTANCE = 9
+	const TILES_DISTANCE = 3
 	var counter = 0
 	var moomoo_position = GameManager.moomoo.global_position
 
@@ -24,7 +24,10 @@ static func start_wave() -> void:
 			counter += 1
 			var enemy: Enemy = EnemyFactory.get_enemy_instance(possible_enemies[randi() % possible_enemies.size()])
 			var random_noise = Vector2(randi_range(-64, 64), randi_range(-64, 64))
-			enemy.global_position = moomoo_position + direction * TILES_DISTANCE * 64 + random_noise
+			var position = moomoo_position + direction * TILES_DISTANCE * 64 + random_noise
+			var cell = MapManager.world_to_cell(position)
+			cell = MapManager.get_valid_grid_cell(cell)
+			enemy.global_position = MapManager.cell_to_world(cell)
 			enemy.id = counter
 			enemy.level = _wave_number
 			
@@ -33,4 +36,4 @@ static func start_wave() -> void:
 				
 			# enemy.can_attack = false
 			GameManager.add_enemy(enemy)
-			return
+			# return

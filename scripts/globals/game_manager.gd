@@ -84,6 +84,7 @@ func remove_entity(entity: Entity) -> void:
 	entity.queue_free() # We shouldn't do this in the client side, server should do it and sync it
 
 func get_players() -> Array[Entity]:
+	# TODO: Improve with cache by frame
 	return entities.values().filter(func(e): return e is Player)
 
 func get_enemies() -> Array[Entity]:
