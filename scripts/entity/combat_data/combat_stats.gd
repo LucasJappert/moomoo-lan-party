@@ -41,7 +41,7 @@ static func get_instance_from_dict(dict: Dictionary) -> CombatStats:
 
 static func get_default_instance() -> CombatStats:
 	var attr = CombatStats.new()
-	attr.move_speed = 3 # Default move speed for enemies
+	attr.move_speed = 2 # Default move speed for enemies
 	attr.attack_range = CombatStats.MIN_ATTACK_RANGE
 	attr.magic_attack_power = 0
 	attr.physical_attack_power = 10

@@ -9,7 +9,7 @@ var current_cell = null
 var _attack_move = false
 var _can_move := true
 var _last_current_path_update_time: float = - INF
-const _NEXT_PATH_RECALC_MS = 5000
+const _NEXT_PATH_RECALC_MS = 1000
 
 func _init(p_owner: Entity):
 	my_owner = p_owner

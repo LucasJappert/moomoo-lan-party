@@ -24,7 +24,7 @@ func _post_ready(_entity: Entity):
 	my_owner = _entity
 	_is_moomoo = my_owner is Moomoo
 
-	_label_container.visible = true
+	_label_container.visible = false
 	_label_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.text = my_owner.name
@@ -48,6 +48,7 @@ func _try_update_bars_visibility():
 	if my_owner.is_my_player(): return
 	
 	bars_container.visible = Time.get_ticks_msec() - my_owner.combat_data.last_damage_received_time < HIDE_BARS_AFTER_MILLISECONDS
+	if ClientInputs.ALT_PRESSED: bars_container.visible = true
 
 func _try_update_label():
 	if not _label_container.visible: return

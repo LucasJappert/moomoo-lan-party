@@ -5,6 +5,7 @@ extends Node2D
 @onready var player: Player = get_parent()
 
 static var SHIFT_PRESSED = false
+static var ALT_PRESSED = false
 
 func _ready():
 	if get_multiplayer_authority() != multiplayer.get_unique_id():
@@ -14,6 +15,7 @@ func _ready():
 	
 func _process(_delta: float) -> void:
 	SHIFT_PRESSED = Input.is_key_pressed(KEY_SHIFT)
+	ALT_PRESSED = Input.is_key_pressed(KEY_ALT)
 
 func _get_hovered_entity_name() -> String:
 	return str(AreaHovered.hovered_entity.name) if AreaHovered.hovered_entity else ""

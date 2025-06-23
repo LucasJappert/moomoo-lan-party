@@ -12,7 +12,7 @@ static func set_entity_sprites(entity: Entity) -> void:
 		entity.sprite.position.y = -38 * _PLAYERS_SCALE
 	elif entity is Enemy:
 		var rects = EnemyTypes.get_rect_frames(entity.enemy_type)
-		var scale_factor = 1.3 if entity._boss_level > 0 else _ENEMIES_SCALE
+		var scale_factor = 1.1 if entity._boss_level > 0 else _ENEMIES_SCALE
 		_set_sprites(entity, rects, scale_factor)
 		entity.sprite.position.y = -24 * scale_factor
 	

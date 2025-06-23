@@ -8,9 +8,9 @@ static func get_enemy_instance(_enemy_type: String = "") -> Enemy:
 
 # region INTERNAL METHODS
 static func _set_base_stats(_enemy: Enemy):
-	_enemy.combat_data.stats.agility = 4
+	_enemy.combat_data.stats.agility = 6
 	_enemy.combat_data.stats.strength = 4
-	_enemy.combat_data.stats.intelligence = 4
+	_enemy.combat_data.stats.intelligence = 8
 
 static func set_frost_revenant(_enemy: Enemy):
 	_set_base_stats(_enemy)
