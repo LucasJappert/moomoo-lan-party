@@ -81,12 +81,17 @@ func add_entity(entity: Entity) -> void:
 
 func remove_entity(entity: Entity) -> void:
 	entities.erase(entity.name)
+	_actions_for_server_side_after_entity_removed(entity)
 
+func _actions_for_server_side_after_entity_removed(entity: Entity) -> void:
 	if not AM_I_HOST: return
+	
 	var current_cell = MapManager.world_to_cell(entity.global_position)
 	MapManager.set_cell_blocked(current_cell, false)
 	entity.queue_free() # We shouldn't do this in the client side, server should do it and sync it
-	if entity is Enemy: current_enemies_in_scene -= 1
+	if entity is Enemy:
+		current_enemies_in_scene -= 1
+		if current_enemies_in_scene == 0: EventBus.emit_wave_finilized()
 
 func _on_enemy_exited_tree() -> void:
 	current_enemies_in_scene -= 1

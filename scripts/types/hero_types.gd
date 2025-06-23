@@ -51,7 +51,7 @@ static func get_keys() -> Array[String]:
 	]
 
 static func get_json_data() -> Dictionary[String, JsonItem]:
-	var json_data = JsonHelpers.load_json("res://.docs/heros.json")
+	var json_data = JsonHelpers.load_json("res://json/heros.json")
 	var result: Dictionary[String, JsonItem] = {}
 	for key in json_data:
 		result[key] = JsonItem.new(json_data[key])
@@ -92,7 +92,7 @@ static func initialize_hero(player: Player) -> void:
 		stats.hp = 10000
 		stats.evasion = 0.1
 		stats.agility = 50
-		stats.strength = 500
+		stats.strength = 50
 		stats.intelligence = 50
 		player.combat_data._skills = [
 			Skill.get_skill(Skill.Names.STORM_STRIKE),

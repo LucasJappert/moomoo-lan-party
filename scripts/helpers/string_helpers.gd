@@ -1,12 +1,21 @@
 class_name StringHelpers
 
 static func format_float(value: float, max_decimals: int = 2) -> String:
-	if value == int(value):
-		return str(int(value))
-	
-	var format_string := "%." + str(max_decimals) + "f"
-	var formatted := format_string % value
-	return formatted.rstrip("0").rstrip(".")
+	var int_str := str(abs(int(value)))
+	var formatted := ""
+	while int_str.length() > 3:
+		formatted = "." + int_str.substr(int_str.length() - 3, 3) + formatted
+		int_str = int_str.substr(0, int_str.length() - 3)
+	formatted = int_str + formatted
+
+	var decimals := ("%." + str(max_decimals) + "f") % abs(value - int(value))
+	decimals = decimals.strip_edges().substr(1).rstrip("0").rstrip(".")
+	if decimals != "":
+		formatted += "," + decimals
+
+	if value < 0:
+		formatted = "-" + formatted
+	return formatted
 
 
 static func format_percent(value: float) -> String:

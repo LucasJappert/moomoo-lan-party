@@ -1,5 +1,12 @@
 extends Node
 
+const WAVE_FINILIZED := "wave_finilized"
+signal wave_finilized()
+func emit_wave_finilized() -> void:
+	emit_signal(WAVE_FINILIZED)
+func connect_to_wave_finilized(p_callback: Callable) -> void:
+	EventBus.connect(WAVE_FINILIZED, p_callback)
+
 const WINDOW_FOCUSED := "window_focused"
 signal window_focused()
 func emit_window_focused() -> void:

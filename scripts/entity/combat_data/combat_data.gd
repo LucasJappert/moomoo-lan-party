@@ -170,7 +170,7 @@ func _try_to_give_experience_to_players(_exp: int) -> void:
 func _try_to_add_gold_to_players(_attacker: Entity) -> void:
 	if _attacker is Player == false: return
 	
-	var base_earned := 10 + 10 * my_owner()._boss_level
+	var base_earned := Player.INITIAL_GOLD * 0.05 * (my_owner()._boss_level + 1)
 	var earned_gold := randi_range(int(base_earned * 0.8), int(base_earned * 1.2))
 	for player in GameManager.get_players():
 		player.increment_current_gold(earned_gold)

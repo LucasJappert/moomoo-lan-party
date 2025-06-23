@@ -94,7 +94,7 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- Json de héroes
+- Agregar otros efectos de sonidos para el ambiente
 - Configure enemy types for wave 2
 - Sistema de rondas de enemigos aumentando las dificultades en cada oleada, cada 3 oleadas podríamos hacer una de solamente 4 boses
 - Sistema de puntos
@@ -126,6 +126,7 @@ MY TODOs: 🔵🟡✅
 - Encapsular lógica de get/set
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+- ✅ Gold coin sound when the player earns gold. Provide gold when each wave of enemies finishes.
 - ✅ Add sound for boss-type enemies
 - ✅ Show health and mana bars when pressing ALT
 - ✅ Configure enemy types for wave 1

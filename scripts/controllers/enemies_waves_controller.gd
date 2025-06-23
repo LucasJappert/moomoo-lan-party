@@ -28,6 +28,7 @@ static var WAVES_INFO = [
 
 static func start_wave_process() -> void:
 	process_running = true
+	EventBus.connect_to_wave_finilized(func(): _wave_finilized())
 
 static func _process(_delta: float) -> void:
 	if not GameManager.AM_I_HOST: return
@@ -70,7 +71,7 @@ static func create_next_wave() -> void:
 			var enemy = _get_enemy(enemy_type, wave_direction, is_boss)
 			# enemy.can_attack = false
 			GameManager.add_enemy(enemy)
-			# # return
+			# return
 
 static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: bool) -> Enemy:
 	var enemy: Enemy = EnemyFactory.get_enemy_instance(enemy_type)
@@ -86,3 +87,8 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 	enemy._boss_level = current_wave if is_boss else 0
 		
 	return enemy
+
+static func _wave_finilized() -> void:
+	for player in GameManager.get_players():
+		var earned_gold = current_wave * Player.INITIAL_GOLD * 3
+		player.increment_current_gold(earned_gold)

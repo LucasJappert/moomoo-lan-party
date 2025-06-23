@@ -91,3 +91,6 @@ static func play_beep(volume: float = -5.0):
 
 static func play_monster_sound(audio_id: int, max_simultaneous: int = 1, volume: float = -5.0):
 	_play_sfx("res://sounds/monsters/%d.wav" % audio_id, volume, max_simultaneous)
+
+static func play_gold_sound(volume: float = -5.0):
+	_play_sfx("res://sounds/generals/gold.wav", volume, 2)
