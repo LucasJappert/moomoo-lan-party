@@ -67,17 +67,17 @@ static func _get_available_player() -> AudioStreamPlayer:
 			return player
 	return _players[0]
 
-static func play_projectile_hit(type: String, volume: float = -15.0):
+static func play_projectile_hit(type: String, volume: float = -10.0):
 	_play_sfx("res://sounds/hits/" + type + ".wav", volume, 1)
 
-static func play_critical_arrow_shot(volume: float = -10.0):
+static func play_critical_arrow_shot(volume: float = -15.0):
 	_play_sfx("res://sounds/hits/critic_arrow.wav", volume, 1) # ← Max 3 at the same time
 
-static func play_melee_hit(volume: float = -15.0):
+static func play_melee_hit(volume: float = -20.0):
 	var random_melee_hit := randi() % 3 + 1
 	_play_sfx("res://sounds/hits/melee%d.wav" % random_melee_hit, volume, 1)
 
-static func play_critical_melee_hit(volume: float = -5.0):
+static func play_critical_melee_hit(volume: float = -15.0):
 	_play_sfx("res://sounds/hits/critic_melee.wav", volume, 1)
 
 static func play_lightning_spell(volume: float = -15.0):

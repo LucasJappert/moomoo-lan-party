@@ -73,13 +73,14 @@ static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _d
 	var _attacker_stats = _attacker.combat_data.cache_total_stats
 
 	# Stun verification, we need it after the evasion check
-	if GlobalsEntityHelpers.roll_chance(_attacker_stats.stun_chance):
-		var _stats = CombatStats.new()
-		_stats.stun_duration = _attacker_stats.stun_duration
-		_stats.is_owner_friendly = false
-		var effect = CombatEffect.get_temporal_effect("Stun", _stats.stun_duration, 1, _stats)
-		effect.set_region_rect(CombatEffect.STUN_RECT_REGION)
-		_receiver.combat_data.add_effect(effect)
+	if _di.damage_type == DamageType.PHYSICAL:
+		if GlobalsEntityHelpers.roll_chance(_attacker_stats.stun_chance):
+			var _stats = CombatStats.new()
+			_stats.stun_duration = _attacker_stats.stun_duration
+			_stats.is_owner_friendly = false
+			var effect = CombatEffect.get_temporal_effect("Stun", _stats.stun_duration, 1, _stats)
+			effect.set_region_rect(CombatEffect.STUN_RECT_REGION)
+			_receiver.combat_data.add_effect(effect)
 
 	# Lifesteal verification
 	if _attacker.combat_data.current_hp < _attacker.combat_data.get_total_hp() && _di.total_damage > 0:

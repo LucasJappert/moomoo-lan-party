@@ -221,10 +221,10 @@ static func initialize_skills() -> void:
 	_skill = _SKILLS[aux_skill_name]
 	_skill.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 0, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
 
-	int_array = [20, 40, 60]
+	int_array = [80, 130, 200]
 	for i in int_array.size():
 		_skill.item_skill_base[i].mana_cost = int_array[i]
-	int_array = [5, 4, 3]
+	int_array = [8, 5, 2]
 	for i in int_array.size():
 		_skill.item_skill_base[i].cooldown = int_array[i]
 	int_array = [5, 6, 7]

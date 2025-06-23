@@ -20,19 +20,7 @@ static func set_frost_revenant(_enemy: Enemy):
 	_enemy.combat_data.stats.evasion = 0.15
 	_enemy.combat_data.stats.crit_chance = 0.2
 
-	# _enemy.combat_data._skills.append_array([Skill.get_new_learned_skill(Skill.Names.MIRROR_DEMISE)])
-
-	return true
-
-static func set_warden_of_decay(_enemy: Enemy):
-	_set_base_stats(_enemy)
-	if _enemy.enemy_type != EnemyTypes.WARDEN_OF_DECAY: return false
-
-	_enemy.combat_data.stats.hp = 120
-	_enemy.combat_data.stats.crit_chance = 0.1
-	_enemy.combat_data.stats.crit_multiplier = 1.5
-
-	# _enemy.combat_data._skills.append_array([Skill.get_new_learned_skill(Skill.Names.MIRROR_DEMISE)])
+	_enemy.combat_data._skills.append_array([Skill.get_new_learned_skill(Skill.Names.FROZEN_TOUCH)])
 
 	return true
 
@@ -55,5 +43,17 @@ static func set_flame_cultist(_enemy: Enemy):
 		# Skill.get_new_learned_skill(Skill.Names.FROZEN_TOUCH),
 		Skill.get_new_learned_skill(Skill.Names.STORM_STRIKE)
 	])
+
+static func set_warden_of_decay(_enemy: Enemy):
+	_set_base_stats(_enemy)
+	if _enemy.enemy_type != EnemyTypes.WARDEN_OF_DECAY: return false
+
+	_enemy.combat_data.stats.hp = 120
+	_enemy.combat_data.stats.crit_chance = 0.1
+	_enemy.combat_data.stats.crit_multiplier = 1.5
+
+	# _enemy.combat_data._skills.append_array([Skill.get_new_learned_skill(Skill.Names.MIRROR_DEMISE)])
+
+	return true
 
 # endregion

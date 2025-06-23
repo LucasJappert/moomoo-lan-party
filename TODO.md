@@ -126,6 +126,9 @@ MY TODOs: 🔵🟡✅
 - Encapsular lógica de get/set
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+
+  23/06/2025
+
 - ✅ Gold coin sound when the player earns gold. Provide gold when each wave of enemies finishes.
 - ✅ Add sound for boss-type enemies
 - ✅ Show health and mana bars when pressing ALT
@@ -137,7 +140,9 @@ MY TODOs: 🔵🟡✅
 - ✅ Enemy spellcasting system
 - ✅ Verify that health and mana bars disappear after a certain time without taking damage
 - ✅ Show mana bar for enemies
+
   21/06/2025
+
 - ✅ Provide some exp when attacking or healing
 - ✅ Add animation when leveling up
 - ✅ Skill progression system when leveling up, automatic increase of base stats, level-up animation

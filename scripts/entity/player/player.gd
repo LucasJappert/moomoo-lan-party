@@ -80,6 +80,9 @@ func level_up() -> void:
 	
 	rpc_handler.add_animation(AnimationsHelper.ANIMATION_NAMES.LEVEL_UP)
 
+	combat_data.update_current_hp(combat_data.get_total_hp())
+	combat_data.update_current_mana(combat_data.get_total_mana())
+
 func increment_current_gold(value_to_increment: int) -> void:
 	current_gold += value_to_increment
 	if is_my_player(): SoundsHelper.play_gold_sound()

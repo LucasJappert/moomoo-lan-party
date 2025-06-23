@@ -44,7 +44,7 @@ static func get_default_instance() -> CombatStats:
 	attr.move_speed = 2 # Default move speed for enemies
 	attr.attack_range = CombatStats.MIN_ATTACK_RANGE
 	attr.magic_attack_power = 0
-	attr.physical_attack_power = 10
+	attr.physical_attack_power = 1
 	attr.crit_multiplier = 1.5
 	attr.attack_speed = 0.5
 	return attr
