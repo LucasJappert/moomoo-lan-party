@@ -738,6 +738,7 @@ monitorable = false
 shape = SubResource("CircleShape2D_g80tl")
 
 [node name="CurrentGold" type="Label" parent="PanelBR"]
+layout_mode = 0
 offset_left = 178.0
 offset_top = 201.0
 offset_right = 279.0

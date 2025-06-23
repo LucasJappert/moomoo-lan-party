@@ -25,6 +25,11 @@ func _on_skill_uppgrade_button_pressed(slot_number: int):
 
 
 # region 	CLIENTS MESSAGES RECEIVED FROM SERVER
+func show_countdown_message(data: String): rpc("_on_show_countdown_message", data)
+@rpc("authority", "call_local")
+func _on_show_countdown_message(message: String):
+	CountdownLabel.show_countdown_number(message)
+
 func update_base_stats(new_stats_data: Dictionary): rpc("_on_update_base_stats", new_stats_data)
 @rpc("authority", "call_local")
 func _on_update_base_stats(new_stats_data: Dictionary):

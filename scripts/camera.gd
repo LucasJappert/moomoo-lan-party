@@ -41,6 +41,11 @@ static func create_camera(spawn_position: Vector2 = Moomoo.SPAWN_POSITION):
 
 static func update_camera_position(pos: Vector2):
 	camera.position = pos
+	
+static func update_camera_position_to_my_player():
+	if GameManager.MY_PLAYER == null: return
+
+	update_camera_position(GameManager.MY_PLAYER.global_position)
 
 static func try_update_zoom(event: InputEvent):
 	if camera == null:

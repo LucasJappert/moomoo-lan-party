@@ -1,16 +1,49 @@
 class_name EnemiesWavesController
 
-static var _wave_number: int = 0
-const ENEMIES_BY_ZONE = 7
+const ENEMIES_BY_ZONE = 1
 const TOTAL_WAVES = 20
 const _WAVE_DIRECTIONS = [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]
 static var TOTAL_ENEMIES_TO_CREATE: int = TOTAL_WAVES * ENEMIES_BY_ZONE * _WAVE_DIRECTIONS.size()
 
-static func start_wave() -> void:
-	_wave_number += 1
-	print("Wave " + str(_wave_number) + " started!")
+static var current_wave: int = 0
 
-	const TILES_DISTANCE = 3
+static var COUNTDOWN_START := 10 # 10 seconds
+static var countdown_time_in_secs: float = COUNTDOWN_START
+static var countdown_time_to_show: int
+static var countdown_active := false
+static var process_running := false
+
+static func start_wave_process() -> void:
+	process_running = true
+
+static func _process(_delta: float) -> void:
+	if not GameManager.AM_I_HOST: return
+	if not process_running: return
+	if not GameManager.MY_PLAYER: return
+	if GameManager.current_enemies_in_scene > 0: return
+
+	if countdown_active == false: countdown_active = true
+
+	if countdown_active and countdown_time_in_secs <= 0:
+		if current_wave > TOTAL_WAVES: return
+
+		countdown_active = false
+		countdown_time_in_secs = COUNTDOWN_START
+		countdown_time_to_show = COUNTDOWN_START
+		return create_next_wave()
+
+	countdown_time_in_secs -= _delta
+	if int(countdown_time_in_secs) != countdown_time_to_show:
+		countdown_time_to_show = int(countdown_time_in_secs)
+		var message = str(countdown_time_to_show)
+		if countdown_time_to_show == 0: message = "Wave " + str(current_wave + 1) + " \n Let's fight!"
+		GameManager.MY_PLAYER.rpc_handler.show_countdown_message(message)
+
+static func create_next_wave() -> void:
+	current_wave += 1
+	print("Wave " + str(current_wave) + " started!")
+
+	const TILES_DISTANCE = 9
 	var counter = 0
 	var moomoo_position = GameManager.moomoo.global_position
 
@@ -29,10 +62,10 @@ static func start_wave() -> void:
 			cell = MapManager.get_valid_grid_cell(cell)
 			enemy.global_position = MapManager.cell_to_world(cell)
 			enemy.id = counter
-			enemy.level = _wave_number
+			enemy.level = current_wave
 			
 			var is_boss = (i == ENEMIES_BY_ZONE - 1)
-			enemy._boss_level = _wave_number if is_boss else 0
+			enemy._boss_level = current_wave if is_boss else 0
 				
 			# enemy.can_attack = false
 			GameManager.add_enemy(enemy)

@@ -9,3 +9,5 @@ func _unhandled_input(event: InputEvent):
 
 		if event.keycode == KEY_I:
 			GUI.SHOW_DEBUG_DATA = not GUI.SHOW_DEBUG_DATA
+		if event.keycode == KEY_SPACE:
+			MyCamera.update_camera_position_to_my_player()

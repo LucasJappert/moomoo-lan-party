@@ -94,12 +94,15 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
+- ✅ Countdown before starting each wave
+- ✅ Sistema de rondas de enemigos aumentando las dificultades en cada oleada, cada 3 oleadas podríamos hacer una de solamente 4 boses
+- Configurar nuevos enemigos
 - Sistema de puntos
 - Json de héroes
 - Ordenar efectos por nombre
+- Agregar panel debugger con opciones para matar todos los enemigos, etc.
 - Agregar sonido de boses
 - Agregar sistema de selección de Héroe
-- Sistema de rondas de enemigos aumentando las dificultades en cada oleada, cada 3 oleadas podríamos hacer una de solamente 4 boses
 - Agregar un score que tenga en cuenta la velocidad con que se avanza a cada oleada
 - Sistema de daños/curas en el tiempo
 - Revisar target hovered cuando hay muchos enemigos

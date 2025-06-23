@@ -24,7 +24,7 @@ func _post_ready(_entity: Entity):
 	my_owner = _entity
 	_is_moomoo = my_owner is Moomoo
 
-	_label_container.visible = false
+	_label_container.visible = true
 	_label_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.text = my_owner.name
@@ -53,7 +53,7 @@ func _try_update_label():
 	if not _label_container.visible: return
 		
 	_label.text = my_owner.combat_data.target_entity_name
-	_label.text = str(my_owner.combat_data.is_stunned)
+	_label.text = str(GameManager.current_enemies_in_scene)
 	pass
 
 func update_health_bar():

@@ -96,7 +96,7 @@ func _on_host_game_pressed() -> void:
 	MultiplayerManager.become_host()
 	GameManager.spawn_moomoo()
 	
-	EnemiesWavesController.start_wave()
+	EnemiesWavesController.start_wave_process()
 	
 func _on_join_as_player_pressed() -> void:
 	%MultiplayerHUD.hide()

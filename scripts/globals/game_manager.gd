@@ -13,6 +13,7 @@ var audio_node
 var MY_PLAYER: Player
 var MY_PLAYER_ID: int = -1
 var AM_I_HOST = false
+var current_enemies_in_scene = 0
 
 func _ready():
 	my_main = get_tree().get_root().get_node("MyMain")
@@ -25,11 +26,13 @@ func _ready():
 	audio_node = get_tree().root.get_node("MyMain/Audio")
 
 	enemies_node.connect("child_entered_tree", func(p_enemy: Enemy): add_entity(p_enemy))
-	enemies_node.connect("child_exiting_tree", func(p_enemy: Enemy): remove_entity(p_enemy))
 	players_node.connect("child_entered_tree", func(p_player: Player): add_entity(p_player))
-	players_node.connect("child_exiting_tree", func(p_player: Player): remove_entity(p_player))
 	moomoo_node.connect("child_entered_tree", func(p_moomoo: Moomoo): add_entity(p_moomoo))
-	moomoo_node.connect("child_exiting_tree", func(p_moomoo: Moomoo): remove_entity(p_moomoo))
+
+	# Ya eliminamos las entidades desde el metodo _global_die()
+	# enemies_node.connect("child_exiting_tree", func(p_enemy: Enemy): remove_entity(p_enemy))
+	# players_node.connect("child_exiting_tree", func(p_player: Player): remove_entity(p_player))
+	# moomoo_node.connect("child_exiting_tree", func(p_moomoo: Moomoo): remove_entity(p_moomoo))
 
 	call_deferred("_init_projectiles_spawner")
 	call_deferred("_init_enemies_spawner")
@@ -53,9 +56,10 @@ func _init_moomoo_spawner() -> void:
 func _process(delta: float) -> void:
 	CursorManager._static_process(delta)
 	WindowFocusWatcher._process(delta)
-
+	EnemiesWavesController._process(delta)
 
 func add_enemy(enemy: Enemy) -> void:
+	current_enemies_in_scene += 1
 	my_main.enemies_spawner.spawn(ObjectHelpers.to_dict(enemy))
 	enemy.queue_free()
 
@@ -82,6 +86,10 @@ func remove_entity(entity: Entity) -> void:
 	var current_cell = MapManager.world_to_cell(entity.global_position)
 	MapManager.set_cell_blocked(current_cell, false)
 	entity.queue_free() # We shouldn't do this in the client side, server should do it and sync it
+	if entity is Enemy: current_enemies_in_scene -= 1
+
+func _on_enemy_exited_tree() -> void:
+	current_enemies_in_scene -= 1
 
 func get_players() -> Array[Entity]:
 	# TODO: Improve with cache by frame
