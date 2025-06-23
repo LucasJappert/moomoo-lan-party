@@ -29,4 +29,4 @@ static func show_countdown_number(message: String):
 	var screen_center := MyMain.SCREEN_SIZE / 2
 	countdown_label.global_position = screen_center - Vector2(0, MapManager.TILE_SIZE_INT * 6)
 	GameManager.my_main.gui_scene.add_child(countdown_label)
-	SoundManager.play_beep()
+	SoundsHelper.play_beep()

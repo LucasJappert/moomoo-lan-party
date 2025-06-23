@@ -76,4 +76,4 @@ static func _apply_lightning_animation(target: Entity):
 	var sprite_size = Vector2(64, 96)
 	var frames = SpritesHelper.get_sprite_frames(Vector2(0, 640), sprite_size, 12, 25, false)
 	_spawn_front_animation(target, frames, ANIMATION_NAMES.LIGHTNING, _get_position_of_bottom_of_the_cell(sprite_size))
-	SoundManager.play_lightning_spell()
+	SoundsHelper.play_lightning_spell()

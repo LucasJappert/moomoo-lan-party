@@ -480,10 +480,10 @@ func global_receive_damage_or_heal(_di: DamageInfo):
 	if _di.critical > 0:
 		my_owner().hud.show_damage_heal_popup(str(- (_di.total_damage - _di.critical)), Color(1, 0, 0))
 		my_owner().hud.show_damage_heal_popup(str(-_di.critical), Color(1, 1, 0))
-		if arrow_attack: SoundManager.play_critical_arrow_shot()
-		if melee_attack: SoundManager.play_critical_melee_hit()
+		if arrow_attack: SoundsHelper.play_critical_arrow_shot()
+		if melee_attack: SoundsHelper.play_critical_melee_hit()
 	if _di.critical == 0 and _di.total_damage > 0:
-		if melee_attack: SoundManager.play_melee_hit()
+		if melee_attack: SoundsHelper.play_melee_hit()
 
 	if _di.total_damage < 0: # Heal
 		my_owner().hud.show_damage_heal_popup(str(abs(_di.total_damage)), Color(0, 1, 0))

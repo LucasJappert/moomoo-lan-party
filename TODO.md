@@ -94,13 +94,12 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- 🔵 Configure enemy types for wave 2
+- Json de héroes
+- Configure enemy types for wave 2
 - Sistema de rondas de enemigos aumentando las dificultades en cada oleada, cada 3 oleadas podríamos hacer una de solamente 4 boses
 - Sistema de puntos
-- Json de héroes
 - Ordenar efectos por nombre
 - Agregar panel debugger con opciones para matar todos los enemigos, etc.
-- Agregar sonido de boses
 - Agregar sistema de selección de Héroe
 - Agregar un score que tenga en cuenta la velocidad con que se avanza a cada oleada
 - Sistema de daños/curas en el tiempo
@@ -127,6 +126,7 @@ MY TODOs: 🔵🟡✅
 - Encapsular lógica de get/set
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+- ✅ Add sound for boss-type enemies
 - ✅ Show health and mana bars when pressing ALT
 - ✅ Configure enemy types for wave 1
 - ✅ Countdown before starting each wave

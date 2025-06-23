@@ -30,7 +30,7 @@ func set_type(type: String):
 func _ready():
 	var volumen = -15.0
 	if _type == TYPES.FIREBALL: volumen = -5.0
-	SoundManager.play_projectile_hit(_type, volumen)
+	SoundsHelper.play_projectile_hit(_type, volumen)
 
 	if _type == TYPES.FIREBALL: _animated_sprite.scale = Vector2(1, 2)
 	_animated_sprite.frames = _get_frames()

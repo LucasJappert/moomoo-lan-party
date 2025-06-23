@@ -33,7 +33,7 @@ func _ready() -> void:
 	DecorationsFactory.add_random_decorations_over_grass_terrain()
 	DecorationsFactory.add_random_decorations_over_dirt_terrain()
 
-	SoundManager.initialize()
+	SoundsHelper.initialize()
 	DamagePopupPool.preload_popups()
 
 func _process(_delta: float) -> void:

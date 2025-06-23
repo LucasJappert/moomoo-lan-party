@@ -4,6 +4,7 @@ class_name Enemy
 
 @export var enemy_type: String
 static var _exp_when_dead: int = 0
+var monster_sounds_helper = MonsterSoundsHelper.new()
 
 var timer_500ms: Timer
 
@@ -30,6 +31,10 @@ func _ready_for_server():
 	timer_500ms.autostart = true
 	timer_500ms.timeout.connect(_on_every_timer_500ms)
 	add_child(timer_500ms)
+
+func _process(_delta: float) -> void:
+	super._process(_delta)
+	monster_sounds_helper.try_to_play_boss_sound(self, _delta)
 
 func set_combat_data():
 	match enemy_type:

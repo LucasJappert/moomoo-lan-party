@@ -68,7 +68,7 @@ static func create_next_wave() -> void:
 			else: enemy_type = _current_wave_info.common_enemies[randi() % _current_wave_info.common_enemies.size()]
 
 			var enemy = _get_enemy(enemy_type, wave_direction, is_boss)
-			# # enemy.can_attack = false
+			# enemy.can_attack = false
 			GameManager.add_enemy(enemy)
 			# # return
 

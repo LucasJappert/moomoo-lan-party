@@ -1,5 +1,5 @@
 extends Node
-class_name SoundManager
+class_name SoundsHelper
 
 const FORCE_MUTED := false
 static var _MUTED := false
@@ -22,13 +22,13 @@ static func initialize():
 		_players.append(player)
 
 	_initialized = true
-	print("✅ SoundManager initialized with %d players" % MAX_PLAYERS)
+	print("✅ SoundsHelper initialized with %d players" % MAX_PLAYERS)
 
 
 static func _play_sfx(path: String, volume: float = 0.0, max_simultaneous: int = 2):
 	if FORCE_MUTED or _MUTED: return
 	if not _initialized:
-		push_error("⚠️ SoundManager not initialized.")
+		push_error("⚠️ SoundsHelper not initialized.")
 		return
 
 	# Evitar reproducir más de X instancias simultáneas de este sonido
@@ -88,3 +88,6 @@ static func play_level_up(volume: float = -5.0):
 
 static func play_beep(volume: float = -5.0):
 	_play_sfx("res://sounds/generals/beep.wav", volume, 1)
+
+static func play_monster_sound(audio_id: int, max_simultaneous: int = 1, volume: float = -5.0):
+	_play_sfx("res://sounds/monsters/%d.wav" % audio_id, volume, max_simultaneous)

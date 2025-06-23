@@ -66,7 +66,7 @@ func level_up() -> void:
 	print("🎉✨ LEVEL UP! You've reached Level %d! 🚀🔥" % level)
 	level += 1
 	increment_skill_points_to_assign(1)
-	if is_my_player(): SoundManager.play_level_up()
+	if is_my_player(): SoundsHelper.play_level_up()
 	
 
 	var stats_to_add = CombatStats.new()
