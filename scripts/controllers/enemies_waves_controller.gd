@@ -1,6 +1,6 @@
 class_name EnemiesWavesController
 
-const ENEMIES_BY_ZONE = 1
+const ENEMIES_BY_ZONE = 7
 const TOTAL_WAVES = 20
 const _WAVE_DIRECTIONS = [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]
 static var TOTAL_ENEMIES_TO_CREATE: int = TOTAL_WAVES * ENEMIES_BY_ZONE * _WAVE_DIRECTIONS.size()
@@ -36,7 +36,7 @@ static func _process(_delta: float) -> void:
 	if int(countdown_time_in_secs) != countdown_time_to_show:
 		countdown_time_to_show = int(countdown_time_in_secs)
 		var message = str(countdown_time_to_show)
-		if countdown_time_to_show == 0: message = "Wave " + str(current_wave + 1) + " \n Let's fight!"
+		if countdown_time_to_show == 0: message = "Wave " + str(current_wave + 1) + " is coming!\nLet's fight!"
 		GameManager.MY_PLAYER.rpc_handler.show_countdown_message(message)
 
 static func create_next_wave() -> void:

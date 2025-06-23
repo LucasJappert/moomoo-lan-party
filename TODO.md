@@ -94,7 +94,6 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- ✅ Countdown before starting each wave
 - ✅ Sistema de rondas de enemigos aumentando las dificultades en cada oleada, cada 3 oleadas podríamos hacer una de solamente 4 boses
 - Configurar nuevos enemigos
 - Sistema de puntos
@@ -128,6 +127,7 @@ MY TODOs: 🔵🟡✅
 - Encapsular lógica de get/set
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+- ✅ Countdown before starting each wave
 - ✅ Add gold to players when an enemy dies
 - ✅ Improvements for when there are many objects on the map (review the pathfinding). Still working on it.
 - ✅ Review exp when attacking an enemy

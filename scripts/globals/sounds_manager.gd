@@ -85,3 +85,6 @@ static func play_lightning_spell(volume: float = -15.0):
 
 static func play_level_up(volume: float = -5.0):
 	_play_sfx("res://sounds/generals/level-up.wav", volume, 1)
+
+static func play_beep(volume: float = -5.0):
+	_play_sfx("res://sounds/generals/beep.wav", volume, 1)
