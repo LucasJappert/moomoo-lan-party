@@ -7,7 +7,7 @@ extends Control
 @onready var _description: Label = $Panel/Description
 
 const MARGINS = 20
-const PANEL_WIDTH = 500
+const PANEL_WIDTH_IN_TILES: float = 14
 
 
 func _ready() -> void:
@@ -21,23 +21,24 @@ func _process(_delta):
 	# 	global_position = get_global_mouse_position() + Vector2(16, 16)
 	return
 
-func show_me(title: String, description: String, panel_width: int = PANEL_WIDTH) -> void:
-	if panel_width == 0: panel_width = PANEL_WIDTH
+func _show_me(title: String, description: String, width_in_tiles: float = PANEL_WIDTH_IN_TILES) -> void:
+	if width_in_tiles == 0: width_in_tiles = PANEL_WIDTH_IN_TILES
 
-	_title.set_size(Vector2(panel_width - MARGINS * 2, 0))
-	_description.set_size(Vector2(panel_width - MARGINS * 2, 0))
+	var width_in_pixels = width_in_tiles * MapManager.TILE_SIZE_INT
+	_title.set_size(Vector2(width_in_pixels - MARGINS * 2, 0))
+	_description.set_size(Vector2(width_in_pixels - MARGINS * 2, 0))
 
 	_title.text = title
 	_description.text = description
 
 	var title_height = _title.get_combined_minimum_size().y
 	var description_height = _description.get_combined_minimum_size().y
-	_panel.set_size(Vector2(panel_width, title_height + description_height + MARGINS * 2))
+	_panel.set_size(Vector2(width_in_pixels, title_height + description_height + MARGINS * 2))
 
 	visible = true
 	_update_position()
 
-func hide_me() -> void:
+func _hide_me() -> void:
 	visible = false
 
 func _update_position() -> void:
@@ -70,3 +71,8 @@ func _update_position() -> void:
 	final_pos.y = clamp(final_pos.y, 0, screen_size.y - tooltip_size.y)
 
 	global_position = final_pos
+
+static func show_tooltip(title: String, text: String, width_in_tiles: float = 0.0) -> void:
+	GameManager.my_main.gui_scene.my_tooltip._show_me(title, text, width_in_tiles)
+static func hide_tooltip() -> void:
+	GameManager.my_main.gui_scene.my_tooltip._hide_me()

@@ -34,6 +34,7 @@ var custom_damage_heal: CustomDamageHeal = CustomDamageHeal.new()
 @export var is_owner_friendly: bool = true
 var keep_latest_stacks: bool = true
 
+
 static func get_instance_from_dict(dict: Dictionary) -> CombatStats:
 	var instance = CombatStats.new()
 	ObjectHelpers.from_dict(instance, dict)
@@ -47,6 +48,9 @@ static func get_default_instance() -> CombatStats:
 	attr.physical_attack_power = 1
 	attr.crit_multiplier = 1.5
 	attr.attack_speed = 0.5
+	attr.agility = 10
+	attr.strength = 10
+	attr.intelligence = 10
 	return attr
 
 func accumulate_combat_stats(stats: CombatStats) -> CombatStats:
@@ -103,25 +107,43 @@ func _get_extra_stats_by_attributes() -> CombatStats:
 	attr.accumulate_combat_stats(get_extra_stats_by_intelligence(intelligence))
 	return attr
 
+const _HP_BY_STRENGTH = 20; const _HP_REGEN_BY_STRENGTH = 0.1; const _PHYSICAL_ATTACK_POWER_BY_STRENGTH = 0.5
+static var STRENGTH_PROPERTIES = "Gives " + StringHelpers.format_float(_HP_BY_STRENGTH) + " hp, " + \
+	StringHelpers.format_float(_HP_REGEN_BY_STRENGTH) + " hp regen and " + \
+	StringHelpers.format_float(_PHYSICAL_ATTACK_POWER_BY_STRENGTH) + " physical attack power per point of strength"
 static func get_extra_stats_by_strength(_str: int) -> CombatStats:
 	var attr = CombatStats.new()
-	attr.hp = _str * 20
-	attr.hp_regeneration_points = _str * 0.1
-	attr.physical_attack_power = _str * 0.5
+	attr.hp = _str * _HP_BY_STRENGTH
+	attr.hp_regeneration_points = _str * _HP_REGEN_BY_STRENGTH
+	attr.physical_attack_power = _str * _PHYSICAL_ATTACK_POWER_BY_STRENGTH
 	return attr
 
+const _MANA_BY_INTELLIGENCE = 10; const _MANA_REGEN_BY_INTELLIGENCE = 0.05; const _MAGIC_ATTACK_POWER_BY_INTELLIGENCE = 1
+const _MAGIC_DEFENSE_BY_INTELLIGENCE = 1 / _AUX
+static var INTELLIGENCE_PROPERTIES = "Gives " + StringHelpers.format_float(_MANA_BY_INTELLIGENCE) + " mana, " + \
+	StringHelpers.format_float(_MANA_REGEN_BY_INTELLIGENCE) + " mana regen, " + \
+	StringHelpers.format_float(_MAGIC_ATTACK_POWER_BY_INTELLIGENCE) + " magic attack power and " + \
+	StringHelpers.format_percent(_MAGIC_DEFENSE_BY_INTELLIGENCE, true, 1) + " magic defense per point of intelligence"
 static func get_extra_stats_by_intelligence(_int: int) -> CombatStats:
 	var attr = CombatStats.new()
-	attr.mana = _int * 5
-	attr.mana_regeneration_points = _int * 0.1
-	attr.magic_attack_power = _int
+	attr.mana = _int * _MANA_BY_INTELLIGENCE
+	attr.mana_regeneration_points = _int * _MANA_REGEN_BY_INTELLIGENCE
+	attr.magic_attack_power = _int * _MAGIC_ATTACK_POWER_BY_INTELLIGENCE
+	attr.magic_defense_percent = _int * _MAGIC_DEFENSE_BY_INTELLIGENCE
 	return attr
 
+const _AUX: float = 1000
+const _ATTACK_SPEED_BY_AGILITY: float = 1 / _AUX
+const _EVASION_BY_AGILITY: float = 1 / _AUX
+const _DEFENSE_BY_AGILITY: float = 1 / _AUX
+static var AGILITY_PROPERTIES = "Gives " + StringHelpers.format_percent(_ATTACK_SPEED_BY_AGILITY, true, 1) + " attack speed, " + \
+	StringHelpers.format_percent(_EVASION_BY_AGILITY, true, 1) + " evasion and " + \
+	StringHelpers.format_percent(_DEFENSE_BY_AGILITY, true, 1) + " defense per point of agility"
 static func get_extra_stats_by_agility(_agi: int) -> CombatStats:
 	var attr = CombatStats.new()
-	attr.attack_speed = _agi * 0.001 # 1000 of agility = 1 = Cada segundo 1 ataque
-	attr.evasion = _agi * 0.0002 # 5000 of agility = 1 = 100% evasion
-	attr.physical_defense_percent = _agi * 0.0002 # 5000 of agility = 1 = 100% defense
+	attr.attack_speed = _agi * _ATTACK_SPEED_BY_AGILITY # 1000 of agility = 1 = Cada segundo 1 ataque
+	attr.evasion = _agi * _EVASION_BY_AGILITY # 1000 of agility = 1 = 100% evasion
+	attr.physical_defense_percent = _agi * _DEFENSE_BY_AGILITY # 1000 of agility = 1 = 100% defense
 	return attr
 
 # region 	GETTERs
@@ -152,13 +174,13 @@ func get_description() -> String:
 		description += str("- Crit chance: ", StringHelpers.format_percent(crit_chance), "\n")
 
 	if crit_multiplier != 0:
-		description += str("- Crit multiplier: ", StringHelpers.format_float(crit_multiplier), "\n")
+		description += str("- Crit multiplier: ", StringHelpers.format_float_compact(crit_multiplier), "\n")
 
 	if stun_chance != 0:
 		description += str("- Stun chance: ", StringHelpers.format_percent(stun_chance), "\n")
 
 	if stun_duration != 0:
-		description += str("- Stun duration: ", StringHelpers.format_float(stun_duration), "s\n")
+		description += str("- Stun duration: ", StringHelpers.format_float_compact(stun_duration), "s\n")
 
 	if attack_range != 0:
 		description += str("- Attack range: ", attack_range, "\n")
@@ -176,19 +198,19 @@ func get_description() -> String:
 		description += str("- Magic attack power percent: ", StringHelpers.format_percent(magic_attack_power_percent), "\n")
 
 	if attack_speed != 0:
-		description += str("- Attack speed: ", StringHelpers.format_float(attack_speed), "\n")
+		description += str("- Attack speed: ", StringHelpers.format_float_compact(attack_speed), "\n")
 
 	if attack_speed_percent != 0:
 		description += str("- Attack speed percent: ", StringHelpers.format_percent(attack_speed_percent), "\n")
 
 	if move_speed != 0:
-		description += str("- Move speed: ", StringHelpers.format_float(move_speed), "\n")
+		description += str("- Move speed: ", StringHelpers.format_float_compact(move_speed), "\n")
 
 	if move_speed_percent != 0:
 		description += str("- Move speed percent: ", StringHelpers.format_percent(move_speed_percent), "\n")
 
 	if freeze_duration != 0:
-		description += str("- Freeze duration: ", StringHelpers.format_float(freeze_duration), "\n")
+		description += str("- Freeze duration: ", StringHelpers.format_float_compact(freeze_duration), "\n")
 
 	if life_steal_percent != 0:
 		description += str("- Life steal percent: ", StringHelpers.format_percent(life_steal_percent), "\n")

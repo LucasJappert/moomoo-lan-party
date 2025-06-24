@@ -34,9 +34,9 @@ func _ready():
 		if _effect == null:
 			print("GuiEffect: Effect is null")
 			return
-		GameManager.show_tooltip(_effect.effect_name, _effect.get_description(), 500)
+		MyTooltip.show_tooltip(_effect.effect_name, _effect.get_description(), 16)
 	)
-	%Area2D.connect("mouse_exited", func(): GameManager.hide_tooltip())
+	%Area2D.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
 
 func _process(delta: float):
 	if GameManager.MY_PLAYER == null: return

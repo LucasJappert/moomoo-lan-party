@@ -37,7 +37,7 @@ func get_description() -> String:
 		result += str("- Mana cost: ", mana_cost, "\n")
 
 	if cooldown > 0.0:
-		result += str("- Cooldown: ", StringHelpers.format_float(cooldown), "s\n")
+		result += str("- Cooldown: ", StringHelpers.format_float_compact(cooldown), "s\n")
 
 	if max_targets > 1:
 		result += "- Max targets: " + str(max_targets) + "\n"

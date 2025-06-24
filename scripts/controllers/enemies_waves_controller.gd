@@ -15,6 +15,8 @@ static var countdown_time_to_show: int
 static var countdown_active := false
 static var process_running := false
 
+static var extra_stats_by_wave = CombatStats.new()
+
 class WaveInfo:
 	var common_enemies: Array[String]
 	var boss_enemies: Array[String]
@@ -57,6 +59,10 @@ static func _process(_delta: float) -> void:
 static func create_next_wave() -> void:
 	current_wave += 1
 	print("Wave " + str(current_wave) + " started!")
+	
+	extra_stats_by_wave.agility = 5 * current_wave
+	extra_stats_by_wave.strength = 5 * current_wave
+	extra_stats_by_wave.intelligence = 5 * current_wave
 
 	if not _current_wave_info and WAVES_INFO.size() > current_wave - 1:
 		_current_wave_info = WAVES_INFO[current_wave - 1]
@@ -70,9 +76,10 @@ static func create_next_wave() -> void:
 			else: enemy_type = _current_wave_info.common_enemies[randi() % _current_wave_info.common_enemies.size()]
 
 			var enemy = _get_enemy(enemy_type, wave_direction, is_boss)
+
 			# enemy.can_attack = false
 			GameManager.add_enemy(enemy)
-			# return
+		# return
 
 static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: bool) -> Enemy:
 	var enemy: Enemy = EnemyFactory.get_enemy_instance(enemy_type)
@@ -86,7 +93,9 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 	enemy.id = UniqueIdGenerator.get_id()
 	enemy.level = current_wave
 	enemy._boss_level = current_wave if is_boss else 0
-		
+	
+	enemy.combat_stats.accumulate_combat_stats(extra_stats_by_wave)
+	if enemy._boss_level: enemy.combat_stats.accumulate_combat_stats(extra_stats_by_wave)
 	return enemy
 
 static func _wave_finilized() -> void:

@@ -4,7 +4,6 @@ extends Node
 
 @onready var combat_effect_node = $CombatEffectNode
 
-var stats: CombatStats = CombatStats.new()
 @export var current_hp: int = 0
 @export var current_mana: int = 0
 @export var attack_type := AttackTypes.MELEE
@@ -43,8 +42,6 @@ var enemy_spell_caster: EnemySpellCaster
 func _ready() -> void:
 	if GameManager.AM_I_HOST == false:
 		set_process(false)
-
-	stats.initialize_default_values() # TODO: Review this... Why dont use get_default_instance()?
 
 	# Initialize items
 	_items.clear()
@@ -181,12 +178,12 @@ func update_current_mana(value_to_increase: int) -> void:
 	my_owner().hud.update_mana_bar()
 
 func update_base_stats(new_stats: CombatStats) -> void:
-	stats = new_stats
+	my_owner().combat_stats = new_stats
 	update_cache_total_stats()
 
 func update_item(index: int, slot_item_info: SlotItemInfo) -> void:
 	_items[index] = slot_item_info
-	update_cache_total_stats() # Update the cache of total stats, which includes items
+	update_cache_total_stats() # Update the cache of total combat_stats, which includes items
 
 func add_item(_slot_item_info: SlotItemInfo) -> bool:
 	if _slot_item_info.position > 0:
@@ -294,9 +291,9 @@ var cache_total_stats: CombatStats = CombatStats.new()
 func update_cache_total_stats() -> void:
 	cache_total_stats = _get_total_stats()
 func _get_total_stats() -> CombatStats:
-	# This function returns the total of all stats, including extras from effects and extras from attributes
+	# This function returns the total of all combat_stats, including extras from effects and extras from attributes
 	var _total_stats := CombatStats.new()
-	_total_stats.accumulate_combat_stats(stats.get_total_stats_including_extras_by_attributes())
+	_total_stats.accumulate_combat_stats(my_owner().combat_stats.get_total_stats_including_extras_by_attributes())
 
 	_total_stats.accumulate_combat_stats(_get_extra_stats_by_effects().get_total_stats_including_extras_by_attributes())
 	_total_stats.accumulate_combat_stats(_get_extra_stats_by_skills().get_total_stats_including_extras_by_attributes())
@@ -307,7 +304,7 @@ func _get_total_stats() -> CombatStats:
 func _get_extra_stats_by_effects() -> CombatStats:
 	var extra_stats = CombatStats.new()
 	for effect in get_effects():
-		if effect.stats.has_hostil_stun_effect(): continue # Do not add stun stats if it is an effect that is hostile to the owner
+		if effect.stats.has_hostil_stun_effect(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
 		extra_stats.accumulate_combat_stats(effect.stats)
 	return extra_stats
 
@@ -317,7 +314,7 @@ func _get_extra_stats_by_skills() -> CombatStats:
 		var learned_skill = skill.get_learned_skill()
 		if not learned_skill: continue
 		if learned_skill.create_effect: continue
-		if learned_skill.stats.has_hostil_stun_effect(): continue # Do not add stun stats if it is an effect that is hostile to the owner
+		if learned_skill.stats.has_hostil_stun_effect(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
 		extra_stats.accumulate_combat_stats(learned_skill.stats)
 	return extra_stats
 
@@ -327,7 +324,7 @@ func _get_extra_stats_by_items() -> CombatStats:
 		if slot_item_info.is_consumable: continue
 		if slot_item_info.item == null: continue
 		if slot_item_info.item.type == SkillType.ACTIVE: continue
-		if slot_item_info.item.stats.has_hostil_stun_effect(): continue # Do not add stun stats if it is an effect that is hostile to the owner
+		if slot_item_info.item.stats.has_hostil_stun_effect(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
 		extra_stats.accumulate_combat_stats(slot_item_info.item.stats)
 	return extra_stats
 

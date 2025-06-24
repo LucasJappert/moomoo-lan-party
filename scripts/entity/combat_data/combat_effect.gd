@@ -24,7 +24,7 @@ func _process(delta: float) -> void:
 func get_description() -> String:
 	var description = ""
 	if _duration > 0.0:
-		description += str("- Duration: ", StringHelpers.format_float(_duration), "s\n")
+		description += str("- Duration: ", StringHelpers.format_float_compact(_duration), "s\n")
 
 	description += stats.get_description()
 

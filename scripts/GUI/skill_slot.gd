@@ -95,11 +95,11 @@ func initialize_styles():
 
 func _on_mouse_entered():
 	if not skill: return
-	GameManager.show_tooltip(skill.item_skill_base[0].my_name, skill.get_description())
+	MyTooltip.show_tooltip(skill.item_skill_base[0].my_name, skill.get_description())
 
 func _on_mouse_exited():
 	if not skill: return
-	GameManager.hide_tooltip()
+	MyTooltip.hide_tooltip()
 
 func _gui_input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
@@ -119,6 +119,6 @@ func _process(_delta: float) -> void:
 	var remaining_cooldown := skill.get_remaining_cooldown()
 	if remaining_cooldown > 0:
 		label_cool_down.visible = true
-		label_cool_down.text = StringHelpers.format_float(remaining_cooldown, 1)
+		label_cool_down.text = StringHelpers.format_float_compact(remaining_cooldown, 1)
 	else:
 		label_cool_down.visible = false

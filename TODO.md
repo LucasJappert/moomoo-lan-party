@@ -94,6 +94,13 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
+- Agregar skill que por cada 10% de vida perdido brinda un 10% extra de daño físico y de velocidad de ataque
+- Agregar un item/skill que da una pasiva de daño en área del 10%/20%/30% del daño físico total causado
+- Agregar un item/skill que al activarlo te hace inmune a los hechizos y a ciertos debuffs como silencios.
+- Agregar un item/skill que te brinda 100% de efectividad de ataque, es decir, ignora la evasion del enemigo.
+- Agregar un item que quema el mana del enemigo ante cada golpe físico, cierto % del mana quemado se convierte en daño.
+- Agregar un item/skill que te hace inmune a todo daño durante cierto tiempo al activarlo.
+- Animacion de caminata para cuando se realiza un ataque
 - Agregar otros efectos de sonidos para el ambiente
 - Configure enemy types for wave 2
 - Sistema de rondas de enemigos aumentando las dificultades en cada oleada, cada 3 oleadas podríamos hacer una de solamente 4 boses
@@ -126,6 +133,9 @@ MY TODOs: 🔵🟡✅
 - Encapsular lógica de get/set
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+
+- ✅ Reorder stats in the GUI. Add a tooltip that provides extra information depending on the stat.
+- ✅ Check the issue with the ready function that overrides the stats set in instances
 
   23/06/2025
 

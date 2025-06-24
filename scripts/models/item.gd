@@ -44,10 +44,10 @@ static func initialize_items() -> void:
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.ACTIVE)
 	_item = _ITEMS[aux_item_name]
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 0, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
-	_item.stats.hp = 200
+	_item.stats.hp = 500
 	_item.cooldown = 0.5
 	_item.cost = 10
-	_item.description = "Restores " + StringHelpers.format_float(_item.stats.hp) + " HP."
+	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.hp) + " HP."
 	# endregion
 	
 	# region ITEM HEALTH_POTION_II
@@ -55,10 +55,10 @@ static func initialize_items() -> void:
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.ACTIVE)
 	_item = _ITEMS[aux_item_name]
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 1, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
-	_item.stats.hp = 500
+	_item.stats.hp = 2000
 	_item.cooldown = 0.5
 	_item.cost = 20
-	_item.description = "Restores " + StringHelpers.format_float(_item.stats.hp) + " HP."
+	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.hp) + " HP."
 	# endregion
 
 	# region ITEM HEALTH_POTION_III
@@ -66,10 +66,10 @@ static func initialize_items() -> void:
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.ACTIVE)
 	_item = _ITEMS[aux_item_name]
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 2, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
-	_item.stats.hp = 2000
+	_item.stats.hp = 10000
 	_item.cooldown = 0.5
 	_item.cost = 50
-	_item.description = "Restores " + StringHelpers.format_float(_item.stats.hp) + " HP."
+	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.hp) + " HP."
 	# endregion
 
 	
@@ -78,10 +78,10 @@ static func initialize_items() -> void:
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.ACTIVE)
 	_item = _ITEMS[aux_item_name]
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 0, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
-	_item.stats.mana = 100
+	_item.stats.mana = 500
 	_item.cooldown = 0.5
 	_item.cost = 10
-	_item.description = "Restores " + StringHelpers.format_float(_item.stats.mana) + " mana."
+	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.mana) + " mana."
 	# endregion
 
 	# region ITEM MANA_POTION_II
@@ -89,10 +89,10 @@ static func initialize_items() -> void:
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.ACTIVE)
 	_item = _ITEMS[aux_item_name]
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 1, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
-	_item.stats.mana = 500
+	_item.stats.mana = 2000
 	_item.cooldown = 0.5
 	_item.cost = 20
-	_item.description = "Restores " + StringHelpers.format_float(_item.stats.mana) + " mana."
+	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.mana) + " mana."
 	# endregion
 
 	# region ITEM MANA_POTION_III
@@ -100,10 +100,10 @@ static func initialize_items() -> void:
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.ACTIVE)
 	_item = _ITEMS[aux_item_name]
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 2, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
-	_item.stats.mana = 2000
+	_item.stats.mana = 10000
 	_item.cooldown = 0.5
 	_item.cost = 50
-	_item.description = "Restores " + StringHelpers.format_float(_item.stats.mana) + " mana."
+	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.mana) + " mana."
 	# endregion
 
 # endregion ................. SETTERs

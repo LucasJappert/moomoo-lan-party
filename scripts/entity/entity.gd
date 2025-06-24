@@ -20,6 +20,7 @@ var id: int = 0
 
 @onready var combat_data: CombatData = $CombatData
 @export var direction: Vector2 = Vector2.ZERO
+var combat_stats = CombatStats.new()
 var replicated: bool = false
 
 # Move this logic to a separate module
@@ -32,7 +33,8 @@ var movement_helper: MovementHelper
 @onready var rpc_handler: RpcHandler = $RpcHandler
 
 func _init() -> void:
-	if not combat_data: combat_data = CombatData.new()
+	if not combat_data:
+		combat_data = CombatData.new()
 
 func _ready():
 	collision_layer = 1

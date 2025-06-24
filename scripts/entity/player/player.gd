@@ -12,7 +12,7 @@ const INITIAL_GOLD: int = 100
 @export var current_gold: int:
 	set(_value):
 		current_gold = _value
-		current_gold_string = StringHelpers.format_float(current_gold)
+		current_gold_string = StringHelpers.format_float_compact(current_gold)
 var current_gold_string: String = ""
 @export var skill_points_to_assign: int:
 	set(_value):
@@ -74,7 +74,7 @@ func level_up() -> void:
 	stats_to_add.strength += 2
 	stats_to_add.agility += 2
 	stats_to_add.intelligence += 2
-	var new_stats = combat_data.stats.accumulate_combat_stats(stats_to_add)
+	var new_stats = combat_stats.accumulate_combat_stats(stats_to_add)
 
 	rpc_handler.update_base_stats(ObjectHelpers.to_dict(new_stats))
 	

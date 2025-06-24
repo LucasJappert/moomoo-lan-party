@@ -32,18 +32,18 @@ const EXP_BAR_FULL_SIZE = Vector2i(612, 27)
 @onready var _hp_label = $PanelBL/LabelHP
 @onready var _current_exp_rect = $PanelBL/CurrentExpRect
 @onready var _level = $PanelBL/Level
-@onready var _stats1_lab1 = $PanelBL/ContainerStats1Values/Lab1
-@onready var _stats1_lab2 = $PanelBL/ContainerStats1Values/Lab2
-@onready var _stats1_lab3 = $PanelBL/ContainerStats1Values/Lab3
-@onready var _stats1_lab4 = $PanelBL/ContainerStats1Values/Lab4
-@onready var _stats1_lab5 = $PanelBL/ContainerStats1Values/Lab5
-@onready var _stats1_lab6 = $PanelBL/ContainerStats1Values/Lab6
-@onready var _stats2_lab1 = $PanelBL/ContainerStats2Values/Lab1
-# @onready var _stats2_lab2 = $PanelBL/ContainerStats2Values/Lab2
-@onready var _stats2_lab3 = $PanelBL/ContainerStats2Values/Lab3
-@onready var _stats2_lab4 = $PanelBL/ContainerStats2Values/Lab4
-@onready var _stats2_lab5 = $PanelBL/ContainerStats2Values/Lab5
-@onready var _stats2_lab6 = $PanelBL/ContainerStats2Values/Lab6
+@onready var _str_value = $PanelBL/StatsContainer/Panel2/VBoxContainer2/StrValue
+@onready var _agi_value = $PanelBL/StatsContainer/Panel2/VBoxContainer2/AgiValue
+@onready var _int_value = $PanelBL/StatsContainer/Panel2/VBoxContainer2/IntValue
+@onready var _move_speed_value = $PanelBL/StatsContainer/Panel2/VBoxContainer2/MoveSpeedValue
+@onready var _attack_speed_value = $PanelBL/StatsContainer/Panel2/VBoxContainer2/AttackSpeedValue
+
+@onready var _damage_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/DamageValue
+@onready var _defense_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/DefenseValue
+@onready var _evasion_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/EvasionValue
+@onready var _stun_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/StunValue
+@onready var _critic_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/CriticValue
+@onready var _lifesteal_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/LifeStealValue
 @onready var _hero_type = $PanelBL/HeroType
 @onready var _hero_alias = $PanelBL/HeroAlias
 # endregion
@@ -60,6 +60,7 @@ var _player_skills: Array[Skill] = []
 var delta: float
 
 func _ready() -> void:
+	GUIStatsHelper._ready(self)
 	text_ip.text = "127.0.0.1"
 	# tailscale IP = 100.99.208.97
 	if multiplayer.is_server() && not MyMain.HOSTED_GAME: return
@@ -79,16 +80,16 @@ func _ready() -> void:
 	%HpBallCircle.connect("mouse_entered", func():
 		if not GameManager.MY_PLAYER: return
 		var regen_points = GameManager.MY_PLAYER.combat_data.cache_total_stats.hp_regeneration_points
-		GameManager.show_tooltip("HP regen", str(regen_points) + " points per second", 200)
+		MyTooltip.show_tooltip("HP regen", str(regen_points) + " points per second", 7)
 	)
-	%HpBallCircle.connect("mouse_exited", func(): GameManager.hide_tooltip())
+	%HpBallCircle.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
 
 	%ManaBallCircle.connect("mouse_entered", func():
 		if not GameManager.MY_PLAYER: return
 		var regen_points = GameManager.MY_PLAYER.combat_data.cache_total_stats.mana_regeneration_points
-		GameManager.show_tooltip("Mana regen", str(regen_points) + " points per second", 200)
+		MyTooltip.show_tooltip("Mana regen", str(regen_points) + " points per second", 7)
 	)
-	%ManaBallCircle.connect("mouse_exited", func(): GameManager.hide_tooltip())
+	%ManaBallCircle.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
 
 
 func _on_host_game_pressed() -> void:
@@ -180,12 +181,12 @@ func _update_panel_top_left(use_lerp: bool = true) -> void:
 	var current_hp = target.combat_data.current_hp
 	var max_hp = target.combat_data.get_total_hp()
 	_target_rect_current_hp.size.x = _new_lerped_size(max_hp, current_hp, int(_RECT_TARGET_MAX_HP.size.x), _target_rect_current_hp.size.x, use_lerp)
-	_label_target_current_hp.text = "%d/%d" % [current_hp, max_hp]
+	_label_target_current_hp.text = "%s / %s" % [StringHelpers.format_float_compact(current_hp), StringHelpers.format_float_compact(max_hp)]
 
 	var current_mana = target.combat_data.current_mana
 	var max_mana = target.combat_data.get_total_mana()
 	_target_rect_current_mana.size.x = _new_lerped_size(max_mana, current_mana, int(_RECT_TARGET_MAX_MANA.size.x), _target_rect_current_mana.size.x, use_lerp)
-	_label_target_current_mana.text = "%d/%d" % [current_mana, max_mana]
+	_label_target_current_mana.text = "%s / %s" % [StringHelpers.format_float_compact(current_mana), StringHelpers.format_float_compact(max_mana)]
 
 func _new_lerped_size(max_value: int, current_value: int, full_size: int, current_size: int, use_lerp: bool = true) -> int:
 	# Smooth interpolation (the 10.0 controls the speed, you can adjust it)
@@ -199,8 +200,13 @@ func _new_lerped_size(max_value: int, current_value: int, full_size: int, curren
 	return lerp(current_size, target_size, delta * 10.0)
 
 func _update_panel_bottom_left() -> void:
-	_hp_label.text = "%d/%d" % [GameManager.MY_PLAYER.combat_data.current_hp, GameManager.MY_PLAYER.combat_data.get_total_hp()]
-	%LabelExp.text = "%d/%d" % [GameManager.MY_PLAYER.current_exp, Player.get_exp_per_level(GameManager.MY_PLAYER.level)]
+	var current_hp = StringHelpers.format_float_compact(GameManager.MY_PLAYER.combat_data.current_hp)
+	var max_hp = StringHelpers.format_float_compact(GameManager.MY_PLAYER.combat_data.get_total_hp())
+	_hp_label.text = "%s / %s" % [current_hp, max_hp]
+
+	var current_exp = StringHelpers.format_float_compact(GameManager.MY_PLAYER.current_exp)
+	var max_exp = StringHelpers.format_float_compact(Player.get_exp_per_level(GameManager.MY_PLAYER.level))
+	%LabelExp.text = "%s / %s" % [current_exp, max_exp]
 	_update_hp_ball_sprite()
 	_update_exp_bar()
 
@@ -209,23 +215,24 @@ func _update_panel_bottom_left() -> void:
 	_level.text = str(GameManager.MY_PLAYER.level)
 
 	var total_stats = GameManager.MY_PLAYER.combat_data.cache_total_stats
-	_stats1_lab1.text = str(total_stats.strength)
-	_stats1_lab2.text = str(total_stats.agility)
-	_stats1_lab3.text = str(total_stats.intelligence)
-	_stats1_lab4.text = StringHelpers.format_float(total_stats.get_total_move_speed())
-	_stats1_lab5.text = StringHelpers.format_float(total_stats.get_total_attack_speed())
-	_stats1_lab6.text = StringHelpers.format_percent(total_stats.life_steal_percent)
+	_str_value.text = StringHelpers.format_float_compact(total_stats.strength)
+	_agi_value.text = StringHelpers.format_float_compact(total_stats.agility)
+	_int_value.text = StringHelpers.format_float_compact(total_stats.intelligence)
+	_move_speed_value.text = StringHelpers.format_float_compact(total_stats.get_total_move_speed())
+	_attack_speed_value.text = StringHelpers.format_float_compact(total_stats.get_total_attack_speed())
+	_lifesteal_value.text = StringHelpers.format_percent(total_stats.life_steal_percent)
 
-	_stats2_lab1.text = StringHelpers.format_float(total_stats.physical_attack_power) + " / " + StringHelpers.format_float(total_stats.magic_attack_power)
-	# _stats2_lab2.text = StringHelpers.format_float(total_stats.magic_attack_power)
-	_stats2_lab3.text = StringHelpers.format_percent(total_stats.physical_defense_percent) + " / " + StringHelpers.format_percent(total_stats.magic_defense_percent)
-	_stats2_lab4.text = StringHelpers.format_percent(total_stats.evasion)
-	_stats2_lab5.text = StringHelpers.format_percent(total_stats.stun_chance)
-	_stats2_lab6.text = StringHelpers.format_percent(total_stats.crit_chance) + " (*" + StringHelpers.format_float(total_stats.crit_multiplier) + ")"
+	_damage_value.text = StringHelpers.format_float_compact(total_stats.physical_attack_power) + "-" + StringHelpers.format_float_compact(total_stats.magic_attack_power)
+	_defense_value.text = StringHelpers.format_percent(total_stats.physical_defense_percent, false) + "-" + StringHelpers.format_percent(total_stats.magic_defense_percent, false) + " %"
+	_evasion_value.text = StringHelpers.format_percent(total_stats.evasion)
+	_stun_value.text = StringHelpers.format_percent(total_stats.stun_chance)
+	_critic_value.text = StringHelpers.format_percent(total_stats.crit_chance) + " (*" + StringHelpers.format_float_compact(total_stats.crit_multiplier) + ")"
 
 func _update_panel_bottom_right() -> void:
 	_current_gold.text = GameManager.MY_PLAYER.current_gold_string
-	_mana_label.text = "%d/%d" % [GameManager.MY_PLAYER.combat_data.current_mana, GameManager.MY_PLAYER.combat_data.get_total_mana()]
+	var current_mana = StringHelpers.format_float_compact(GameManager.MY_PLAYER.combat_data.current_mana)
+	var max_mana = StringHelpers.format_float_compact(GameManager.MY_PLAYER.combat_data.get_total_mana())
+	_mana_label.text = "%s / %s" % [current_mana, max_mana]
 	_update_mana_ball_sprite()
 
 func _update_exp_bar() -> void:

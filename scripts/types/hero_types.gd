@@ -66,25 +66,28 @@ static func get_hero_json_data(hero_type: String) -> JsonItem:
 static func initialize_hero(player: Player) -> void:
 	player.json_data = HeroTypes.get_hero_json_data(player.hero_type)
 	var stats = CombatStats.new()
-	stats.physical_defense_percent = 0.2
-	stats.magic_defense_percent = 0.2
-	stats.evasion = 0.05
+	# stats.physical_defense_percent = 0.2
+	# stats.magic_defense_percent = 0.2
+	# stats.evasion = 0.05
 	stats.crit_chance = 0.05
 	stats.crit_multiplier = 1.5
 	stats.attack_speed = 0.5
-	stats.physical_attack_power = 7
-	stats.magic_attack_power = 7
+	# stats.physical_attack_power = 7
+	# stats.magic_attack_power = 7
 	stats.move_speed = 5
 	stats.agility = 50
 	stats.strength = 50
 	stats.intelligence = 50
 	stats.attack_range = CombatStats.MIN_ATTACK_RANGE
 	# region Add some potions 
-	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_I), 20))
-	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_I), 20))
-	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_II), 20))
-	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_II), 20))
-	player.combat_data.add_item(SlotItemInfo.get_non_consumable_slot_item(Item.get_item(Item.Names.STUNNING_EDGE)))
+	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_I), 100))
+	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_I), 100))
+	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_II), 100))
+	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_II), 100))
+	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_III), 100))
+	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_III), 100))
+	# player.combat_data.add_item(SlotItemInfo.get_non_consumable_slot_item(Item.get_item(Item.Names.STUNNING_EDGE)))
+
 
 	# endregion Add some potions
 

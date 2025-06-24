@@ -177,7 +177,7 @@ static func initialize_skills() -> void:
 		_skill.item_skill_base[i].max_targets = int_array[i]
 		_skill.item_skill_base[i].apply_to_owner = false
 		aux_text = StringHelpers.format_percent(_skill.item_skill_base[i].stats.attack_speed_percent)
-		aux_text1 = StringHelpers.format_float(_skill.item_skill_base[i].stats.freeze_duration)
+		aux_text1 = StringHelpers.format_float_compact(_skill.item_skill_base[i].stats.freeze_duration)
 		_skill.item_skill_base[i].description = "The attacker's icy touch partially freezes the target, reducing their movement and attack speed by " + aux_text + " for " + aux_text1 + " seconds."
 	# endregion
 
@@ -194,7 +194,7 @@ static func initialize_skills() -> void:
 		_skill.item_skill_base[i].apply_to_owner = true
 		_skill.item_skill_base[i].max_stacks = 1
 		aux_text = StringHelpers.format_percent(_skill.item_skill_base[i].stats.stun_chance)
-		aux_text1 = StringHelpers.format_float(_skill.item_skill_base[i].stats.stun_duration)
+		aux_text1 = StringHelpers.format_float_compact(_skill.item_skill_base[i].stats.stun_duration)
 		_skill.item_skill_base[i].description = "Has a " + aux_text + " chance to stun the target for " + aux_text1 + " seconds."
 	
 	# endregion
@@ -240,7 +240,7 @@ static func initialize_skills() -> void:
 		_skill.item_skill_base[i].apply_to_owner = false
 		_skill.item_skill_base[i].damage_type = DamageType.MAGIC
 
-		aux_text = StringHelpers.format_float(_skill.item_skill_base[i].stats.custom_damage_heal.base_damage_heal)
+		aux_text = StringHelpers.format_float_compact(_skill.item_skill_base[i].stats.custom_damage_heal.base_damage_heal)
 		aux_text1 = StringHelpers.format_percent(_skill.item_skill_base[i].stats.custom_damage_heal.extra_value_by_intelligence)
 		_skill.item_skill_base[i].description = "Calls down a bolt of arcane lightning, dealing " + aux_text + " base magic damage, plus an additional " + aux_text1 + " of the caster's total Intelligence to multiple targets."
 	
@@ -285,9 +285,9 @@ static func actions_before_entity_death(_dead_entity: Entity, _attacker: Entity)
 			new_enemy.replicated = true
 			new_enemy.position = _dead_entity.position + target_tiles[i]
 			# We need set combat_data props after the enemy is added to the scene
-			new_enemy.combat_data.stats.hp = new_enemy.combat_data.get_total_hp() * 0.5
+			new_enemy.combat_stats.hp = new_enemy.combat_data.get_total_hp() * 0.5
 			new_enemy.combat_data.update_cache_total_stats()
-			new_enemy.combat_data.current_hp = new_enemy.combat_data.stats.hp
+			new_enemy.combat_data.current_hp = new_enemy.combat_stats.hp
 			GameManager.add_enemy(new_enemy)
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:

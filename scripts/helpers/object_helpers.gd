@@ -75,7 +75,7 @@ static func from_dict(obj: Object, data: Dictionary) -> Object:
 			TYPE_ARRAY:
 				from_dict_array(obj, key, value)
 			_:
-				if key == "name" and not value: return
+				if key == "name" and not value: continue
 				obj.set(key, value)
 
 	return obj
