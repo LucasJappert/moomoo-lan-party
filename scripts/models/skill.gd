@@ -10,6 +10,7 @@ const Names = {
 	FROZEN_TOUCH = "Frozen Touch", # ✅
 	STUNNING_STRIKE = "Stunning Strike", # ✅
 	STORM_STRIKE = "Storm Strike", # ✅
+	BLOOD_FURY = "Blood Fury", # ✅
 	MANA_SCORCHER = "Mana Scorcher",
 	DIVINE_SHIELD = "Divine Shield",
 	ENERGY_ABSORPTION = "Energy Absorption",
@@ -114,7 +115,7 @@ func get_remaining_cooldown() -> float:
 
 static func initialize_skills() -> void:
 	var aux_skill_name = ""
-	var aux_text: String; var aux_text1: String
+	var aux_text: String; var aux_text1: String; var aux_text2: String
 	var _skill: Skill
 	var int_array: Array[int]; var float_array: Array[float]
 
@@ -246,6 +247,24 @@ static func initialize_skills() -> void:
 	
 	# endregion
 
+	# region BLOOD FURY
+	aux_skill_name = Names.BLOOD_FURY
+	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
+	_skill = _SKILLS[aux_skill_name]
+	_skill.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 1, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
+
+	float_array = [0.05, 0.1, 0.15]
+	for i in int_array.size():
+		_skill.item_skill_base[i].stats.physical_attack_power_percent = float_array[i]
+		_skill.item_skill_base[i].stats.attack_speed_percent = float_array[i]
+		_skill.item_skill_base[i].stats.hp_regeneration_points_percent = float_array[i]
+
+		aux_text = StringHelpers.format_percent(_skill.item_skill_base[i].stats.physical_attack_power_percent)
+		aux_text1 = StringHelpers.format_percent(_skill.item_skill_base[i].stats.attack_speed_percent)
+		aux_text2 = StringHelpers.format_percent(_skill.item_skill_base[i].stats.hp_regeneration_points_percent)
+		_skill.item_skill_base[i].description = "Gives " + aux_text + " extra physical attack power, " + aux_text1 + " extra attack speed and " + aux_text2 + " extra hp regeneration per each 10% of lost hp."
+	# endregion
+
 func use(my_owner: Entity, target_entity: Entity) -> void:
 	if not can_use(my_owner): return print("Cannot use skill: ", get_learned_skill())
 
@@ -266,6 +285,25 @@ func try_to_upgrade(my_owner: Entity) -> void:
 # endregion ................. SETTERs
 
 # region :::::::::::::::::::: SKILLS LOGICS
+static func verify_blood_fury(my_owner: Entity) -> void:
+	var learned_skill = my_owner.combat_data.get_learned_skill(Names.BLOOD_FURY)
+	if not learned_skill: return
+
+	my_owner.combat_data.remove_effect(Names.BLOOD_FURY)
+
+	var current_hp = my_owner.combat_data.current_hp
+	var total_hp: float = my_owner.combat_data.get_total_hp()
+	var percent_lost_hp: float = floor((1 - current_hp / total_hp) * 10.0) / 10.0
+	if percent_lost_hp <= 0: return # Remove the effect if the hp is full
+
+	var effect_stats = CombatStats.new()
+	effect_stats.physical_attack_power = my_owner.combat_data.cache_total_stats.physical_attack_power * percent_lost_hp
+	effect_stats.attack_speed = my_owner.combat_data.cache_total_stats.attack_speed * percent_lost_hp
+
+	var new_effect = CombatEffect.get_permanent_effect(Names.BLOOD_FURY, learned_skill.max_stacks, effect_stats)
+	new_effect.set_region_rect(_SKILLS[Names.BLOOD_FURY].region_rect)
+	my_owner.combat_data.add_effect(new_effect)
+
 static func actions_before_entity_death(_dead_entity: Entity, _attacker: Entity) -> void:
 	if not _dead_entity is Enemy: return
 	if _dead_entity.replicated: return

@@ -18,7 +18,7 @@ var current_gold_string: String = ""
 	set(_value):
 		skill_points_to_assign = _value
 		EventBus.emit_skill_points_to_assign_changed(self)
-
+const EXTRA_ATTRIBUTES_STATS_BY_LEVEL = 4
 
 func set_player(data: Dictionary) -> void:
 	player_id = data["player_id"]
@@ -71,17 +71,17 @@ func level_up() -> void:
 	
 
 	var stats_to_add = CombatStats.new()
-	stats_to_add.strength += 2
-	stats_to_add.agility += 2
-	stats_to_add.intelligence += 2
+	stats_to_add.strength += EXTRA_ATTRIBUTES_STATS_BY_LEVEL
+	stats_to_add.agility += EXTRA_ATTRIBUTES_STATS_BY_LEVEL
+	stats_to_add.intelligence += EXTRA_ATTRIBUTES_STATS_BY_LEVEL
 	var new_stats = combat_stats.accumulate_combat_stats(stats_to_add)
 
 	rpc_handler.update_base_stats(ObjectHelpers.to_dict(new_stats))
 	
 	rpc_handler.add_animation(AnimationsHelper.ANIMATION_NAMES.LEVEL_UP)
 
-	combat_data.update_current_hp(combat_data.get_total_hp())
-	combat_data.update_current_mana(combat_data.get_total_mana())
+	# combat_data.update_current_hp(combat_data.get_total_hp())
+	# combat_data.update_current_mana(combat_data.get_total_mana())
 
 func increment_current_gold(value_to_increment: int) -> void:
 	current_gold += value_to_increment

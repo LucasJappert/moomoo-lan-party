@@ -94,7 +94,6 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- Agregar skill que por cada 10% de vida perdido brinda un 10% extra de daño físico y de velocidad de ataque
 - Agregar un item/skill que da una pasiva de daño en área del 10%/20%/30% del daño físico total causado
 - Agregar un item/skill que al activarlo te hace inmune a los hechizos y a ciertos debuffs como silencios.
 - Agregar un item/skill que te brinda 100% de efectividad de ataque, es decir, ignora la evasion del enemigo.
@@ -134,6 +133,7 @@ MY TODOs: 🔵🟡✅
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
 
+- ✅ Add skill that grants 5% extra physical damage and attack speed for every 10% of lost health
 - ✅ Reorder stats in the GUI. Add a tooltip that provides extra information depending on the stat.
 - ✅ Check the issue with the ready function that overrides the stats set in instances
 

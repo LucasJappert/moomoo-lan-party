@@ -101,7 +101,8 @@ static func initialize_hero(player: Player) -> void:
 			Skill.get_skill(Skill.Names.STORM_STRIKE),
 			Skill.get_skill(Skill.Names.LIFESTEAL),
 			Skill.get_skill(Skill.Names.STUNNING_STRIKE),
-			Skill.get_skill(Skill.Names.FROZEN_TOUCH)
+			Skill.get_skill(Skill.Names.BLOOD_FURY),
+			# Skill.get_skill(Skill.Names.FROZEN_TOUCH)
 		]
 		# player.combat_data._skills[0].learned_level = 2
 	

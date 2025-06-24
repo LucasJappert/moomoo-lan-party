@@ -11,6 +11,7 @@ var _elapsed: float = 0.0
 var _region_rect: Rect2
 var max_stacks: int = 1
 var stats: CombatStats = CombatStats.new()
+var unique_id: int = UniqueIdGenerator.get_id()
 
 const STUN_RECT_REGION := Rect2(0, 608, 32, 17)
 
@@ -39,6 +40,7 @@ func set_region_rect(rect: Rect2) -> void:
 
 func delete_effect() -> void:
 	queue_free()
+	EventBus.emit_effect_removed(GlobalsEntityHelpers.get_owner(self), self)
 # endregion GETTERs
 
 

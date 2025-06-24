@@ -72,6 +72,10 @@ func _ready() -> void:
 	%CombatEffectSpawner.spawn_function = func(effect_data: Dictionary) -> Node:
 		return CombatEffect.get_instance_from_dict(effect_data)
 
+	EventBus.connect_to_current_hp_changed(func(p_entity: Entity):
+		if p_entity.id != my_owner().id: return
+		Skill.verify_blood_fury(p_entity)
+	)
 func _post_ready() -> void:
 	if not GameManager.AM_I_HOST: return
 
@@ -142,6 +146,7 @@ func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void
 	var exp_by_damage = min(current_hp, abs(value_to_increase)) * 0.1
 	current_hp += value_to_increase
 	current_hp = clamp(current_hp, 0, get_total_hp())
+	EventBus.emit_current_hp_changed(my_owner())
 
 	if _attacker: _try_to_give_experience_to_players(exp_by_damage) # Give experience when an enemy takes damage
 	
@@ -233,6 +238,11 @@ func add_effect(p_effect: CombatEffect) -> void:
 
 	%CombatEffectSpawner.spawn(ObjectHelpers.to_dict(p_effect, true))
 	p_effect.queue_free()
+
+func remove_effect(effect_name: String) -> void:
+	for effect in get_effects():
+		if effect.effect_name == effect_name:
+			effect.delete_effect()
 
 func _effects_updated() -> void:
 	update_cache_total_stats()

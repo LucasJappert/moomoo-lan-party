@@ -23,6 +23,7 @@ const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapM
 @export var freeze_duration: float = 0 # In seconds
 @export var life_steal_percent: float = 0
 @export var hp_regeneration_points: int = 0 # Points per second
+@export var hp_regeneration_points_percent: float = 0
 @export var mana_regeneration_points: int = 0 # Points per second
 
 @export var agility: int = 0
@@ -49,7 +50,7 @@ static func get_default_instance() -> CombatStats:
 	attr.crit_multiplier = 1.5
 	attr.attack_speed = 0.5
 	attr.agility = 10
-	attr.strength = 10
+	attr.strength = 6
 	attr.intelligence = 10
 	return attr
 
@@ -76,6 +77,7 @@ func accumulate_combat_stats(stats: CombatStats) -> CombatStats:
 	physical_attack_power_percent += stats.physical_attack_power_percent
 	life_steal_percent += stats.life_steal_percent
 	hp_regeneration_points += stats.hp_regeneration_points
+	hp_regeneration_points_percent += stats.hp_regeneration_points_percent
 	mana_regeneration_points += stats.mana_regeneration_points
 	is_owner_friendly = stats.is_owner_friendly
 
@@ -217,6 +219,9 @@ func get_description() -> String:
 
 	if hp_regeneration_points != 0:
 		description += str("- HP regeneration points: ", hp_regeneration_points, "\n")
+
+	if hp_regeneration_points_percent != 0:
+		description += str("- HP regeneration points percent: ", StringHelpers.format_percent(hp_regeneration_points_percent, true, 1), "\n")
 
 	if mana_regeneration_points != 0:
 		description += str("- Mana regeneration points: ", mana_regeneration_points, "\n")

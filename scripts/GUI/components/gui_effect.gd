@@ -38,22 +38,14 @@ func _ready():
 	)
 	%Area2D.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
 
+	EventBus.connect_to_effect_removed(func(_owner: Entity, p_effect: CombatEffect):
+		if _owner.is_my_player() == false: return
+		if p_effect.unique_name_node != _effect.unique_name_node: return
+		queue_free()
+	)
+
 func _process(delta: float):
 	if GameManager.MY_PLAYER == null: return
 	if is_permanent: return
 
 	_elapsed += delta
-	if _elapsed >= _duration: queue_free()
-
-	_verify_existence_on_effects()
-
-func _verify_existence_on_effects() -> void:
-	if get_parent().name == GuiEffects.MY_EFFECTS_INSTANCE:
-		if GameManager.MY_PLAYER.combat_data.get_effect_by_unique_name(_effect.unique_name_node) == null:
-			return queue_free()
-	
-	if get_parent().name == GuiEffects.TARGET_EFFECTS_INSTANCE:
-		var target = GameManager.MY_PLAYER.combat_data.get_target_entity()
-		if target == null: return
-		if target.combat_data.get_effect_by_unique_name(_effect.unique_name_node) == null:
-			return queue_free()
