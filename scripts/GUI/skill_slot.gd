@@ -44,6 +44,8 @@ func _ready():
 	label_cool_down.visible = false
 	EventBus.connect_to_skill_upgraded(func(p_owner: Entity):
 		# The skill should have been updated by reference, since it's the same skill that emits the signal after updating itself
+		print("Skill name: ", skill.item_skill_base[0].my_name)
+		print("Skill upgraded: ", skill.item_skill_base[0].stats.cleave_effect)
 		update_controls(p_owner)
 	)
 

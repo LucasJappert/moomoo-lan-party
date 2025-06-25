@@ -36,6 +36,7 @@ func _on_mouse_exited():
 
 func _gui_input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		if not GameManager.MY_PLAYER: return
 		KeyboardHelper.key_pressed(KeyboardHelper.INVENTORY_HOTKEYS[info.position - 1], GameManager.MY_PLAYER)
 		
 func set_info(slot_item_info: SlotItemInfo):

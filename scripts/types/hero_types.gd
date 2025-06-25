@@ -80,12 +80,13 @@ static func initialize_hero(player: Player) -> void:
 	stats.intelligence = 50
 	stats.attack_range = CombatStats.MIN_ATTACK_RANGE
 	# region Add some potions 
-	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_I), 100))
-	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_I), 100))
+	# player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_I), 100))
+	# player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_I), 100))
 	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_II), 100))
 	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_II), 100))
 	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_III), 100))
 	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_III), 100))
+	player.combat_data.add_item(SlotItemInfo.get_non_consumable_slot_item(Item.get_item(Item.Names.CLEAVE_EDGE)))
 	# player.combat_data.add_item(SlotItemInfo.get_non_consumable_slot_item(Item.get_item(Item.Names.STUNNING_EDGE)))
 
 
@@ -100,7 +101,7 @@ static func initialize_hero(player: Player) -> void:
 		player.combat_data._skills = [
 			Skill.get_skill(Skill.Names.STORM_STRIKE),
 			Skill.get_skill(Skill.Names.LIFESTEAL),
-			Skill.get_skill(Skill.Names.STUNNING_STRIKE),
+			Skill.get_skill(Skill.Names.CLEAVE_STRIKE),
 			Skill.get_skill(Skill.Names.BLOOD_FURY),
 			# Skill.get_skill(Skill.Names.FROZEN_TOUCH)
 		]

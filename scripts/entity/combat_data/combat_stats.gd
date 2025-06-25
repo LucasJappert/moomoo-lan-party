@@ -1,5 +1,7 @@
 class_name CombatStats
 
+extends MyInitAuxiliary
+
 const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapManager.TILE_SIZE.y, 2))) + 1
 
 @export var hp: int = 0
@@ -25,6 +27,7 @@ const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapM
 @export var hp_regeneration_points: int = 0 # Points per second
 @export var hp_regeneration_points_percent: float = 0
 @export var mana_regeneration_points: int = 0 # Points per second
+var cleave_effect: CleaveEffect
 
 @export var agility: int = 0
 @export var strength: int = 0
@@ -80,6 +83,9 @@ func accumulate_combat_stats(stats: CombatStats) -> CombatStats:
 	hp_regeneration_points_percent += stats.hp_regeneration_points_percent
 	mana_regeneration_points += stats.mana_regeneration_points
 	is_owner_friendly = stats.is_owner_friendly
+
+	if stats.cleave_effect != null:
+		cleave_effect = stats.cleave_effect
 
 	agility += stats.agility
 	strength += stats.strength
@@ -225,6 +231,8 @@ func get_description() -> String:
 
 	if mana_regeneration_points != 0:
 		description += str("- Mana regeneration points: ", mana_regeneration_points, "\n")
+
+	if cleave_effect: description += cleave_effect.get_description()
 
 	return description
 

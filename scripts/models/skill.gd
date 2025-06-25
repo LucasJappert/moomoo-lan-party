@@ -11,6 +11,7 @@ const Names = {
 	STUNNING_STRIKE = "Stunning Strike", # ✅
 	STORM_STRIKE = "Storm Strike", # ✅
 	BLOOD_FURY = "Blood Fury", # ✅
+	CLEAVE_STRIKE = "Cleave Strike", # ✅
 	MANA_SCORCHER = "Mana Scorcher",
 	DIVINE_SHIELD = "Divine Shield",
 	ENERGY_ABSORPTION = "Energy Absorption",
@@ -253,7 +254,7 @@ static func initialize_skills() -> void:
 	_skill = _SKILLS[aux_skill_name]
 	_skill.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 1, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
 
-	float_array = [0.05, 0.1, 0.15]
+	float_array = [0.1, 0.15, 0.2]
 	for i in int_array.size():
 		_skill.item_skill_base[i].stats.physical_attack_power_percent = float_array[i]
 		_skill.item_skill_base[i].stats.attack_speed_percent = float_array[i]
@@ -263,6 +264,19 @@ static func initialize_skills() -> void:
 		aux_text1 = StringHelpers.format_percent(_skill.item_skill_base[i].stats.attack_speed_percent)
 		aux_text2 = StringHelpers.format_percent(_skill.item_skill_base[i].stats.hp_regeneration_points_percent)
 		_skill.item_skill_base[i].description = "Gives " + aux_text + " extra physical attack power, " + aux_text1 + " extra attack speed and " + aux_text2 + " extra hp regeneration per each 10% of lost hp."
+	# endregion
+
+	# region CLEAVE STRIKE
+	aux_skill_name = Names.CLEAVE_STRIKE
+	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
+	_skill = _SKILLS[aux_skill_name]
+	_skill.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 2, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
+
+	float_array = [0.2, 0.3, 0.4]
+	int_array = [1, 1, 2]
+	for i in int_array.size():
+		_skill.item_skill_base[i].stats.cleave_effect = CleaveEffect.new(float_array[i], int_array[i])
+		_skill.item_skill_base[i].description = "Deals " + StringHelpers.format_percent(float_array[i]) + " of the damage as a cleave effect to enemies around " + str(int_array[i]) + " tiles."
 	# endregion
 
 func use(my_owner: Entity, target_entity: Entity) -> void:
@@ -297,8 +311,8 @@ static func verify_blood_fury(my_owner: Entity) -> void:
 	if percent_lost_hp <= 0: return # Remove the effect if the hp is full
 
 	var effect_stats = CombatStats.new()
-	effect_stats.physical_attack_power = my_owner.combat_data.cache_total_stats.physical_attack_power * percent_lost_hp
-	effect_stats.attack_speed = my_owner.combat_data.cache_total_stats.attack_speed * percent_lost_hp
+	effect_stats.physical_attack_power = my_owner.combat_data.cache_total_stats_no_effects.physical_attack_power * percent_lost_hp
+	effect_stats.attack_speed = my_owner.combat_data.cache_total_stats_no_effects.attack_speed * percent_lost_hp
 
 	var new_effect = CombatEffect.get_permanent_effect(Names.BLOOD_FURY, learned_skill.max_stacks, effect_stats)
 	new_effect.set_region_rect(_SKILLS[Names.BLOOD_FURY].region_rect)
@@ -339,6 +353,10 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 		effect.set_region_rect(Skill.get_skill(Names.FROZEN_TOUCH, false).region_rect)
 		_target.combat_data.add_effect(effect)
 
+	# Cleave verification
+	var cleave_skill = _attacker.combat_data.get_learned_skill(Names.CLEAVE_STRIKE)
+	if cleave_skill: CleaveEffect.auxiliary_actions_after_hit(cleave_skill.stats, _attacker, _target, _di)
+
 func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:
 	if not _target: return false
 
@@ -347,7 +365,7 @@ func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:
 
 	var targets = [_target]
 	var my_enemies = _attacker.get_my_enemies()
-	targets.append_array(GlobalsEntityHelpers.get_closest_entities(_target.global_position, get_max_targets() - 1, my_enemies, MapManager.TILE_SIZE_INT * 6, [_target]))
+	targets.append_array(GlobalsEntityHelpers.get_closest_entities(_target.global_position, get_max_targets() - 1, my_enemies, 6, [_target]))
 
 	for target in targets:
 		var _di := DamageInfo.new(total_damage, get_learned_skill().damage_type)

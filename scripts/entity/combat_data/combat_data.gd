@@ -121,6 +121,7 @@ func _server_execute_physical_damage(_target: Entity) -> void:
 	_target.combat_data.server_receive_damage(_di, my_owner())
 
 func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
+	if _di.total_damage == 0: return
 	if my_owner().multiplayer.is_server() == false: return
 
 	var total_stats = cache_total_stats
@@ -131,6 +132,7 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 
 	CombatEffect.actions_after_effective_hit(_attacker, my_owner(), _di)
 	Skill.actions_after_effective_hit(_attacker, my_owner(), _di)
+	Item.actions_after_effective_hit(_attacker, my_owner(), _di)
 
 	my_owner().rpc_handler.receive_damage_or_heal(ObjectHelpers.to_dict(_di, true))
 
@@ -298,14 +300,16 @@ func try_critical_hit(base_value: int) -> int:
 	return critical_damage
 
 var cache_total_stats: CombatStats = CombatStats.new()
+var cache_total_stats_no_effects: CombatStats = CombatStats.new()
 func update_cache_total_stats() -> void:
 	cache_total_stats = _get_total_stats()
-func _get_total_stats() -> CombatStats:
+	cache_total_stats_no_effects = _get_total_stats(false)
+func _get_total_stats(include_effects := true) -> CombatStats:
 	# This function returns the total of all combat_stats, including extras from effects and extras from attributes
 	var _total_stats := CombatStats.new()
 	_total_stats.accumulate_combat_stats(my_owner().combat_stats.get_total_stats_including_extras_by_attributes())
 
-	_total_stats.accumulate_combat_stats(_get_extra_stats_by_effects().get_total_stats_including_extras_by_attributes())
+	if include_effects: _total_stats.accumulate_combat_stats(_get_extra_stats_by_effects().get_total_stats_including_extras_by_attributes())
 	_total_stats.accumulate_combat_stats(_get_extra_stats_by_skills().get_total_stats_including_extras_by_attributes())
 	_total_stats.accumulate_combat_stats(_get_extra_stats_by_items().get_total_stats_including_extras_by_attributes())
 
@@ -425,6 +429,12 @@ func get_target_entity() -> Entity:
 
 func get_items() -> Array[SlotItemInfo]:
 	return _items
+func get_items_by_name(p_name: String) -> Array[SlotItemInfo]:
+	var result: Array[SlotItemInfo] = []
+	for slot_item in _items:
+		if not slot_item.item: continue
+		if slot_item.item.my_name == p_name: result.append(slot_item)
+	return result
 # endregion GETTERs
 
 # region TRY PHISICAL ATTACK

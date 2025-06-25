@@ -61,6 +61,7 @@ region_enabled = true
 region_rect = Rect2(1632, 1856, 64, 64)
 
 [node name="Hotkey" type="Label" parent="."]
+texture_filter = 1
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -122,6 +123,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_fesxh")
 
 [node name="UpgradeButton" type="Label" parent="."]
+texture_filter = 1
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5

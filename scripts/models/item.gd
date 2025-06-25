@@ -9,7 +9,8 @@ const Names = {
 	MANA_POTION_I = "Mana Potion I",
 	MANA_POTION_II = "Mana Potion II",
 	MANA_POTION_III = "Mana Potion III",
-	STUNNING_EDGE = "Stunning Edge"
+	STUNNING_EDGE = "Stunning Edge",
+	CLEAVE_EDGE = "Cleave Edge",
 }
 
 static var _ITEMS: Dictionary[String, Item]
@@ -29,6 +30,14 @@ func _init(_name: String = "", _type: String = SkillType.PASSIVE):
 static func initialize_items() -> void:
 	var aux_item_name = ""
 	var _item: Item
+
+	# region ITEM CLEAVE_EDGE
+	aux_item_name = Names.CLEAVE_EDGE
+	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.PASSIVE)
+	_item = _ITEMS[aux_item_name]
+	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 4, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
+	_item.stats.cleave_effect = CleaveEffect.new(0.3, 2)
+	# endregion
 
 	# region ITEM STUNNING_EDGE
 	aux_item_name = Names.STUNNING_EDGE
@@ -126,5 +135,15 @@ func get_description() -> String:
 	
 	return result
 
-
 # endregion ................. GETTERs
+
+
+# region :::::::::::::::::::: ITEMs LOGICS
+
+static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
+	# Cleave verification
+	var cleave_items_slots = _attacker.combat_data.get_items_by_name(Names.CLEAVE_EDGE)
+	for item_slot in cleave_items_slots:
+		CleaveEffect.auxiliary_actions_after_hit(item_slot.item.stats, _attacker, _target, _di)
+
+# endregion ................. SKILLS LOGICS
