@@ -56,10 +56,10 @@ static func to_dict(obj: Object, just_my_vars: bool = false) -> Dictionary:
 
 	return dict
 
-static func from_dict(obj: Object, data: Dictionary) -> Object:
-	if obj == null: return obj
+static func from_dict(original_obj: Object, data: Dictionary) -> Object:
+	if original_obj == null: return original_obj
 
-	var prop_names := obj.get_property_list().map(func(p): return p.name)
+	var prop_names := original_obj.get_property_list().map(func(p): return p.name)
 
 	for key in data.keys():
 		if key == "script" or not prop_names.has(key):
@@ -69,16 +69,27 @@ static func from_dict(obj: Object, data: Dictionary) -> Object:
 
 		match typeof(value):
 			TYPE_DICTIONARY:
-				var sub_obj = obj.get(key)
-				if sub_obj != null:
+				var sub_obj = original_obj.get(key)
+				if sub_obj:
 					from_dict(sub_obj, value)
+					continue
+
+				var expected_script = _get_expected_script(value)
+				if expected_script:
+					sub_obj = expected_script.new()
+					from_dict(sub_obj, value)
+					original_obj.set(key, sub_obj)
+					continue
+					
+				print("❗ No se pudo determinar el script para instanciar el objeto '" + key + "'")
+
 			TYPE_ARRAY:
-				from_dict_array(obj, key, value)
+				from_dict_array(original_obj, key, value)
 			_:
 				if key == "name" and not value: continue
-				obj.set(key, value)
+				original_obj.set(key, value)
 
-	return obj
+	return original_obj
 
 static func from_dict_array(obj: Object, key: String, value: Array) -> void:
 	if not obj.has_method("get") or not obj.has_method("set"):
@@ -109,12 +120,15 @@ static func _resolve_script_for_array(value: Array) -> Script:
 	if value.is_empty(): return null
 	if typeof(value[0]) != TYPE_DICTIONARY: return null
 
-	if value[0].has("script"):
-		var path = value[0]["script"]
+	return _get_expected_script(value[0])
+
+static func _get_expected_script(data: Dictionary) -> Script:
+	if data.has("script"):
+		var path = data["script"]
 		if typeof(path) == TYPE_STRING: return load(path)
 
-	if value[0].has("script_path"):
-		var path = value[0]["script_path"]
+	if data.has("script_path"):
+		var path = data["script_path"]
 		if typeof(path) == TYPE_STRING: return load(path)
 
 	return null
