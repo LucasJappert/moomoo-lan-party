@@ -4,6 +4,10 @@ extends MyInitAuxiliary
 
 const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapManager.TILE_SIZE.y, 2))) + 1
 
+var ignore_enemy_evasion_chance: float = 0.0
+var cleave_effect: CleaveEffect
+var level: int
+
 @export var hp: int = 0
 @export var mana: int = 0
 @export var physical_defense_percent: float = 0
@@ -27,7 +31,6 @@ const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapM
 @export var hp_regeneration_points: int = 0 # Points per second
 @export var hp_regeneration_points_percent: float = 0
 @export var mana_regeneration_points: int = 0 # Points per second
-var cleave_effect: CleaveEffect
 
 @export var agility: int = 0
 @export var strength: int = 0
@@ -59,6 +62,7 @@ static func get_default_instance() -> CombatStats:
 
 func accumulate_combat_stats(stats: CombatStats) -> CombatStats:
 	custom_damage_heal.accumulate_props(stats.custom_damage_heal)
+	ignore_enemy_evasion_chance += stats.ignore_enemy_evasion_chance
 	hp += stats.hp
 	mana += stats.mana
 	physical_defense_percent += stats.physical_defense_percent
@@ -231,6 +235,9 @@ func get_description() -> String:
 
 	if mana_regeneration_points != 0:
 		description += str("- Mana regeneration points: ", mana_regeneration_points, "\n")
+
+	if ignore_enemy_evasion_chance != 0:
+		description += str("- Ignore enemy evasion chance: ", StringHelpers.format_percent(ignore_enemy_evasion_chance), "\n")
 
 	if cleave_effect: description += cleave_effect.get_description()
 

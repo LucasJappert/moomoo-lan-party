@@ -8,6 +8,7 @@ const ANIMATION_NAMES = {
 }
 
 static func try_to_remove_obsolete_stun_animation(target: Entity):
+	# Shouldn't happen, we could delete it when we're sure
 	var animation_stun_active = _animation_active(target, ANIMATION_NAMES.STUN)
 	if not animation_stun_active: return
 	

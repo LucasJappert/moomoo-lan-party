@@ -1,4 +1,4 @@
-class_name GUI
+class_name GUIScene
 
 extends CanvasLayer
 
@@ -24,9 +24,11 @@ const EXP_BAR_FULL_SIZE = Vector2i(612, 27)
 @onready var _label_target_level = $PanelTL/TargetLevel
 @onready var _label_target_current_hp = $PanelTL/TargetCurrentHp
 @onready var _label_target_current_mana = $PanelTL/TargetCurrentMana
+@onready var target_effects = $PanelTL/TargetEffects
 # endregion
 
 # region Panel BOTTOM LEFT
+@onready var my_effects: GuiEffects = $PanelBL/MyEffects
 @onready var _my_player_avatar = $PanelBL/MyPlayerAvatar
 @onready var _hp_ball = $PanelBL/HpBall
 @onready var _hp_label = $PanelBL/LabelHP
@@ -64,8 +66,6 @@ func _ready() -> void:
 	text_ip.text = "127.0.0.1"
 	# tailscale IP = 100.99.208.97
 	if multiplayer.is_server() && not MyMain.HOSTED_GAME: return
-	
-	EventBus.connect(EventBus.NEW_TARGET_SELECTED, func(_owner: Entity, _target: Entity): _on_new_target_selected(_owner, _target))
 
 	%HostGameButton.connect("pressed", _on_host_game_pressed)
 	%JoinAsPlayerButton.connect("pressed", _on_join_as_player_pressed)
@@ -145,9 +145,9 @@ func set_target_avatar_region(region_rect: Rect2) -> void:
 	_panelTL_avatar.region_rect = region_rect
 
 func add_effect_to_my_effects(effect: CombatEffect) -> void:
-	%MyEffects.add_effect(effect)
+	my_effects.add_effect(effect)
 func add_effect_to_target_effects(effect: CombatEffect) -> void:
-	%TargetEffects.add_effect(effect)
+	target_effects.add_effect(effect)
 
 func _on_new_target_selected(_owner: Entity, _target: Entity) -> void:
 	if not _owner or not _owner.is_my_player(): return

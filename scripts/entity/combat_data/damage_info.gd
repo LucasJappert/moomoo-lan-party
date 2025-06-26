@@ -5,6 +5,9 @@ var critical: int
 var projectile_type: String
 var damage_type: String = DamageType.PHYSICAL
 var attacker_name: String
+var can_be_evaded: bool = true
+var was_reflected: bool = false
+var was_a_cleave_damage: bool = false
 
 func _init(p_total_damage: int = 0, _damage_type: String = DamageType.PHYSICAL):
 	total_damage = p_total_damage

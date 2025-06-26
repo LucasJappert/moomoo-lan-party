@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://1myskyslafks"]
+[gd_scene load_steps=3 format=3 uid="uid://1myskyslafks"]
 
 [ext_resource type="Script" uid="uid://bew2kc8hogsem" path="res://scripts/entity/combat_data/combat_data.gd" id="1_j6lkr"]
-[ext_resource type="Script" uid="uid://v7lf07t54i2j" path="res://scripts/entity/combat_data/components/combat_effect_node.gd" id="2_60tv1"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_60tv1"]
 properties/0/path = NodePath(".:current_hp")
@@ -22,14 +21,12 @@ properties/4/replication_mode = 2
 
 [node name="CombatData" type="Node2D"]
 script = ExtResource("1_j6lkr")
+current_hp = null
+current_mana = null
+attack_type = null
+projectile_type = null
+is_stunned = null
+target_entity_name = null
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_60tv1")
-
-[node name="CombatEffectSpawner" type="MultiplayerSpawner" parent="."]
-unique_name_in_owner = true
-_spawnable_scenes = PackedStringArray("uid://caia40nyc2spx")
-spawn_path = NodePath("../CombatEffectNode")
-
-[node name="CombatEffectNode" type="Node2D" parent="."]
-script = ExtResource("2_60tv1")

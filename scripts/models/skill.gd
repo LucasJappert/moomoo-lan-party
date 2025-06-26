@@ -171,12 +171,12 @@ static func initialize_skills() -> void:
 	_skill = _SKILLS[aux_skill_name]
 	_skill.region_rect = Rect2(3 * FRAME_SIZE + _ATLAS_START_POS.x, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
 
-	int_array = [3, 5, 7]
+	int_array = [3, 4, 5]
 	for i in int_array.size():
 		_skill.item_skill_base[i].stats.attack_speed_percent = -0.1
 		_skill.item_skill_base[i].stats.move_speed_percent = -0.1
 		_skill.item_skill_base[i].stats.freeze_duration = 4
-		_skill.item_skill_base[i].max_targets = int_array[i]
+		_skill.item_skill_base[i].max_stacks = int_array[i]
 		_skill.item_skill_base[i].apply_to_owner = false
 		aux_text = StringHelpers.format_percent(_skill.item_skill_base[i].stats.attack_speed_percent)
 		aux_text1 = StringHelpers.format_float_compact(_skill.item_skill_base[i].stats.freeze_duration)
@@ -294,6 +294,7 @@ func try_to_upgrade(my_owner: Entity) -> void:
 
 	learned_level += 1
 	my_owner.increment_skill_points_to_assign(-1)
+
 	EventBus.emit_skill_upgraded(my_owner)
 
 # endregion ................. SETTERs
@@ -303,20 +304,25 @@ static func verify_blood_fury(my_owner: Entity) -> void:
 	var learned_skill = my_owner.combat_data.get_learned_skill(Names.BLOOD_FURY)
 	if not learned_skill: return
 
-	my_owner.combat_data.remove_effect(Names.BLOOD_FURY)
-
 	var current_hp = my_owner.combat_data.current_hp
 	var total_hp: float = my_owner.combat_data.get_total_hp()
 	var percent_lost_hp: float = floor((1 - current_hp / total_hp) * 10.0) / 10.0
-	if percent_lost_hp <= 0: return # Remove the effect if the hp is full
+	if percent_lost_hp <= 0: return
 
 	var effect_stats = CombatStats.new()
 	effect_stats.physical_attack_power = my_owner.combat_data.cache_total_stats_no_effects.physical_attack_power * percent_lost_hp
 	effect_stats.attack_speed = my_owner.combat_data.cache_total_stats_no_effects.attack_speed * percent_lost_hp
+	effect_stats.level = percent_lost_hp * 10 # Should be 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+
+	var existing_effect = my_owner.combat_data.get_effect(Names.BLOOD_FURY)
+	if existing_effect:
+		if existing_effect.stats.level == effect_stats.level: return
+
+	my_owner.combat_data.remove_effect_by_name(Names.BLOOD_FURY)
 
 	var new_effect = CombatEffect.get_permanent_effect(Names.BLOOD_FURY, learned_skill.max_stacks, effect_stats)
 	new_effect.set_region_rect(_SKILLS[Names.BLOOD_FURY].region_rect)
-	my_owner.combat_data.add_effect(new_effect)
+	my_owner.combat_data.effects_helper.add_effect(new_effect)
 
 static func actions_before_entity_death(_dead_entity: Entity, _attacker: Entity) -> void:
 	if not _dead_entity is Enemy: return
@@ -351,7 +357,7 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 		var effect = CombatEffect.get_temporal_effect(Names.FROZEN_TOUCH, skill_stats.freeze_duration, frozen_skill.max_stacks, skill_stats)
 		effect.stats.is_owner_friendly = false
 		effect.set_region_rect(Skill.get_skill(Names.FROZEN_TOUCH, false).region_rect)
-		_target.combat_data.add_effect(effect)
+		_target.combat_data.effects_helper.add_effect(effect)
 
 	# Cleave verification
 	var cleave_skill = _attacker.combat_data.get_learned_skill(Names.CLEAVE_STRIKE)

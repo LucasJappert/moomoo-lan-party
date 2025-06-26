@@ -8,6 +8,6 @@ func _unhandled_input(event: InputEvent):
 			get_tree().quit() # CLOSE THE GAME
 
 		if event.keycode == KEY_I:
-			GUI.SHOW_DEBUG_DATA = not GUI.SHOW_DEBUG_DATA
+			GUIScene.SHOW_DEBUG_DATA = not GUIScene.SHOW_DEBUG_DATA
 		if event.keycode == KEY_SPACE:
 			MyCamera.update_camera_position_to_my_player()

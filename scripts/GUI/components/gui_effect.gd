@@ -2,18 +2,15 @@ class_name GuiEffect
 
 extends Control
 
-const SCENE = preload("res://scenes/GUI/gui_effect_scene.tscn")
-
 @onready var _sprite = $Sprite2D
 var is_permanent: bool = false
 var _duration: float = 0 # In seconds
 var _elapsed: float = 0
 var _effect: CombatEffect
-var unique
 var my_owner: Entity
 
 static func get_instance(p_effect: CombatEffect) -> GuiEffect:
-	var gui_effect = SCENE.instantiate()
+	var gui_effect = load("res://scenes/GUI/gui_effect_scene.tscn").instantiate()
 	gui_effect._initialize(p_effect)
 	return gui_effect
 
@@ -40,7 +37,7 @@ func _ready():
 
 	EventBus.connect_to_effect_removed(func(_owner: Entity, p_effect: CombatEffect):
 		if _owner.is_my_player() == false: return
-		if p_effect.unique_name_node != _effect.unique_name_node: return
+		if p_effect.id != _effect.id: return
 		queue_free()
 	)
 

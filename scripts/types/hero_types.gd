@@ -66,14 +66,9 @@ static func get_hero_json_data(hero_type: String) -> JsonItem:
 static func initialize_hero(player: Player) -> void:
 	player.json_data = HeroTypes.get_hero_json_data(player.hero_type)
 	var stats = CombatStats.new()
-	# stats.physical_defense_percent = 0.2
-	# stats.magic_defense_percent = 0.2
-	# stats.evasion = 0.05
 	stats.crit_chance = 0.05
 	stats.crit_multiplier = 1.5
 	stats.attack_speed = 0.5
-	# stats.physical_attack_power = 7
-	# stats.magic_attack_power = 7
 	stats.move_speed = 5
 	stats.agility = 50
 	stats.strength = 50

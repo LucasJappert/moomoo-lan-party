@@ -11,7 +11,7 @@ func initialize() -> void:
 	_combat_data = _my_owner.combat_data
 	_hud = _my_owner.hud
 
-# region 	SERVER MESSAGES RECEIVED FROM CLIENT
+# region 	MESSAGES RECEIVED FROM CLIENT
 func key_pressed(keycode: int): rpc("_on_key_pressed", keycode)
 @rpc("authority", "call_local")
 func _on_key_pressed(keycode: int): _my_owner.key_pressed(keycode)
@@ -19,12 +19,17 @@ func _on_key_pressed(keycode: int): _my_owner.key_pressed(keycode)
 func skill_uppgrade_button_pressed(slot_number: int): rpc("_on_skill_uppgrade_button_pressed", slot_number)
 @rpc("authority", "call_local")
 func _on_skill_uppgrade_button_pressed(slot_number: int):
-	print("_on_skill_uppgrade_button_pressed skill: ", slot_number)
 	_combat_data.upgrade_skill(slot_number)
-# endregion SERVER MESSAGES RECEIVED FROM CLIENT
+# endregion MESSAGES RECEIVED FROM CLIENT
 
 
-# region 	CLIENTS MESSAGES RECEIVED FROM SERVER
+# region 	MESSAGES RECEIVED FROM SERVER
+
+# func notify_effects_removed(data: Array): rpc("_on_notify_effects_removed", data)
+# @rpc("authority", "call_local")
+# func _on_notify_effects_removed(data: Array):
+# 	_combat_data.notify_effects_removed(data)
+
 func show_countdown_message(data: String): rpc("_on_show_countdown_message", data)
 @rpc("authority", "call_local")
 func _on_show_countdown_message(message: String):
@@ -81,4 +86,25 @@ func _on_slot_item_info_updated(data: Dictionary):
 	slot_item_info.item = Item.new()
 	ObjectHelpers.from_dict(slot_item_info, data)
 	_my_owner.combat_data.item_updated_by_rpc(slot_item_info)
-# endregion CLIENTS MESSAGES RECEIVED FROM SERVER
+# endregion MESSAGES RECEIVED FROM SERVER
+
+
+func notify_effect_added_to_clients(effect: CombatEffect) -> void:
+	for peer_id in MultiplayerManager.multiplayer.get_peers():
+		if peer_id == MultiplayerManager.multiplayer.get_unique_id(): continue
+		rpc_id(peer_id, "_on_effect_added", ObjectHelpers.to_dict(effect, true))
+@rpc("any_peer", "reliable")
+func _on_effect_added(data: Dictionary) -> void:
+	if GameManager.AM_I_HOST: return
+
+	_combat_data.effects_helper.add_effect(CombatEffect.get_instance_from_dict(data))
+
+func notify_effects_removed_to_clients(removed_ids: Array[int]) -> void:
+	for peer_id in MultiplayerManager.multiplayer.get_peers():
+		if peer_id == MultiplayerManager.multiplayer.get_unique_id(): continue
+		rpc_id(peer_id, "_on_effects_removed", removed_ids)
+@rpc("any_peer", "reliable")
+func _on_effects_removed(removed_ids: Array[int]) -> void:
+	if GameManager.AM_I_HOST: return
+
+	_combat_data.effects_helper.remove_effect_by_ids(removed_ids)

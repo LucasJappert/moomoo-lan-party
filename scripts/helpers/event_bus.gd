@@ -7,17 +7,24 @@ func emit_effect_removed(p_owner: Entity, p_effect: CombatEffect) -> void:
 func connect_to_effect_removed(p_callback: Callable) -> void:
 	EventBus.connect(EFFECT_REMOVED, p_callback)
 
+const EFFECT_ADDED := "effect_added"
+signal effect_added(p_owner: Entity, p_effect: CombatEffect)
+func emit_effect_added(p_owner: Entity, p_effect: CombatEffect) -> void:
+	emit_signal(EFFECT_ADDED, p_owner, p_effect)
+func connect_to_effect_added(p_callback: Callable) -> void:
+	EventBus.connect(EFFECT_ADDED, p_callback)
+
 const TOTAL_HP_CHANGED := "total_hp_changed"
 signal total_hp_changed(p_owner: Entity)
 func emit_total_hp_changed(p_owner: Entity): emit_signal(TOTAL_HP_CHANGED, p_owner)
 func connect_to_total_hp_changed(p_callback: Callable) -> void:
 	EventBus.connect(TOTAL_HP_CHANGED, p_callback)
 
-const CURRENT_HP_CHANGED := "current_hp_changed"
-signal current_hp_changed(p_owner: Entity)
-func emit_current_hp_changed(p_owner: Entity): emit_signal(CURRENT_HP_CHANGED, p_owner)
-func connect_to_current_hp_changed(p_callback: Callable) -> void:
-	EventBus.connect(CURRENT_HP_CHANGED, p_callback)
+# const CURRENT_HP_CHANGED := "current_hp_changed"
+# signal current_hp_changed(p_owner: Entity)
+# func emit_current_hp_changed(p_owner: Entity): emit_signal(CURRENT_HP_CHANGED, p_owner)
+# func connect_to_current_hp_changed(p_callback: Callable) -> void:
+# 	EventBus.connect(CURRENT_HP_CHANGED, p_callback)
 
 const WAVE_FINILIZED := "wave_finilized"
 signal wave_finilized()

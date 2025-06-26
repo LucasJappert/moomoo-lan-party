@@ -1,17 +1,17 @@
 class_name CombatEffect
 
-extends Node
+extends MyInitAuxiliary
 
-const SCENE = preload("res://scenes/entity/combat_data/combat_effect.tscn")
 var effect_name: String
-var unique_name_node: String
+var id: int
 var is_permanent: bool = false
-@export var _duration: float # In seconds
+var _duration: float # In seconds
 var _elapsed: float = 0.0
 var _region_rect: Rect2
 var max_stacks: int = 1
 var stats: CombatStats = CombatStats.new()
 var unique_id: int = UniqueIdGenerator.get_id()
+var is_cooldown_finished: bool = false
 
 const STUN_RECT_REGION := Rect2(0, 608, 32, 17)
 
@@ -19,8 +19,11 @@ func _process(delta: float) -> void:
 	if is_permanent: return
 
 	_elapsed += delta
-	if _elapsed >= _duration:
-		if multiplayer.is_server(): queue_free() # Only executed on the server
+	if _elapsed <= _duration: return
+
+	_elapsed = _duration
+	is_cooldown_finished = true
+	# EventBus.emit_effect_removed(GlobalsEntityHelpers.get_owner(self), self)
 
 func get_description() -> String:
 	var description = ""
@@ -38,9 +41,6 @@ func get_description() -> String:
 func set_region_rect(rect: Rect2) -> void:
 	_region_rect = rect
 
-func delete_effect() -> void:
-	queue_free()
-	EventBus.emit_effect_removed(GlobalsEntityHelpers.get_owner(self), self)
 # endregion GETTERs
 
 
@@ -50,17 +50,17 @@ func delete_effect() -> void:
 
 
 static func get_instance_from_dict(dict: Dictionary) -> CombatEffect:
-	var combat_effect = SCENE.instantiate()
+	var combat_effect = CombatEffect.new()
 	ObjectHelpers.from_dict(combat_effect, dict)
 	return combat_effect
 
 static func _get_instance(p_name: String, duration: float, p_is_permanent: bool, _max_stacks: int, _stats: CombatStats) -> CombatEffect:
-	var combat_effect = SCENE.instantiate()
+	var combat_effect = CombatEffect.new()
 	combat_effect.max_stacks = _max_stacks
 	if _stats: combat_effect.stats = _stats
 	combat_effect._duration = duration
 	combat_effect.is_permanent = p_is_permanent
-	combat_effect.unique_name_node = StringHelpers.unique_id()
+	combat_effect.id = UniqueIdGenerator.get_id()
 	combat_effect.effect_name = p_name
 	return combat_effect
 
@@ -82,17 +82,17 @@ static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _d
 			_stats.is_owner_friendly = false
 			var effect = CombatEffect.get_temporal_effect("Stun", _stats.stun_duration, 1, _stats)
 			effect.set_region_rect(CombatEffect.STUN_RECT_REGION)
-			_receiver.combat_data.add_effect(effect)
+			_receiver.combat_data.effects_helper.add_effect(effect)
 
 	# Lifesteal verification
-	if _attacker.combat_data.current_hp < _attacker.combat_data.get_total_hp() && _di.total_damage > 0:
-		var _attacker_life_steal_percent = _attacker.combat_data.cache_total_stats.life_steal_percent
-		if _attacker_life_steal_percent > 0:
-			var total_heal = int(max(1, _di.total_damage * _attacker_life_steal_percent))
-			if total_heal > 0:
-				var new_di = DamageInfo.get_instance()
-				new_di.total_damage = - total_heal
-				_attacker.rpc_handler.receive_damage_or_heal(ObjectHelpers.to_dict(new_di, true))
-				_attacker.combat_data.update_current_hp(total_heal)
-
+	if not _di.was_a_cleave_damage:
+		if _attacker.combat_data.current_hp < _attacker.combat_data.get_total_hp() && _di.total_damage > 0:
+			var _attacker_life_steal_percent = _attacker.combat_data.cache_total_stats.life_steal_percent
+			if _attacker_life_steal_percent > 0:
+				var total_heal = int(max(1, _di.total_damage * _attacker_life_steal_percent))
+				if total_heal > 0:
+					var new_di = DamageInfo.get_instance()
+					new_di.total_damage = - total_heal
+					_attacker.rpc_handler.receive_damage_or_heal(ObjectHelpers.to_dict(new_di, true))
+					_attacker.combat_data.update_current_hp(total_heal)
 	return

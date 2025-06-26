@@ -94,8 +94,9 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- Allow unevadable attacks
+- 🔵 Agregar stat que da probabilidades de que los ataques no fallen, es decir, ignoraría la evasión del enemigo.
 - 🔵 Agregar un item/skill que te brinda 100% de efectividad de ataque, es decir, ignora la evasion del enemigo.
+- Capear ciertas stats como defensas y evasion.
 - Agregar un item/skill que al activarlo te hace inmune a los hechizos y a ciertos debuffs como silencios.
 - Agregar un item que quema el mana del enemigo ante cada golpe físico, cierto % del mana quemado se convierte en daño.
 - Agregar un item/skill que te hace inmune a todo daño durante cierto tiempo al activarlo.
@@ -104,6 +105,7 @@ MY TODOs: 🔵🟡✅
 - Configure enemy types for wave 2
 - Sistema de rondas de enemigos aumentando las dificultades en cada oleada, cada 3 oleadas podríamos hacer una de solamente 4 boses
 - Sistema de puntos
+- Agregar info de Cleave attack a la gui
 - Ordenar efectos por nombre
 - Agregar panel debugger con opciones para matar todos los enemigos, etc.
 - Agregar sistema de selección de Héroe
@@ -133,6 +135,10 @@ MY TODOs: 🔵🟡✅
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
 
+- ✅ Implement the observer pattern (subscribers) where necessary
+- ✅ Redesign effects logic and how they are added to the GUI. Fix bugs for Blood Fury skill
+- ✅ Apply lifesteal only when attacking the target (do not apply to damage caused by cleave)
+- ✅ Allow unevadable attacks
 - ✅ Add an item that provides a passive area damage of 30% of the total physical damage dealt
 - ✅ Improvements in object cloning
 - ✅ Add an skill that provides a passive area damage of 20%/30%/40% of the total physical damage dealt

@@ -24,6 +24,7 @@ var _STYLE_BEIGE := StyleBoxFlat.new()
 
 func initialize(p_skill: Skill, _slot_number: int):
 	skill = p_skill
+	# skill.subscribe_to_changes(Callable(self, "_on_skill_changed")) # Ver si podemos usar una lambda
 	slot_number = _slot_number
 	hotkey.text = OS.get_keycode_string(KeyboardHelper.SKILL_HOTKEYS[slot_number - 1])
 	if skill.item_skill_base[0].type == SkillType.PASSIVE: hotkey.visible = false
@@ -33,6 +34,11 @@ func initialize(p_skill: Skill, _slot_number: int):
 	update_controls()
 	
 func _ready():
+	label_cool_down.visible = false
+	upgrade_button.visible = false
+
+	hotkey.text = OS.get_keycode_string(KeyboardHelper.SKILL_HOTKEYS[get_index()])
+
 	connect("mouse_entered", func(): _on_mouse_entered())
 	connect("mouse_exited", func(): _on_mouse_exited())
 
@@ -41,33 +47,28 @@ func _ready():
 			GameManager.MY_PLAYER.rpc_handler.skill_uppgrade_button_pressed(slot_number)
 		)
 
-	label_cool_down.visible = false
-	EventBus.connect_to_skill_upgraded(func(p_owner: Entity):
-		# The skill should have been updated by reference, since it's the same skill that emits the signal after updating itself
-		print("Skill name: ", skill.item_skill_base[0].my_name)
-		print("Skill upgraded: ", skill.item_skill_base[0].stats.cleave_effect)
-		update_controls(p_owner)
-	)
+	EventBus.connect_to_skill_upgraded(func(_p_owner: Entity): update_controls())
+	EventBus.connect_to_skill_points_to_assign_changed(func(_p_owner: Entity): update_controls())
 
-	EventBus.connect_to_skill_points_to_assign_changed(func(p_owner: Entity): update_controls(p_owner))
 		
 # region 	GETTERS
 
 # endregion GETTERS
 
 # region 	SETTERS
-func update_controls(p_owner: Entity = null):
+func _on_skill_changed():
+	update_controls()
+
+func update_controls():
 	if not skill: return
-	if not ObjectHelpers.is_my_player(p_owner): return
 	
-	# upgrade_button.visible = p_owner.skill_points_to_assign > 0 && skill.learned_level < Skill.AVAILABLE_LEVELS
 	var next_skill_level := skill.learned_level + 1
 	var level_requirement: int = SKILL_LEVEL_REQUIREMENTS.get(next_skill_level, INF)
 
 	upgrade_button.visible = (
-		p_owner.skill_points_to_assign > 0
+		GameManager.MY_PLAYER.skill_points_to_assign > 0
 		&& skill.learned_level < Skill.AVAILABLE_LEVELS
-		&& p_owner.level >= level_requirement
+		&& GameManager.MY_PLAYER.level >= level_requirement
 	)
 
 	var panels = [panel1, panel2, panel3]

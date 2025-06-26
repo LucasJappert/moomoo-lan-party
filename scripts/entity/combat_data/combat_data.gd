@@ -2,8 +2,7 @@ class_name CombatData
 
 extends Node
 
-@onready var combat_effect_node = $CombatEffectNode
-
+var effects_helper: EffectsHelper = EffectsHelper.new()
 @export var current_hp: int = 0
 @export var current_mana: int = 0
 @export var attack_type := AttackTypes.MELEE
@@ -40,6 +39,8 @@ var keep_ground: bool = false
 var enemy_spell_caster: EnemySpellCaster
 
 func _ready() -> void:
+	effects_helper.subscribe_to_changes(Callable(self, "update_cache_total_stats"))
+
 	if GameManager.AM_I_HOST == false:
 		set_process(false)
 
@@ -49,34 +50,9 @@ func _ready() -> void:
 
 	update_cache_total_stats()
 
-	if multiplayer.is_server() == false:
-		set_process(false)
-
-	# Agregamos una señal para cuando se agrega un hijo a combat_effect_node
-	combat_effect_node.connect("child_entered_tree", func(p_effect: CombatEffect):
-		p_effect.connect("tree_exited", func(): _effects_updated())
-
-		_effects_updated()
-
-		#TODO: Improve this next lines
-		if !GameManager.MY_PLAYER: return
-
-		if my_owner().is_my_player(): GameManager.my_main.gui_scene.add_effect_to_my_effects(p_effect)
-
-		var target_entity_of_my_player = GameManager.MY_PLAYER.combat_data._target_entity
-		if target_entity_of_my_player:
-			if target_entity_of_my_player.name == my_owner().name:
-				GameManager.my_main.gui_scene.add_effect_to_target_effects(p_effect)
-	)
-
-	%CombatEffectSpawner.spawn_function = func(effect_data: Dictionary) -> Node:
-		return CombatEffect.get_instance_from_dict(effect_data)
-
-	EventBus.connect_to_current_hp_changed(func(p_entity: Entity):
-		if p_entity.id != my_owner().id: return
-		Skill.verify_blood_fury(p_entity)
-	)
 func _post_ready() -> void:
+	effects_helper.set_my_owner(_my_owner)
+
 	if not GameManager.AM_I_HOST: return
 
 	current_hp = int(get_total_hp())
@@ -90,6 +66,13 @@ func _post_ready() -> void:
 
 func _process(_delta: float): # Run only when it is the host
 	if not my_owner(): return
+
+	effects_helper._process(_delta)
+
+	_process_on_server(_delta)
+
+func _process_on_server(_delta: float):
+	if not GameManager.AM_I_HOST: return
 
 	try_physical_attack(_delta)
 
@@ -148,7 +131,7 @@ func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void
 	var exp_by_damage = min(current_hp, abs(value_to_increase)) * 0.1
 	current_hp += value_to_increase
 	current_hp = clamp(current_hp, 0, get_total_hp())
-	EventBus.emit_current_hp_changed(my_owner())
+	Skill.verify_blood_fury(my_owner())
 
 	if _attacker: _try_to_give_experience_to_players(exp_by_damage) # Give experience when an enemy takes damage
 	
@@ -219,40 +202,16 @@ func set_attack_type_according_to_projectile_type() -> void:
 	if projectile_type != Projectile.TYPES.NONE:
 		attack_type = AttackTypes.RANGED
 
-func add_effect(p_effect: CombatEffect) -> void:
-	# Should be called only on the server
-	var current_stacks = 0
-	var matching_effects: Array[CombatEffect] = []
+func remove_effect_by_name(effect_name: String) -> void:
+	effects_helper.remove_effect_by_name(effect_name)
 
-	for effect in get_effects():
-		if effect.effect_name == p_effect.effect_name:
-			current_stacks += 1
-			matching_effects.append(effect)
+# func effects_updated() -> void:
+# 	update_cache_total_stats()
 
-	if current_stacks >= p_effect.max_stacks:
-		if not p_effect.stats.keep_latest_stacks: return
-
-		matching_effects.sort_custom(func(a, b): return a._elapsed > b._elapsed)
-
-		var effects_to_remove = current_stacks - p_effect.max_stacks + 1
-		for i in range(effects_to_remove):
-			matching_effects[i].delete_effect()
-
-	%CombatEffectSpawner.spawn(ObjectHelpers.to_dict(p_effect, true))
-	p_effect.queue_free()
-
-func remove_effect(effect_name: String) -> void:
-	for effect in get_effects():
-		if effect.effect_name == effect_name:
-			effect.delete_effect()
-
-func _effects_updated() -> void:
-	update_cache_total_stats()
-
-	is_stunned = false
-	for effect in get_effects():
-		if effect.stats.has_hostil_stun_effect(): is_stunned = true
-	if not is_stunned: AnimationsHelper.try_to_remove_obsolete_stun_animation(my_owner())
+# 	is_stunned = false
+# 	for effect in effects_helper.get_effects():
+# 		if effect.stats.has_hostil_stun_effect(): is_stunned = true
+# 	if not is_stunned: AnimationsHelper.try_to_remove_obsolete_stun_animation(my_owner())
 
 func register_attacker(attacker: Entity) -> void:
 	latest_attacker = attacker
@@ -345,26 +304,12 @@ func _get_extra_stats_by_items() -> CombatStats:
 func get_attack_range() -> int:
 	return cache_total_stats.attack_range
 
-# TODO: Improve this get by creating a dictionary to quickly obtain active effects
-# TODO: Also we could implements a cache variable by frame
 func get_effects() -> Array[CombatEffect]:
-	var effects: Array[CombatEffect] = []
-	if not combat_effect_node: return effects
-
-	for child in combat_effect_node.get_children():
-		if child is CombatEffect:
-			effects.append(child as CombatEffect)
-	return effects
-
+	return effects_helper.get_effects()
 func get_effect(effect_name: String) -> CombatEffect:
-	for effect in get_effects():
-		if effect.effect_name == effect_name: return effect
-	return null
-
-func get_effect_by_unique_name(unique_name: String) -> CombatEffect:
-	for effect in get_effects():
-		if effect.unique_name_node == unique_name: return effect
-	return null
+	return effects_helper.get_effect_by_name(effect_name)
+func get_effect_by_id(id: int) -> CombatEffect:
+	return effects_helper.get_effect_by_id(id)
 
 func my_owner() -> Entity:
 	if _my_owner: return _my_owner
@@ -372,6 +317,8 @@ func my_owner() -> Entity:
 	return _my_owner
 
 func _check_evade(_di: DamageInfo, total_stats: CombatStats) -> bool:
+	if not _di.can_be_evaded: return false
+
 	if _di.damage_type != DamageType.PHYSICAL: return false # Evasion verification (only for physical damage)
 
 	if not GlobalsEntityHelpers.roll_chance(total_stats.evasion): return false
@@ -518,7 +465,7 @@ func _try_to_add_effect_from_skills() -> void:
 
 		var new_effect = CombatEffect.get_permanent_effect(skill_base.my_name, skill_base.max_stacks, skill_base.stats)
 		new_effect.set_region_rect(skill.region_rect)
-		add_effect(new_effect)
+		effects_helper.add_effect(new_effect)
 
 func _actions_after_1_second(_delta: float) -> void:
 	_1_second_timer += _delta

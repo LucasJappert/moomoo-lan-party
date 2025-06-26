@@ -14,6 +14,9 @@ const HOTKEY_BY_SLOT = ["1", "2", "3", "4", "5", "6"]
 func _ready():
 	label_cool_down.text = "0"
 	label_cool_down.visible = false
+	
+	hotkey.text = HOTKEY_BY_SLOT[get_index()]
+
 	connect("mouse_entered", func(): _on_mouse_entered())
 	connect("mouse_exited", func(): _on_mouse_exited())
 func _process(_delta: float) -> void:

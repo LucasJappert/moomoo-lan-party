@@ -1,6 +1,6 @@
 class_name GUIStatsHelper
 
-static func _ready(gui: GUI):
+static func _ready(gui: GUIScene):
 	gui._str_value.connect("mouse_entered", func():
 		if not GameManager.MY_PLAYER: return
 		MyTooltip.show_tooltip("STRENGTH", CombatStats.STRENGTH_PROPERTIES)
