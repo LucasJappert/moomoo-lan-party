@@ -21,8 +21,6 @@ func _ready():
 	_ready_for_server()
 	
 func _ready_for_server():
-	_set_next_cast_delay()
-
 	if not multiplayer.is_server():
 		return
 	timer_500ms = Timer.new()
@@ -96,21 +94,3 @@ func get_nearest_player_inside_vision() -> Entity:
 			closest_player = player
 
 	return closest_player
-
-# region TRY SKILL USE
-var cast_timer: float = 0.0
-var next_cast_delay: float = 0.0
-func _set_next_cast_delay():
-	# Ejemplo: nivel 1 = casteo cada 4~6s, nivel 10 = casteo cada 1~2s
-	var min_delay = lerp(6.0, 2.0, clamp(level / 10.0, 0, 1))
-	var max_delay = lerp(8.0, 3.0, clamp(level / 10.0, 0, 1))
-	next_cast_delay = randf_range(min_delay, max_delay)
-
-func try_cast_random_skill():
-	var available_skills = combat_data._skills.filter(func(s): return s.can_use(self))
-
-	if available_skills.size() == 0:
-		return
-
-	var skill_to_cast = available_skills[randi() % available_skills.size()]
-	skill_to_cast.use(self)

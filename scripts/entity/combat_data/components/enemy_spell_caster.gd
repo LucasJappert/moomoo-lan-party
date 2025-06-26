@@ -27,6 +27,7 @@ func _set_next_cast_delay() -> void:
 	next_cast_delay = randf_range(min_delay, max_delay)
 
 func _try_cast_random_skill() -> bool:
+	if not _enemy.can_attack: return false
 	if _enemy.combat_data._target_entity == null: return false
 
 	var available_skills: Array[Skill] = _enemy.combat_data.get_skills().filter(func(skill):

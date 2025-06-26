@@ -94,8 +94,6 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- 🔵 Agregar stat que da probabilidades de que los ataques no fallen, es decir, ignoraría la evasión del enemigo.
-- 🔵 Agregar un item/skill que te brinda 100% de efectividad de ataque, es decir, ignora la evasion del enemigo.
 - Capear ciertas stats como defensas y evasion.
 - Agregar un item/skill que al activarlo te hace inmune a los hechizos y a ciertos debuffs como silencios.
 - Agregar un item que quema el mana del enemigo ante cada golpe físico, cierto % del mana quemado se convierte en daño.
@@ -135,6 +133,8 @@ MY TODOs: 🔵🟡✅
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
 
+- ✅ Add an skill that gives xx% attack effectiveness, i.e. ignores enemy evasion
+- ✅ Add stat that gives chances of attacks not missing, i.e. ignoring enemy evasion
 - ✅ Implement the observer pattern (subscribers) where necessary
 - ✅ Redesign effects logic and how they are added to the GUI. Fix bugs for Blood Fury skill
 - ✅ Apply lifesteal only when attacking the target (do not apply to damage caused by cleave)

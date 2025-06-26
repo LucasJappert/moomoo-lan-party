@@ -107,11 +107,15 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	if _di.total_damage == 0: return
 	if my_owner().multiplayer.is_server() == false: return
 
-	var total_stats = cache_total_stats
+	var my_stats = cache_total_stats
+	var attacker_stats = _attacker.combat_data.cache_total_stats
 	
-	if _check_evade(_di, total_stats): return # Evasion verification (only for physical damage)
+	var attacker_can_miss := _check_ignore_enemy_evasion(_di, attacker_stats)
+	if attacker_can_miss: _di.can_be_evaded = false
 
-	_apply_defenses(_di, total_stats)
+	if _check_evade(_di, my_stats): return # Evasion verification (only for physical damage)
+
+	_apply_defenses(_di, my_stats)
 
 	CombatEffect.actions_after_effective_hit(_attacker, my_owner(), _di)
 	Skill.actions_after_effective_hit(_attacker, my_owner(), _di)
@@ -315,6 +319,11 @@ func my_owner() -> Entity:
 	if _my_owner: return _my_owner
 	_my_owner = GlobalsEntityHelpers.get_owner(self)
 	return _my_owner
+
+func _check_ignore_enemy_evasion(_di: DamageInfo, total_stats: CombatStats) -> bool:
+	if _di.damage_type != DamageType.PHYSICAL: return false # Ignore enemy evasion only for physical damage
+
+	return GlobalsEntityHelpers.roll_chance(total_stats.ignore_enemy_evasion_chance)
 
 func _check_evade(_di: DamageInfo, total_stats: CombatStats) -> bool:
 	if not _di.can_be_evaded: return false
