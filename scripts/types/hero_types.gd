@@ -94,11 +94,12 @@ static func initialize_hero(player: Player) -> void:
 		stats.strength = 50
 		stats.intelligence = 50
 		player.combat_data._skills = [
-			Skill.get_skill(Skill.Names.STORM_STRIKE),
+			Skill.get_skill(Skill.Names.MANA_SCORCHER),
 			Skill.get_skill(Skill.Names.LIFESTEAL),
-			# Skill.get_skill(Skill.Names.CLEAVE_STRIKE),
 			Skill.get_skill(Skill.Names.BLOOD_FURY),
 			Skill.get_skill(Skill.Names.TRUE_STRIKE),
+			# Skill.get_skill(Skill.Names.STORM_STRIKE),
+			# Skill.get_skill(Skill.Names.CLEAVE_STRIKE),
 			# Skill.get_skill(Skill.Names.FROZEN_TOUCH)
 		]
 		# player.combat_data._skills[0].learned_level = 2

@@ -96,7 +96,6 @@ MY TODOs: 🔵🟡✅
 
 - Capear ciertas stats como defensas y evasion.
 - Agregar un item/skill que al activarlo te hace inmune a los hechizos y a ciertos debuffs como silencios.
-- Agregar un item que quema el mana del enemigo ante cada golpe físico, cierto % del mana quemado se convierte en daño.
 - Agregar un item/skill que te hace inmune a todo daño durante cierto tiempo al activarlo.
 - Animacion de caminata para cuando se realiza un ataque
 - Agregar otros efectos de sonidos para el ambiente
@@ -133,6 +132,7 @@ MY TODOs: 🔵🟡✅
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
 
+- ✅ Add skill that drains enemy's mana on each physical hit, certain % of drained mana is converted into damage
 - ✅ Add an skill that gives xx% attack effectiveness, i.e. ignores enemy evasion
 - ✅ Add stat that gives chances of attacks not missing, i.e. ignoring enemy evasion
 - ✅ Implement the observer pattern (subscribers) where necessary

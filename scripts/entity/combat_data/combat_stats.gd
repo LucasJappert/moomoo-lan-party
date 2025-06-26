@@ -4,6 +4,7 @@ extends MyInitAuxiliary
 
 const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapManager.TILE_SIZE.y, 2))) + 1
 
+var mana_burn: ManaBurn
 var ignore_enemy_evasion_chance: float = 0.0
 var cleave_effect: CleaveEffect
 var level: int
