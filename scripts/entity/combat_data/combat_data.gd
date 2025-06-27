@@ -1,6 +1,7 @@
 class_name CombatData
 
 extends Node
+const EXP_MULTIPLIER: int = 1
 
 var effects_helper: EffectsHelper = EffectsHelper.new()
 @export var current_hp: int = 0
@@ -83,7 +84,7 @@ func _process_on_server(_delta: float):
 	if enemy_spell_caster: enemy_spell_caster._process(_delta)
 
 # TODO: Review
-func _server_execute_physical_damage(_target: Entity) -> void:
+func server_execute_physical_damage(_target: Entity) -> void:
 	if my_owner().multiplayer.is_server() == false: return
 	if _target == null: return
 
@@ -161,6 +162,7 @@ func _server_verify_death(_attacker: Entity) -> void:
 	_try_to_add_gold_to_players(_attacker)
 
 func _try_to_give_experience_to_players(_exp: int) -> void:
+	_exp *= EXP_MULTIPLIER
 	if not my_owner() is Enemy: return
 
 	for player in GameManager.get_players():
@@ -407,7 +409,7 @@ func try_physical_attack(_delta: float) -> bool:
 
 	if not can_physical_attack(): return false
 
-	_execute_physical_attack()
+	execute_physical_attack()
 	last_physical_hit_time = Time.get_ticks_msec()
 
 	return true
@@ -427,12 +429,16 @@ func _get_nearest_target_in_range_attack():
 
 	return null
 
-func _execute_physical_attack() -> void:
+func execute_physical_attack(apply_extra_actions: bool = true, _custom_target: Entity = null) -> void:
 	EntityState.change_to_attack(my_owner())
-	if projectile_type == Projectile.TYPES.NONE:
-		return _server_execute_physical_damage(_target_entity)
 
-	Projectile.launch(my_owner(), _target_entity, cache_total_stats.physical_attack_power)
+	var final_target = _custom_target if _custom_target else _target_entity
+	if projectile_type == Projectile.TYPES.NONE: server_execute_physical_damage(final_target)
+	else: Projectile.launch(my_owner(), final_target, cache_total_stats.physical_attack_power)
+
+	if not apply_extra_actions: return
+
+	Skill.actions_after_execute_physical_attack(my_owner(), _target_entity)
 		
 func can_physical_attack() -> bool:
 	if not my_owner().can_attack: return false

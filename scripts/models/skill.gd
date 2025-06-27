@@ -14,6 +14,7 @@ const Names = {
 	CLEAVE_STRIKE = "Cleave Strike", # ✅
 	TRUE_STRIKE = "True Strike", # ✅
 	MANA_SCORCHER = "Mana Scorcher", # ✅
+	MULTIPLE_STRIKE = "Multiple Strike", # ✅
 	DIVINE_SHIELD = "Divine Shield",
 	ENERGY_ABSORPTION = "Energy Absorption",
 	VOID_STEP = "Void Step",
@@ -24,7 +25,6 @@ const Names = {
 	FROST_NOVA = "Frost Nova",
 	SHADOW_STEP = "Shadow Step",
 	STUNNING_BLOW = "Stunning Blow",
-	MULTI_SHOT = "Multi Shot",
 	FINAL_EXPLOSION = "Final Explosion",
 	RAGE_BOOST = "Rage Boost",
 	KAMIKAZE_CHARGE = "Kamikaze Charge",
@@ -76,12 +76,6 @@ static func get_new_learned_skill(_skill_name: String, skill_level: int = 1) -> 
 	result.learned_level = skill_level
 	return result
 	
-
-static func get_mana_scorcher() -> Skill:
-	var skill = Skill.new(Names.MANA_SCORCHER, SkillType.ACTIVE)
-	skill.description = "Burns 50% of the target's mana, dealing 25% of that as physical damage."
-	return skill
-
 func get_learned_skill() -> ItemSkillBase:
 	if not learned_level: return null
 	return item_skill_base[learned_level - 1]
@@ -119,7 +113,20 @@ static func initialize_skills() -> void:
 	var aux_skill_name = ""
 	var aux_text: String; var aux_text1: String; var aux_text2: String
 	var _skill: Skill
-	var int_array: Array[int]; var float_array: Array[float]; var float_array1: Array[float]
+	var int_array: Array[int]; var int_array1: Array[int]; var float_array: Array[float]; var float_array1: Array[float]
+
+	# region MULTIPLE_STRIKE
+	aux_skill_name = Names.MULTIPLE_STRIKE
+	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
+	_skill = _SKILLS[aux_skill_name]
+	_skill.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 5, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
+
+	int_array = [2, 3, 4]
+	int_array1 = [5, 4, 3]
+	for i in int_array.size():
+		_skill.item_skill_base[i].stats.multiple_strike = MultipleStrike.new(int_array[i], int_array1[i])
+		_skill.item_skill_base[i].description = "Every " + str(int_array1[i]) + " attacks executes a multiple attack to " + str(int_array[i]) + " extra enemies"
+	# endregion
 
 	# region SKILL MANA_SCORCHER
 	aux_skill_name = Names.MANA_SCORCHER
@@ -395,6 +402,15 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 	# MANA_SCORCHER verification
 	var mana_scorcher_skill = _attacker.combat_data.get_learned_skill(Names.MANA_SCORCHER)
 	if mana_scorcher_skill: ManaBurn.auxiliary_actions_after_hit(mana_scorcher_skill.stats, _attacker, _target, _di)
+
+static func actions_after_execute_physical_attack(_attacker: Entity, _target: Entity):
+	var multiple_strike_skill = _attacker.combat_data.get_learned_skill(Names.MULTIPLE_STRIKE)
+	if multiple_strike_skill:
+		if multiple_strike_skill.stats.multiple_strike.increment_hits():
+			var extra_targets = multiple_strike_skill.stats.multiple_strike.extra_targets
+			var nearest_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, extra_targets, _attacker.get_my_enemies(), _attacker.combat_data.get_attack_range(), [_target])
+			for extra_target in nearest_enemies:
+				_attacker.combat_data.execute_physical_attack(false, extra_target)
 
 func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:
 	if not _target: return false

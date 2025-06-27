@@ -59,10 +59,11 @@ func _remove_effects_by_predicate(predicate: Callable) -> void:
 	
 	notify_changes_to_subscribers()
 
-	if _my_owner.is_my_player(): # Remove effects from my GUI
-		GameManager.my_main.gui_scene.my_effects.remove_effects_by_ids(removed_ids)
-	if _my_owner.name == GameManager.MY_PLAYER.combat_data.target_entity_name: # Remove effects from target GUI
-		GameManager.my_main.gui_scene.target_effects.remove_effects_by_ids(removed_ids)
+	if GameManager.MY_PLAYER:
+		if _my_owner.is_my_player(): # Remove effects from my GUI
+			GameManager.my_main.gui_scene.my_effects.remove_effects_by_ids(removed_ids)
+		if _my_owner.name == GameManager.MY_PLAYER.combat_data.target_entity_name: # Remove effects from target GUI
+			GameManager.my_main.gui_scene.target_effects.remove_effects_by_ids(removed_ids)
 
 	if GameManager.AM_I_HOST and removed_ids:
 		_my_owner.rpc_handler.notify_effects_removed_to_clients(removed_ids)

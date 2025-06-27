@@ -4,6 +4,7 @@ extends MyInitAuxiliary
 
 const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapManager.TILE_SIZE.y, 2))) + 1
 
+var multiple_strike: MultipleStrike
 var mana_burn: ManaBurn
 var ignore_enemy_evasion_chance: float = 0.0
 var cleave_effect: CleaveEffect
@@ -241,6 +242,8 @@ func get_description() -> String:
 		description += str("- Ignore enemy evasion chance: ", StringHelpers.format_percent(ignore_enemy_evasion_chance), "\n")
 
 	if cleave_effect: description += cleave_effect.get_description()
+
+	if multiple_strike: description += multiple_strike.description
 
 	return description
 

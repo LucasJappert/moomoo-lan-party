@@ -7,7 +7,7 @@ const MAX_LEVEL: int = 30
 var json_data: HeroTypes.JsonItem
 @export var player_id: int = 0
 @export var current_exp: int = 0
-@export var hero_type: String = HeroTypes.IRON_VEX
+@export var hero_type: String
 const INITIAL_GOLD: int = 100
 @export var current_gold: int:
 	set(_value):

@@ -57,3 +57,8 @@ static func get_closest_entities(
 	)
 
 	return sorted.slice(0, max_targets)
+
+static func print_description_skills(entity: Entity) -> void:
+	for skill in entity.combat_data._skills:
+		for skill_base in skill.item_skill_base:
+			print(skill.get_description())

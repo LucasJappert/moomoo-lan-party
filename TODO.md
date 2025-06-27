@@ -94,8 +94,7 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- ✅ Enable upgrading of the special skill (number 4) at levels 6, 12, and 18
-- Configurar 2 heroes
+- 🔵 Slot de un item oscuro cuando está en cooldown
 - Crear escena de elección de héroes
 - Implementar sistema de asignación de puntos en lugar de skills level
 - Agregar item que brinda un 20% de lifesteal
@@ -136,6 +135,9 @@ MY TODOs: 🔵🟡✅
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
 
+- ✅ Create a skill that every 5/4/3 attacks performs a multiple attack to 2/3/4 extra enemies
+- ✅ Configure 2 heroes (BLOOD_WARDEN and Frostbane Arcanist)
+- ✅ Enable upgrading of the special skill (number 4) at levels 6, 12, and 18
 - ✅ Animation for when an attack is made or a spell is cast
 - ✅ Add skill that drains enemy's mana on each physical hit, certain % of drained mana is converted into damage
 - ✅ Add skill that gives xx% attack effectiveness, i.e. ignores enemy evasion

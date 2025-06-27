@@ -95,7 +95,7 @@ func _server_move(delta: float):
 
 	if position.distance_to(target_position) < 10:
 		if _get_target_entity() != null && _get_origin_entity() != null:
-			_get_origin_entity().combat_data._server_execute_physical_damage(_get_target_entity())
+			_get_origin_entity().combat_data.server_execute_physical_damage(_get_target_entity())
 		queue_free()
 
 

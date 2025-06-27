@@ -10,10 +10,10 @@ class JsonItem:
 		description_en = data["description_en"]
 		description_es = data["description_es"]
 
-const IRON_VEX = "Iron Vex"
+const BLOOD_WARDEN = "Blood Warden" # (Guardián de Sangre)
+const FROSTBANE_ARCANIST = "Frostbane Arcanist" # (Arcanista de Escarcha)
 const LIORA_SUNVEIL = "Liora Sunveil"
 const THARNOK_THE_VERDANT = "Tharnok the Verdant"
-const VARRIK_DUSKHOLLOW = "Varrik Duskhollow"
 
 const _START_REGION = Vector2i(0, 320)
 const _FRAME_SIZE = Vector2i(128, 128)
@@ -44,10 +44,10 @@ static func get_rect_frames(hero_type: String) -> Array[Rect2]:
 
 static func get_keys() -> Array[String]:
 	return [
-		IRON_VEX,
+		BLOOD_WARDEN,
 		LIORA_SUNVEIL,
 		THARNOK_THE_VERDANT,
-		VARRIK_DUSKHOLLOW
+		FROSTBANE_ARCANIST
 	]
 
 static func get_json_data() -> Dictionary[String, JsonItem]:
@@ -81,14 +81,13 @@ static func initialize_hero(player: Player) -> void:
 	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_II), 100))
 	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_III), 100))
 	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_III), 100))
-	player.combat_data.add_item(SlotItemInfo.get_non_consumable_slot_item(Item.get_item(Item.Names.CLEAVE_EDGE)))
+	# player.combat_data.add_item(SlotItemInfo.get_non_consumable_slot_item(Item.get_item(Item.Names.CLEAVE_EDGE)))
 	# player.combat_data.add_item(SlotItemInfo.get_non_consumable_slot_item(Item.get_item(Item.Names.STUNNING_EDGE)))
 
 
 	# endregion Add some potions
 
-	if player.hero_type == IRON_VEX:
-		# stats.hp = 100
+	if player.hero_type == BLOOD_WARDEN:
 		stats.evasion = 0.1
 		stats.agility = 50
 		stats.strength = 50
@@ -104,47 +103,24 @@ static func initialize_hero(player: Player) -> void:
 		]
 		# player.combat_data._skills[0].learned_level = 2
 	
-	if player.hero_type == LIORA_SUNVEIL:
+	if player.hero_type == FROSTBANE_ARCANIST:
+		stats.attack_range = 200
+		player.combat_data.projectile_type = Projectile.TYPES.ARROW
+		stats.agility = 50
+		stats.strength = 50
+		stats.intelligence = 50
 		player.combat_data._skills = [
-			Skill.get_skill(Skill.Names.LIFESTEAL),
-			Skill.get_skill(Skill.Names.STUNNING_STRIKE),
-			Skill.get_skill(Skill.Names.SHIELDED_CORE),
-			Skill.get_skill(Skill.Names.FROZEN_TOUCH)
+			Skill.get_skill(Skill.Names.MANA_SCORCHER),
+			Skill.get_skill(Skill.Names.STORM_STRIKE),
+			Skill.get_skill(Skill.Names.FROZEN_TOUCH),
+			Skill.get_skill(Skill.Names.MULTIPLE_STRIKE)
 		]
 	
 	if player.hero_type == THARNOK_THE_VERDANT:
 		player.combat_data._skills = [Skill.get_skill(Skill.Names.LIFESTEAL)]
 	
-	if player.hero_type == VARRIK_DUSKHOLLOW:
-		stats.attack_range = 200
-		player.combat_data.projectile_type = Projectile.TYPES.ARROW
+	if player.hero_type == LIORA_SUNVEIL:
 		player.combat_data._skills = [Skill.get_skill(Skill.Names.LIFESTEAL)]
 		
+	# GlobalsEntityHelpers.print_description_skills(player)
 	player.combat_data.update_base_stats(stats)
-
-# [
-#   {
-#     "name": "Iron Vex",
-#     "alias": "Vexar",
-#     "description_en": "A shielded warrior who strikes back with raw plasma force.",
-#     "description_es": "Un guerrero blindado que contraataca con fuerza de plasma pura."
-#   },
-#   {
-#     "name": "Liora Sunveil",
-#     "alias": "Lumira",
-#     "description_en": "A divine priestess channeling celestial light to heal and smite.",
-#     "description_es": "Una sacerdotisa divina que canaliza luz celestial para sanar y castigar."
-#   },
-#   {
-#     "name": "Tharnok the Verdant",
-#     "alias": "Thornak",
-#     "description_en": "Nature-bound knight who thrives on regeneration and retaliation.",
-#     "description_es": "Caballero vinculado a la naturaleza que se regenera y contraataca."
-#   },
-#   {
-#     "name": "Varrik Duskhollow",
-#     "alias": "Duskar",
-#     "description_en": "A cursed archer who fires shadow-tipped arrows from afar.",
-#     "description_es": "Arquero maldito que dispara flechas sombrías desde la distancia."
-#   }
-# ]
