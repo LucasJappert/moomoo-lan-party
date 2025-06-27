@@ -3,6 +3,8 @@ class_name ItemSkillBase
 extends MyInitAuxiliary
 
 const FRAME_SIZE = 64
+const CAN_USE_COLOR = Color.WHITE
+const CANT_USE_COLOR = Color(0.5, 0.5, 0.5)
 
 var my_name: String
 var type: String = SkillType.ACTIVE

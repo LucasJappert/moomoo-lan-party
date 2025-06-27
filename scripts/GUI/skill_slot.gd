@@ -22,8 +22,6 @@ const SKILL_LEVEL_REQUIREMENTS := {
 @onready var upgrade_button = $UpgradeButton
 var skill: Skill
 var slot_number: int
-const CAN_USE_COLOR = Color.WHITE
-const CANT_USE_COLOR = Color(0.5, 0.5, 0.5)
 var _STYLE_BLACK := StyleBoxFlat.new()
 var _STYLE_BEIGE := StyleBoxFlat.new()
 
@@ -120,11 +118,11 @@ func _process(_delta: float) -> void:
 
 	if skill.can_use(GameManager.MY_PLAYER):
 		label_cool_down.visible = false
-		sprite.modulate = CAN_USE_COLOR
+		sprite.modulate = ItemSkillBase.CAN_USE_COLOR
 		return
 	
 	# Cant use
-	sprite.modulate = CANT_USE_COLOR
+	sprite.modulate = ItemSkillBase.CANT_USE_COLOR
 	var remaining_cooldown := skill.get_remaining_cooldown()
 	if remaining_cooldown > 0:
 		label_cool_down.visible = true

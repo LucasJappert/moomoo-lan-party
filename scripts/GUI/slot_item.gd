@@ -19,9 +19,18 @@ func _ready():
 
 	connect("mouse_entered", func(): _on_mouse_entered())
 	connect("mouse_exited", func(): _on_mouse_exited())
+
 func _process(_delta: float) -> void:
+	if not GameManager.MY_PLAYER: return
 	if not info.item: return
 
+	if info.can_use(GameManager.MY_PLAYER):
+		label_cool_down.visible = false
+		sprite.modulate = ItemSkillBase.CAN_USE_COLOR
+		return
+
+	# Cant use
+	sprite.modulate = ItemSkillBase.CANT_USE_COLOR
 	var remaining_cooldown := info.item.get_remaining_cooldown()
 	if remaining_cooldown > 0:
 		label_cool_down.visible = true
