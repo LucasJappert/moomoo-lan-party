@@ -94,7 +94,11 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
-- ✅ Animation for when an attack is made or a spell is cast
+- ✅ Enable upgrading of the special skill (number 4) at levels 6, 12, and 18
+- Configurar 2 heroes
+- Crear escena de elección de héroes
+- Implementar sistema de asignación de puntos en lugar de skills level
+- Agregar item que brinda un 20% de lifesteal
 - Capear ciertas stats como defensas y evasion.
 - Agregar un item/skill que al activarlo te hace inmune a los hechizos y a ciertos debuffs como silencios.
 - Agregar un item/skill que te hace inmune a todo daño durante cierto tiempo al activarlo.

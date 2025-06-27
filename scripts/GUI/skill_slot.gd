@@ -2,6 +2,11 @@ class_name SkillSlot
 
 extends Control
 
+const SPECIAL_SKILL_LEVEL_REQUIREMENTS := {
+	1: 6, # Level 1 of the skill can be learned at level 6
+	2: 12, # Level 2 of the skill can be learned at level 12
+	3: 18, # Level 3 of the skill can be learned at level 18
+}
 const SKILL_LEVEL_REQUIREMENTS := {
 	1: 0, # Level 1 of the skill can be learned from the beginning
 	2: 3, # Level 2 of the skill can be learned at level 3
@@ -61,10 +66,11 @@ func _on_skill_changed():
 
 func update_controls():
 	if not skill: return
-	
+
 	var next_skill_level := skill.learned_level + 1
 	var level_requirement: int = SKILL_LEVEL_REQUIREMENTS.get(next_skill_level, INF)
-
+	if slot_number == 4: level_requirement = SPECIAL_SKILL_LEVEL_REQUIREMENTS.get(next_skill_level, INF)
+		
 	upgrade_button.visible = (
 		GameManager.MY_PLAYER.skill_points_to_assign > 0
 		&& skill.learned_level < Skill.AVAILABLE_LEVELS

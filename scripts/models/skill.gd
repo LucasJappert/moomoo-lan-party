@@ -236,7 +236,7 @@ static func initialize_skills() -> void:
 	_skill = _SKILLS[aux_skill_name]
 	_skill.region_rect = Rect2(5 * FRAME_SIZE + _ATLAS_START_POS.x, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
 	
-	float_array = [0.15, 0.175, 0.2]
+	float_array = [0.15, 0.2, 0.25]
 	for i in float_array.size():
 		_skill.item_skill_base[i].apply_to_owner = false
 		_skill.item_skill_base[i].create_effect = true
