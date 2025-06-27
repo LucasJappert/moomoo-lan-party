@@ -126,6 +126,14 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	update_current_hp(-_di.total_damage, _attacker)
 
 # region SETTERs
+func _verify_if_am_i_stunned_after_stats_change() -> void:
+	for effect in effects_helper.get_effects():
+		if effect.stats.has_hostil_stun_effect():
+			is_stunned = true
+			return
+
+	is_stunned = false
+	AnimationsHelper.try_to_remove_obsolete_stun_animation(my_owner())
 
 func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void:
 	if value_to_increase == 0: return
@@ -209,14 +217,6 @@ func set_attack_type_according_to_projectile_type() -> void:
 func remove_effect_by_name(effect_name: String) -> void:
 	effects_helper.remove_effect_by_name(effect_name)
 
-# func effects_updated() -> void:
-# 	update_cache_total_stats()
-
-# 	is_stunned = false
-# 	for effect in effects_helper.get_effects():
-# 		if effect.stats.has_hostil_stun_effect(): is_stunned = true
-# 	if not is_stunned: AnimationsHelper.try_to_remove_obsolete_stun_animation(my_owner())
-
 func register_attacker(attacker: Entity) -> void:
 	latest_attacker = attacker
 	last_damage_received_time = Time.get_ticks_msec()
@@ -267,6 +267,8 @@ var cache_total_stats_no_effects: CombatStats = CombatStats.new()
 func update_cache_total_stats() -> void:
 	cache_total_stats = _get_total_stats()
 	cache_total_stats_no_effects = _get_total_stats(false)
+
+	_verify_if_am_i_stunned_after_stats_change()
 func _get_total_stats(include_effects := true) -> CombatStats:
 	# This function returns the total of all combat_stats, including extras from effects and extras from attributes
 	var _total_stats := CombatStats.new()
@@ -426,6 +428,7 @@ func _get_nearest_target_in_range_attack():
 	return null
 
 func _execute_physical_attack() -> void:
+	EntityState.change_to_attack(my_owner())
 	if projectile_type == Projectile.TYPES.NONE:
 		return _server_execute_physical_damage(_target_entity)
 

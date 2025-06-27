@@ -42,6 +42,13 @@ static func _set_sprites(entity: Entity, rects: Array[Rect2], scale: float) -> v
 		walk_regions.append(rect)
 	_add_animation(frames, "walk", walk_regions)
 
+	# Setup "attack" animation with 2 frames horizontally aligned
+	var attack_regions: Array[Rect2] = []
+	for rect in rects:
+		attack_regions.append(rect)
+	_add_animation(frames, "attack", attack_regions)
+	frames.set_animation_loop("attack", false)
+
 	# Apply the animations and set initial animation
 	entity.sprite.frames = frames
 	entity.sprite.scale = Vector2(scale, scale)

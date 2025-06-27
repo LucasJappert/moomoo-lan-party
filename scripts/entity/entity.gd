@@ -52,7 +52,7 @@ func _post_ready():
 	combat_data._post_ready()
 	
 func _process(_delta: float) -> void:
-	EntityState._process(self)
+	EntityState.process(self)
 
 func _physics_process(_delta):
 	movement_helper._physics_process(_delta) # we need this because movement_helper is not a child node
@@ -87,8 +87,6 @@ func _set_area_attack_shape_radius() -> void:
 	area_attack_shape.shape.radius = combat_data.cache_total_stats.attack_range
 
 func _client_init() -> void:
-	if multiplayer.is_server() && not MyMain.HOSTED_GAME: return
-
 	SpritesHelper.set_entity_sprites(self)
 
 # endregion SETTERs

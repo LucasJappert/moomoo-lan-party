@@ -94,10 +94,10 @@ Let’s build MooMoo LAN Party together! 🐮
 
 MY TODOs: 🔵🟡✅
 
+- ✅ Animation for when an attack is made or a spell is cast
 - Capear ciertas stats como defensas y evasion.
 - Agregar un item/skill que al activarlo te hace inmune a los hechizos y a ciertos debuffs como silencios.
 - Agregar un item/skill que te hace inmune a todo daño durante cierto tiempo al activarlo.
-- Animacion de caminata para cuando se realiza un ataque
 - Agregar otros efectos de sonidos para el ambiente
 - Configure enemy types for wave 2
 - Sistema de rondas de enemigos aumentando las dificultades en cada oleada, cada 3 oleadas podríamos hacer una de solamente 4 boses
@@ -132,17 +132,18 @@ MY TODOs: 🔵🟡✅
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
 
+- ✅ Animation for when an attack is made or a spell is cast
 - ✅ Add skill that drains enemy's mana on each physical hit, certain % of drained mana is converted into damage
-- ✅ Add an skill that gives xx% attack effectiveness, i.e. ignores enemy evasion
+- ✅ Add skill that gives xx% attack effectiveness, i.e. ignores enemy evasion
+- ✅ Add item that provides a passive area damage of 30% of the total physical damage dealt
+- ✅ Add skill that provides a passive area damage of 20%/30%/40% of the total physical damage dealt
+- ✅ Add skill that grants extra physical damage and attack speed for every 10% of lost health
 - ✅ Add stat that gives chances of attacks not missing, i.e. ignoring enemy evasion
 - ✅ Implement the observer pattern (subscribers) where necessary
 - ✅ Redesign effects logic and how they are added to the GUI. Fix bugs for Blood Fury skill
 - ✅ Apply lifesteal only when attacking the target (do not apply to damage caused by cleave)
 - ✅ Allow unevadable attacks
-- ✅ Add an item that provides a passive area damage of 30% of the total physical damage dealt
 - ✅ Improvements in object cloning
-- ✅ Add an skill that provides a passive area damage of 20%/30%/40% of the total physical damage dealt
-- ✅ Add skill that grants extra physical damage and attack speed for every 10% of lost health
 - ✅ Reorder stats in the GUI. Add a tooltip that provides extra information depending on the stat.
 - ✅ Check the issue with the ready function that overrides the stats set in instances
 

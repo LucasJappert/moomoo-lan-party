@@ -49,10 +49,10 @@ static func _remove_animations(target: Entity, animated_sprite_name: String):
 			child.queue_free()
 
 static func _animation_active(target: Entity, animated_sprite_name: String) -> bool:
+	if not target.front_animations_node: return false
+	
 	for animated_sprite in target.front_animations_node.get_children():
-		# TODO: remove animated_sprite is AnimatedSprite2D condition
-		if animated_sprite is AnimatedSprite2D and animated_sprite.name == animated_sprite_name:
-			return true
+		if animated_sprite.name == animated_sprite_name: return true
 	return false
 
 static func _get_position_of_bottom_of_the_cell(sprite_size: Vector2) -> Vector2:

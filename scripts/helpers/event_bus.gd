@@ -1,5 +1,11 @@
 extends Node
 
+# const STATE_UPDATED := "state_updated"
+# signal state_updated(p_owner: Entity)
+# func emit_state_updated(p_owner: Entity): emit_signal(STATE_UPDATED, p_owner)
+# func connect_to_state_updated(p_callback: Callable) -> void:
+# 	EventBus.connect(STATE_UPDATED, p_callback)
+
 const EFFECT_REMOVED := "effect_removed"
 signal effect_removed(p_owner: Entity, p_effect: CombatEffect)
 func emit_effect_removed(p_owner: Entity, p_effect: CombatEffect) -> void:
