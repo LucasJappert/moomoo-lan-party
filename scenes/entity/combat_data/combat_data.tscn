@@ -21,12 +21,6 @@ properties/4/replication_mode = 2
 
 [node name="CombatData" type="Node2D"]
 script = ExtResource("1_j6lkr")
-current_hp = null
-current_mana = null
-attack_type = null
-projectile_type = null
-is_stunned = null
-target_entity_name = null
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_60tv1")

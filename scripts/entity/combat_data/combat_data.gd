@@ -83,7 +83,6 @@ func _process_on_server(_delta: float):
 
 	if enemy_spell_caster: enemy_spell_caster._process(_delta)
 
-# TODO: Review
 func server_execute_physical_damage(_target: Entity) -> void:
 	if my_owner().multiplayer.is_server() == false: return
 	if _target == null: return
@@ -118,9 +117,10 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 
 	_apply_defenses(_di, my_stats)
 
-	CombatEffect.actions_after_effective_hit(_attacker, my_owner(), _di)
-	Skill.actions_after_effective_hit(_attacker, my_owner(), _di)
-	Item.actions_after_effective_hit(_attacker, my_owner(), _di)
+	if not _di.was_a_cleave_damage and not _di.was_reflected:
+		CombatEffect.actions_after_effective_hit(_attacker, my_owner(), _di)
+		Skill.actions_after_effective_hit(_attacker, my_owner(), _di)
+		Item.actions_after_effective_hit(_attacker, my_owner(), _di)
 
 	my_owner().rpc_handler.receive_damage_or_heal(ObjectHelpers.to_dict(_di, true))
 
@@ -256,21 +256,7 @@ func toogle_keep_ground() -> void:
 	keep_ground = not keep_ground
 # endregion SETTERs
 
-# region GETTERs
-func try_critical_hit(base_value: int) -> int:
-	var critical_damage = 0
-	var total_stats = cache_total_stats
-	if GlobalsEntityHelpers.roll_chance(total_stats.crit_chance):
-		critical_damage = base_value * total_stats.crit_multiplier
-	return critical_damage
-
-var cache_total_stats: CombatStats = CombatStats.new()
-var cache_total_stats_no_effects: CombatStats = CombatStats.new()
-func update_cache_total_stats() -> void:
-	cache_total_stats = _get_total_stats()
-	cache_total_stats_no_effects = _get_total_stats(false)
-
-	_verify_if_am_i_stunned_after_stats_change()
+# region 	PRIVATE GETTERs
 func _get_total_stats(include_effects := true) -> CombatStats:
 	# This function returns the total of all combat_stats, including extras from effects and extras from attributes
 	var _total_stats := CombatStats.new()
@@ -284,7 +270,7 @@ func _get_total_stats(include_effects := true) -> CombatStats:
 
 func _get_extra_stats_by_effects() -> CombatStats:
 	var extra_stats = CombatStats.new()
-	for effect in get_effects():
+	for effect in effects_helper.get_effects():
 		if effect.stats.has_hostil_stun_effect(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
 		extra_stats.accumulate_combat_stats(effect.stats)
 	return extra_stats
@@ -308,21 +294,6 @@ func _get_extra_stats_by_items() -> CombatStats:
 		if slot_item_info.item.stats.has_hostil_stun_effect(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
 		extra_stats.accumulate_combat_stats(slot_item_info.item.stats)
 	return extra_stats
-
-func get_attack_range() -> int:
-	return cache_total_stats.attack_range
-
-func get_effects() -> Array[CombatEffect]:
-	return effects_helper.get_effects()
-func get_effect(effect_name: String) -> CombatEffect:
-	return effects_helper.get_effect_by_name(effect_name)
-func get_effect_by_id(id: int) -> CombatEffect:
-	return effects_helper.get_effect_by_id(id)
-
-func my_owner() -> Entity:
-	if _my_owner: return _my_owner
-	_my_owner = GlobalsEntityHelpers.get_owner(self)
-	return _my_owner
 
 func _check_ignore_enemy_evasion(_di: DamageInfo, total_stats: CombatStats) -> bool:
 	if _di.damage_type != DamageType.PHYSICAL: return false # Ignore enemy evasion only for physical damage
@@ -358,6 +329,31 @@ func _apply_defenses(_di: DamageInfo, total_stats: CombatStats) -> void:
 		var total_damage: int = _di.total_damage - reduced_damage
 		if total_damage < 0: total_damage = 0
 		_di.total_damage = total_damage
+# endregion PRIVATE GETTERs
+
+# region GETTERs
+func try_critical_hit(base_value: int) -> int:
+	var critical_damage = 0
+	var total_stats = cache_total_stats
+	if GlobalsEntityHelpers.roll_chance(total_stats.crit_chance):
+		critical_damage = base_value * total_stats.crit_multiplier
+	return critical_damage
+
+var cache_total_stats: CombatStats = CombatStats.new()
+var cache_total_stats_no_effects: CombatStats = CombatStats.new()
+func update_cache_total_stats() -> void:
+	cache_total_stats = _get_total_stats()
+	cache_total_stats_no_effects = _get_total_stats(false)
+
+	_verify_if_am_i_stunned_after_stats_change()
+
+func get_attack_range() -> int:
+	return cache_total_stats.attack_range
+
+func my_owner() -> Entity:
+	if _my_owner: return _my_owner
+	_my_owner = GlobalsEntityHelpers.get_owner(self)
+	return _my_owner
 
 func get_skills() -> Array[Skill]:
 	return _skills
@@ -374,9 +370,6 @@ func get_learned_skill(p_name: String) -> ItemSkillBase:
 		if not skill.get_learned_skill(): continue
 		if skill.get_learned_skill().my_name == p_name: return skill.get_learned_skill()
 	return null
-
-func get_skill_by_index(index: int) -> Skill:
-	return _skills[index]
 
 func get_total_hp() -> int:
 	return cache_total_stats.hp
@@ -454,7 +447,6 @@ func can_physical_attack() -> bool:
 	return true
 # endregion TRY PHISICAL ATTACK
 
-
 # region 	SERVER METHODS
 func global_receive_damage_or_heal(_di: DamageInfo):
 	var melee_attack = _di.projectile_type == Projectile.TYPES.NONE && _di.damage_type == DamageType.PHYSICAL
@@ -479,7 +471,7 @@ func _try_to_add_effect_from_skills() -> void:
 		if skill_base.type != SkillType.PASSIVE: continue
 		if not skill_base.create_effect: continue
 		if not skill_base.stats.is_owner_friendly: continue
-		if get_effect(skill_base.my_name): continue # Already has this effect
+		if effects_helper.get_effect_by_name(skill_base.my_name): continue # Already has this effect
 
 		var new_effect = CombatEffect.get_permanent_effect(skill_base.my_name, skill_base.max_stacks, skill_base.stats)
 		new_effect.set_region_rect(skill.region_rect)

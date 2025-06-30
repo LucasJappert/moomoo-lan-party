@@ -1,70 +1,42 @@
 class_name HeroTypes
 
-class JsonItem:
+class Info:
+	var key: String
+	var rects: Array[Rect2]
 	var alias: String
 	var description_en: String
 	var description_es: String
 
-	func _init(data: Dictionary):
-		alias = data["alias"]
-		description_en = data["description_en"]
-		description_es = data["description_es"]
+	func _init(_key: String, _rects: Array[Rect2], _alias: String):
+		key = _key
+		rects = _rects
+		alias = _alias
 
-const BLOOD_WARDEN = "Blood Warden" # (Guardián de Sangre)
-const FROSTBANE_ARCANIST = "Frostbane Arcanist" # (Arcanista de Escarcha)
-const LIORA_SUNVEIL = "Liora Sunveil"
-const THARNOK_THE_VERDANT = "Tharnok the Verdant"
+const Names = {
+	BLOOD_WARDEN = "Blood Warden", # (Guardián de Sangre)
+	FROSTBANE_ARCANIST = "Frostbane Arcanist", # (Arcanista de Escarcha)
+}
+# const BLOOD_WARDEN = "Blood Warden" # (Guardián de Sangre)
+# const FROSTBANE_ARCANIST = "Frostbane Arcanist" # (Arcanista de Escarcha)
+# const LIORA_SUNVEIL = "Liora Sunveil"
+# const THARNOK_THE_VERDANT = "Tharnok the Verdant"
+static var HERO_TYPES: Dictionary[String, Info] = {
+	Names.BLOOD_WARDEN: Info.new(Names.BLOOD_WARDEN, get_rect_frames(Vector2i(3, 0)), "Skar"),
+	Names.FROSTBANE_ARCANIST: Info.new(Names.FROSTBANE_ARCANIST, get_rect_frames(Vector2i(2, 0)), "Zareth"),
+}
 
 const _START_REGION = Vector2i(0, 320)
 const _FRAME_SIZE = Vector2i(128, 128)
-const frames_by_type := 2
-static var heros_start_vector: Dictionary[String, Vector2i] = {}
-static var heros_json_data: Dictionary[String, JsonItem] = {}
+const _FRAMES := 2
 
-static func _get_heros_start_vector() -> Dictionary[String, Vector2i]:
-	if heros_start_vector.size() != 0:
-		return heros_start_vector
-
-	const heros_by_row = 2
-	const heros_by_column = 2
-
-	for y in range(heros_by_column):
-		for x in range(heros_by_row):
-			var _key = y * heros_by_row + x
-			heros_start_vector[get_keys()[_key]] = Vector2i(_START_REGION.x + x * _FRAME_SIZE.x * frames_by_type, _START_REGION.y + y * _FRAME_SIZE.y)
-
-	return heros_start_vector
-
-static func get_rect_frames(hero_type: String) -> Array[Rect2]:
-	var start_vector := _get_heros_start_vector()[hero_type]
-	var rects: Array[Rect2] = []
-	for i in range(frames_by_type):
-		rects.append(Rect2(start_vector.x + i * _FRAME_SIZE.x, start_vector.y, _FRAME_SIZE.x, _FRAME_SIZE.y))
-	return rects
-
-static func get_keys() -> Array[String]:
-	return [
-		BLOOD_WARDEN,
-		LIORA_SUNVEIL,
-		THARNOK_THE_VERDANT,
-		FROSTBANE_ARCANIST
-	]
-
-static func get_json_data() -> Dictionary[String, JsonItem]:
-	var json_data = JsonHelpers.load_json("res://json/heros.json")
-	var result: Dictionary[String, JsonItem] = {}
-	for key in json_data:
-		result[key] = JsonItem.new(json_data[key])
+static func get_rect_frames(pos: Vector2i) -> Array[Rect2]:
+	var result: Array[Rect2] = []
+	result.append(Rect2(_START_REGION.x + (pos.x * _FRAMES) * _FRAME_SIZE.x, _START_REGION.y + (pos.y * _FRAMES) * _FRAME_SIZE.y, _FRAME_SIZE.x, _FRAME_SIZE.y))
+	result.append(Rect2(_START_REGION.x + (pos.x * _FRAMES + 1) * _FRAME_SIZE.x, _START_REGION.y + (pos.y * _FRAMES) * _FRAME_SIZE.y, _FRAME_SIZE.x, _FRAME_SIZE.y))
 	return result
 
-static func get_hero_json_data(hero_type: String) -> JsonItem:
-	if heros_json_data.size() == 0:
-		heros_json_data = get_json_data()
-
-	return heros_json_data[hero_type]
-
 static func initialize_hero(player: Player) -> void:
-	player.json_data = HeroTypes.get_hero_json_data(player.hero_type)
+	player.extra_info = HERO_TYPES[player.hero_type]
 	var stats = CombatStats.new()
 	stats.crit_chance = 0.05
 	stats.crit_multiplier = 1.5
@@ -87,7 +59,7 @@ static func initialize_hero(player: Player) -> void:
 
 	# endregion Add some potions
 
-	if player.hero_type == BLOOD_WARDEN:
+	if player.hero_type == Names.BLOOD_WARDEN:
 		stats.evasion = 0.1
 		stats.agility = 50
 		stats.strength = 50
@@ -95,15 +67,16 @@ static func initialize_hero(player: Player) -> void:
 		player.combat_data._skills = [
 			Skill.get_skill(Skill.Names.LIFESTEAL),
 			Skill.get_skill(Skill.Names.CLEAVE_STRIKE),
-			Skill.get_skill(Skill.Names.TRUE_STRIKE),
+			Skill.get_skill(Skill.Names.STUNNING_STRIKE),
 			Skill.get_skill(Skill.Names.BLOOD_FURY),
+			# Skill.get_skill(Skill.Names.TRUE_STRIKE),
 			# Skill.get_skill(Skill.Names.MANA_SCORCHER),
 			# Skill.get_skill(Skill.Names.STORM_STRIKE),
 			# Skill.get_skill(Skill.Names.FROZEN_TOUCH)
 		]
 		# player.combat_data._skills[0].learned_level = 2
 	
-	if player.hero_type == FROSTBANE_ARCANIST:
+	if player.hero_type == Names.FROSTBANE_ARCANIST:
 		stats.attack_range = 200
 		player.combat_data.projectile_type = Projectile.TYPES.ARROW
 		stats.agility = 50
@@ -115,12 +88,6 @@ static func initialize_hero(player: Player) -> void:
 			Skill.get_skill(Skill.Names.FROZEN_TOUCH),
 			Skill.get_skill(Skill.Names.MULTIPLE_STRIKE)
 		]
-	
-	if player.hero_type == THARNOK_THE_VERDANT:
-		player.combat_data._skills = [Skill.get_skill(Skill.Names.LIFESTEAL)]
-	
-	if player.hero_type == LIORA_SUNVEIL:
-		player.combat_data._skills = [Skill.get_skill(Skill.Names.LIFESTEAL)]
 		
 	# GlobalsEntityHelpers.print_description_skills(player)
 	player.combat_data.update_base_stats(stats)

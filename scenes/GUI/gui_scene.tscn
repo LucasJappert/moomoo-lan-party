@@ -348,7 +348,7 @@ position = Vector2(96, 112)
 scale = Vector2(1.0625, 1.0625)
 texture = ExtResource("1_gbqeo")
 region_enabled = true
-region_rect = Rect2(256, 448, 128, 128)
+region_rect = Rect2(512, 320, 128, 128)
 
 [node name="FullExpRect" type="ColorRect" parent="PanelBL"]
 layout_mode = 2

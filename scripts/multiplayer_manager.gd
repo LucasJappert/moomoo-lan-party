@@ -37,7 +37,7 @@ func _on_peer_disconnected(id):
 func _add_player_to_game(id):
 	var spawn_data = {
 		"player_id": id,
-		"hero_type": HeroTypes.FROSTBANE_ARCANIST if id == 1 else HeroTypes.FROSTBANE_ARCANIST
+		"hero_type": HeroTypes.Names.BLOOD_WARDEN if id == 1 else HeroTypes.Names.FROSTBANE_ARCANIST
 	}
 	var new_player = GameManager.my_main.player_spawner.spawn(spawn_data)
 	GameManager.add_entity(new_player)

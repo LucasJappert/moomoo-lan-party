@@ -6,7 +6,7 @@ extends Node2D
 @onready var _label_container: PanelContainer = $PanelContainer
 @onready var _label: Label = $PanelContainer/Label
 const BAR_SIZE = 40.0
-const HIDE_BARS_AFTER_MILLISECONDS = 5000
+const HIDE_BARS_AFTER_MILLISECONDS = 3000
 
 @onready var bars_container: Node2D = $BarsContainer
 @onready var _health_bg_black: Panel = $BarsContainer/MyHealthBar/BgBlack

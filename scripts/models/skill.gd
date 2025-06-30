@@ -138,7 +138,7 @@ static func initialize_skills() -> void:
 	float_array1 = [0.5, 0.75, 1] # Percentage of physical damage dealt
 	for i in float_array.size():
 		_skill.item_skill_base[i].stats.mana_burn = ManaBurn.new(float_array[i], float_array1[i], true)
-		_skill.item_skill_base[i].description = "Drains mana from the target equal to " + StringHelpers.format_percent(float_array[i]) + " of the physical damage dealt, then deals additional physical damage equal to " + StringHelpers.format_percent(float_array1[i]) + " of the mana drained."
+		_skill.item_skill_base[i].description = "Burns mana from the target equal to " + StringHelpers.format_percent(float_array[i]) + " of the physical damage dealt, then deals additional physical damage equal to " + StringHelpers.format_percent(float_array1[i]) + " of the mana burned."
 
 
 	# endregion
@@ -350,7 +350,7 @@ static func verify_blood_fury(my_owner: Entity) -> void:
 	effect_stats.attack_speed = my_owner.combat_data.cache_total_stats_no_effects.attack_speed * percent_lost_hp
 	effect_stats.level = percent_lost_hp * 10 # Should be 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
 
-	var existing_effect = my_owner.combat_data.get_effect(Names.BLOOD_FURY)
+	var existing_effect = my_owner.combat_data.effects_helper.get_effect_by_name(Names.BLOOD_FURY)
 	if existing_effect:
 		if existing_effect.stats.level == effect_stats.level: return
 

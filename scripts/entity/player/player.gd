@@ -4,7 +4,7 @@ extends Entity
 
 static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 const MAX_LEVEL: int = 30
-var json_data: HeroTypes.JsonItem
+var extra_info: HeroTypes.Info
 @export var player_id: int = 0
 @export var current_exp: int = 0
 @export var hero_type: String
@@ -29,10 +29,10 @@ func set_player(data: Dictionary) -> void:
 func get_client_inputs(): return %ClientInputs
 
 func _ready():
+	HeroTypes.initialize_hero(self)
+
 	super._ready()
 	global_position = MapManager.cell_to_world(MapManager.PLAYER_CELL_SPAWN)
-
-	HeroTypes.initialize_hero(self)
 
 	# We need to update the radius of the attack area node here as it enters the scene
 	_set_area_attack_shape_radius()

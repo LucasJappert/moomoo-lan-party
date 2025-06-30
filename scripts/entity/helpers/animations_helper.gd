@@ -12,7 +12,7 @@ static func try_to_remove_obsolete_stun_animation(target: Entity):
 	var animation_stun_active = _animation_active(target, ANIMATION_NAMES.STUN)
 	if not animation_stun_active: return
 	
-	for effect in target.combat_data.get_effects():
+	for effect in target.combat_data.effects_helper.get_effects():
 		if effect.stats.has_hostil_stun_effect(): return
 
 	_remove_animations(target, ANIMATION_NAMES.STUN)

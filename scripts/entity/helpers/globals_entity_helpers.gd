@@ -38,25 +38,34 @@ static func get_closest_entities(
 	origin: Vector2,
 	max_targets: int,
 	entities: Array[Entity],
-	max_distance_in_tiles: int = 5,
+	max_distance_in_tiles: float = 5.0,
 	excluded_entities: Array[Entity] = []
 ) -> Array[Entity]:
 	var sorted: Array[Entity] = []
-	var max_distance_px := MapManager.TILE_SIZE_INT * max_distance_in_tiles
+
+	var origin_tile := MapManager.world_to_cell(origin)
 
 	for entity in entities:
 		if entity in excluded_entities:
 			continue
-		var dist_sq := entity.global_position.distance_squared_to(origin)
-		if max_distance_in_tiles >= 0 and dist_sq > max_distance_px * max_distance_px:
+
+		var entity_tile := MapManager.world_to_cell(entity.global_position)
+		var tile_offset := entity_tile - origin_tile
+		var distance_in_tiles := tile_offset.length() # euclidiana entre tiles
+
+		if max_distance_in_tiles >= 0 and distance_in_tiles > max_distance_in_tiles:
 			continue
+
 		sorted.append(entity)
 
 	sorted.sort_custom(func(a: Entity, b: Entity) -> bool:
-		return a.global_position.distance_squared_to(origin) < b.global_position.distance_squared_to(origin)
+		var a_dist := (MapManager.world_to_cell(a.global_position) - origin_tile).length_squared()
+		var b_dist := (MapManager.world_to_cell(b.global_position) - origin_tile).length_squared()
+		return a_dist < b_dist
 	)
 
 	return sorted.slice(0, max_targets)
+
 
 static func print_description_skills(entity: Entity) -> void:
 	for skill in entity.combat_data._skills:

@@ -146,6 +146,12 @@ shape = SubResource("CircleShape2D_8707b")
 debug_color = Color(1, 1, 1, 0.054)
 
 [node name="CombatData" parent="." instance=ExtResource("5_wjrb4")]
+current_hp = 0
+current_mana = 0
+attack_type = "melee"
+projectile_type = "none"
+is_stunned = false
+target_entity_name = ""
 
 [node name="HUD" type="Node2D" parent="."]
 script = ExtResource("3_wjrb4")

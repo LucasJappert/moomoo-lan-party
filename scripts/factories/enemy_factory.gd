@@ -11,10 +11,10 @@ static func get_enemy_instance(_enemy_type: String = "") -> Enemy:
 static func set_frost_revenant(_enemy: Enemy):
 	if _enemy.enemy_type != EnemyTypes.FROST_REVENANT: return false
 
-	_enemy.combat_stats.evasion = 0.15
-	_enemy.combat_stats.crit_chance = 0.2
+	# _enemy.combat_stats.evasion = 0.15
+	# _enemy.combat_stats.crit_chance = 0.2
 
-	_enemy.combat_data._skills.append_array([Skill.get_new_learned_skill(Skill.Names.FROZEN_TOUCH)])
+	# _enemy.combat_data._skills.append_array([Skill.get_new_learned_skill(Skill.Names.FROZEN_TOUCH)])
 
 	return true
 

@@ -138,8 +138,7 @@ func _set_skills() -> void:
 		skill_slots[i].initialize(_player_skills[i], i + 1)
 
 func _set_my_player_avatar_region(my_player: Player) -> void:
-	var rects = HeroTypes.get_rect_frames(my_player.hero_type)
-	_my_player_avatar.region_rect = rects[0]
+	_my_player_avatar.region_rect = my_player.extra_info.rects[0]
 
 func set_target_avatar_region(region_rect: Rect2) -> void:
 	_panelTL_avatar.region_rect = region_rect
@@ -211,7 +210,7 @@ func _update_panel_bottom_left() -> void:
 	_update_exp_bar()
 
 	_hero_type.text = GameManager.MY_PLAYER.hero_type
-	_hero_alias.text = GameManager.MY_PLAYER.json_data.alias
+	_hero_alias.text = GameManager.MY_PLAYER.extra_info.alias
 	_level.text = str(GameManager.MY_PLAYER.level)
 
 	var total_stats = GameManager.MY_PLAYER.combat_data.cache_total_stats

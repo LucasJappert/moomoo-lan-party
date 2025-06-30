@@ -90,14 +90,21 @@ This file tracks upcoming features and tasks in development. Contributions are w
 
 ---
 
-Let’s build MooMoo LAN Party together! 🐮
+Let’s build MooMoo LAN Party together! 🎉
 
-MY TODOs: 🔵🟡✅
+MY TODOs: 🔵In Progress🟡Ready for test🟣Paused✅Done
 
-- Crear escena de elección de héroes
+- Corregir sistema de target. Deberíamos priorizar visualizar el avatar de la unidad que se hace click izquierdo. Si no hay unidad clickeada con click iquierdo, ahí sí mostraríamos el target que estamos atacando.
+- Agregar información de los diferentes niveles en las descripciones de habilidades
+- Agregar skill, la cual puede activarse o desactivarse, que brindaría chances de matar al enemigo al instante (no aplica a bosses). Consume 20 de mana en cada ataque.
+- Agregar skill pasiva que luego de matar un enemigo lo transforma en 3 esqueletos que lucharán para él.
+- Agregar skill que tien chances de crear copias de sí mismo ante cada ataque físico.
+- 🟣 Crear escena de elección de héroes
+- Crear tooltip con descripcion del target
+- Agregar quinta skill al nivel 20
 - Implementar sistema de asignación de puntos en lugar de skills level
 - Agregar item que brinda un 20% de lifesteal
-- Capear ciertas stats como defensas y evasion.
+- Capear stats como defensas y evasion.
 - Agregar un item/skill que al activarlo te hace inmune a los hechizos y a ciertos debuffs como silencios.
 - Agregar un item/skill que te hace inmune a todo daño durante cierto tiempo al activarlo.
 - Agregar otros efectos de sonidos para el ambiente
@@ -105,7 +112,6 @@ MY TODOs: 🔵🟡✅
 - Sistema de rondas de enemigos aumentando las dificultades en cada oleada, cada 3 oleadas podríamos hacer una de solamente 4 boses
 - Sistema de puntos
 - Agregar info de Cleave attack a la gui
-- Ordenar efectos por nombre
 - Agregar panel debugger con opciones para matar todos los enemigos, etc.
 - Agregar sistema de selección de Héroe
 - Agregar un score que tenga en cuenta la velocidad con que se avanza a cada oleada
@@ -137,7 +143,7 @@ MY TODOs: 🔵🟡✅
 - ✅ Darken item slot when on cooldown
 - ✅ Create a skill that every 5/4/3 attacks performs a multiple attack to 2/3/4 extra enemies
 - ✅ Configure 2 heroes (BLOOD_WARDEN and Frostbane Arcanist)
-- ✅ Enable upgrading of the special skill (number 4) at levels 6, 12, and 18
+- ✅ Enable upgrading of the special skill (number 4) at levels 6, 9, and 12
 - ✅ Animation for when an attack is made or a spell is cast
 - ✅ Add skill that drains enemy's mana on each physical hit, certain % of drained mana is converted into damage
 - ✅ Add skill that gives xx% attack effectiveness, i.e. ignores enemy evasion

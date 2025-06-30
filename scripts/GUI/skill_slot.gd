@@ -4,8 +4,8 @@ extends Control
 
 const SPECIAL_SKILL_LEVEL_REQUIREMENTS := {
 	1: 6, # Level 1 of the skill can be learned at level 6
-	2: 12, # Level 2 of the skill can be learned at level 12
-	3: 18, # Level 3 of the skill can be learned at level 18
+	2: 9, # Level 2 of the skill can be learned at level 9
+	3: 12, # Level 3 of the skill can be learned at level 12
 }
 const SKILL_LEVEL_REQUIREMENTS := {
 	1: 0, # Level 1 of the skill can be learned from the beginning

@@ -7,8 +7,7 @@ const _ENEMIES_SCALE: float = 0.85
 
 static func set_entity_sprites(entity: Entity) -> void:
 	if entity is Player:
-		var rects = HeroTypes.get_rect_frames(entity.hero_type)
-		_set_sprites(entity, rects, _PLAYERS_SCALE)
+		_set_sprites(entity, entity.extra_info.rects, _PLAYERS_SCALE)
 		entity.sprite.position.y = -38 * _PLAYERS_SCALE
 	elif entity is Enemy:
 		var rects = EnemyTypes.get_rect_frames(entity.enemy_type)

@@ -37,7 +37,7 @@ func remove_effects_by_ids(ids_to_remove: Array[int]) -> void:
 
 func _add_current_effects(target: Entity) -> void:
 	if not target: return
-	for effect in target.combat_data.get_effects():
+	for effect in target.combat_data.effects_helper.get_effects():
 		add_effect(effect)
 
 func get_effects() -> Array[CombatEffect]:
