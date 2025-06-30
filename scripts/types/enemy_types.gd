@@ -1,97 +1,57 @@
 class_name EnemyTypes
 
+const Names = {
+	FROST_REVENANT = "Frost Revenant", # (Revenant de Escarcha) - alias: Frostreign
+	WARDEN_OF_DECAY = "Warden of Decay", # (Guardián de la Decadencia) - alias: Decaywarden
+	FLAME_CULTIST = "Flame Cultist", # (Cultista de la Llama) - alias: Pyraeth
+	MOSSWOOD_SHAMAN = "Mosswood Shaman", # (Chamán de Bosque Musgoso) - alias: Mossgrove
+	EMBER_FIEND = "Ember Fiend", # (Demonio de la Brasa) - alias: Cindral
+	DUSK_PRIESTESS = "Dusk Priestess", # (Sacerdotisa del Ocaso) - alias: Nythera
+	VENOM_GUARD = "Venom Guard", # (Guardia Venenosa) - alias: Virex
+	ROTPIERCER = "Rotpiercer", # (Perforador Pútrido) - alias: Rukmar
+	ORC_BERSERKER = "Orc Berserker", # (Orco Rabioso) - alias: Gorthak
+	LICH_COMMANDER = "Lich Commander", # (Comandante Lich) - alias: Varnor
+	SOULBURN_SKELETON = "Soulburn Skeleton", # (Esqueleto Quemaalmas) - alias: Ashrack
+	GRAVE_WARDEN = "Grave Warden", # (Guardián de la Tumba) - alias: Tharn
+	BLAZELEAF_ROGUE = "Blazeleaf Rogue", # (Pícaro de Hoja Llameante) - alias: Sylza
+	HELLHORN_BRUTE = "Hellhorn Brute", # (Bruto de Cuerno Infernal) - alias: Braknor
+	ASHEN_KNIGHT = "Ashen Knight", # (Caballero Cenizo) - alias: Duskar
+	INFERNO_HORNBEAST = "Inferno Hornbeast", # (Bestia Cornuda del Infierno) - alias: Moltrax
+	BONEGUARD = "Boneguard", # (Guardián Óseo) - alias: Dravok
+	WRAITHMANCER = "Wraithmancer", # (Nigromante Espectral) - alias: Kaelmor
+	BOGSHADE_ADEPT = "Bogshade Adept", # (Adepto del Pantano Sombrío) - alias: Morgrin
+	INFERNAL_MINOTAUR = "Infernal Minotaur", # (Minotauro Infernal) - alias: Threx
+	CRIMSON_ARCHER = "Crimson Archer", # (Arquero Carmesí) - alias: Valyra
+	FROSTSKIN_GOBLIN = "Frostskin Goblin", # (Goblin de Piel Helada) - alias: Snurgle
+	SILVERBLADE_HUNTER = "Silverblade Hunter", # (Cazador de Hoja Plateada) - alias: Eryndor
+	CINDERFLAME_WIELDER = "Cinderflame Wielder", # (Portador de la Llama de Ceniza) - alias: Arvok
+	DARK_ACOLYTE = "Dark Acolyte", # (Acólito Oscuro) - alias: Nihzar
+	NIGHTFANG_ASSASSIN = "Nightfang Assassin", # (Asesino Colmillo Nocturno) - alias: Vexira
+	SWAMP_HEXER = "Swamp Hexer", # (Hechicero del Pantano) - alias: Drogar
+	ASHBORN_GLADIATOR = "Ashborn Gladiator", # (Gladiador Nacido de Ceniza) - alias: Kaelgor
+	GHOSTBLADE = "Ghostblade", # (Hoja Fantasmal) - alias: Spectralis
+	MOONFANG_DUELIST = "Moonfang Duelist", # (Duelista de Colmillo Lunar) - alias: Lurien
+	BONE_BULWARK = "Bone Bulwark", # (Muralla Ósea) - alias: Marrak
+	FROSTBONE_WARRIOR = "Frostbone Warrior", # (Guerrero de Hueso Helado) - alias: Halgrim
+}
 
-const FROST_REVENANT = "Frost Revenant"
-const WARDEN_OF_DECAY = "Warden of Decay"
-const FLAME_CULTIST = "Flame Cultist"
-const MOSSWOOD_SHAMAN = "Mosswood Shaman"
-const EMBER_FIEND = "Ember Fiend"
-const DUSK_PRIESTESS = "Dusk Priestess"
-const VENOM_GUARD = "Venom Guard"
-const ROTPIERCER = "Rotpiercer"
-const ORC_BERSERKER = "Orc Berserker"
-const LICH_COMMANDER = "Lich Commander"
-const SOULBURN_SKELETON = "Soulburn Skeleton"
-const GRAVE_WARDEN = "Grave Warden"
-const BLAZELEAF_ROGUE = "Blazeleaf Rogue"
-const HELLHORN_BRUTE = "Hellhorn Brute"
-const ASHEN_KNIGHT = "Ashen Knight"
-const INFERNO_HORNBEAST = "Inferno Hornbeast"
-const BONEGUARD = "Boneguard"
-const WRAITHMANCER = "Wraithmancer"
-const BOGSHADE_ADEPT = "Bogshade Adept"
-const INFERNAL_MINOTAUR = "Infernal Minotaur"
-const CRIMSON_ARCHER = "Crimson Archer"
-const FROSTSKIN_GOBLIN = "Frostskin Goblin"
-const SILVERBLADE_HUNTER = "Silverblade Hunter"
-const CINDERFLAME_WIELDER = "Cinderflame Wielder"
-const DARK_ACOLYTE = "Dark Acolyte"
-const NIGHTFANG_ASSASSIN = "Nightfang Assassin"
-const SWAMP_HEXER = "Swamp Hexer"
-const ASHBORN_GLADIATOR = "Ashborn Gladiator"
-const GHOSTBLADE = "Ghostblade"
-const MOONFANG_DUELIST = "Moonfang Duelist"
-const BONE_BULWARK = "Bone Bulwark"
-const FROSTBONE_WARRIOR = "Frostbone Warrior"
+static var ENEMY_TYPES: Dictionary[String, ExtraInfo] = {
+	Names.FROST_REVENANT: ExtraInfo.new(Names.FROST_REVENANT, get_rect_frames(Vector2i(0, 0)), "Frostreign"),
+	Names.WARDEN_OF_DECAY: ExtraInfo.new(Names.WARDEN_OF_DECAY, get_rect_frames(Vector2i(1, 0)), "Decaywarden"),
+	Names.FLAME_CULTIST: ExtraInfo.new(Names.FLAME_CULTIST, get_rect_frames(Vector2i(2, 0)), "Pyraeth"),
+	# ... y así para cada enemigo
+}
 
 const _START_REGION = Vector2i(0, 0)
 const _FRAME_SIZE = Vector2i(64, 64)
-const frames_by_type = 2
-static var enemies_start_vector: Dictionary[String, Vector2i] = {}
+const _FRAMES = 2
 
-static func _get_enemies_start_vector() -> Dictionary[String, Vector2i]:
-	if enemies_start_vector.size() != 0:
-		return enemies_start_vector
+static func get_rect_frames(pos: Vector2i) -> Array[Rect2]:
+	var result: Array[Rect2] = []
+	result.append(Rect2(_START_REGION.x + (pos.x * _FRAMES) * _FRAME_SIZE.x, _START_REGION.y + (pos.y * _FRAMES) * _FRAME_SIZE.y, _FRAME_SIZE.x, _FRAME_SIZE.y))
+	result.append(Rect2(_START_REGION.x + (pos.x * _FRAMES + 1) * _FRAME_SIZE.x, _START_REGION.y + (pos.y * _FRAMES) * _FRAME_SIZE.y, _FRAME_SIZE.x, _FRAME_SIZE.y))
+	return result
 
-	const enemies_by_row = 8
-	const enemies_by_column = 4
-
-	for y in range(enemies_by_column):
-		for x in range(enemies_by_row):
-			var _key = y * enemies_by_row + x
-			enemies_start_vector[get_keys()[_key]] = Vector2i(_START_REGION.x + x * _FRAME_SIZE.x * frames_by_type, _START_REGION.y + y * _FRAME_SIZE.y)
-
-	return enemies_start_vector
-
-static func get_rect_frames(enemy_key: String) -> Array[Rect2]:
-	var start_vector := _get_enemies_start_vector()[enemy_key]
-	var rects: Array[Rect2] = []
-	for i in range(frames_by_type):
-		rects.append(Rect2(start_vector.x + i * _FRAME_SIZE.x, start_vector.y, _FRAME_SIZE.x, _FRAME_SIZE.y))
-	return rects
-
-static func get_keys() -> Array[String]:
-	return [
-		FROST_REVENANT,
-		WARDEN_OF_DECAY,
-		FLAME_CULTIST,
-		MOSSWOOD_SHAMAN,
-		EMBER_FIEND,
-		DUSK_PRIESTESS,
-		VENOM_GUARD,
-		ROTPIERCER,
-		ORC_BERSERKER,
-		LICH_COMMANDER,
-		SOULBURN_SKELETON,
-		GRAVE_WARDEN,
-		BLAZELEAF_ROGUE,
-		HELLHORN_BRUTE,
-		ASHEN_KNIGHT,
-		INFERNO_HORNBEAST,
-		BONEGUARD,
-		WRAITHMANCER,
-		BOGSHADE_ADEPT,
-		INFERNAL_MINOTAUR,
-		CRIMSON_ARCHER,
-		FROSTSKIN_GOBLIN,
-		SILVERBLADE_HUNTER,
-		CINDERFLAME_WIELDER,
-		DARK_ACOLYTE,
-		NIGHTFANG_ASSASSIN,
-		SWAMP_HEXER,
-		ASHBORN_GLADIATOR,
-		GHOSTBLADE,
-		MOONFANG_DUELIST,
-		BONE_BULWARK,
-		FROSTBONE_WARRIOR
-	]
+static func initialize(enemy: Enemy) -> void:
+	enemy.extra_info = ENEMY_TYPES[enemy.extra_info.key_type]
+	enemy.update_cache_total_stats()

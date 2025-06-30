@@ -323,7 +323,7 @@ func use(my_owner: Entity, target_entity: Entity) -> void:
 
 	get_learned_skill().set_last_used_time()
 
-	my_owner.combat_data.update_current_mana(-get_learned_skill().mana_cost)
+	my_owner.update_current_mana(-get_learned_skill().mana_cost)
 
 func try_to_upgrade(my_owner: Entity) -> void:
 	if learned_level >= AVAILABLE_LEVELS: return
@@ -337,34 +337,34 @@ func try_to_upgrade(my_owner: Entity) -> void:
 
 # region :::::::::::::::::::: SKILLS LOGICS
 static func verify_blood_fury(my_owner: Entity) -> void:
-	var learned_skill = my_owner.combat_data.get_learned_skill(Names.BLOOD_FURY)
+	var learned_skill = my_owner.get_learned_skill(Names.BLOOD_FURY)
 	if not learned_skill: return
 
-	var current_hp = my_owner.combat_data.current_hp
-	var total_hp: float = my_owner.combat_data.get_total_hp()
+	var current_hp = my_owner.current_hp
+	var total_hp: float = my_owner.get_total_hp()
 	var percent_lost_hp: float = floor((1 - current_hp / total_hp) * 10.0) / 10.0
 	if percent_lost_hp <= 0: return
 
 	var effect_stats = CombatStats.new()
-	effect_stats.physical_attack_power = my_owner.combat_data.cache_total_stats_no_effects.physical_attack_power * percent_lost_hp
-	effect_stats.attack_speed = my_owner.combat_data.cache_total_stats_no_effects.attack_speed * percent_lost_hp
+	effect_stats.physical_attack_power = my_owner.cache_total_stats_no_effects.physical_attack_power * percent_lost_hp
+	effect_stats.attack_speed = my_owner.cache_total_stats_no_effects.attack_speed * percent_lost_hp
 	effect_stats.level = percent_lost_hp * 10 # Should be 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
 
-	var existing_effect = my_owner.combat_data.effects_helper.get_effect_by_name(Names.BLOOD_FURY)
+	var existing_effect = my_owner.effects_helper.get_effect_by_name(Names.BLOOD_FURY)
 	if existing_effect:
 		if existing_effect.stats.level == effect_stats.level: return
 
-	my_owner.combat_data.remove_effect_by_name(Names.BLOOD_FURY)
+	my_owner.remove_effect_by_name(Names.BLOOD_FURY)
 
 	var new_effect = CombatEffect.get_permanent_effect(Names.BLOOD_FURY, learned_skill.max_stacks, effect_stats)
 	new_effect.set_region_rect(_SKILLS[Names.BLOOD_FURY].region_rect)
-	my_owner.combat_data.effects_helper.add_effect(new_effect)
+	my_owner.effects_helper.add_effect(new_effect)
 
 static func actions_before_entity_death(_dead_entity: Entity, _attacker: Entity) -> void:
 	if not _dead_entity is Enemy: return
 	if _dead_entity.replicated: return
 
-	var mirror_skill = _dead_entity.combat_data.get_learned_skill(Names.MIRROR_DEMISE)
+	var mirror_skill = _dead_entity.get_learned_skill(Names.MIRROR_DEMISE)
 	if mirror_skill:
 		var target_tiles = [
 			Vector2(-MapManager.TILE_SIZE.x, -MapManager.TILE_SIZE.y),
@@ -373,49 +373,47 @@ static func actions_before_entity_death(_dead_entity: Entity, _attacker: Entity)
 			Vector2(-MapManager.TILE_SIZE.x, MapManager.TILE_SIZE.y)
 		]
 		for i in range(4):
-			# var new_enemy = EnemyFactory.get_enemy_instance(_dead_entity.enemy_type)
-			# new_enemy.set_combat_data()
 			var new_enemy = ObjectHelpers.deep_clone(_dead_entity) as Enemy
 			new_enemy.replicated = true
 			new_enemy.position = _dead_entity.position + target_tiles[i]
 			# We need set combat_data props after the enemy is added to the scene
-			new_enemy.combat_stats.hp = new_enemy.combat_data.get_total_hp() * 0.5
-			new_enemy.combat_data.update_cache_total_stats()
-			new_enemy.combat_data.current_hp = new_enemy.combat_stats.hp
-			GameManager.add_enemy(new_enemy)
+			new_enemy.combat_stats.hp = new_enemy.get_total_hp() * 0.5
+			new_enemy.update_cache_total_stats()
+			new_enemy.current_hp = new_enemy.combat_stats.hp
+			GameManager.spawn_enemy(new_enemy)
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
 	# Should be called only on the server
 	# Freeze verification
-	var frozen_skill = _attacker.combat_data.get_learned_skill(Names.FROZEN_TOUCH)
+	var frozen_skill = _attacker.get_learned_skill(Names.FROZEN_TOUCH)
 	if frozen_skill:
 		var skill_stats = frozen_skill.stats.get_combat_stats_instance()
 		var effect = CombatEffect.get_temporal_effect(Names.FROZEN_TOUCH, skill_stats.freeze_duration, frozen_skill.max_stacks, skill_stats)
 		effect.stats.is_owner_friendly = false
 		effect.set_region_rect(Skill.get_skill(Names.FROZEN_TOUCH, false).region_rect)
-		_target.combat_data.effects_helper.add_effect(effect)
+		_target.effects_helper.add_effect(effect)
 
 	# Cleave verification
-	var cleave_skill = _attacker.combat_data.get_learned_skill(Names.CLEAVE_STRIKE)
+	var cleave_skill = _attacker.get_learned_skill(Names.CLEAVE_STRIKE)
 	if cleave_skill: CleaveEffect.auxiliary_actions_after_hit(cleave_skill.stats, _attacker, _target, _di)
 
 	# MANA_SCORCHER verification
-	var mana_scorcher_skill = _attacker.combat_data.get_learned_skill(Names.MANA_SCORCHER)
+	var mana_scorcher_skill = _attacker.get_learned_skill(Names.MANA_SCORCHER)
 	if mana_scorcher_skill: ManaBurn.auxiliary_actions_after_hit(mana_scorcher_skill.stats, _attacker, _target, _di)
 
 static func actions_after_execute_physical_attack(_attacker: Entity, _target: Entity):
-	var multiple_strike_skill = _attacker.combat_data.get_learned_skill(Names.MULTIPLE_STRIKE)
+	var multiple_strike_skill = _attacker.get_learned_skill(Names.MULTIPLE_STRIKE)
 	if multiple_strike_skill:
 		if multiple_strike_skill.stats.multiple_strike.increment_hits():
 			var extra_targets = multiple_strike_skill.stats.multiple_strike.extra_targets
-			var nearest_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, extra_targets, _attacker.get_my_enemies(), _attacker.combat_data.get_attack_range(), [_target])
+			var nearest_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, extra_targets, _attacker.get_my_enemies(), _attacker.get_attack_range(), [_target])
 			for extra_target in nearest_enemies:
-				_attacker.combat_data.execute_physical_attack(false, extra_target)
+				_attacker.execute_physical_attack(false, extra_target)
 
 func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:
 	if not _target: return false
 
-	var attacker_stats = _attacker.combat_data.cache_total_stats
+	var attacker_stats = _attacker.cache_total_stats
 	var total_damage = get_stats().custom_damage_heal.get_total_damage_heal(attacker_stats.agility, attacker_stats.strength, attacker_stats.intelligence)
 
 	var targets = [_target]
@@ -424,7 +422,7 @@ func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:
 
 	for target in targets:
 		var _di := DamageInfo.new(total_damage, get_learned_skill().damage_type)
-		var critical_damage = _attacker.combat_data.try_critical_hit(total_damage)
+		var critical_damage = _attacker.try_critical_hit(total_damage)
 		var total_damage_and_crit = total_damage + critical_damage
 
 		_di.total_damage = total_damage_and_crit
@@ -433,7 +431,7 @@ func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:
 		_di.damage_type = DamageType.MAGIC
 		_di.attacker_name = _attacker.name
 
-		target.combat_data.server_receive_damage(_di, _attacker)
+		target.server_receive_damage(_di, _attacker)
 		target.rpc_handler.add_animation(AnimationsHelper.ANIMATION_NAMES.LIGHTNING)
 	
 	return true

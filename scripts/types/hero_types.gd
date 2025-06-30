@@ -1,28 +1,16 @@
 class_name HeroTypes
 
-class Info:
-	var key: String
-	var rects: Array[Rect2]
-	var alias: String
-	var description_en: String
-	var description_es: String
-
-	func _init(_key: String, _rects: Array[Rect2], _alias: String):
-		key = _key
-		rects = _rects
-		alias = _alias
-
-const Names = {
-	BLOOD_WARDEN = "Blood Warden", # (Guardián de Sangre)
-	FROSTBANE_ARCANIST = "Frostbane Arcanist", # (Arcanista de Escarcha)
-}
 # const BLOOD_WARDEN = "Blood Warden" # (Guardián de Sangre)
 # const FROSTBANE_ARCANIST = "Frostbane Arcanist" # (Arcanista de Escarcha)
 # const LIORA_SUNVEIL = "Liora Sunveil"
 # const THARNOK_THE_VERDANT = "Tharnok the Verdant"
-static var HERO_TYPES: Dictionary[String, Info] = {
-	Names.BLOOD_WARDEN: Info.new(Names.BLOOD_WARDEN, get_rect_frames(Vector2i(3, 0)), "Skar"),
-	Names.FROSTBANE_ARCANIST: Info.new(Names.FROSTBANE_ARCANIST, get_rect_frames(Vector2i(2, 0)), "Zareth"),
+const Names = {
+	BLOOD_WARDEN = "Blood Warden", # (Guardián de Sangre)
+	FROSTBANE_ARCANIST = "Frostbane Arcanist", # (Arcanista de Escarcha)
+}
+static var HERO_TYPES: Dictionary[String, ExtraInfo] = {
+	Names.BLOOD_WARDEN: ExtraInfo.new(Names.BLOOD_WARDEN, get_rect_frames(Vector2i(3, 0)), "Skar"),
+	Names.FROSTBANE_ARCANIST: ExtraInfo.new(Names.FROSTBANE_ARCANIST, get_rect_frames(Vector2i(2, 0)), "Zareth"),
 }
 
 const _START_REGION = Vector2i(0, 320)
@@ -35,8 +23,8 @@ static func get_rect_frames(pos: Vector2i) -> Array[Rect2]:
 	result.append(Rect2(_START_REGION.x + (pos.x * _FRAMES + 1) * _FRAME_SIZE.x, _START_REGION.y + (pos.y * _FRAMES) * _FRAME_SIZE.y, _FRAME_SIZE.x, _FRAME_SIZE.y))
 	return result
 
-static func initialize_hero(player: Player) -> void:
-	player.extra_info = HERO_TYPES[player.hero_type]
+static func initialize(player: Player) -> void:
+	player.extra_info = HERO_TYPES[player.extra_info.key_type]
 	var stats = CombatStats.new()
 	stats.crit_chance = 0.05
 	stats.crit_multiplier = 1.5
@@ -47,24 +35,24 @@ static func initialize_hero(player: Player) -> void:
 	stats.intelligence = 50
 	stats.attack_range = CombatStats.MIN_ATTACK_RANGE
 	# region Add some potions 
-	# player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_I), 100))
-	# player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_I), 100))
-	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_II), 100))
-	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_II), 100))
-	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_III), 100))
-	player.combat_data.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_III), 100))
-	# player.combat_data.add_item(SlotItemInfo.get_non_consumable_slot_item(Item.get_item(Item.Names.CLEAVE_EDGE)))
-	# player.combat_data.add_item(SlotItemInfo.get_non_consumable_slot_item(Item.get_item(Item.Names.STUNNING_EDGE)))
+	# player.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_I), 100))
+	# player.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_I), 100))
+	player.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_II), 100))
+	player.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_II), 100))
+	player.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.HEALTH_POTION_III), 100))
+	player.add_item(SlotItemInfo.get_consumable_slot_item(Item.get_item(Item.Names.MANA_POTION_III), 100))
+	# player.add_item(SlotItemInfo.get_non_consumable_slot_item(Item.get_item(Item.Names.CLEAVE_EDGE)))
+	# player.add_item(SlotItemInfo.get_non_consumable_slot_item(Item.get_item(Item.Names.STUNNING_EDGE)))
 
 
 	# endregion Add some potions
 
-	if player.hero_type == Names.BLOOD_WARDEN:
+	if player.extra_info.key_type == Names.BLOOD_WARDEN:
 		stats.evasion = 0.1
 		stats.agility = 50
 		stats.strength = 50
 		stats.intelligence = 50
-		player.combat_data._skills = [
+		player._skills = [
 			Skill.get_skill(Skill.Names.LIFESTEAL),
 			Skill.get_skill(Skill.Names.CLEAVE_STRIKE),
 			Skill.get_skill(Skill.Names.STUNNING_STRIKE),
@@ -74,15 +62,15 @@ static func initialize_hero(player: Player) -> void:
 			# Skill.get_skill(Skill.Names.STORM_STRIKE),
 			# Skill.get_skill(Skill.Names.FROZEN_TOUCH)
 		]
-		# player.combat_data._skills[0].learned_level = 2
+		# player._skills[0].learned_level = 2
 	
-	if player.hero_type == Names.FROSTBANE_ARCANIST:
+	if player.extra_info.key_type == Names.FROSTBANE_ARCANIST:
 		stats.attack_range = 200
-		player.combat_data.projectile_type = Projectile.TYPES.ARROW
+		player.projectile_type = Projectile.TYPES.ARROW
 		stats.agility = 50
 		stats.strength = 50
 		stats.intelligence = 50
-		player.combat_data._skills = [
+		player._skills = [
 			Skill.get_skill(Skill.Names.MANA_SCORCHER),
 			Skill.get_skill(Skill.Names.STORM_STRIKE),
 			Skill.get_skill(Skill.Names.FROZEN_TOUCH),
@@ -90,4 +78,4 @@ static func initialize_hero(player: Player) -> void:
 		]
 		
 	# GlobalsEntityHelpers.print_description_skills(player)
-	player.combat_data.update_base_stats(stats)
+	player.update_base_stats(stats)

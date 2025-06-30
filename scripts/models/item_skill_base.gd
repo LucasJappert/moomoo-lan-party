@@ -54,7 +54,7 @@ func get_description() -> String:
 
 func can_use(my_owner: Entity) -> bool:
 	if mana_cost > 0:
-		if my_owner.combat_data.current_mana < mana_cost: return false
+		if my_owner.current_mana < mana_cost: return false
 
 	return get_remaining_cooldown() == 0
 

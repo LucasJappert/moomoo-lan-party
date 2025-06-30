@@ -47,21 +47,21 @@ func _process(_delta: float):
 func _try_update_bars_visibility():
 	if my_owner.is_my_player(): return
 	
-	bars_container.visible = Time.get_ticks_msec() - my_owner.combat_data.last_damage_received_time < HIDE_BARS_AFTER_MILLISECONDS
+	bars_container.visible = Time.get_ticks_msec() - my_owner.last_damage_received_time < HIDE_BARS_AFTER_MILLISECONDS
 	if ClientInputs.ALT_PRESSED: bars_container.visible = true
 
 func _try_update_label():
 	if not _label_container.visible: return
 		
-	_label.text = my_owner.combat_data.target_entity_name
-	_label.text = str(GameManager.current_enemies_in_scene)
+	_label.text = str(my_owner.global_position)
+	# _label.text = str(GameManager.current_enemies_in_scene)
 	pass
 
 func update_health_bar():
-	_health_current_bar.size.x = my_owner.combat_data.current_hp * BAR_SIZE / my_owner.combat_data.get_total_hp()
+	_health_current_bar.size.x = my_owner.current_hp * BAR_SIZE / my_owner.get_total_hp()
 
 func update_mana_bar():
-	_mana_current_bar.size.x = my_owner.combat_data.current_mana * BAR_SIZE / my_owner.combat_data.get_total_mana()
+	_mana_current_bar.size.x = my_owner.current_mana * BAR_SIZE / my_owner.get_total_mana()
 
 func show_damage_heal_popup(text: String, color: Color = Color.RED):
 	if not SHOW_DAMAGES_HEALS: return

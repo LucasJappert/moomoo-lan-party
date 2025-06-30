@@ -142,7 +142,7 @@ func get_description() -> String:
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
 	# Cleave verification
-	var cleave_items_slots = _attacker.combat_data.get_items_by_name(Names.CLEAVE_EDGE)
+	var cleave_items_slots = _attacker.get_items_by_name(Names.CLEAVE_EDGE)
 	for item_slot in cleave_items_slots:
 		CleaveEffect.auxiliary_actions_after_hit(item_slot.item.stats, _attacker, _target, _di)
 

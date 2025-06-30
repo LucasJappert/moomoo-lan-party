@@ -140,6 +140,8 @@ MY TODOs: 🔵In Progress🟡Ready for test🟣Paused✅Done
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
 
+30/06/2025
+
 - ✅ Darken item slot when on cooldown
 - ✅ Create a skill that every 5/4/3 attacks performs a multiple attack to 2/3/4 extra enemies
 - ✅ Configure 2 heroes (BLOOD_WARDEN and Frostbane Arcanist)

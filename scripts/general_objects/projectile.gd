@@ -95,7 +95,7 @@ func _server_move(delta: float):
 
 	if position.distance_to(target_position) < 10:
 		if _get_target_entity() != null && _get_origin_entity() != null:
-			_get_origin_entity().combat_data.server_execute_physical_damage(_get_target_entity())
+			_get_origin_entity().server_execute_physical_damage(_get_target_entity())
 		queue_free()
 
 
@@ -106,7 +106,7 @@ static func get_instance_from_dict(dict: Dictionary) -> Projectile:
 
 static func launch(_origin_entity: Entity, _target_entity: Entity, _damage: int):
 	var projectile = PROJECTILE_SCENE.instantiate()
-	projectile.set_type(_origin_entity.combat_data.projectile_type)
+	projectile.set_type(_origin_entity.projectile_type)
 	projectile.damage = _damage
 	projectile.origin_entity_name = _origin_entity.name
 	projectile.target_entity_name = _target_entity.name

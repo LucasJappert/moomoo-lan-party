@@ -61,7 +61,7 @@ func set_target_cell(target_cell: Vector2i) -> void:
 	_clean_movements()
 	_target_cell = MapManager.get_valid_grid_cell(target_cell)
 	update_path()
-	my_owner.combat_data.register_attacker(null)
+	my_owner.register_attacker(null)
 
 func update_path() -> void:
 	if _target_cell == null && _target_entity == null: return
@@ -83,11 +83,11 @@ func _try_set_next_current_target_pos() -> void:
 
 	if current_path.is_empty(): return _clean_movements()
 
-	if my_owner.combat_data.is_stunned: return
+	if my_owner.is_stunned: return
 
 	if _attack_move:
 		# Return if the target is in attack range (dont move, just attack)
-		var target_in_attack_range = GlobalsEntityHelpers.is_target_in_attack_range(my_owner, my_owner.combat_data.get_target_entity())
+		var target_in_attack_range = GlobalsEntityHelpers.is_target_in_attack_range(my_owner, my_owner.get_target_entity())
 		if target_in_attack_range: return _clean_movements()
 
 	var next_target_cell = current_path[0]
@@ -99,26 +99,26 @@ func _try_set_next_current_target_pos() -> void:
 	current_path.remove_at(0)
 
 func _try_to_update_target_from_latest_attacker():
-	if my_owner.combat_data.keep_ground: return
+	if my_owner.keep_ground: return
 	if _target_cell or _target_entity: return
-	if not my_owner.combat_data.latest_attacker: return
+	if not my_owner.latest_attacker: return
 	if my_owner is Player == false: return # Enemies should always have a target (Moomoo by default)
 
 	# With the following logic, we ensure that our character moves towards the target (only if the target is out of attack range)
-	if my_owner.combat_data.get_target_entity():
-		if GlobalsEntityHelpers.is_target_in_attack_range(my_owner, my_owner.combat_data.get_target_entity()): return
+	if my_owner.get_target_entity():
+		if GlobalsEntityHelpers.is_target_in_attack_range(my_owner, my_owner.get_target_entity()): return
 
 	var nearest_enemy: Entity
 	nearest_enemy = GlobalsEntityHelpers.get_nearest_entity(my_owner.global_position, GameManager.get_enemies(), my_owner.area_vision_shape.shape.radius)
 
 	set_target_entity(nearest_enemy)
-	my_owner.combat_data.set_target_entity(nearest_enemy)
+	my_owner.set_target_entity(nearest_enemy)
 
 func _try_to_move(_delta: float) -> void:
 	var old_distance = current_target_pos - my_owner.global_position
 	var direction = old_distance.normalized()
 	# TODO: get_total_stats en Entity
-	var speed = my_owner.combat_data.cache_total_stats.get_total_move_speed() * MapManager.TILE_SIZE.x
+	var speed = my_owner.cache_total_stats.get_total_move_speed() * MapManager.TILE_SIZE.x
 	var velocity = direction * speed
 
 	var move_delta = velocity * _delta

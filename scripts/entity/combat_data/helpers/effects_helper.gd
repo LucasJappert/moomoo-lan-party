@@ -62,7 +62,7 @@ func _remove_effects_by_predicate(predicate: Callable) -> void:
 	if GameManager.MY_PLAYER:
 		if _my_owner.is_my_player(): # Remove effects from my GUI
 			GameManager.my_main.gui_scene.my_effects.remove_effects_by_ids(removed_ids)
-		if _my_owner.name == GameManager.MY_PLAYER.combat_data.target_entity_name: # Remove effects from target GUI
+		if _my_owner.name == GameManager.MY_PLAYER.target_entity_name: # Remove effects from target GUI
 			GameManager.my_main.gui_scene.target_effects.remove_effects_by_ids(removed_ids)
 
 	if GameManager.AM_I_HOST and removed_ids:
@@ -97,5 +97,5 @@ func _try_to_update_my_gui(p_effect: CombatEffect) -> void:
 
 	if _my_owner.is_my_player(): # Update my GUI
 		GameManager.my_main.gui_scene.my_effects.add_effect(p_effect)
-	if _my_owner.name == GameManager.MY_PLAYER.combat_data.target_entity_name: # Update target GUI
+	if _my_owner.name == GameManager.MY_PLAYER.target_entity_name: # Update target GUI
 		GameManager.my_main.gui_scene.target_effects.add_effect(p_effect)

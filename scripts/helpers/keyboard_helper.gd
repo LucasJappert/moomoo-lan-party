@@ -9,13 +9,13 @@ static func key_pressed(_keycode: int, player: Entity) -> void:
 	# SKILL HOTKEYs
 	for i in SKILL_HOTKEYS.size():
 		if _keycode == SKILL_HOTKEYS[i]:
-			return player.combat_data.charge_skill(i)
+			return player.charge_skill(i)
 
 	# INVENTORY HOTKEYs
 	for i in INVENTORY_HOTKEYS.size():
 		if _keycode == INVENTORY_HOTKEYS[i]:
-			return player.combat_data.use_item(i + 1)
+			return player.use_item(i + 1)
 
 	# OTHER HOTKEYs
 	if _keycode == KEY_Q:
-		player.combat_data.toogle_keep_ground()
+		player.toogle_keep_ground()

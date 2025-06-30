@@ -72,7 +72,7 @@ static func get_temporal_effect(p_name: String, duration: float, _max_stacks: in
 
 static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _di: DamageInfo) -> void:
 	# Should be called only on the server
-	var _attacker_stats = _attacker.combat_data.cache_total_stats
+	var _attacker_stats = _attacker.cache_total_stats
 
 	# Stun verification, we need it after the evasion check
 	if _di.damage_type == DamageType.PHYSICAL:
@@ -82,17 +82,17 @@ static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _d
 			_stats.is_owner_friendly = false
 			var effect = CombatEffect.get_temporal_effect("Stun", _stats.stun_duration, 1, _stats)
 			effect.set_region_rect(CombatEffect.STUN_RECT_REGION)
-			_receiver.combat_data.effects_helper.add_effect(effect)
+			_receiver.effects_helper.add_effect(effect)
 
 	# Lifesteal verification
 	if not _di.was_a_cleave_damage:
-		if _attacker.combat_data.current_hp < _attacker.combat_data.get_total_hp() && _di.total_damage > 0:
-			var _attacker_life_steal_percent = _attacker.combat_data.cache_total_stats.life_steal_percent
+		if _attacker.current_hp < _attacker.get_total_hp() && _di.total_damage > 0:
+			var _attacker_life_steal_percent = _attacker.cache_total_stats.life_steal_percent
 			if _attacker_life_steal_percent > 0:
 				var total_heal = int(max(1, _di.total_damage * _attacker_life_steal_percent))
 				if total_heal > 0:
 					var new_di = DamageInfo.get_instance()
 					new_di.total_damage = - total_heal
 					_attacker.rpc_handler.receive_damage_or_heal(ObjectHelpers.to_dict(new_di, true))
-					_attacker.combat_data.update_current_hp(total_heal)
+					_attacker.update_current_hp(total_heal)
 	return

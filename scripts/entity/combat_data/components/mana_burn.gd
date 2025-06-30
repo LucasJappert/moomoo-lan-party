@@ -28,7 +28,7 @@ static func auxiliary_actions_after_hit(stats: CombatStats, _attacker: Entity, _
 	var mana_burned = stats.mana_burn.get_mana_burned(_di.total_damage)
 	if not mana_burned: return
 
-	_target.combat_data.update_current_mana(-mana_burned)
+	_target.update_current_mana(-mana_burned)
 
 	var extra_damage_by_burned_mana = stats.mana_burn.get_extra_damage_by_burned_mana(mana_burned)
 	var new_total_damage = _di.total_damage + extra_damage_by_burned_mana

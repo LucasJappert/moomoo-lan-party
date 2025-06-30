@@ -6,7 +6,7 @@ static func is_target_in_attack_range(_entity: Entity, _target_entity) -> bool:
 
 	var dist = _entity.global_position.distance_to(_target_entity.global_position)
 
-	return dist <= _entity.combat_data.cache_total_stats.attack_range
+	return dist <= _entity.cache_total_stats.attack_range
 
 static func get_nearest_entity(start_pos: Vector2, entities: Array[Entity], max_range: int) -> Entity:
 	var nearest_entity: Entity = null
@@ -68,6 +68,6 @@ static func get_closest_entities(
 
 
 static func print_description_skills(entity: Entity) -> void:
-	for skill in entity.combat_data._skills:
+	for skill in entity._skills:
 		for skill_base in skill.item_skill_base:
 			print(skill.get_description())

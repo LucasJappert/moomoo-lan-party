@@ -32,7 +32,7 @@ static func _verify_state_and_animation(entity: Entity) -> void:
 	if entity is Moomoo: return
 	if not entity.sprite: return
 
-	if entity.combat_data.is_stunned: # we must call it before the attack animation to cut it off when we are stunned
+	if entity.is_stunned: # we must call it before the attack animation to cut it off when we are stunned
 		return _update_state(entity, StateEnum.IDLE)
 
 	if _is_playing_attack_animation(entity): return

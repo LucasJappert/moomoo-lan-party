@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://1myskyslafks"]
+[gd_scene load_steps=3 format=3 uid="uid://pkj0fv7el6cc"]
 
 [ext_resource type="Script" uid="uid://bew2kc8hogsem" path="res://scripts/entity/combat_data/combat_data.gd" id="1_j6lkr"]
 

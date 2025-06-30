@@ -45,7 +45,7 @@ func _on_try_to_move(_target_cell: Vector2i):
 @rpc("authority", "call_local")
 func _on_right_click_on_entity(_target_entity_name: String):
 	var target_entity = GameManager.get_entity(_target_entity_name)
-	player.combat_data.set_target_entity(target_entity)
+	player.set_target_entity(target_entity)
 	player.movement_helper.set_target_entity(target_entity)
 	
 @rpc("authority", "call_local")
@@ -55,9 +55,9 @@ func _on_left_click(_target_entity_name: String):
 
 	if target_entity: print("entity name: ", target_entity.name)
 
-	player.combat_data.set_target_entity(target_entity)
+	player.set_target_entity(target_entity)
 
-	player.combat_data.use_charged_skill()
+	player.use_charged_skill()
 
 @rpc("authority", "call_local")
 func _on_key_pressed(_keycode: int):
@@ -65,5 +65,5 @@ func _on_key_pressed(_keycode: int):
 
 @rpc("authority", "call_local")
 func _on_inventory_slot_clicked(_position: int):
-	player.combat_data.use_item(_position)
+	player.use_item(_position)
 # endregion SERVER MESSAGES RECEIVED FROM CLIENT

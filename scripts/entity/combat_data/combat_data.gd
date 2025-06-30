@@ -1,6 +1,7 @@
 class_name CombatData
 
-extends Node
+extends CharacterBody2D
+
 const EXP_MULTIPLIER: int = 1
 
 var effects_helper: EffectsHelper = EffectsHelper.new()
@@ -11,7 +12,6 @@ var effects_helper: EffectsHelper = EffectsHelper.new()
 @export var is_stunned: bool = false
 var _skills: Array[Skill] = []
 var _items: Array[SlotItemInfo] = [] # We use 6 slots
-var _my_owner: Entity
 
 var _1_second_timer: float = 0.0
 
@@ -22,7 +22,7 @@ var _target_entity: Entity #
 		_target_entity_name = value
 		_target_entity = GameManager.get_entity(value)
 		
-		EventBus.emit_new_target_selected(GlobalsEntityHelpers.get_owner(self), _target_entity)
+		EventBus.emit_new_target_selected(my_owner(), _target_entity)
 		if _target_entity == null: return
 
 	get:
@@ -39,25 +39,24 @@ var charged_skill: Skill
 var keep_ground: bool = false
 var enemy_spell_caster: EnemySpellCaster
 
-func _ready() -> void:
-	effects_helper.subscribe_to_changes(Callable(self, "update_cache_total_stats"))
 
-	if GameManager.AM_I_HOST == false:
-		set_process(false)
+func ready_combat_data() -> void:
+	effects_helper.subscribe_to_changes(Callable(my_owner(), "update_cache_total_stats"))
 
 	# Initialize items
 	_items.clear()
 	for i in range(SlotItem.HOTKEY_BY_SLOT.size()): _items.append(SlotItemInfo.new(null, i + 1))
 
 	update_cache_total_stats()
+	print("hp: ", current_hp, " total hp: ", get_total_hp())
 
-func _post_ready() -> void:
-	effects_helper.set_my_owner(_my_owner)
+func post_ready_combat_data() -> void:
+	effects_helper.set_my_owner(my_owner())
 
 	if not GameManager.AM_I_HOST: return
 
-	current_hp = int(get_total_hp())
-	current_mana = int(get_total_mana())
+	if current_hp == 0: current_hp = get_total_hp()
+	if current_mana == 0: current_mana = get_total_mana()
 
 	if my_owner() is Enemy:
 		enemy_spell_caster = EnemySpellCaster.new(my_owner())
@@ -65,7 +64,7 @@ func _post_ready() -> void:
 	for item in _items:
 		my_owner().rpc_handler.send_item_updated(item) # Send items to clients
 
-func _process(_delta: float): # Run only when it is the host
+func process_combat_data(_delta: float): # Run only when it is the host
 	if not my_owner(): return
 
 	effects_helper._process(_delta)
@@ -101,14 +100,14 @@ func server_execute_physical_damage(_target: Entity) -> void:
 	_di.damage_type = DamageType.PHYSICAL
 	_di.attacker_name = my_owner().name
 
-	_target.combat_data.server_receive_damage(_di, my_owner())
+	_target.server_receive_damage(_di, my_owner())
 
 func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	if _di.total_damage == 0: return
 	if my_owner().multiplayer.is_server() == false: return
 
 	var my_stats = cache_total_stats
-	var attacker_stats = _attacker.combat_data.cache_total_stats
+	var attacker_stats = _attacker.cache_total_stats
 	
 	var attacker_can_miss := _check_ignore_enemy_evasion(_di, attacker_stats)
 	if attacker_can_miss: _di.can_be_evaded = false
@@ -202,10 +201,10 @@ func add_item(_slot_item_info: SlotItemInfo) -> bool:
 
 	return false
 
-func use_item(position: int) -> void: # Called from _on_key_pressed
-	if _items[position - 1] == null: return print("No item in slot: ", position)
+func use_item(slot_position: int) -> void: # Called from _on_key_pressed
+	if _items[slot_position - 1] == null: return print("No item in slot: ", slot_position)
 
-	_items[position - 1].use_item(my_owner(), null)
+	_items[slot_position - 1].use_item(my_owner(), null)
 
 func item_updated_by_rpc(slot_item_info: SlotItemInfo) -> void:
 	update_item(slot_item_info.position - 1, slot_item_info)
@@ -241,7 +240,7 @@ func uncharge_skill() -> void:
 	print("Uncharging skill")
 
 func upgrade_skill(slot_number: int) -> void:
-	_skills[slot_number - 1].try_to_upgrade(_my_owner)
+	_skills[slot_number - 1].try_to_upgrade(my_owner())
 	update_cache_total_stats()
 
 func use_charged_skill() -> void:
@@ -258,6 +257,7 @@ func toogle_keep_ground() -> void:
 
 # region 	PRIVATE GETTERs
 func _get_total_stats(include_effects := true) -> CombatStats:
+	if not my_owner(): return null
 	# This function returns the total of all combat_stats, including extras from effects and extras from attributes
 	var _total_stats := CombatStats.new()
 	_total_stats.accumulate_combat_stats(my_owner().combat_stats.get_total_stats_including_extras_by_attributes())
@@ -351,9 +351,7 @@ func get_attack_range() -> int:
 	return cache_total_stats.attack_range
 
 func my_owner() -> Entity:
-	if _my_owner: return _my_owner
-	_my_owner = GlobalsEntityHelpers.get_owner(self)
-	return _my_owner
+	return self
 
 func get_skills() -> Array[Skill]:
 	return _skills

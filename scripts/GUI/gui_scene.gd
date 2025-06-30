@@ -79,14 +79,14 @@ func _ready() -> void:
 
 	%HpBallCircle.connect("mouse_entered", func():
 		if not GameManager.MY_PLAYER: return
-		var regen_points = GameManager.MY_PLAYER.combat_data.cache_total_stats.hp_regeneration_points
+		var regen_points = GameManager.MY_PLAYER.cache_total_stats.hp_regeneration_points
 		MyTooltip.show_tooltip("HP regen", str(regen_points) + " points per second", 7)
 	)
 	%HpBallCircle.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
 
 	%ManaBallCircle.connect("mouse_entered", func():
 		if not GameManager.MY_PLAYER: return
-		var regen_points = GameManager.MY_PLAYER.combat_data.cache_total_stats.mana_regeneration_points
+		var regen_points = GameManager.MY_PLAYER.cache_total_stats.mana_regeneration_points
 		MyTooltip.show_tooltip("Mana regen", str(regen_points) + " points per second", 7)
 	)
 	%ManaBallCircle.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
@@ -130,7 +130,7 @@ func init_scene(player: Player) -> void:
 
 func _set_skills() -> void:
 	if _player_skills.is_empty():
-		_player_skills = GameManager.MY_PLAYER.combat_data._skills
+		_player_skills = GameManager.MY_PLAYER._skills
 	
 	var skill_slots = _skill_slots_container.get_children() as Array[SkillSlot]
 	for i in range(skill_slots.size()):
@@ -168,22 +168,22 @@ func get_items() -> Array[SlotItem]:
 
 func _update_panel_top_left(use_lerp: bool = true) -> void:
 	if not GameManager.MY_PLAYER: return
-	if not GameManager.MY_PLAYER.combat_data._target_entity:
+	if not GameManager.MY_PLAYER._target_entity:
 		_panel_tl.visible = false
 		return
 
 	if _panel_tl.visible == false: _panel_tl.visible = true
 
-	var target = GameManager.MY_PLAYER.combat_data._target_entity
+	var target = GameManager.MY_PLAYER._target_entity
 	_label_target_level.text = str(target.level)
 
-	var current_hp = target.combat_data.current_hp
-	var max_hp = target.combat_data.get_total_hp()
+	var current_hp = target.current_hp
+	var max_hp = target.get_total_hp()
 	_target_rect_current_hp.size.x = _new_lerped_size(max_hp, current_hp, int(_RECT_TARGET_MAX_HP.size.x), _target_rect_current_hp.size.x, use_lerp)
 	_label_target_current_hp.text = "%s / %s" % [StringHelpers.format_float_compact(current_hp), StringHelpers.format_float_compact(max_hp)]
 
-	var current_mana = target.combat_data.current_mana
-	var max_mana = target.combat_data.get_total_mana()
+	var current_mana = target.current_mana
+	var max_mana = target.get_total_mana()
 	_target_rect_current_mana.size.x = _new_lerped_size(max_mana, current_mana, int(_RECT_TARGET_MAX_MANA.size.x), _target_rect_current_mana.size.x, use_lerp)
 	_label_target_current_mana.text = "%s / %s" % [StringHelpers.format_float_compact(current_mana), StringHelpers.format_float_compact(max_mana)]
 
@@ -199,8 +199,8 @@ func _new_lerped_size(max_value: int, current_value: int, full_size: int, curren
 	return lerp(current_size, target_size, delta * 10.0)
 
 func _update_panel_bottom_left() -> void:
-	var current_hp = StringHelpers.format_float_compact(GameManager.MY_PLAYER.combat_data.current_hp)
-	var max_hp = StringHelpers.format_float_compact(GameManager.MY_PLAYER.combat_data.get_total_hp())
+	var current_hp = StringHelpers.format_float_compact(GameManager.MY_PLAYER.current_hp)
+	var max_hp = StringHelpers.format_float_compact(GameManager.MY_PLAYER.get_total_hp())
 	_hp_label.text = "%s / %s" % [current_hp, max_hp]
 
 	var current_exp = StringHelpers.format_float_compact(GameManager.MY_PLAYER.current_exp)
@@ -209,11 +209,11 @@ func _update_panel_bottom_left() -> void:
 	_update_hp_ball_sprite()
 	_update_exp_bar()
 
-	_hero_type.text = GameManager.MY_PLAYER.hero_type
+	_hero_type.text = GameManager.MY_PLAYER.extra_info.key_type
 	_hero_alias.text = GameManager.MY_PLAYER.extra_info.alias
 	_level.text = str(GameManager.MY_PLAYER.level)
 
-	var total_stats = GameManager.MY_PLAYER.combat_data.cache_total_stats
+	var total_stats = GameManager.MY_PLAYER.cache_total_stats
 	_str_value.text = StringHelpers.format_float_compact(total_stats.strength)
 	_agi_value.text = StringHelpers.format_float_compact(total_stats.agility)
 	_int_value.text = StringHelpers.format_float_compact(total_stats.intelligence)
@@ -229,8 +229,8 @@ func _update_panel_bottom_left() -> void:
 
 func _update_panel_bottom_right() -> void:
 	_current_gold.text = GameManager.MY_PLAYER.current_gold_string
-	var current_mana = StringHelpers.format_float_compact(GameManager.MY_PLAYER.combat_data.current_mana)
-	var max_mana = StringHelpers.format_float_compact(GameManager.MY_PLAYER.combat_data.get_total_mana())
+	var current_mana = StringHelpers.format_float_compact(GameManager.MY_PLAYER.current_mana)
+	var max_mana = StringHelpers.format_float_compact(GameManager.MY_PLAYER.get_total_mana())
 	_mana_label.text = "%s / %s" % [current_mana, max_mana]
 	_update_mana_ball_sprite()
 
@@ -244,14 +244,14 @@ func _update_exp_bar() -> void:
 func _update_hp_ball_sprite():
 	_update_ball_sprite(
 		_hp_ball,
-		GameManager.MY_PLAYER.combat_data.current_hp,
-		GameManager.MY_PLAYER.combat_data.get_total_hp()
+		GameManager.MY_PLAYER.current_hp,
+		GameManager.MY_PLAYER.get_total_hp()
 	)
 func _update_mana_ball_sprite():
 	_update_ball_sprite(
 		_mana_ball,
-		GameManager.MY_PLAYER.combat_data.current_mana,
-		GameManager.MY_PLAYER.combat_data.get_total_mana()
+		GameManager.MY_PLAYER.current_mana,
+		GameManager.MY_PLAYER.get_total_mana()
 	)
 func _update_ball_sprite(ball_sprite: Sprite2D, current_value: int, max_value: int) -> void:
 	var current_size = int(ball_sprite.region_rect.size.y)
