@@ -25,15 +25,6 @@ func _ready():
 	terrain = get_tree().root.get_node("MyMain/Terrain")
 	audio_node = get_tree().root.get_node("MyMain/Audio")
 
-	enemies_node.connect("child_entered_tree", func(p_enemy: Enemy): add_entity(p_enemy))
-	players_node.connect("child_entered_tree", func(p_player: Player): add_entity(p_player))
-	moomoo_node.connect("child_entered_tree", func(p_moomoo: Moomoo): add_entity(p_moomoo))
-
-	# Ya eliminamos las entidades desde el metodo _global_die()
-	# enemies_node.connect("child_exiting_tree", func(p_enemy: Enemy): remove_entity(p_enemy))
-	# players_node.connect("child_exiting_tree", func(p_player: Player): remove_entity(p_player))
-	# moomoo_node.connect("child_exiting_tree", func(p_moomoo: Moomoo): remove_entity(p_moomoo))
-	
 
 func _init_projectiles_spawner() -> void:
 	my_main.projectiles_spawner.spawn_function = func(data: Dictionary) -> Node:
@@ -49,7 +40,8 @@ func add_my_tree(my_tree: MyTree) -> void:
 	MapManager.set_cell_blocked(MapManager.world_to_cell(my_tree.global_position), true)
 
 func add_entity(entity: Entity) -> void:
-	if entity is Enemy: current_enemies_in_scene += 1
+	if entity is Enemy:
+		current_enemies_in_scene += 1
 	entities[entity.name] = entity
 
 	if not AM_I_HOST: return
@@ -68,12 +60,14 @@ func remove_entity(entity: Entity) -> void:
 func _actions_for_server_side_after_entity_removed(entity: Entity) -> void:
 	if not AM_I_HOST: return
 	
-	var current_cell = MapManager.world_to_cell(entity.global_position)
-	MapManager.set_cell_blocked(current_cell, false)
-	entity.queue_free() # We shouldn't do this in the client side, server should do it and sync it
 	if entity is Enemy:
 		current_enemies_in_scene -= 1
 		if current_enemies_in_scene == 0: EventBus.emit_wave_finilized()
+	
+	var current_cell = MapManager.world_to_cell(entity.global_position)
+	MapManager.set_cell_blocked(current_cell, false)
+	EventBus.emit_freed_entity(entity.name)
+	entity.queue_free() # We shouldn't do this in the client side, server should do it and sync it
 
 func _on_enemy_exited_tree() -> void:
 	current_enemies_in_scene -= 1
@@ -99,6 +93,7 @@ func add_decoration(sprite: Sprite2D) -> void:
 
 func spawn_moomoo() -> void:
 	moomoo = my_main.moomoo_spawner.spawn({})
+	add_entity(moomoo)
 	print("Moomoo spawned: ", moomoo)
 
 func spawn_player(spawn_data: Dictionary) -> void:

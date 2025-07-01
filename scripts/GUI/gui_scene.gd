@@ -12,12 +12,13 @@ var _ORIGINAL_BALL_RECT_POS_Y: float
 var reseted_gui := false
 @onready var text_ip = %TextIP
 
+var _top_left_target: Entity
 
 # region Panel TOP LEFT
 const _RECT_TARGET_MAX_HP = Rect2(81, 27, 189, 21)
 const _RECT_TARGET_MAX_MANA = Rect2(80, 51, 183, 15)
 const EXP_BAR_FULL_SIZE = Vector2i(612, 27)
-@onready var _panelTL_avatar = $PanelTL/TargetAvatar
+@onready var _sprite_target_avatar = $PanelTL/TargetAvatar
 @onready var _panel_tl = $PanelTL
 @onready var _target_rect_current_hp = $PanelTL/TargetRectCurrentHP
 @onready var _target_rect_current_mana = $PanelTL/TargetRectCurrentMana
@@ -90,6 +91,8 @@ func _ready() -> void:
 		MyTooltip.show_tooltip("Mana regen", str(regen_points) + " points per second", 7)
 	)
 	%ManaBallCircle.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
+	
+	EventBus.connect_to_new_target_view_selected(func(_owner: Entity, _target: Entity): _on_new_target_view_selected(_owner, _target))
 
 
 func _on_host_game_pressed() -> void:
@@ -141,21 +144,24 @@ func _set_my_player_avatar_region(my_player: Player) -> void:
 	_my_player_avatar.region_rect = my_player.extra_info.rects[0]
 
 func set_target_avatar_region(region_rect: Rect2) -> void:
-	_panelTL_avatar.region_rect = region_rect
+	_sprite_target_avatar.region_rect = region_rect
 
 func add_effect_to_my_effects(effect: CombatEffect) -> void:
 	my_effects.add_effect(effect)
 func add_effect_to_target_effects(effect: CombatEffect) -> void:
 	target_effects.add_effect(effect)
 
-func _on_new_target_selected(_owner: Entity, _target: Entity) -> void:
-	if not _owner or not _owner.is_my_player(): return
+func _on_new_target_view_selected(_owner: Entity, _target: Entity) -> void:
+	if not ObjectHelpers.is_my_player(_owner): return
+
+	_top_left_target = _target
 
 	_update_panel_top_left(false)
 
-	if _target:
-		var region_rect = SpritesHelper.get_region_rect_of_sprite(_target.sprite)
-		GameManager.my_main.gui_scene.set_target_avatar_region(region_rect)
+	if not _target: return
+
+	var region_rect = SpritesHelper.get_region_rect_of_sprite(_target.sprite)
+	set_target_avatar_region(region_rect)
 # endregion SETTERS
 
 # region	GETTERs
@@ -168,22 +174,21 @@ func get_items() -> Array[SlotItem]:
 
 func _update_panel_top_left(use_lerp: bool = true) -> void:
 	if not GameManager.MY_PLAYER: return
-	if not GameManager.MY_PLAYER._target_entity:
+	if not _top_left_target:
 		_panel_tl.visible = false
 		return
 
 	if _panel_tl.visible == false: _panel_tl.visible = true
 
-	var target = GameManager.MY_PLAYER._target_entity
-	_label_target_level.text = str(target.level)
+	_label_target_level.text = str(_top_left_target.level)
 
-	var current_hp = target.current_hp
-	var max_hp = target.get_total_hp()
+	var current_hp = _top_left_target.current_hp
+	var max_hp = _top_left_target.get_total_hp()
 	_target_rect_current_hp.size.x = _new_lerped_size(max_hp, current_hp, int(_RECT_TARGET_MAX_HP.size.x), _target_rect_current_hp.size.x, use_lerp)
 	_label_target_current_hp.text = "%s / %s" % [StringHelpers.format_float_compact(current_hp), StringHelpers.format_float_compact(max_hp)]
 
-	var current_mana = target.current_mana
-	var max_mana = target.get_total_mana()
+	var current_mana = _top_left_target.current_mana
+	var max_mana = _top_left_target.get_total_mana()
 	_target_rect_current_mana.size.x = _new_lerped_size(max_mana, current_mana, int(_RECT_TARGET_MAX_MANA.size.x), _target_rect_current_mana.size.x, use_lerp)
 	_label_target_current_mana.text = "%s / %s" % [StringHelpers.format_float_compact(current_mana), StringHelpers.format_float_compact(max_mana)]
 

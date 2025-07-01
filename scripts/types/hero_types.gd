@@ -50,7 +50,7 @@ static func initialize(player: Player) -> void:
 	if player.extra_info.key_type == Names.BLOOD_WARDEN:
 		stats.evasion = 0.1
 		stats.agility = 50
-		stats.strength = 50
+		stats.strength = 500
 		stats.intelligence = 50
 		player._skills = [
 			Skill.get_skill(Skill.Names.LIFESTEAL),

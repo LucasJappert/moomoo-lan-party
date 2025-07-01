@@ -8,7 +8,7 @@ var monster_sounds_helper = MonsterSoundsHelper.new()
 var timer_500ms: Timer
 
 func _ready():
-	EnemyTypes.initialize(self)
+	EnemyTypes.initialize(self) # TODO: Deberíamos mover esto en el spawn
 	super._ready()
 			
 	# We need to update the radius of the attack area node here as it enters the scene
@@ -38,7 +38,7 @@ func _on_every_timer_500ms() -> void:
 	var nearest_player = get_nearest_player_inside_vision()
 	if nearest_player: target = nearest_player
 	
-	set_target_entity(target)
+	set_target_to_attack(target)
 	movement_helper.set_target_entity(target)
 
 # region 	GETTERs

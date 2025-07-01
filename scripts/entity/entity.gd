@@ -46,6 +46,8 @@ func _ready():
 	call_deferred("_post_ready")
 	ready_combat_data()
 
+	EventBus.connect_to_freed_entity(Callable(self, "_on_entity_freed"))
+
 func _post_ready():
 	hud._post_ready(self)
 	post_ready_combat_data()
@@ -63,6 +65,9 @@ func _client_physics_process(_delta: float) -> void:
 		
 	sprite.flip_h = direction.x < 0
 
+func _on_entity_freed(entity_name: String) -> void:
+	verify_freed_target_to_attack(entity_name)
+	verify_freed_target_view(entity_name)
 
 # region 	GETTERs
 func is_my_player() -> bool: return false

@@ -15,19 +15,30 @@ var _items: Array[SlotItemInfo] = [] # We use 6 slots
 
 var _1_second_timer: float = 0.0
 
-var _target_entity: Entity #
-@export var target_entity_name: String:
+var target_view: Entity
+@export var target_view_name: String:
 	set(value):
-		if _target_entity_name == value: return
-		_target_entity_name = value
-		_target_entity = GameManager.get_entity(value)
+		if _target_view_name == value: return
+		_target_view_name = value
+		target_view = GameManager.get_entity(value)
+		EventBus.emit_new_target_view_selected(my_owner(), target_view)
+	get:
+		return _target_view_name
+var _target_view_name: String = ""
+
+var target_to_attack: Entity
+@export var target_to_attack_name: String:
+	set(value):
+		if _target_to_attack_name == value: return
+		_target_to_attack_name = value
+		target_to_attack = GameManager.get_entity(value)
 		
-		EventBus.emit_new_target_selected(my_owner(), _target_entity)
-		if _target_entity == null: return
+		EventBus.emit_new_target_to_attack_selected(my_owner(), target_to_attack)
+		if target_to_attack == null: return
 
 	get:
-		return _target_entity_name
-var _target_entity_name: String = ""
+		return _target_to_attack_name
+var _target_to_attack_name: String = ""
 
 var last_physical_hit_time: int = 0 # In milliseconds
 var nearest_enemy_focused: Entity
@@ -48,7 +59,7 @@ func ready_combat_data() -> void:
 	for i in range(SlotItem.HOTKEY_BY_SLOT.size()): _items.append(SlotItemInfo.new(null, i + 1))
 
 	update_cache_total_stats()
-	print("hp: ", current_hp, " total hp: ", get_total_hp())
+	print("current_hp: ", current_hp, " total hp: ", get_total_hp())
 
 func post_ready_combat_data() -> void:
 	effects_helper.set_my_owner(my_owner())
@@ -85,6 +96,8 @@ func _process_on_server(_delta: float):
 func server_execute_physical_damage(_target: Entity) -> void:
 	if my_owner().multiplayer.is_server() == false: return
 	if _target == null: return
+	
+	if not _target.target_view: _target.set_target_view(my_owner())
 
 	var total_stats = cache_total_stats
 	var base_damage = total_stats.physical_attack_power
@@ -126,6 +139,11 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	update_current_hp(-_di.total_damage, _attacker)
 
 # region SETTERs
+func set_current_hp_and_mana() -> void:
+	update_cache_total_stats()
+	current_hp = get_total_hp()
+	current_mana = get_total_mana()
+
 func _verify_if_am_i_stunned_after_stats_change() -> void:
 	for effect in effects_helper.get_effects():
 		if effect.stats.has_hostil_stun_effect():
@@ -221,12 +239,28 @@ func remove_effect_by_name(effect_name: String) -> void:
 func register_attacker(attacker: Entity) -> void:
 	latest_attacker = attacker
 	last_damage_received_time = Time.get_ticks_msec()
+	if attacker and ObjectHelpers.is_my_player(self): attacker.hud.set_last_damage_to_my_player()
 
-func set_target_entity(_target: Entity) -> void: # Used only by the server
-	if _target == _target_entity: return
+func set_target_to_attack(_target: Entity) -> void: # Used only by the server
+	if _target == target_to_attack: return
 
-	target_entity_name = str(_target.name) if _target != null else ""
-	_target_entity = _target
+	target_to_attack = _target
+	target_to_attack_name = str(_target.name) if _target else ""
+
+func verify_freed_target_to_attack(entity_name: String) -> void:
+	if target_to_attack_name == entity_name:
+		print("Freed target to attack: ", entity_name)
+		set_target_to_attack(null)
+
+func set_target_view(_target: Entity) -> void:
+	if _target == target_view: return
+
+	target_view = _target
+	target_view_name = str(_target.name) if _target else ""
+func verify_freed_target_view(entity_name: String) -> void:
+	if target_view_name == entity_name:
+		print("Freed target view: ", entity_name)
+		set_target_view(null)
 
 func charge_skill(index: int) -> void:
 	if not _skills[index].learned_level: return
@@ -243,11 +277,14 @@ func upgrade_skill(slot_number: int) -> void:
 	_skills[slot_number - 1].try_to_upgrade(my_owner())
 	update_cache_total_stats()
 
-func use_charged_skill() -> void:
-	if charged_skill == null: return
-	if ObjectHelpers.is_null(_target_entity): return
+func use_charged_skill(_target: Entity) -> void:
+	if not charged_skill: return
+	if ObjectHelpers.is_null(_target): return
 
-	charged_skill.use(my_owner(), _target_entity)
+	# Update the target to attack if the skill is not friendly
+	if not charged_skill.get_learned_skill().stats.is_owner_friendly: set_target_to_attack(_target)
+
+	charged_skill.use(my_owner(), _target)
 
 	uncharge_skill()
 
@@ -376,7 +413,7 @@ func get_total_mana() -> int:
 	return cache_total_stats.mana
 
 func get_target_entity() -> Entity:
-	return GameManager.get_entity(target_entity_name)
+	return GameManager.get_entity(target_to_attack_name)
 
 func get_items() -> Array[SlotItemInfo]:
 	return _items
@@ -394,9 +431,9 @@ func try_physical_attack(_delta: float) -> bool:
 
 	if my_owner().current_state != EntityState.StateEnum.IDLE: return false # Cant attack while moving
 	
-	if _target_entity == GameManager.moomoo: set_target_entity(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
+	if target_to_attack == GameManager.moomoo: set_target_to_attack(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
 
-	if _target_entity == null: return false
+	if target_to_attack == null: return false
 
 	if not can_physical_attack(): return false
 
@@ -423,13 +460,13 @@ func _get_nearest_target_in_range_attack():
 func execute_physical_attack(apply_extra_actions: bool = true, _custom_target: Entity = null) -> void:
 	EntityState.change_to_attack(my_owner())
 
-	var final_target = _custom_target if _custom_target else _target_entity
+	var final_target = _custom_target if _custom_target else target_to_attack
 	if projectile_type == Projectile.TYPES.NONE: server_execute_physical_damage(final_target)
 	else: Projectile.launch(my_owner(), final_target, cache_total_stats.physical_attack_power)
 
 	if not apply_extra_actions: return
 
-	Skill.actions_after_execute_physical_attack(my_owner(), _target_entity)
+	Skill.actions_after_execute_physical_attack(my_owner(), target_to_attack)
 		
 func can_physical_attack() -> bool:
 	if not my_owner().can_attack: return false
@@ -440,7 +477,7 @@ func can_physical_attack() -> bool:
 	var interval_ms = 1000.0 / cache_total_stats.get_total_attack_speed()
 	if now - last_physical_hit_time < interval_ms: return false # If enough time has passed, can attack
 
-	if not GlobalsEntityHelpers.is_target_in_attack_range(my_owner(), _target_entity): return false
+	if not GlobalsEntityHelpers.is_target_in_attack_range(my_owner(), target_to_attack): return false
 
 	return true
 # endregion TRY PHISICAL ATTACK

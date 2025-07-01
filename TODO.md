@@ -94,7 +94,6 @@ Let’s build MooMoo LAN Party together! 🎉
 
 MY TODOs: 🔵In Progress🟡Ready for test🟣Paused✅Done
 
-- Corregir sistema de target. Deberíamos priorizar visualizar el avatar de la unidad que se hace click izquierdo. Si no hay unidad clickeada con click iquierdo, ahí sí mostraríamos el target que estamos atacando.
 - Agregar información de los diferentes niveles en las descripciones de habilidades
 - Agregar skill, la cual puede activarse o desactivarse, que brindaría chances de matar al enemigo al instante (no aplica a bosses). Consume 20 de mana en cada ataque.
 - Agregar skill pasiva que luego de matar un enemigo lo transforma en 3 esqueletos que lucharán para él.
@@ -142,6 +141,8 @@ MY TODOs: 🔵In Progress🟡Ready for test🟣Paused✅Done
 
 30/06/2025
 
+- ✅ Show health and mana bars above enemies that are attacking
+- ✅ Fix targeting system. We should prioritize visualizing the avatar of the unit that is selected with left click. If there is no unit clicked with left click, then we should show the target that we are attacking
 - ✅ Darken item slot when on cooldown
 - ✅ Create a skill that every 5/4/3 attacks performs a multiple attack to 2/3/4 extra enemies
 - ✅ Configure 2 heroes (BLOOD_WARDEN and Frostbane Arcanist)

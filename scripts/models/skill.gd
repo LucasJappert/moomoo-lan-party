@@ -378,8 +378,7 @@ static func actions_before_entity_death(_dead_entity: Entity, _attacker: Entity)
 			new_enemy.position = _dead_entity.position + target_tiles[i]
 			# We need set combat_data props after the enemy is added to the scene
 			new_enemy.combat_stats.hp = new_enemy.get_total_hp() * 0.5
-			new_enemy.update_cache_total_stats()
-			new_enemy.current_hp = new_enemy.combat_stats.hp
+			new_enemy.set_current_hp_and_mana()
 			GameManager.spawn_enemy(new_enemy)
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:

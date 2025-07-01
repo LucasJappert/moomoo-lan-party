@@ -2,6 +2,8 @@ class_name HUD
 
 extends Node2D
 
+var _last_damage_to_my_player: float = - INF
+
 # @onready var _health_bar: ProgressBar = $HealthBar
 @onready var _label_container: PanelContainer = $PanelContainer
 @onready var _label: Label = $PanelContainer/Label
@@ -47,8 +49,15 @@ func _process(_delta: float):
 func _try_update_bars_visibility():
 	if my_owner.is_my_player(): return
 	
-	bars_container.visible = Time.get_ticks_msec() - my_owner.last_damage_received_time < HIDE_BARS_AFTER_MILLISECONDS
-	if ClientInputs.ALT_PRESSED: bars_container.visible = true
+	if ClientInputs.ALT_PRESSED: bars_container.visible = true; return
+
+	var show_by_last_damage_to_my_player = Time.get_ticks_msec() - _last_damage_to_my_player < HIDE_BARS_AFTER_MILLISECONDS
+	if show_by_last_damage_to_my_player: bars_container.visible = true; return
+
+	var show_by_last_damage_received = Time.get_ticks_msec() - my_owner.last_damage_received_time < HIDE_BARS_AFTER_MILLISECONDS
+	if show_by_last_damage_received: bars_container.visible = true; return
+
+	bars_container.visible = false
 
 func _try_update_label():
 	if not _label_container.visible: return
@@ -79,3 +88,6 @@ func show_popup(text: String, color: Color = Color.RED):
 	popup.position = Vector2(0, -MapManager.TILE_SIZE.x * 2) + offset
 
 	popup.show_damage(text, color)
+
+func set_last_damage_to_my_player():
+	_last_damage_to_my_player = Time.get_ticks_msec()

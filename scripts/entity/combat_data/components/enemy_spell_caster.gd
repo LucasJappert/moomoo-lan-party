@@ -28,7 +28,7 @@ func _set_next_cast_delay() -> void:
 
 func _try_cast_random_skill() -> bool:
 	if not _enemy.can_attack: return false
-	if _enemy._target_entity == null: return false
+	if _enemy.target_to_attack == null: return false
 
 	var available_skills: Array[Skill] = _enemy.get_skills().filter(func(skill):
 		if skill.get_learned_skill() == null: return false
@@ -40,6 +40,6 @@ func _try_cast_random_skill() -> bool:
 	if available_skills.size() == 0: return true
 
 	var skill_to_cast: Skill = available_skills[randi() % available_skills.size()]
-	skill_to_cast.use(_enemy, _enemy._target_entity)
+	skill_to_cast.use(_enemy, _enemy.target_to_attack)
 
 	return true

@@ -27,7 +27,7 @@ func set_player(data: Dictionary) -> void:
 func get_client_inputs(): return %ClientInputs
 
 func _ready():
-	HeroTypes.initialize(self)
+	HeroTypes.initialize(self) # TODO: Deberíamos mover esto en el spawn
 
 	super._ready()
 	global_position = MapManager.cell_to_world(MapManager.PLAYER_CELL_SPAWN)

@@ -38,9 +38,12 @@ properties/8/replication_mode = 2
 properties/9/path = NodePath(".:is_stunned")
 properties/9/spawn = true
 properties/9/replication_mode = 2
-properties/10/path = NodePath(".:target_entity_name")
+properties/10/path = NodePath(".:target_to_attack_name")
 properties/10/spawn = true
 properties/10/replication_mode = 2
+properties/11/path = NodePath(".:target_view_name")
+properties/11/spawn = true
+properties/11/replication_mode = 2
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_wjrb4"]
 radius = 300.0

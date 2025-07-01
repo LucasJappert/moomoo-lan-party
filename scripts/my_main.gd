@@ -45,13 +45,14 @@ func _init_player_spawner():
 func _spawn_custom_player(data: Dictionary) -> Node:
 	var player = load("res://scenes/entity/player_scene.tscn").instantiate()
 	player.set_player(data)
+	player.set_current_hp_and_mana()
 	player.get_client_inputs().set_multiplayer_authority(player.player_id)
 	return player
 	
 func _init_moomoo_spawner():
 	moomoo_spawner.spawn_function = Callable(self, "_spawn_custom_moomoo")
-func _spawn_custom_moomoo(data: Dictionary = {}) -> Node:
-	return Moomoo.get_instance_from_dict(data)
+func _spawn_custom_moomoo(_data: Dictionary) -> Node:
+	return Moomoo.get_instance()
 
 func _init_enemies_spawner():
 	enemies_spawner.spawn_function = Callable(self, "_spawn_custom_enemy")

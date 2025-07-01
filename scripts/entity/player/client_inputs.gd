@@ -45,7 +45,8 @@ func _on_try_to_move(_target_cell: Vector2i):
 @rpc("authority", "call_local")
 func _on_right_click_on_entity(_target_entity_name: String):
 	var target_entity = GameManager.get_entity(_target_entity_name)
-	player.set_target_entity(target_entity)
+	player.set_target_view(target_entity)
+	player.set_target_to_attack(target_entity)
 	player.movement_helper.set_target_entity(target_entity)
 	
 @rpc("authority", "call_local")
@@ -55,9 +56,9 @@ func _on_left_click(_target_entity_name: String):
 
 	if target_entity: print("entity name: ", target_entity.name)
 
-	player.set_target_entity(target_entity)
+	player.set_target_view(target_entity)
 
-	player.use_charged_skill()
+	player.use_charged_skill(target_entity)
 
 @rpc("authority", "call_local")
 func _on_key_pressed(_keycode: int):

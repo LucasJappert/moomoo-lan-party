@@ -25,7 +25,7 @@ class WaveInfo:
 		boss_enemies = p_boss_enemies
 
 static var WAVES_INFO = [
-	WaveInfo.new([EnemyTypes.Names.FLAME_CULTIST], [EnemyTypes.Names.FLAME_CULTIST]),
+	WaveInfo.new([EnemyTypes.Names.FROST_REVENANT], [EnemyTypes.Names.FLAME_CULTIST]),
 	
 ]
 
@@ -76,6 +76,7 @@ static func create_next_wave() -> void:
 			else: enemy_type = _current_wave_info.common_enemies[randi() % _current_wave_info.common_enemies.size()]
 
 			var enemy = _get_enemy(enemy_type, wave_direction, is_boss)
+			enemy.set_current_hp_and_mana()
 
 			# enemy.can_attack = false
 			GameManager.spawn_enemy(enemy)

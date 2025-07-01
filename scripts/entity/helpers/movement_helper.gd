@@ -112,7 +112,7 @@ func _try_to_update_target_from_latest_attacker():
 	nearest_enemy = GlobalsEntityHelpers.get_nearest_entity(my_owner.global_position, GameManager.get_enemies(), my_owner.area_vision_shape.shape.radius)
 
 	set_target_entity(nearest_enemy)
-	my_owner.set_target_entity(nearest_enemy)
+	my_owner.set_target_to_attack(nearest_enemy)
 
 func _try_to_move(_delta: float) -> void:
 	var old_distance = current_target_pos - my_owner.global_position

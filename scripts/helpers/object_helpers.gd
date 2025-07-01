@@ -123,3 +123,7 @@ static func array_to_dict_array(array: Array, just_my_vars: bool = false) -> Arr
 			TYPE_OBJECT:
 				result.append(to_dict(item, just_my_vars))
 	return result
+
+static func get_valid_entity_instance(object) -> Object:
+	if is_null(object): return null
+	return object
