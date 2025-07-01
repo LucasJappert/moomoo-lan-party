@@ -23,7 +23,7 @@ static func get_rect_frames(pos: Vector2i) -> Array[Rect2]:
 	result.append(Rect2(_START_REGION.x + (pos.x * _FRAMES + 1) * _FRAME_SIZE.x, _START_REGION.y + (pos.y * _FRAMES) * _FRAME_SIZE.y, _FRAME_SIZE.x, _FRAME_SIZE.y))
 	return result
 
-static func initialize(player: Player) -> void:
+static func initialize_hero(player: Player) -> void:
 	player.extra_info = HERO_TYPES[player.extra_info.key_type]
 	var stats = CombatStats.new()
 	stats.crit_chance = 0.05
@@ -50,7 +50,7 @@ static func initialize(player: Player) -> void:
 	if player.extra_info.key_type == Names.BLOOD_WARDEN:
 		stats.evasion = 0.1
 		stats.agility = 50
-		stats.strength = 500
+		stats.strength = 50
 		stats.intelligence = 50
 		player._skills = [
 			Skill.get_skill(Skill.Names.LIFESTEAL),

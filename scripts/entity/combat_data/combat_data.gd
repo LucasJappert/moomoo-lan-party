@@ -11,7 +11,8 @@ var effects_helper: EffectsHelper = EffectsHelper.new()
 @export var projectile_type: String = Projectile.TYPES.NONE
 @export var is_stunned: bool = false
 var _skills: Array[Skill] = []
-var _items: Array[SlotItemInfo] = [] # We use 6 slots
+var ITEMS_SLOTS: int = 6
+var _items: Array[SlotItemInfo] = [SlotItemInfo.new(), SlotItemInfo.new(), SlotItemInfo.new(), SlotItemInfo.new(), SlotItemInfo.new(), SlotItemInfo.new()]
 
 var _1_second_timer: float = 0.0
 
@@ -54,10 +55,6 @@ var enemy_spell_caster: EnemySpellCaster
 func ready_combat_data() -> void:
 	effects_helper.subscribe_to_changes(Callable(my_owner(), "update_cache_total_stats"))
 
-	# Initialize items
-	_items.clear()
-	for i in range(SlotItem.HOTKEY_BY_SLOT.size()): _items.append(SlotItemInfo.new(null, i + 1))
-
 	update_cache_total_stats()
 	print("current_hp: ", current_hp, " total hp: ", get_total_hp())
 
@@ -71,9 +68,6 @@ func post_ready_combat_data() -> void:
 
 	if my_owner() is Enemy:
 		enemy_spell_caster = EnemySpellCaster.new(my_owner())
-
-	for item in _items:
-		my_owner().rpc_handler.send_item_updated(item) # Send items to clients
 
 func process_combat_data(_delta: float): # Run only when it is the host
 	if not my_owner(): return
@@ -202,20 +196,22 @@ func update_base_stats(new_stats: CombatStats) -> void:
 	my_owner().combat_stats = new_stats
 	update_cache_total_stats()
 
-func update_item(index: int, slot_item_info: SlotItemInfo) -> void:
+func update_item(index: int, slot_item_info: SlotItemInfo) -> bool:
+	if index >= _items.size(): printerr("Index out of range: ", index)
+
+	slot_item_info.position = index + 1
 	_items[index] = slot_item_info
-	update_cache_total_stats() # Update the cache of total combat_stats, which includes items
+
+	update_cache_total_stats()
+	return true
 
 func add_item(_slot_item_info: SlotItemInfo) -> bool:
 	if _slot_item_info.position > 0:
-		update_item(_slot_item_info.position - 1, _slot_item_info)
-		return true
+		return update_item(_slot_item_info.position - 1, _slot_item_info)
 
-	for i in range(_items.size()):
+	for i in range(ITEMS_SLOTS):
 		if _items[i].item == null:
-			_slot_item_info.position = i + 1
-			update_item(i, _slot_item_info)
-			return true
+			return update_item(i, _slot_item_info)
 
 	return false
 

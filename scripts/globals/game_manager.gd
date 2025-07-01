@@ -105,7 +105,6 @@ func spawn_player(spawn_data: Dictionary) -> void:
 func spawn_enemy(enemy: Enemy) -> void:
 	var new_enemy = my_main.enemies_spawner.spawn(ObjectHelpers.to_dict(enemy))
 	add_entity(new_enemy)
-	# enemy.queue_free()i
 
 # region 	SETTERs
 func set_my_player(player: Player) -> void:

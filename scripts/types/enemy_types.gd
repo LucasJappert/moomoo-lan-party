@@ -52,6 +52,6 @@ static func get_rect_frames(pos: Vector2i) -> Array[Rect2]:
 	result.append(Rect2(_START_REGION.x + (pos.x * _FRAMES + 1) * _FRAME_SIZE.x, _START_REGION.y + (pos.y * _FRAMES) * _FRAME_SIZE.y, _FRAME_SIZE.x, _FRAME_SIZE.y))
 	return result
 
-static func initialize(enemy: Enemy) -> void:
+static func initialize_enemy(enemy: Enemy) -> void:
 	enemy.extra_info = ENEMY_TYPES[enemy.extra_info.key_type]
 	enemy.update_cache_total_stats()

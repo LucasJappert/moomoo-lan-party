@@ -6,7 +6,7 @@ static func get_enemy_instance(_enemy_type: String = "") -> Enemy:
 
 	enemy.set_enemy_type(_enemy_type)
 	enemy.combat_stats.initialize_default_values()
-	EnemyTypes.initialize(enemy)
+	EnemyTypes.initialize_enemy(enemy)
 	if _enemy_type == EnemyTypes.Names.FROST_REVENANT: set_frost_revenant(enemy)
 	if _enemy_type == EnemyTypes.Names.FLAME_CULTIST: set_flame_cultist(enemy)
 	if _enemy_type == EnemyTypes.Names.WARDEN_OF_DECAY: set_warden_of_decay(enemy)

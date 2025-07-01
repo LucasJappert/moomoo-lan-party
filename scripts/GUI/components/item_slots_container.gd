@@ -9,7 +9,7 @@ func _ready():
 	for child in get_children():
 		_slots_items.append(child as SlotItem)
 	
-	EventBus.connect(EventBus.ITEM_UPDATED, func(_owner: Entity, slot_item_info: SlotItemInfo, _target: Entity): _on_item_updated(_owner, slot_item_info, _target))
+	EventBus.connect_to_item_updated(func(_owner: Entity, slot_item_info: SlotItemInfo, _target: Entity): _on_item_updated(_owner, slot_item_info, _target))
 
 func _process(_delta: float) -> void:
 	pass

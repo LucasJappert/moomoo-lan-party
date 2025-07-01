@@ -23,12 +23,11 @@ func set_player(data: Dictionary) -> void:
 	extra_info.key_type = data["key_type"]
 	skill_points_to_assign = 1
 	current_gold = INITIAL_GOLD
+	HeroTypes.initialize_hero(self)
 
 func get_client_inputs(): return %ClientInputs
 
 func _ready():
-	HeroTypes.initialize(self) # TODO: Deberíamos mover esto en el spawn
-
 	super._ready()
 	global_position = MapManager.cell_to_world(MapManager.PLAYER_CELL_SPAWN)
 

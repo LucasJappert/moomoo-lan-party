@@ -8,7 +8,6 @@ var monster_sounds_helper = MonsterSoundsHelper.new()
 var timer_500ms: Timer
 
 func _ready():
-	EnemyTypes.initialize(self) # TODO: Deberíamos mover esto en el spawn
 	super._ready()
 			
 	# We need to update the radius of the attack area node here as it enters the scene

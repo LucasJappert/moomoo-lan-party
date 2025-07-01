@@ -73,6 +73,8 @@ const ITEM_UPDATED := "item_updated"
 signal item_updated(p_owner: Entity, slot_item_info: SlotItemInfo, p_target: Entity)
 func emit_item_updated(p_owner: Entity, slot_item_info: SlotItemInfo, p_target: Entity):
 	emit_signal(ITEM_UPDATED, p_owner, slot_item_info, p_target)
+func connect_to_item_updated(p_callback: Callable) -> void:
+	EventBus.connect(ITEM_UPDATED, p_callback)
 
 const SKILL_POINTS_TO_ASSIGN_CHANGED := "skill_points_to_assign_changed"
 signal skill_points_to_assign_changed(p_owner: Entity)

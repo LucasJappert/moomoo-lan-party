@@ -94,12 +94,10 @@ func _ready() -> void:
 	
 	EventBus.connect_to_new_target_view_selected(func(_owner: Entity, _target: Entity): _on_new_target_view_selected(_owner, _target))
 
-
 func _on_host_game_pressed() -> void:
 	%MultiplayerHUD.hide()
 	MultiplayerManager.become_host()
 	GameManager.spawn_moomoo()
-	
 	EnemiesWavesController.start_wave_process()
 	
 func _on_join_as_player_pressed() -> void:
@@ -130,6 +128,7 @@ func _process(_delta: float) -> void:
 func init_scene(player: Player) -> void:
 	_set_my_player_avatar_region(player)
 	_set_skills()
+	_set_items()
 
 func _set_skills() -> void:
 	if _player_skills.is_empty():
@@ -139,6 +138,14 @@ func _set_skills() -> void:
 	for i in range(skill_slots.size()):
 		if i >= _player_skills.size(): continue
 		skill_slots[i].initialize(_player_skills[i], i + 1)
+
+func _set_items() -> void:
+	var _player_items = GameManager.MY_PLAYER._items
+	var _item_slots = _item_slots_container.get_children() as Array[SlotItem]
+
+	for i in range(_item_slots.size()):
+		if i >= _player_items.size(): continue
+		_item_slots[i].set_info(_player_items[i])
 
 func _set_my_player_avatar_region(my_player: Player) -> void:
 	_my_player_avatar.region_rect = my_player.extra_info.rects[0]

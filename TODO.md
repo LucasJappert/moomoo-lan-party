@@ -102,6 +102,7 @@ MY TODOs: 🔵In Progress🟡Ready for test🟣Paused✅Done
 - Crear tooltip con descripcion del target
 - Agregar quinta skill al nivel 20
 - Implementar sistema de asignación de puntos en lugar de skills level
+- Refactorizar escena GUI (dividir en escenas separadas la parte top-left, bottom-right, etc.)
 - Agregar item que brinda un 20% de lifesteal
 - Capear stats como defensas y evasion.
 - Agregar un item/skill que al activarlo te hace inmune a los hechizos y a ciertos debuffs como silencios.
@@ -139,10 +140,12 @@ MY TODOs: 🔵In Progress🟡Ready for test🟣Paused✅Done
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
 
-30/06/2025
-
+- ✅ Fix bugs with items in the GUI
 - ✅ Show health and mana bars above enemies that are attacking
 - ✅ Fix targeting system. We should prioritize visualizing the avatar of the unit that is selected with left click. If there is no unit clicked with left click, then we should show the target that we are attacking
+
+30/06/2025
+
 - ✅ Darken item slot when on cooldown
 - ✅ Create a skill that every 5/4/3 attacks performs a multiple attack to 2/3/4 extra enemies
 - ✅ Configure 2 heroes (BLOOD_WARDEN and Frostbane Arcanist)
