@@ -20,22 +20,24 @@ patch_margin_top = 20
 patch_margin_right = 20
 patch_margin_bottom = 20
 
-[node name="Title" type="Label" parent="Panel"]
+[node name="Title" type="RichTextLabel" parent="Panel"]
 layout_mode = 0
 offset_left = 12.0
 offset_top = 8.0
 offset_right = 191.0
 offset_bottom = 31.0
-theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_colors/default_color = Color(1, 0.984314, 0.819608, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 16
 text = "Title"
 
-[node name="Description" type="Label" parent="Panel"]
+[node name="Description" type="RichTextLabel" parent="Panel"]
 layout_mode = 2
 offset_left = 12.0
 offset_top = 37.0
 offset_right = 189.0
 offset_bottom = 103.0
-theme_override_colors/font_color = Color(0.581033, 0.581033, 0.581033, 1)
+theme_override_colors/default_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "asdad"
 autowrap_mode = 2

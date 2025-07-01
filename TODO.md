@@ -94,7 +94,6 @@ Let’s build MooMoo LAN Party together! 🎉
 
 MY TODOs: 🔵In Progress🟡Ready for test🟣Paused✅Done
 
-- Agregar información de los diferentes niveles en las descripciones de habilidades
 - Agregar skill, la cual puede activarse o desactivarse, que brindaría chances de matar al enemigo al instante (no aplica a bosses). Consume 20 de mana en cada ataque.
 - Agregar skill pasiva que luego de matar un enemigo lo transforma en 3 esqueletos que lucharán para él.
 - Agregar skill que tien chances de crear copias de sí mismo ante cada ataque físico.
@@ -140,6 +139,7 @@ MY TODOs: 🔵In Progress🟡Ready for test🟣Paused✅Done
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
 
+- ✅ Add information about different levels in skill descriptions
 - ✅ Fix bugs with items in the GUI
 - ✅ Show health and mana bars above enemies that are attacking
 - ✅ Fix targeting system. We should prioritize visualizing the avatar of the unit that is selected with left click. If there is no unit clicked with left click, then we should show the target that we are attacking

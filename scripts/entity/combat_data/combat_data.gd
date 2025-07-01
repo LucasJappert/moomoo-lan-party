@@ -56,7 +56,6 @@ func ready_combat_data() -> void:
 	effects_helper.subscribe_to_changes(Callable(my_owner(), "update_cache_total_stats"))
 
 	update_cache_total_stats()
-	print("current_hp: ", current_hp, " total hp: ", get_total_hp())
 
 func post_ready_combat_data() -> void:
 	effects_helper.set_my_owner(my_owner())

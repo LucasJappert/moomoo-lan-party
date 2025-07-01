@@ -25,15 +25,12 @@ func _init():
 func set_last_used_time() -> void:
 	_last_used_time = Time.get_ticks_msec() / 1000.0
 
-func get_description() -> String:
+func get_description(include_stats_description: bool = true) -> String:
 	var result = ""
 
 	if description: result += description + "\n"
 	
-	result += stats.get_description()
-	
-	if stats.mana > 0:
-		result += str("- Mana: ", stats.mana, "\n")
+	if include_stats_description: result += stats.get_description()
 	
 	if mana_cost > 0:
 		result += str("- Mana cost: ", mana_cost, "\n")

@@ -102,7 +102,7 @@ func initialize_styles():
 
 func _on_mouse_entered():
 	if not skill: return
-	MyTooltip.show_tooltip(skill.item_skill_base[0].my_name, skill.get_description())
+	MyTooltip.show_tooltip(skill.item_skill_base[0].my_name, skill.get_description(false), 20)
 
 func _on_mouse_exited():
 	if not skill: return

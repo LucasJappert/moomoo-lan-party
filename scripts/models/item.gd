@@ -126,8 +126,8 @@ static func get_item(_item_name: String, new_copy: bool = true) -> Item:
 	
 	return _ITEMS[_item_name]
 
-func get_description() -> String:
-	var result = super.get_description()
+func get_description(include_stats_description: bool = true) -> String:
+	var result = super.get_description(include_stats_description)
 
 	if cost > 0:
 		result += str("- Cost: ", cost, "\n")

@@ -40,7 +40,7 @@ func _process(_delta: float) -> void:
 
 func _on_mouse_entered():
 	if not info.item: return
-	MyTooltip.show_tooltip(info.item.my_name, info.item.get_description())
+	MyTooltip.show_tooltip(info.item.my_name, info.item.get_description(false))
 
 func _on_mouse_exited():
 	if not info.item: return
