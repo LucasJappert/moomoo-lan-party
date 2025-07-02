@@ -223,6 +223,7 @@ func use_item(slot_position: int) -> void: # Called from _on_key_pressed
 
 	_items[slot_position - 1].use_item(my_owner(), null)
 
+
 func item_updated_by_rpc(slot_item_info: SlotItemInfo) -> void:
 	update_item(slot_item_info.position - 1, slot_item_info)
 	EventBus.emit_item_updated(my_owner(), slot_item_info, null)
@@ -263,15 +264,24 @@ func verify_freed_target_view(entity_name: String) -> void:
 
 func charge_skill(index: int) -> void:
 	if is_silenced: return
-	if not _skills[index].learned_level: return
+	print("AM HOST: ", GameManager.AM_I_HOST)
+	print("self.name: ", self.name)
+	print("_skills[index].learned_level: ", _skills[index].learned_level)
+	if not _skills[index].learned_level: return print("Skill not learned: ", _skills[index])
 	if _skills[index].get_learned_skill().type == SkillType.PASSIVE: return
 	if not _skills[index].can_use(my_owner()): return
 
 	charged_skill = _skills[index]
-func uncharge_skill() -> void:
-	charged_skill = null
+	
+	if not charged_skill.get_learned_skill().instant_use: return
 
-func upgrade_skill(slot_number: int) -> void:
+	charged_skill.use(my_owner(), null)
+
+func uncharge_skill() -> bool:
+	charged_skill = null
+	return true
+
+func server_upgrade_skill(slot_number: int) -> void:
 	_skills[slot_number - 1].try_to_upgrade(my_owner())
 	update_cache_total_stats()
 
@@ -291,6 +301,7 @@ func use_charged_skill(_target: Entity) -> void:
 	charged_skill.use(my_owner(), _target)
 
 	uncharge_skill()
+
 
 func toogle_keep_ground() -> void:
 	keep_ground = not keep_ground
@@ -433,7 +444,7 @@ func get_items_by_name(p_name: String) -> Array[SlotItemInfo]:
 func try_physical_attack(_delta: float) -> bool:
 	if not my_owner().multiplayer.is_server(): return false
 
-	if my_owner().current_state != EntityState.StateEnum.IDLE: return false # Cant attack while moving
+	if my_owner().current_state != EntityState.States.IDLE: return false # Cant attack while moving
 	
 	if target_to_attack == GameManager.moomoo: set_target_to_attack(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
 

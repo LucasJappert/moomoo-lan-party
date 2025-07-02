@@ -235,7 +235,6 @@ clear_button_enabled = true
 
 [node name="JoinAsPlayerButton" type="Button" parent="MultiplayerHUD/Panel"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 offset_top = 157.0
 offset_right = 403.0

@@ -15,7 +15,7 @@ static var countdown_time_to_show: int
 static var countdown_active := false
 static var process_running := false
 
-static var extra_stats_by_wave = CombatStats.new()
+static var extra_stats_by_wave: CombatStats
 
 class WaveInfo:
 	var common_enemies: Array[String]
@@ -31,9 +31,11 @@ static var WAVES_INFO = [
 
 static func start_wave_process() -> void:
 	process_running = true
+	extra_stats_by_wave = CombatStats.new()
 	EventBus.connect_to_wave_finilized(func(): _wave_finilized())
 
 static func _process(_delta: float) -> void:
+	# return
 	if not GameManager.AM_I_HOST: return
 	if not process_running: return
 	if not GameManager.MY_PLAYER: return
@@ -78,9 +80,9 @@ static func create_next_wave() -> void:
 			var enemy = _get_enemy(enemy_type, wave_direction, is_boss)
 			enemy.set_current_hp_and_mana()
 
-			# enemy.can_attack = false
+			enemy.can_attack = false
 			GameManager.spawn_enemy(enemy)
-			# return
+			return
 
 static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: bool) -> Enemy:
 	var enemy: Enemy = EnemyFactory.get_enemy_instance(enemy_type)

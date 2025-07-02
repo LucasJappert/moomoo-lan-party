@@ -6,6 +6,9 @@ const FRAME_SIZE = 64
 const CAN_USE_COLOR = Color.WHITE
 const CANT_USE_COLOR = Color(0.5, 0.5, 0.5)
 
+var range_in_tiles: float = 1
+var instant_use: bool = false
+var auxiliary_float: float # Used for general purposes, like calculate percentage of damage respect to the strength
 var my_name: String
 var duration_in_seconds: float
 var type: String = SkillType.ACTIVE

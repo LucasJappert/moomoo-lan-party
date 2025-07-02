@@ -44,24 +44,23 @@ var custom_damage_heal: CustomDamageHeal = CustomDamageHeal.new()
 @export var is_owner_friendly: bool = true
 var keep_latest_stacks: bool = true
 
-
 static func get_instance_from_dict(dict: Dictionary) -> CombatStats:
 	var instance = CombatStats.new()
 	ObjectHelpers.from_dict(instance, dict)
 	return instance
 
 static func get_default_instance() -> CombatStats:
-	var attr = CombatStats.new()
-	attr.move_speed = 2 # Default move speed for enemies
-	attr.attack_range = CombatStats.MIN_ATTACK_RANGE
-	attr.magic_attack_power = 0
-	attr.physical_attack_power = 1
-	attr.crit_multiplier = 1.5
-	attr.attack_speed = 0.5
-	attr.agility = 10
-	attr.strength = 6
-	attr.intelligence = 10
-	return attr
+	var stats = CombatStats.new()
+	stats.move_speed = 2 # Default move speed for enemies
+	stats.attack_range = CombatStats.MIN_ATTACK_RANGE
+	stats.magic_attack_power = 0
+	stats.physical_attack_power = 1
+	stats.crit_multiplier = 1.5
+	stats.attack_speed = 0.5
+	stats.agility = 10
+	stats.strength = 6
+	stats.intelligence = 10
+	return stats
 
 func accumulate_combat_stats(stats: CombatStats) -> CombatStats:
 	custom_damage_heal.accumulate_props(stats.custom_damage_heal)

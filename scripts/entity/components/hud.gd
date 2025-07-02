@@ -26,7 +26,6 @@ func _post_ready(_entity: Entity):
 	my_owner = _entity
 	_is_moomoo = my_owner is Moomoo
 
-	_label_container.visible = false
 	_label_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.text = my_owner.name
@@ -60,11 +59,10 @@ func _try_update_bars_visibility():
 	bars_container.visible = false
 
 func _try_update_label():
-	if not _label_container.visible: return
+	_label_container.visible = _label.text != ""
 		
-	_label.text = str(my_owner.global_position)
+	_label.text = str(my_owner.current_state)
 	# _label.text = str(GameManager.current_enemies_in_scene)
-	pass
 
 func update_health_bar():
 	_health_current_bar.size.x = my_owner.current_hp * BAR_SIZE / my_owner.get_total_hp()

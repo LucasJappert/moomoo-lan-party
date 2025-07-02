@@ -34,7 +34,7 @@ func _unhandled_input(event):
 			rpc_id(1, "_on_left_click", _get_hovered_entity_name())
 
 	if event is InputEventKey and event.pressed:
-		rpc_id(1, "_on_key_pressed", event.keycode)
+		GameManager.MY_PLAYER.rpc_handler.notify_key_pressed_to_server(event.keycode)
 			
 
 # region 	SERVER MESSAGES RECEIVED FROM CLIENT
@@ -59,10 +59,6 @@ func _on_left_click(_target_entity_name: String):
 	player.set_target_view(target_entity)
 
 	player.use_charged_skill(target_entity)
-
-@rpc("authority", "call_local")
-func _on_key_pressed(_keycode: int):
-	KeyboardHelper.key_pressed(_keycode, player)
 
 @rpc("authority", "call_local")
 func _on_inventory_slot_clicked(_position: int):

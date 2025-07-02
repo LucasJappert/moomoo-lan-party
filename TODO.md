@@ -94,10 +94,13 @@ Let’s build MooMoo LAN Party together! 🎉
 
 MY TODOs: 🔵In Progress🟡Paused✅Done
 
-- 🔵 Add a skill that when activated grants 20/30/40% increased attack speed for 6 seconds. During this time, the hero is silenced
+- Check walk animation on player 2
+- Ver skill activo desde el player 2
+
 - Agregar una skill que stunea a todos los enemigos de hasta 2 tiles de distancia por 2/3/4 segundos. También hace un damage del 30/40/50% de la fuerza total
 - Agregar una skill que, al ser activada, acumula todo el daño recibido por el héroe. Transcurrido 7 segundos, el 10/20/30% de ese daño acumulado será liberado como daño a todos los enemigos ubicados en un radio de 3 casillas
 - Agregar un skill que te hace inmune a todo daño durante cierto tiempo al activarlo
+- Configurar nuevo héroe Kael Dravok
 
 - Agregar skill que brinda un 10/20/30% de evasion
 - Agregar skill, la cual puede activarse o desactivarse, que brindaría chances de matar al enemigo al instante (no aplica a bosses). Consume 20 de mana en cada ataque.
@@ -140,6 +143,7 @@ MY TODOs: 🔵In Progress🟡Paused✅Done
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
 
+- ✅ Add a skill that when activated grants 20/30/40% increased attack speed for 6 seconds. During this time, the hero is silenced
 - ✅ Add information about different levels in skill descriptions
 - ✅ Fix bugs with items in the GUI
 - ✅ Show health and mana bars above enemies that are attacking

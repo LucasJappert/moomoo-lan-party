@@ -10,14 +10,17 @@ func initialize() -> void:
 	_hud = _my_owner.hud
 
 # region 	MESSAGES RECEIVED FROM CLIENT
-func key_pressed(keycode: int): rpc("_on_key_pressed", keycode)
+func notify_key_pressed_to_server(keycode: int): rpc_id(1, "_on_key_pressed", keycode)
 @rpc("authority", "call_local")
-func _on_key_pressed(keycode: int): _my_owner.key_pressed(keycode)
+func _on_key_pressed(keycode: int): KeyboardHelper.key_pressed_server_side(keycode, _my_owner)
 
-func skill_uppgrade_button_pressed(slot_number: int): rpc("_on_skill_uppgrade_button_pressed", slot_number)
-@rpc("authority", "call_local")
+func send_skill_uppgrade_button_pressed_to_server(slot_number: int):
+	if not multiplayer.is_server(): return rpc_id(1, "_on_skill_uppgrade_button_pressed", slot_number)
+
+	_on_skill_uppgrade_button_pressed(slot_number)
+@rpc("any_peer", "reliable")
 func _on_skill_uppgrade_button_pressed(slot_number: int):
-	_my_owner.upgrade_skill(slot_number)
+	_my_owner.server_upgrade_skill(slot_number)
 # endregion MESSAGES RECEIVED FROM CLIENT
 
 
@@ -80,6 +83,7 @@ func send_item_updated(slot_item_info: SlotItemInfo) -> void:
 	rpc("_on_slot_item_info_updated", data)
 @rpc("authority", "call_local")
 func _on_slot_item_info_updated(data: Dictionary):
+	print("Item updated: ", data, " GameManager.AM_I_HOST: ", GameManager.AM_I_HOST)
 	var slot_item_info := SlotItemInfo.new()
 	slot_item_info.item = Item.new()
 	ObjectHelpers.from_dict(slot_item_info, data)

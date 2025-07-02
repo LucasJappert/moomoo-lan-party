@@ -36,6 +36,11 @@ func add_effect(p_effect: CombatEffect) -> void:
 	_server_verifications_before_adding_effect(p_effect)
 	_effects.append(p_effect)
 	notify_changes_to_subscribers()
+
+	if p_effect.stats.freeze_duration > 0:
+		AnimationsHelper.apply_frost_hit_animation(_my_owner)
+	if p_effect.stats.has_hostil_stun_effect():
+		AnimationsHelper.apply_stun_animation(_my_owner)
 	
 	_try_to_add_effect_to_my_gui(p_effect)
 

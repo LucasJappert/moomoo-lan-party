@@ -16,6 +16,7 @@ const Names = {
 	MANA_SCORCHER = "Mana Scorcher", # ✅
 	MULTIPLE_STRIKE = "Multiple Strike", # ✅
 	FRENZIED_SILENCE = "Frenzied Silence", # ✅
+	EARTHSHATTER = "Earthshatter", # ✅
 	DIVINE_SHIELD = "Divine Shield",
 	ENERGY_ABSORPTION = "Energy Absorption",
 	VOID_STEP = "Void Step",
@@ -121,6 +122,31 @@ static func initialize_skills() -> void:
 	var aux_text: String; var aux_text1: String; var aux_text2: String
 	var _skill: Skill
 	var int_array: Array[int]; var int_array1: Array[int]; var float_array: Array[float]; var float_array1: Array[float]
+
+	# region EARTHSHATTER
+	aux_skill_name = Names.EARTHSHATTER
+	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.ACTIVE)
+	_skill = _SKILLS[aux_skill_name]
+	_skill.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 6, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
+
+	int_array = [2, 3, 4]
+	int_array1 = [100, 150, 200]
+	float_array = [1, 1.5, 2]
+	for i in int_array.size():
+		_skill.item_skill_base[i].range_in_tiles = 2
+		_skill.item_skill_base[i].instant_use = true
+		_skill.item_skill_base[i].damage_type = DamageType.MAGIC
+		_skill.item_skill_base[i].stats.stun_duration = int_array[i]
+		_skill.item_skill_base[i].auxiliary_float = float_array[i]
+		_skill.item_skill_base[i].mana_cost = int_array1[i]
+		_skill.item_skill_base[i].cooldown = 1
+		_skill.item_skill_base[i].description = (
+			"Stuns all enemies within " + str(_skill.item_skill_base[i].range_in_tiles) + " tiles for " + str(int_array[i]) +
+			" seconds and deals " + StringHelpers.format_percent(float_array[i]) +
+			" of the hero's total strength as damage."
+		)
+
+	# endregion
 
 	# region FRENZIED_SILENCE
 	aux_skill_name = Names.FRENZIED_SILENCE
@@ -347,18 +373,25 @@ static func initialize_skills() -> void:
 		_skill.item_skill_base[i].description = "Deals " + StringHelpers.format_percent(float_array[i]) + " of the damage as a cleave effect to enemies around " + str(int_array[i]) + " tiles."
 	# endregion
 
-func use(my_owner: Entity, target_entity: Entity) -> void:
-	if not can_use(my_owner): return print("Cannot use skill: ", get_learned_skill())
+func use(my_owner: Entity, target_entity: Entity) -> bool:
+	if not can_use(my_owner):
+		print("Cannot use skill: ", get_learned_skill())
+		return false
+
+	if get_learned_skill().my_name == Names.EARTHSHATTER:
+		if not _apply_earthshatter(my_owner): return false
 
 	if get_learned_skill().my_name == Names.STORM_STRIKE:
-		if not _apply_storm_strike(my_owner, target_entity): return
+		if not _apply_storm_strike(my_owner, target_entity): return false
 
 	if get_learned_skill().my_name == Names.FRENZIED_SILENCE:
-		if not _apply_frenzied_silence(my_owner, target_entity): return
+		if not _apply_frenzied_silence(my_owner, target_entity): return false
 
 	get_learned_skill().set_last_used_time()
 
 	my_owner.update_current_mana(-get_learned_skill().mana_cost)
+
+	return my_owner.uncharge_skill()
 
 func try_to_upgrade(my_owner: Entity) -> void:
 	if learned_level >= AVAILABLE_LEVELS: return
@@ -371,6 +404,29 @@ func try_to_upgrade(my_owner: Entity) -> void:
 # endregion ................. SETTERs
 
 # region :::::::::::::::::::: SKILLS LOGICS
+func _apply_earthshatter(_attacker: Entity) -> bool:
+	if not _attacker: return false
+
+	var learned_skill = get_learned_skill()
+	if not learned_skill: return false
+
+	var target_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, 20, _attacker.get_my_enemies(), learned_skill.range_in_tiles, [])
+
+	var magic_damage: int = _attacker.cache_total_stats.strength * learned_skill.auxiliary_float
+	var stun_stats = CombatStats.new()
+	stun_stats.stun_duration = learned_skill.stats.stun_duration
+	stun_stats.is_owner_friendly = false
+	var stun_effect = CombatEffect.get_temporal_effect(CombatEffect.STUN_NAME, stun_stats.stun_duration, 1, stun_stats)
+
+	for _enemy in target_enemies:
+		var _di = DamageInfo.new(magic_damage, learned_skill.damage_type, _attacker.name)
+		_enemy.server_receive_damage(_di, _attacker)
+
+		_enemy.effects_helper.add_effect(stun_effect)
+
+	SoundsHelper.play_earthshatter_skill()
+	return true
+
 func _apply_frenzied_silence(_attacker: Entity, _target: Entity) -> bool:
 	var learned_skill = get_learned_skill()
 	if not _target or not learned_skill: return false

@@ -56,7 +56,7 @@ static func initialize_hero(player: Player) -> void:
 		stats.intelligence = 50
 		player._skills = [
 			Skill.get_skill(Skill.Names.FRENZIED_SILENCE),
-			# Skill.get_skill(Skill.Names.),
+			Skill.get_skill(Skill.Names.EARTHSHATTER),
 			# Skill.get_skill(Skill.Names.),
 			# Skill.get_skill(Skill.Names.),
 		]

@@ -25,6 +25,9 @@ static func initialize():
 	print("✅ SoundsHelper initialized with %d players" % MAX_PLAYERS)
 
 
+static func play_earthshatter_skill(volume: float = -15.0):
+	_play_sfx("res://sounds/spells/earthshatter.wav", volume, 1)
+
 static func _play_sfx(path: String, volume: float = 0.0, max_simultaneous: int = 2):
 	if FORCE_MUTED or _MUTED: return
 	if not _initialized:

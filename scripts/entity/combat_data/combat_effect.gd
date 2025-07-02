@@ -14,6 +14,7 @@ var unique_id: int = UniqueIdGenerator.get_id()
 var is_cooldown_finished: bool = false
 
 const STUN_RECT_REGION := Rect2(0, 608, 32, 17)
+const STUN_NAME = "Stun"
 
 func _process(delta: float) -> void:
 	if is_permanent: return
@@ -68,7 +69,9 @@ static func get_permanent_effect(p_name: String, _max_stacks: int, _stats: Comba
 	return _get_instance(p_name, 0.0, true, _max_stacks, _stats)
 
 static func get_temporal_effect(p_name: String, duration_in_seconds: float, _max_stacks: int, _stats: CombatStats) -> CombatEffect:
-	return _get_instance(p_name, duration_in_seconds, false, _max_stacks, _stats)
+	var result = _get_instance(p_name, duration_in_seconds, false, _max_stacks, _stats)
+	if p_name == STUN_NAME: result.set_region_rect(CombatEffect.STUN_RECT_REGION)
+	return result
 
 static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _di: DamageInfo) -> void:
 	# Should be called only on the server
@@ -80,8 +83,7 @@ static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _d
 			var _stats = CombatStats.new()
 			_stats.stun_duration = _attacker_stats.stun_duration
 			_stats.is_owner_friendly = false
-			var effect = CombatEffect.get_temporal_effect("Stun", _stats.stun_duration, 1, _stats)
-			effect.set_region_rect(CombatEffect.STUN_RECT_REGION)
+			var effect = CombatEffect.get_temporal_effect(STUN_NAME, _stats.stun_duration, 1, _stats)
 			_receiver.effects_helper.add_effect(effect)
 
 	# Lifesteal verification

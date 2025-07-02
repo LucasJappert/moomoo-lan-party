@@ -46,6 +46,7 @@ func _spawn_custom_player(data: Dictionary) -> Node:
 	var player = load("res://scenes/entity/player_scene.tscn").instantiate()
 	player.set_player(data)
 	player.set_current_hp_and_mana()
+	player.current_hp = 100
 	player.get_client_inputs().set_multiplayer_authority(player.player_id)
 	return player
 	

@@ -27,7 +27,15 @@ var replicated: bool = false
 # Move this logic to a separate module
 var movement_helper: MovementHelper
 
-@export var current_state: EntityState.StateEnum = EntityState.StateEnum.IDLE
+@export var current_state: String:
+	set(value):
+		if _current_state == value: return
+		_current_state = value
+		EntityState.server_and_client_on_state_changed(self)
+	get:
+		return _current_state
+var _current_state: String = EntityState.States.IDLE
+
 @export var _boss_level: int = 0
 @export var level: int = 1
 
@@ -54,7 +62,7 @@ func _post_ready():
 	
 func _process(_delta: float) -> void:
 	if GameManager.AM_I_HOST: process_combat_data(_delta)
-	EntityState.process(self)
+	EntityState.server_process(self)
 
 func _physics_process(_delta):
 	movement_helper._physics_process(_delta) # we need this because movement_helper is not a child node

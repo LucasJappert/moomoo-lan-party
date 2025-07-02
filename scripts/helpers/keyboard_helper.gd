@@ -3,9 +3,10 @@ class_name KeyboardHelper
 const INVENTORY_HOTKEYS := [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6]
 const SKILL_HOTKEYS := [KEY_A, KEY_S, KEY_D, KEY_F]
 
-static func key_pressed(_keycode: int, player: Entity) -> void:
+static func key_pressed_server_side(_keycode: int, player: Entity) -> void:
 	if not player: return
 	
+	print("Key pressed: ", _keycode)
 	# SKILL HOTKEYs
 	for i in SKILL_HOTKEYS.size():
 		if _keycode == SKILL_HOTKEYS[i]:

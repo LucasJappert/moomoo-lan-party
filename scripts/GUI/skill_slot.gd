@@ -47,7 +47,7 @@ func _ready():
 
 	upgrade_button.gui_input.connect(func(event):
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			GameManager.MY_PLAYER.rpc_handler.skill_uppgrade_button_pressed(slot_number)
+			GameManager.MY_PLAYER.rpc_handler.send_skill_uppgrade_button_pressed_to_server(slot_number)
 		)
 
 	EventBus.connect_to_skill_upgraded(func(_p_owner: Entity): update_controls())
@@ -114,7 +114,7 @@ func _gui_input(event) -> void:
 		if GameManager.MY_PLAYER.charged_skill:
 			return GameManager.MY_PLAYER.use_charged_skill(GameManager.MY_PLAYER)
 
-		KeyboardHelper.key_pressed(KeyboardHelper.SKILL_HOTKEYS[slot_number - 1], GameManager.MY_PLAYER)
+		GameManager.MY_PLAYER.rpc_handler.notify_key_pressed_to_server(KeyboardHelper.SKILL_HOTKEYS[slot_number - 1])
 
 func _process(_delta: float) -> void:
 	if not GameManager.MY_PLAYER: return
