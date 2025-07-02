@@ -19,6 +19,7 @@ var level: int
 @export var crit_multiplier: float = 0
 @export var stun_chance: float = 0.0
 @export var stun_duration: float = 0.0 # In seconds
+var hostile_silence_duration: float = 0.0 # In seconds
 @export var attack_range: int = 0
 @export var physical_attack_power: int = 0
 @export var physical_attack_power_percent: float = 0
@@ -89,6 +90,7 @@ func accumulate_combat_stats(stats: CombatStats) -> CombatStats:
 	hp_regeneration_points_percent += stats.hp_regeneration_points_percent
 	mana_regeneration_points += stats.mana_regeneration_points
 	is_owner_friendly = stats.is_owner_friendly
+	hostile_silence_duration = stats.hostile_silence_duration
 
 	if stats.cleave_effect != null:
 		cleave_effect = stats.cleave_effect
@@ -166,6 +168,11 @@ func has_hostil_stun_effect() -> bool:
 
 	return false
 
+func has_hostil_silence_effect() -> bool:
+	if hostile_silence_duration > 0: return true
+
+	return false
+
 func get_description() -> String:
 	var description = ""
 
@@ -240,6 +247,9 @@ func get_description() -> String:
 
 	if ignore_enemy_evasion_chance != 0:
 		description += str("- Ignore enemy evasion chance: ", StringHelpers.format_percent(ignore_enemy_evasion_chance), "\n")
+
+	if hostile_silence_duration != 0:
+		description += str("- Hostile silence duration: ", StringHelpers.format_float_compact(hostile_silence_duration), "\n")
 
 	if cleave_effect: description += cleave_effect.get_description()
 

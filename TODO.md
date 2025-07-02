@@ -92,11 +92,17 @@ This file tracks upcoming features and tasks in development. Contributions are w
 
 Let’s build MooMoo LAN Party together! 🎉
 
-MY TODOs: 🔵In Progress🟡Ready for test🟣Paused✅Done
+MY TODOs: 🔵In Progress🟡Paused✅Done
 
+- 🔵 Add a skill that when activated grants 20/30/40% increased attack speed for 6 seconds. During this time, the hero is silenced
+- Agregar una skill que stunea a todos los enemigos de hasta 2 tiles de distancia por 2/3/4 segundos. También hace un damage del 30/40/50% de la fuerza total
+- Agregar una skill que, al ser activada, acumula todo el daño recibido por el héroe. Transcurrido 7 segundos, el 10/20/30% de ese daño acumulado será liberado como daño a todos los enemigos ubicados en un radio de 3 casillas
+- Agregar un skill que te hace inmune a todo daño durante cierto tiempo al activarlo
+
+- Agregar skill que brinda un 10/20/30% de evasion
 - Agregar skill, la cual puede activarse o desactivarse, que brindaría chances de matar al enemigo al instante (no aplica a bosses). Consume 20 de mana en cada ataque.
 - Agregar skill pasiva que luego de matar un enemigo lo transforma en 3 esqueletos que lucharán para él.
-- Agregar skill que tien chances de crear copias de sí mismo ante cada ataque físico.
+- Agregar skill que brinda chances de crear copias de sí mismo ante cada ataque físico.
 - 🟣 Crear escena de elección de héroes
 - Crear tooltip con descripcion del target
 - Agregar quinta skill al nivel 20
@@ -105,7 +111,6 @@ MY TODOs: 🔵In Progress🟡Ready for test🟣Paused✅Done
 - Agregar item que brinda un 20% de lifesteal
 - Capear stats como defensas y evasion.
 - Agregar un item/skill que al activarlo te hace inmune a los hechizos y a ciertos debuffs como silencios.
-- Agregar un item/skill que te hace inmune a todo daño durante cierto tiempo al activarlo.
 - Agregar otros efectos de sonidos para el ambiente
 - Configure enemy types for wave 2
 - Sistema de rondas de enemigos aumentando las dificultades en cada oleada, cada 3 oleadas podríamos hacer una de solamente 4 boses
@@ -118,12 +123,8 @@ MY TODOs: 🔵In Progress🟡Ready for test🟣Paused✅Done
 - Revisar target hovered cuando hay muchos enemigos
 - Agregar skill que invoca esqueletos luego de matar a un enemigo
 - Agregar skill de velocidad de ataque de un 25%
-- Agregar skill de daño en area
-- Agregar skill de disparo multiple
 - Agregar skill que causa un x2 cuando el ataque es por la espalda del enemigo.
 - Agregar skill que cada 5 ataques regenera el 5% de la vida total a todos los aliados
-- Agregar skill que invoca copias de si mismo con cierta chance ante cada ataque
-- Sistema de elección de Héroe
 - Crear escena para crear y unirse a salas.
 - Implementar animaciones varias como congelamiento, sangrado, sobre entidades
 - Implementar animaciones sobre tiles, como fuego, sanacion, congelamiento.

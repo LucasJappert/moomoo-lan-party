@@ -4,7 +4,8 @@ class_name CursorManager
 # Enum for the available cursor types
 enum CursorType {
 	SWORD,
-	HAND
+	DEFAULT,
+	CAST
 }
 
 # Path to the cursor textures
@@ -13,8 +14,12 @@ const CURSORS := {
 		"texture": preload("res://assets/cursors/sword.png"),
 		"hotspot": Vector2(32, 32),
 	},
-	CursorType.HAND: {
-		"texture": preload("res://assets/cursors/hand.png"),
+	CursorType.DEFAULT: {
+		"texture": preload("res://assets/cursors/default.png"),
+		"hotspot": Vector2(32, 32),
+	},
+	CursorType.CAST: {
+		"texture": preload("res://assets/cursors/cast.png"),
 		"hotspot": Vector2(32, 32),
 	}
 }
@@ -25,17 +30,20 @@ static var _initialized := false
 
 static func _initialize():
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	set_cursor(CursorType.HAND) # Set the default cursor
+	set_cursor(CursorType.DEFAULT) # Set the default cursor
 	_initialized = true
 
 static func _static_process(_delta):
 	if not _initialized: _initialize()
 	
 	# Change cursor dynamically depending on the hovered entity
-	if ObjectHelpers.is_enemy(AreaHovered.hovered_entity):
-		set_cursor(CursorType.SWORD)
-	else:
-		set_cursor(CursorType.HAND)
+	if not GameManager.MY_PLAYER: return set_cursor(CursorType.DEFAULT)
+
+	if GameManager.MY_PLAYER.charged_skill: return set_cursor(CursorType.CAST)
+
+	if ObjectHelpers.is_enemy(AreaHovered.hovered_entity): return set_cursor(CursorType.SWORD)
+
+	set_cursor(CursorType.DEFAULT)
 
 static func set_cursor(cursor_type: CursorType):
 	if cursor_type == _current_cursor: return # Already set

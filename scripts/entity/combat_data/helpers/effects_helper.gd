@@ -37,7 +37,7 @@ func add_effect(p_effect: CombatEffect) -> void:
 	_effects.append(p_effect)
 	notify_changes_to_subscribers()
 	
-	_try_to_update_my_gui(p_effect)
+	_try_to_add_effect_to_my_gui(p_effect)
 
 	if GameManager.AM_I_HOST: # Notify if we are host
 		_my_owner.rpc_handler.notify_effect_added_to_clients(p_effect)
@@ -59,11 +59,7 @@ func _remove_effects_by_predicate(predicate: Callable) -> void:
 	
 	notify_changes_to_subscribers()
 
-	if GameManager.MY_PLAYER:
-		if _my_owner.is_my_player(): # Remove effects from my GUI
-			GameManager.my_main.gui_scene.my_effects.remove_effects_by_ids(removed_ids)
-		if _my_owner.name == GameManager.MY_PLAYER.target_to_attack_name: # Remove effects from target GUI
-			GameManager.my_main.gui_scene.target_effects.remove_effects_by_ids(removed_ids)
+	_try_to_remove_effects_from_my_gui(removed_ids)
 
 	if GameManager.AM_I_HOST and removed_ids:
 		_my_owner.rpc_handler.notify_effects_removed_to_clients(removed_ids)
@@ -92,10 +88,18 @@ func _server_verifications_before_adding_effect(p_effect: CombatEffect) -> void:
 	matching_effects.clear()
 	remove_effect_by_ids(ids_to_remove)
 
-func _try_to_update_my_gui(p_effect: CombatEffect) -> void:
+func _try_to_add_effect_to_my_gui(p_effect: CombatEffect) -> void:
 	if not GameManager.MY_PLAYER: return
 
 	if _my_owner.is_my_player(): # Update my GUI
 		GameManager.my_main.gui_scene.my_effects.add_effect(p_effect)
-	if _my_owner.name == GameManager.MY_PLAYER.target_to_attack_name: # Update target GUI
+	if _my_owner.name == GameManager.MY_PLAYER.target_view_name: # Update target GUI
 		GameManager.my_main.gui_scene.target_effects.add_effect(p_effect)
+
+func _try_to_remove_effects_from_my_gui(ids_to_remove: Array[int]) -> void:
+	if not GameManager.MY_PLAYER: return
+
+	if _my_owner.is_my_player(): # Update my GUI
+		GameManager.my_main.gui_scene.my_effects.remove_effects_by_ids(ids_to_remove)
+	if _my_owner.name == GameManager.MY_PLAYER.target_view_name: # Update target GUI
+		GameManager.my_main.gui_scene.target_effects.remove_effects_by_ids(ids_to_remove)

@@ -7,6 +7,7 @@ const CAN_USE_COLOR = Color.WHITE
 const CANT_USE_COLOR = Color(0.5, 0.5, 0.5)
 
 var my_name: String
+var duration_in_seconds: float
 var type: String = SkillType.ACTIVE
 var cooldown: float = 0 # In seconds
 var mana_cost: int = 0

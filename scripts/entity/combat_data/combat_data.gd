@@ -10,6 +10,7 @@ var effects_helper: EffectsHelper = EffectsHelper.new()
 @export var attack_type := AttackTypes.MELEE
 @export var projectile_type: String = Projectile.TYPES.NONE
 @export var is_stunned: bool = false
+var is_silenced: bool = false
 var _skills: Array[Skill] = []
 var ITEMS_SLOTS: int = 6
 var _items: Array[SlotItemInfo] = [SlotItemInfo.new(), SlotItemInfo.new(), SlotItemInfo.new(), SlotItemInfo.new(), SlotItemInfo.new(), SlotItemInfo.new()]
@@ -137,14 +138,17 @@ func set_current_hp_and_mana() -> void:
 	current_hp = get_total_hp()
 	current_mana = get_total_mana()
 
-func _verify_if_am_i_stunned_after_stats_change() -> void:
+func _verify_combat_states_after_stats_change() -> void:
+	is_stunned = false
+	is_silenced = false
+
 	for effect in effects_helper.get_effects():
 		if effect.stats.has_hostil_stun_effect():
 			is_stunned = true
-			return
+		if effect.stats.has_hostil_silence_effect():
+			is_silenced = true
 
-	is_stunned = false
-	AnimationsHelper.try_to_remove_obsolete_stun_animation(my_owner())
+	if not is_stunned: AnimationsHelper.try_to_remove_obsolete_stun_animation(my_owner())
 
 func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void:
 	if value_to_increase == 0: return
@@ -258,15 +262,14 @@ func verify_freed_target_view(entity_name: String) -> void:
 		set_target_view(null)
 
 func charge_skill(index: int) -> void:
+	if is_silenced: return
 	if not _skills[index].learned_level: return
 	if _skills[index].get_learned_skill().type == SkillType.PASSIVE: return
 	if not _skills[index].can_use(my_owner()): return
 
-	print("Charging skill: ", _skills[index].get_learned_skill().my_name)
 	charged_skill = _skills[index]
 func uncharge_skill() -> void:
 	charged_skill = null
-	print("Uncharging skill")
 
 func upgrade_skill(slot_number: int) -> void:
 	_skills[slot_number - 1].try_to_upgrade(my_owner())
@@ -274,10 +277,16 @@ func upgrade_skill(slot_number: int) -> void:
 
 func use_charged_skill(_target: Entity) -> void:
 	if not charged_skill: return
-	if ObjectHelpers.is_null(_target): return
+	if is_silenced: return uncharge_skill()
+	if ObjectHelpers.is_null(_target): return uncharge_skill()
+	
+	var learned_skill = charged_skill.get_learned_skill()
+
+	# Do not allow the use of damaging skills on oneself
+	if not learned_skill.stats.is_owner_friendly and _target.name == my_owner().name: return uncharge_skill()
 
 	# Update the target to attack if the skill is not friendly
-	if not charged_skill.get_learned_skill().stats.is_owner_friendly: set_target_to_attack(_target)
+	if not learned_skill.stats.is_owner_friendly: set_target_to_attack(_target)
 
 	charged_skill.use(my_owner(), _target)
 
@@ -377,7 +386,7 @@ func update_cache_total_stats() -> void:
 	cache_total_stats = _get_total_stats()
 	cache_total_stats_no_effects = _get_total_stats(false)
 
-	_verify_if_am_i_stunned_after_stats_change()
+	_verify_combat_states_after_stats_change()
 
 func get_attack_range() -> int:
 	return cache_total_stats.attack_range

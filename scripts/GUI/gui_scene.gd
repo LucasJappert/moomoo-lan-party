@@ -153,11 +153,6 @@ func _set_my_player_avatar_region(my_player: Player) -> void:
 func set_target_avatar_region(region_rect: Rect2) -> void:
 	_sprite_target_avatar.region_rect = region_rect
 
-func add_effect_to_my_effects(effect: CombatEffect) -> void:
-	my_effects.add_effect(effect)
-func add_effect_to_target_effects(effect: CombatEffect) -> void:
-	target_effects.add_effect(effect)
-
 func _on_new_target_view_selected(_owner: Entity, _target: Entity) -> void:
 	if not ObjectHelpers.is_my_player(_owner): return
 

@@ -15,6 +15,7 @@ const Names = {
 	TRUE_STRIKE = "True Strike", # ✅
 	MANA_SCORCHER = "Mana Scorcher", # ✅
 	MULTIPLE_STRIKE = "Multiple Strike", # ✅
+	FRENZIED_SILENCE = "Frenzied Silence", # ✅
 	DIVINE_SHIELD = "Divine Shield",
 	ENERGY_ABSORPTION = "Energy Absorption",
 	VOID_STEP = "Void Step",
@@ -92,18 +93,18 @@ func get_max_targets() -> int:
 	return get_learned_skill().max_targets
 
 func get_description(include_stats_description: bool = true) -> String:
-	# var result = get_safe_learned_skill().get_description()
 	var result = ""
 
 	var tag_color_1 = "[color=#D3C5AC]"; var tag_color_2 = "[color=#605A4F]";
 	for index in range(item_skill_base.size()):
 		var color = tag_color_1 if index + 1 == learned_level else tag_color_2
-		result += color + "- [u]Level " + str(index + 1) + ":[/u] " + item_skill_base[index].get_description(include_stats_description) + "[/color]"
+		result += color + "⚔ [u]Level " + str(index + 1) + ":[/u] " + item_skill_base[index].get_description(include_stats_description) + "[/color]"
 
 	return result
 
 func can_use(my_owner: Entity) -> bool:
 	if not learned_level: return false
+	if my_owner.is_silenced: return false
 
 	return item_skill_base[learned_level - 1].can_use(my_owner)
 
@@ -120,6 +121,31 @@ static func initialize_skills() -> void:
 	var aux_text: String; var aux_text1: String; var aux_text2: String
 	var _skill: Skill
 	var int_array: Array[int]; var int_array1: Array[int]; var float_array: Array[float]; var float_array1: Array[float]
+
+	# region FRENZIED_SILENCE
+	aux_skill_name = Names.FRENZIED_SILENCE
+	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.ACTIVE)
+	_skill = _SKILLS[aux_skill_name]
+	_skill.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 6, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
+
+	float_array = [0.2, 0.3, 0.4]
+	int_array = [80, 110, 140]
+	float_array1 = [10, 8, 6]
+	int_array1 = [6, 6, 6]
+	for i in int_array.size():
+		_skill.item_skill_base[i].stats.attack_speed_percent = float_array[i]
+		_skill.item_skill_base[i].stats.hostile_silence_duration = int_array1[i]
+		_skill.item_skill_base[i].create_effect = true
+		_skill.item_skill_base[i].mana_cost = int_array[i]
+		_skill.item_skill_base[i].cooldown = float_array1[i]
+		_skill.item_skill_base[i].duration_in_seconds = int_array1[i]
+
+		_skill.item_skill_base[i].description = (
+			"Grants " + StringHelpers.format_percent(float_array[i]) +
+			" bonus attack speed for " + str(int_array1[i]) +
+			" seconds. Silences the hero during this time."
+		)
+	# endregion
 
 	# region MULTIPLE_STRIKE
 	aux_skill_name = Names.MULTIPLE_STRIKE
@@ -327,6 +353,9 @@ func use(my_owner: Entity, target_entity: Entity) -> void:
 	if get_learned_skill().my_name == Names.STORM_STRIKE:
 		if not _apply_storm_strike(my_owner, target_entity): return
 
+	if get_learned_skill().my_name == Names.FRENZIED_SILENCE:
+		if not _apply_frenzied_silence(my_owner, target_entity): return
+
 	get_learned_skill().set_last_used_time()
 
 	my_owner.update_current_mana(-get_learned_skill().mana_cost)
@@ -342,6 +371,43 @@ func try_to_upgrade(my_owner: Entity) -> void:
 # endregion ................. SETTERs
 
 # region :::::::::::::::::::: SKILLS LOGICS
+func _apply_frenzied_silence(_attacker: Entity, _target: Entity) -> bool:
+	var learned_skill = get_learned_skill()
+	if not _target or not learned_skill: return false
+
+	var effect_stats = learned_skill.stats.get_combat_stats_instance()
+	var new_effect = CombatEffect.get_temporal_effect(Names.FRENZIED_SILENCE, learned_skill.duration_in_seconds, learned_skill.max_stacks, effect_stats)
+	new_effect.set_region_rect(_SKILLS[Names.FRENZIED_SILENCE].region_rect)
+	_target.effects_helper.add_effect(new_effect)
+
+	return true
+
+func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:
+	if not _target: return false
+
+	var attacker_stats = _attacker.cache_total_stats
+	var total_damage = get_stats().custom_damage_heal.get_total_damage_heal(attacker_stats.agility, attacker_stats.strength, attacker_stats.intelligence)
+
+	var targets = [_target]
+	var my_enemies = _attacker.get_my_enemies()
+	targets.append_array(GlobalsEntityHelpers.get_closest_entities(_target.global_position, get_max_targets() - 1, my_enemies, 6, [_target]))
+
+	for target in targets:
+		var _di := DamageInfo.new(total_damage, get_learned_skill().damage_type)
+		var critical_damage = _attacker.try_critical_hit(total_damage)
+		var total_damage_and_crit = total_damage + critical_damage
+
+		_di.total_damage = total_damage_and_crit
+		_di.critical = critical_damage
+		_di.projectile_type = Projectile.TYPES.NONE
+		_di.damage_type = DamageType.MAGIC
+		_di.attacker_name = _attacker.name
+
+		target.server_receive_damage(_di, _attacker)
+		target.rpc_handler.add_animation(AnimationsHelper.ANIMATION_NAMES.LIGHTNING)
+	
+	return true
+
 static func verify_blood_fury(my_owner: Entity) -> void:
 	var learned_skill = my_owner.get_learned_skill(Names.BLOOD_FURY)
 	if not learned_skill: return
@@ -414,32 +480,6 @@ static func actions_after_execute_physical_attack(_attacker: Entity, _target: En
 			var nearest_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, extra_targets, _attacker.get_my_enemies(), _attacker.get_attack_range(), [_target])
 			for extra_target in nearest_enemies:
 				_attacker.execute_physical_attack(false, extra_target)
-
-func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:
-	if not _target: return false
-
-	var attacker_stats = _attacker.cache_total_stats
-	var total_damage = get_stats().custom_damage_heal.get_total_damage_heal(attacker_stats.agility, attacker_stats.strength, attacker_stats.intelligence)
-
-	var targets = [_target]
-	var my_enemies = _attacker.get_my_enemies()
-	targets.append_array(GlobalsEntityHelpers.get_closest_entities(_target.global_position, get_max_targets() - 1, my_enemies, 6, [_target]))
-
-	for target in targets:
-		var _di := DamageInfo.new(total_damage, get_learned_skill().damage_type)
-		var critical_damage = _attacker.try_critical_hit(total_damage)
-		var total_damage_and_crit = total_damage + critical_damage
-
-		_di.total_damage = total_damage_and_crit
-		_di.critical = critical_damage
-		_di.projectile_type = Projectile.TYPES.NONE
-		_di.damage_type = DamageType.MAGIC
-		_di.attacker_name = _attacker.name
-
-		target.server_receive_damage(_di, _attacker)
-		target.rpc_handler.add_animation(AnimationsHelper.ANIMATION_NAMES.LIGHTNING)
-	
-	return true
 
 
 # endregion .................... SKILLS LOGICS

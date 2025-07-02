@@ -5,7 +5,7 @@ extends MyInitAuxiliary
 var effect_name: String
 var id: int
 var is_permanent: bool = false
-var _duration: float # In seconds
+var _duration_in_seconds: float # In seconds
 var _elapsed: float = 0.0
 var _region_rect: Rect2
 var max_stacks: int = 1
@@ -19,16 +19,16 @@ func _process(delta: float) -> void:
 	if is_permanent: return
 
 	_elapsed += delta
-	if _elapsed <= _duration: return
+	if _elapsed <= _duration_in_seconds: return
 
-	_elapsed = _duration
+	_elapsed = _duration_in_seconds
 	is_cooldown_finished = true
 	# EventBus.emit_effect_removed(GlobalsEntityHelpers.get_owner(self), self)
 
 func get_description() -> String:
 	var description = ""
-	if _duration > 0.0:
-		description += str("- Duration: ", StringHelpers.format_float_compact(_duration), "s\n")
+	if _duration_in_seconds > 0.0:
+		description += str("- Duration: ", StringHelpers.format_float_compact(_duration_in_seconds), "s\n")
 
 	description += stats.get_description()
 
@@ -54,11 +54,11 @@ static func get_instance_from_dict(dict: Dictionary) -> CombatEffect:
 	ObjectHelpers.from_dict(combat_effect, dict)
 	return combat_effect
 
-static func _get_instance(p_name: String, duration: float, p_is_permanent: bool, _max_stacks: int, _stats: CombatStats) -> CombatEffect:
+static func _get_instance(p_name: String, duration_in_seconds: float, p_is_permanent: bool, _max_stacks: int, _stats: CombatStats) -> CombatEffect:
 	var combat_effect = CombatEffect.new()
 	combat_effect.max_stacks = _max_stacks
 	if _stats: combat_effect.stats = _stats
-	combat_effect._duration = duration
+	combat_effect._duration_in_seconds = duration_in_seconds
 	combat_effect.is_permanent = p_is_permanent
 	combat_effect.id = UniqueIdGenerator.get_id()
 	combat_effect.effect_name = p_name
@@ -67,8 +67,8 @@ static func _get_instance(p_name: String, duration: float, p_is_permanent: bool,
 static func get_permanent_effect(p_name: String, _max_stacks: int, _stats: CombatStats) -> CombatEffect:
 	return _get_instance(p_name, 0.0, true, _max_stacks, _stats)
 
-static func get_temporal_effect(p_name: String, duration: float, _max_stacks: int, _stats: CombatStats) -> CombatEffect:
-	return _get_instance(p_name, duration, false, _max_stacks, _stats)
+static func get_temporal_effect(p_name: String, duration_in_seconds: float, _max_stacks: int, _stats: CombatStats) -> CombatEffect:
+	return _get_instance(p_name, duration_in_seconds, false, _max_stacks, _stats)
 
 static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _di: DamageInfo) -> void:
 	# Should be called only on the server

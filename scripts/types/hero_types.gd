@@ -7,10 +7,12 @@ class_name HeroTypes
 const Names = {
 	BLOOD_WARDEN = "Blood Warden", # (Guardián de Sangre)
 	FROSTBANE_ARCANIST = "Frostbane Arcanist", # (Arcanista de Escarcha)
+	KAEL_DRAVOK = "Kael Dravok", # (Kael del Juramento de Guerra)
 }
 static var HERO_TYPES: Dictionary[String, ExtraInfo] = {
 	Names.BLOOD_WARDEN: ExtraInfo.new(Names.BLOOD_WARDEN, get_rect_frames(Vector2i(3, 0)), "Skar"),
 	Names.FROSTBANE_ARCANIST: ExtraInfo.new(Names.FROSTBANE_ARCANIST, get_rect_frames(Vector2i(2, 0)), "Zareth"),
+	Names.KAEL_DRAVOK: ExtraInfo.new(Names.KAEL_DRAVOK, get_rect_frames(Vector2i(0, 0)), "Kael"),
 }
 
 const _START_REGION = Vector2i(0, 320)
@@ -47,6 +49,18 @@ static func initialize_hero(player: Player) -> void:
 
 	# endregion Add some potions
 
+	if player.extra_info.key_type == Names.KAEL_DRAVOK:
+		stats.evasion = 0.1
+		stats.agility = 50
+		stats.strength = 50
+		stats.intelligence = 50
+		player._skills = [
+			Skill.get_skill(Skill.Names.FRENZIED_SILENCE),
+			# Skill.get_skill(Skill.Names.),
+			# Skill.get_skill(Skill.Names.),
+			# Skill.get_skill(Skill.Names.),
+		]
+
 	if player.extra_info.key_type == Names.BLOOD_WARDEN:
 		stats.evasion = 0.1
 		stats.agility = 50
@@ -62,7 +76,6 @@ static func initialize_hero(player: Player) -> void:
 			# Skill.get_skill(Skill.Names.STORM_STRIKE),
 			# Skill.get_skill(Skill.Names.FROZEN_TOUCH)
 		]
-		# player._skills[0].learned_level = 2
 	
 	if player.extra_info.key_type == Names.FROSTBANE_ARCANIST:
 		stats.attack_range = 200

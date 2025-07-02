@@ -108,8 +108,12 @@ func _on_mouse_exited():
 	if not skill: return
 	MyTooltip.hide_tooltip()
 
-func _gui_input(event):
+func _gui_input(event) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		if not GameManager.MY_PLAYER: return
+		if GameManager.MY_PLAYER.charged_skill:
+			return GameManager.MY_PLAYER.use_charged_skill(GameManager.MY_PLAYER)
+
 		KeyboardHelper.key_pressed(KeyboardHelper.SKILL_HOTKEYS[slot_number - 1], GameManager.MY_PLAYER)
 
 func _process(_delta: float) -> void:
