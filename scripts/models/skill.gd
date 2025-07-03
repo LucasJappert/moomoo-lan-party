@@ -452,7 +452,7 @@ func _apply_earthshatter(_attacker: Entity) -> bool:
 
 		_enemy.effects_helper.add_effect(stun_effect)
 
-	SoundsHelper.play_earthshatter_skill()
+	SoundsHelper.play_scream_hero_1()
 	return true
 
 func _apply_frenzied_silence(_attacker: Entity, _target: Entity) -> bool:

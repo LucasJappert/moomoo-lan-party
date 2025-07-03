@@ -32,8 +32,10 @@ func process(_delta: float, _attacker: Entity) -> void:
 	seconds_elapsed += _delta
 	if seconds_elapsed < seconds_to_release: return
 
-	active = false
+	_apply_release(_attacker, _attacker)
 
+func _apply_release(_attacker: Entity, _target: Entity) -> void:
+	active = false
 	var nearest_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, 30, _attacker.get_my_enemies(), radius_in_tiles)
 	var total_damage_to_release := int(damage_accumulated * percent_to_release)
 	for enemy in nearest_enemies:
@@ -41,6 +43,7 @@ func process(_delta: float, _attacker: Entity) -> void:
 
 	var message := "💥 " + str(total_damage_to_release) + " released 💥"
 	_attacker.hud.show_message_popup(message.to_upper(), Color(1, 1, 1), 0.4)
+	SoundsHelper.play_scream_hero_1()
 
 static func try_to_use(_my_owner: Entity, learned_skill: ItemSkillBase) -> bool:
 	if learned_skill.my_name != Skill.Names.ABSORB_AND_RELEASE: return true
