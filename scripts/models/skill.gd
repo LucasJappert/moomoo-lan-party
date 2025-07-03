@@ -18,6 +18,7 @@ const Names = {
 	FRENZIED_SILENCE = "Frenzied Silence", # ✅
 	EARTHSHATTER = "Earthshatter", # ✅
 	ABSORB_AND_RELEASE = "Absorb and Release", # ✅
+	UNBREAKABLE = "Unbreakable", # ✅
 	DIVINE_SHIELD = "Divine Shield",
 	ENERGY_ABSORPTION = "Energy Absorption",
 	VOID_STEP = "Void Step",
@@ -62,6 +63,7 @@ func _init(_name: String = "", _type: String = SkillType.PASSIVE):
 		item_skill_base.append(ItemSkillBase.new())
 		item_skill_base[i].my_name = _name
 		item_skill_base[i].type = _type
+
 
 # region :::::::::::::::::::: GETTERs
 
@@ -124,27 +126,9 @@ static func initialize_skills() -> void:
 	var _skill: Skill
 	var int_array: Array[int]; var int_array1: Array[int]; var float_array: Array[float]; var float_array1: Array[float]
 
-	# region ABSORB_AND_RELEASE
-	aux_skill_name = Names.ABSORB_AND_RELEASE
-	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.ACTIVE)
-	_skill = _SKILLS[aux_skill_name]
-	_skill.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 7, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
+	SkillUnbreakable.create_and_add_instance(_SKILLS)
 
-	int_array1 = [60, 120, 180]
-	float_array = [0.2, 0.4, 0.6]
-	int_array = [12, 10, 8]
-	for i in int_array.size():
-		var seconds_to_release: float = 7.0; var range_in_tiles: int = 3
-		_skill.item_skill_base[i].instant_use = true
-		_skill.item_skill_base[i].range_in_tiles = range_in_tiles
-		_skill.item_skill_base[i].float_dict["percent_to_release"] = float_array[i]
-		_skill.item_skill_base[i].float_dict["seconds_to_release"] = seconds_to_release
-		_skill.item_skill_base[i].damage_type = DamageType.PHYSICAL
-		_skill.item_skill_base[i].mana_cost = int_array1[i]
-		_skill.item_skill_base[i].cooldown = int_array[i]
-		_skill.item_skill_base[i].description = "Accumulates all damage received over " + StringHelpers.format_float(seconds_to_release) + " seconds. Then releases " + StringHelpers.format_percent(float_array[i]) + " of the accumulated damage as physical damage to all enemies within " + str(range_in_tiles) + " tiles."
-
-	# endregion
+	SkillAbsorbAndRelease.create_and_add_instance(_SKILLS)
 
 	# region EARTHSHATTER
 	aux_skill_name = Names.EARTHSHATTER
@@ -155,7 +139,7 @@ static func initialize_skills() -> void:
 	int_array = [2, 3, 4]
 	int_array1 = [100, 150, 200]
 	float_array = [1, 1.5, 2]
-	for i in int_array.size():
+	for i in AVAILABLE_LEVELS:
 		_skill.item_skill_base[i].range_in_tiles = 2
 		_skill.item_skill_base[i].instant_use = true
 		_skill.item_skill_base[i].damage_type = DamageType.MAGIC
@@ -181,7 +165,7 @@ static func initialize_skills() -> void:
 	int_array = [80, 110, 140]
 	float_array1 = [10, 8, 6]
 	int_array1 = [6, 6, 6]
-	for i in int_array.size():
+	for i in AVAILABLE_LEVELS:
 		_skill.item_skill_base[i].stats.attack_speed_percent = float_array[i]
 		_skill.item_skill_base[i].stats.hostile_silence_duration = int_array1[i]
 		_skill.item_skill_base[i].create_effect = true
@@ -204,7 +188,7 @@ static func initialize_skills() -> void:
 
 	int_array = [2, 3, 4]
 	int_array1 = [5, 4, 3]
-	for i in int_array.size():
+	for i in AVAILABLE_LEVELS:
 		_skill.item_skill_base[i].stats.multiple_strike = MultipleStrike.new(int_array[i], int_array1[i])
 		_skill.item_skill_base[i].description = "Every " + str(int_array1[i]) + " attacks executes a multiple attack to " + str(int_array[i]) + " extra enemies"
 	# endregion
@@ -289,7 +273,7 @@ static func initialize_skills() -> void:
 	_skill.region_rect = Rect2(3 * FRAME_SIZE + _ATLAS_START_POS.x, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
 
 	int_array = [3, 4, 5]
-	for i in int_array.size():
+	for i in AVAILABLE_LEVELS:
 		_skill.item_skill_base[i].stats.attack_speed_percent = -0.1
 		_skill.item_skill_base[i].stats.move_speed_percent = -0.1
 		_skill.item_skill_base[i].stats.freeze_duration = 4
@@ -341,16 +325,16 @@ static func initialize_skills() -> void:
 	_skill.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 0, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
 
 	int_array = [80, 130, 200]
-	for i in int_array.size():
+	for i in AVAILABLE_LEVELS:
 		_skill.item_skill_base[i].mana_cost = int_array[i]
 	int_array = [8, 5, 2]
-	for i in int_array.size():
+	for i in AVAILABLE_LEVELS:
 		_skill.item_skill_base[i].cooldown = int_array[i]
 	int_array = [5, 6, 7]
-	for i in int_array.size():
+	for i in AVAILABLE_LEVELS:
 		_skill.item_skill_base[i].max_targets = int_array[i]
 	int_array = [20, 50, 100]
-	for i in int_array.size():
+	for i in AVAILABLE_LEVELS:
 		_skill.item_skill_base[i].stats.custom_damage_heal.base_damage_heal = int_array[i]
 	float_array = [0.2, 0.3, 0.4]
 	for i in float_array.size():
@@ -372,7 +356,7 @@ static func initialize_skills() -> void:
 	_skill.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 1, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
 
 	float_array = [0.1, 0.15, 0.2]
-	for i in int_array.size():
+	for i in AVAILABLE_LEVELS:
 		_skill.item_skill_base[i].stats.physical_attack_power_percent = float_array[i]
 		_skill.item_skill_base[i].stats.attack_speed_percent = float_array[i]
 		_skill.item_skill_base[i].stats.hp_regeneration_points_percent = float_array[i]
@@ -391,7 +375,7 @@ static func initialize_skills() -> void:
 
 	float_array = [0.2, 0.3, 0.4]
 	int_array = [1, 1, 2]
-	for i in int_array.size():
+	for i in AVAILABLE_LEVELS:
 		_skill.item_skill_base[i].stats.cleave_effect = CleaveEffect.new(float_array[i], int_array[i])
 		_skill.item_skill_base[i].description = "Deals " + StringHelpers.format_percent(float_array[i]) + " of the damage as a cleave effect to enemies around " + str(int_array[i]) + " tiles."
 	# endregion
@@ -404,7 +388,8 @@ func use(my_owner: Entity, target_entity: Entity) -> bool:
 		print("Cannot use skill: ", learned_skill)
 		return false
 
-	AbsorbAndRelease.try_to_use(my_owner, learned_skill)
+	SkillAbsorbAndRelease.try_to_use(my_owner, self)
+	SkillUnbreakable.try_to_use(my_owner, self)
 
 	if learned_skill.my_name == Names.EARTHSHATTER:
 		if not _apply_earthshatter(my_owner): return false
@@ -444,13 +429,16 @@ func _apply_earthshatter(_attacker: Entity) -> bool:
 	var stun_stats = CombatStats.new()
 	stun_stats.stun_duration = learned_skill.stats.stun_duration
 	stun_stats.is_owner_friendly = false
-	var stun_effect = CombatEffect.get_temporal_effect(CombatEffect.STUN_NAME, stun_stats.stun_duration, 1, stun_stats)
 
 	for _enemy in target_enemies:
 		var _di = DamageInfo.new(magic_damage, learned_skill.damage_type, _attacker.name)
 		_enemy.server_receive_damage(_di, _attacker)
 
+		var stun_effect = CombatEffect.get_temporal_effect(CombatEffect.STUN_NAME, stun_stats.stun_duration, 1, stun_stats)
 		_enemy.effects_helper.add_effect(stun_effect)
+
+	var message := DamageType.MAGIC_EMOTI + " " + str(magic_damage) + " " + DamageType.MAGIC_EMOTI
+	_attacker.hud.show_message_popup(message.to_upper(), Color(1, 1, 1), 0.4)
 
 	SoundsHelper.play_scream_hero_1()
 	return true
@@ -566,6 +554,10 @@ static func actions_after_execute_physical_attack(_attacker: Entity, _target: En
 			for extra_target in nearest_enemies:
 				_attacker.execute_physical_attack(false, extra_target)
 
+static func actions_before_receive_damage(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
+	for active_skill in _target.active_skills:
+		if active_skill.my_name == Names.UNBREAKABLE: return false
+	return true
 
 # endregion .................... SKILLS LOGICS
 

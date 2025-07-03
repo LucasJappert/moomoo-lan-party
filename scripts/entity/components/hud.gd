@@ -60,6 +60,7 @@ func _try_update_bars_visibility():
 
 func _try_update_label():
 	# _label.text = str(my_owner.current_state)
+	# _label.text = str(my_owner.effects_helper.get_effects().size())
 	_label_container.visible = _label.text != ""
 		
 	# _label.text = str(GameManager.current_enemies_in_scene)

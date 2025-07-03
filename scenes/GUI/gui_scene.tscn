@@ -218,7 +218,7 @@ offset_top = 1.0
 offset_right = 403.0
 offset_bottom = 54.0
 theme_override_font_sizes/font_size = 32
-text = "Host new game"
+text = "Lets play!"
 
 [node name="TextIP" type="LineEdit" parent="MultiplayerHUD/Panel"]
 unique_name_in_owner = true

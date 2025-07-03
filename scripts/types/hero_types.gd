@@ -58,7 +58,7 @@ static func initialize_hero(player: Player) -> void:
 			Skill.get_skill(Skill.Names.FRENZIED_SILENCE),
 			Skill.get_skill(Skill.Names.EARTHSHATTER),
 			Skill.get_skill(Skill.Names.ABSORB_AND_RELEASE),
-			# Skill.get_skill(Skill.Names.),
+			Skill.get_skill(Skill.Names.UNBREAKABLE),
 		]
 
 	if player.extra_info.key_type == Names.BLOOD_WARDEN:

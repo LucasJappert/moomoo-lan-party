@@ -4,7 +4,7 @@ extends CharacterBody2D
 
 const EXP_MULTIPLIER: int = 1
 
-var absorb_and_release: AbsorbAndRelease = AbsorbAndRelease.new()
+var active_skills: Array[SkillBase] = []
 var effects_helper: EffectsHelper = EffectsHelper.new()
 @export var current_hp: int = 0
 @export var current_mana: int = 0
@@ -88,7 +88,13 @@ func _process_on_server(_delta: float):
 
 	if enemy_spell_caster: enemy_spell_caster._process(_delta)
 
-	absorb_and_release.process(_delta, my_owner())
+	# Iterate in reverse order to avoid breaking indices when removing elements
+	for i in range(active_skills.size() - 1, -1, -1):
+		var active_skill = active_skills[i]
+		active_skill.process(my_owner(), _delta)
+
+		if not active_skill.active:
+			active_skills.remove_at(i)
 
 func server_execute_physical_damage(_target: Entity) -> void:
 	if my_owner().multiplayer.is_server() == false: return
@@ -116,6 +122,8 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	if _di.total_damage == 0: return
 	if my_owner().multiplayer.is_server() == false: return
 
+	if not Skill.actions_before_receive_damage(_attacker, my_owner(), _di): return
+
 	var my_stats = cache_total_stats
 	var attacker_stats = _attacker.cache_total_stats
 	
@@ -135,7 +143,8 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 
 	update_current_hp(-_di.total_damage, _attacker)
 
-	absorb_and_release.on_damage_received(_attacker, _di.total_damage)
+	for active_skill in active_skills:
+		active_skill.on_damage_received(_attacker, _di.total_damage)
 
 # region SETTERs
 func set_current_hp_and_mana() -> void:

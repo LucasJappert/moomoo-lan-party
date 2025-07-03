@@ -97,11 +97,6 @@ Let’s build MooMoo LAN Party together! 🎉
 📝 MY TODOs: 🔵In Progress🟡Paused✅Done
 
 - Ver info de habilidades, items y stats cuando hacemos hover sobre el avatar del target
-- Ver skill activo desde el player 2
-
-- 🔵 Agregar un skill que te hace inmune a todo daño durante cierto tiempo al activarlo
-- Configurar nuevo héroe Kael Dravok
-
 - Agregar skill que brinda un 10/20/30% de evasion
 - Agregar skill, la cual puede activarse o desactivarse, que brindaría chances de matar al enemigo al instante (no aplica a bosses). Consume 20 de mana en cada ataque.
 - Agregar skill pasiva que luego de matar un enemigo lo transforma en 3 esqueletos que lucharán para él.
@@ -143,6 +138,9 @@ Let’s build MooMoo LAN Party together! 🎉
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
 
+- ✅ Configure new hero 🧙 Kael Dravok 🧙
+- ✅ Add animation for UNBREAKABLE skill
+- ✅ Add a skill that makes you immune to all damage for a certain time when activated
 - ✅ Add a skill that, when activated, accumulates all damage received by the hero. After 7 seconds, 10/20/30% of that accumulated damage will be released as damage to all enemies within a radius of 3 tiles
 - ✅ Add a skill that stuns all enemies within 2 tiles for 2/3/4 seconds. It also deals damage of 30/40/50% of the total strength
 - ✅ Add a skill that when activated grants 20/30/40% increased attack speed for 6 seconds. During this time, the hero is silenced
@@ -155,7 +153,7 @@ Let’s build MooMoo LAN Party together! 🎉
 
 - ✅ Darken item slot when on cooldown
 - ✅ Create a skill that every 5/4/3 attacks performs a multiple attack to 2/3/4 extra enemies
-- ✅ Configure 2 heroes (BLOOD_WARDEN and Frostbane Arcanist)
+- ✅ Configure 2 heroes (🧙Blood Warden🧙 and 🧙Frostbane Arcanist🧙)
 - ✅ Enable upgrading of the special skill (number 4) at levels 6, 9, and 12
 - ✅ Animation for when an attack is made or a spell is cast
 - ✅ Add skill that drains enemy's mana on each physical hit, certain % of drained mana is converted into damage

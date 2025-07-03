@@ -12,6 +12,7 @@ var max_stacks: int = 1
 var stats: CombatStats = CombatStats.new()
 var unique_id: int = UniqueIdGenerator.get_id()
 var is_cooldown_finished: bool = false
+var _description: String = ""
 
 const STUN_RECT_REGION := Rect2(0, 608, 32, 17)
 const STUN_NAME = "Stun"
@@ -28,21 +29,25 @@ func _process(delta: float) -> void:
 
 func get_description() -> String:
 	var description = ""
+
+	if _description != "": description += _description + "\n"
+
 	if _duration_in_seconds > 0.0:
 		description += str("- Duration: ", StringHelpers.format_float_compact(_duration_in_seconds), "s\n")
 
 	description += stats.get_description()
 
-	description += str("- Max stacks: ", max_stacks, "\n")
+	if max_stacks > 1: description += str("- Max stacks: ", max_stacks, "\n")
 
 	return description
 
 # region 	SETTERs
+func set_description(description: String) -> void:
+	_description = description
 
 func set_region_rect(rect: Rect2) -> void:
 	_region_rect = rect
-
-# endregion GETTERs
+# endregion SETTERs
 
 
 # region 	GETTERs
