@@ -99,8 +99,7 @@ Let’s build MooMoo LAN Party together! 🎉
 - Ver info de habilidades, items y stats cuando hacemos hover sobre el avatar del target
 - Ver skill activo desde el player 2
 
-- 🔵 Agregar una skill que, al ser activada, acumula todo el daño recibido por el héroe. Transcurrido 7 segundos, el 10/20/30% de ese daño acumulado será liberado como daño a todos los enemigos ubicados en un radio de 3 casillas
-- Agregar un skill que te hace inmune a todo daño durante cierto tiempo al activarlo
+- 🔵 Agregar un skill que te hace inmune a todo daño durante cierto tiempo al activarlo
 - Configurar nuevo héroe Kael Dravok
 
 - Agregar skill que brinda un 10/20/30% de evasion
@@ -144,6 +143,7 @@ Let’s build MooMoo LAN Party together! 🎉
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
 
+- ✅ Add a skill that, when activated, accumulates all damage received by the hero. After 7 seconds, 10/20/30% of that accumulated damage will be released as damage to all enemies within a radius of 3 tiles
 - ✅ Add a skill that stuns all enemies within 2 tiles for 2/3/4 seconds. It also deals damage of 30/40/50% of the total strength
 - ✅ Add a skill that when activated grants 20/30/40% increased attack speed for 6 seconds. During this time, the hero is silenced
 - ✅ Add information about different levels in skill descriptions

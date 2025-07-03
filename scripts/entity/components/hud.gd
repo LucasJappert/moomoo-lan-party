@@ -28,7 +28,7 @@ func _post_ready(_entity: Entity):
 
 	_label_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_label.text = my_owner.name
+	_label.text = ""
 
 	var percent := 0.7
 	var scale_diff := my_owner.sprite.scale.y - 1.0
@@ -59,9 +59,9 @@ func _try_update_bars_visibility():
 	bars_container.visible = false
 
 func _try_update_label():
+	# _label.text = str(my_owner.current_state)
 	_label_container.visible = _label.text != ""
 		
-	_label.text = str(my_owner.current_state)
 	# _label.text = str(GameManager.current_enemies_in_scene)
 
 func update_health_bar():
@@ -70,11 +70,11 @@ func update_health_bar():
 func update_mana_bar():
 	_mana_current_bar.size.x = my_owner.current_mana * BAR_SIZE / my_owner.get_total_mana()
 
-func show_damage_heal_popup(text: String, color: Color = Color.RED):
+func show_message_popup(text: String, color: Color = Color.RED, speed_scale: float = 1.0):
 	if not SHOW_DAMAGES_HEALS: return
-	show_popup(text, color)
+	show_popup(text, color, speed_scale)
 
-func show_popup(text: String, color: Color = Color.RED):
+func show_popup(text: String, color: Color = Color.RED, speed_scale: float = 1.0):
 	var popup = DamagePopupPool.get_popup()
 	if not popup: return
 	
@@ -85,7 +85,7 @@ func show_popup(text: String, color: Color = Color.RED):
 	var offset := Vector2(0, randi_range(-_aux, _aux))
 	popup.position = Vector2(0, -MapManager.TILE_SIZE.x * 2) + offset
 
-	popup.show_damage(text, color)
+	popup.show_damage(text, color, speed_scale)
 
 func set_last_damage_to_my_player():
 	_last_damage_to_my_player = Time.get_ticks_msec()

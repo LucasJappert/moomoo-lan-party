@@ -17,6 +17,7 @@ const Names = {
 	MULTIPLE_STRIKE = "Multiple Strike", # ✅
 	FRENZIED_SILENCE = "Frenzied Silence", # ✅
 	EARTHSHATTER = "Earthshatter", # ✅
+	ABSORB_AND_RELEASE = "Absorb and Release", # ✅
 	DIVINE_SHIELD = "Divine Shield",
 	ENERGY_ABSORPTION = "Energy Absorption",
 	VOID_STEP = "Void Step",
@@ -123,6 +124,28 @@ static func initialize_skills() -> void:
 	var _skill: Skill
 	var int_array: Array[int]; var int_array1: Array[int]; var float_array: Array[float]; var float_array1: Array[float]
 
+	# region ABSORB_AND_RELEASE
+	aux_skill_name = Names.ABSORB_AND_RELEASE
+	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.ACTIVE)
+	_skill = _SKILLS[aux_skill_name]
+	_skill.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 7, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
+
+	int_array1 = [60, 120, 180]
+	float_array = [0.2, 0.4, 0.6]
+	int_array = [12, 10, 8]
+	for i in int_array.size():
+		var seconds_to_release: float = 7.0; var range_in_tiles: int = 3
+		_skill.item_skill_base[i].instant_use = true
+		_skill.item_skill_base[i].range_in_tiles = range_in_tiles
+		_skill.item_skill_base[i].float_dict["percent_to_release"] = float_array[i]
+		_skill.item_skill_base[i].float_dict["seconds_to_release"] = seconds_to_release
+		_skill.item_skill_base[i].damage_type = DamageType.PHYSICAL
+		_skill.item_skill_base[i].mana_cost = int_array1[i]
+		_skill.item_skill_base[i].cooldown = int_array[i]
+		_skill.item_skill_base[i].description = "Accumulates all damage received over " + StringHelpers.format_float(seconds_to_release) + " seconds. Then releases " + StringHelpers.format_percent(float_array[i]) + " of the accumulated damage as physical damage to all enemies within " + str(range_in_tiles) + " tiles."
+
+	# endregion
+
 	# region EARTHSHATTER
 	aux_skill_name = Names.EARTHSHATTER
 	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.ACTIVE)
@@ -139,7 +162,7 @@ static func initialize_skills() -> void:
 		_skill.item_skill_base[i].stats.stun_duration = int_array[i]
 		_skill.item_skill_base[i].auxiliary_float = float_array[i]
 		_skill.item_skill_base[i].mana_cost = int_array1[i]
-		_skill.item_skill_base[i].cooldown = 1
+		_skill.item_skill_base[i].cooldown = 12
 		_skill.item_skill_base[i].description = (
 			"Stuns all enemies within " + str(_skill.item_skill_base[i].range_in_tiles) + " tiles for " + str(int_array[i]) +
 			" seconds and deals " + StringHelpers.format_percent(float_array[i]) +
@@ -374,22 +397,27 @@ static func initialize_skills() -> void:
 	# endregion
 
 func use(my_owner: Entity, target_entity: Entity) -> bool:
+	var learned_skill = get_learned_skill()
+	if not learned_skill: return false
+
 	if not can_use(my_owner):
-		print("Cannot use skill: ", get_learned_skill())
+		print("Cannot use skill: ", learned_skill)
 		return false
 
-	if get_learned_skill().my_name == Names.EARTHSHATTER:
+	AbsorbAndRelease.try_to_use(my_owner, learned_skill)
+
+	if learned_skill.my_name == Names.EARTHSHATTER:
 		if not _apply_earthshatter(my_owner): return false
 
-	if get_learned_skill().my_name == Names.STORM_STRIKE:
+	if learned_skill.my_name == Names.STORM_STRIKE:
 		if not _apply_storm_strike(my_owner, target_entity): return false
 
-	if get_learned_skill().my_name == Names.FRENZIED_SILENCE:
+	if learned_skill.my_name == Names.FRENZIED_SILENCE:
 		if not _apply_frenzied_silence(my_owner, target_entity): return false
 
-	get_learned_skill().set_last_used_time()
+	learned_skill.set_last_used_time()
 
-	my_owner.update_current_mana(-get_learned_skill().mana_cost)
+	my_owner.update_current_mana(-learned_skill.mana_cost)
 
 	return my_owner.uncharge_skill()
 
@@ -531,6 +559,7 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 static func actions_after_execute_physical_attack(_attacker: Entity, _target: Entity):
 	var multiple_strike_skill = _attacker.get_learned_skill(Names.MULTIPLE_STRIKE)
 	if multiple_strike_skill:
+		# TODO: get this logic to MultipleStrike class
 		if multiple_strike_skill.stats.multiple_strike.increment_hits():
 			var extra_targets = multiple_strike_skill.stats.multiple_strike.extra_targets
 			var nearest_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, extra_targets, _attacker.get_my_enemies(), _attacker.get_attack_range(), [_target])

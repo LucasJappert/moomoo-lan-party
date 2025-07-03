@@ -6,7 +6,6 @@ const SKILL_HOTKEYS := [KEY_A, KEY_S, KEY_D, KEY_F]
 static func key_pressed_server_side(_keycode: int, player: Entity) -> void:
 	if not player: return
 	
-	print("Key pressed: ", _keycode)
 	# SKILL HOTKEYs
 	for i in SKILL_HOTKEYS.size():
 		if _keycode == SKILL_HOTKEYS[i]:

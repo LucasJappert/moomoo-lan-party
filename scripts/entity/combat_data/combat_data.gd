@@ -4,6 +4,7 @@ extends CharacterBody2D
 
 const EXP_MULTIPLIER: int = 1
 
+var absorb_and_release: AbsorbAndRelease = AbsorbAndRelease.new()
 var effects_helper: EffectsHelper = EffectsHelper.new()
 @export var current_hp: int = 0
 @export var current_mana: int = 0
@@ -87,6 +88,8 @@ func _process_on_server(_delta: float):
 
 	if enemy_spell_caster: enemy_spell_caster._process(_delta)
 
+	absorb_and_release.process(_delta, my_owner())
+
 func server_execute_physical_damage(_target: Entity) -> void:
 	if my_owner().multiplayer.is_server() == false: return
 	if _target == null: return
@@ -131,6 +134,8 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	my_owner().rpc_handler.receive_damage_or_heal(ObjectHelpers.to_dict(_di, true))
 
 	update_current_hp(-_di.total_damage, _attacker)
+
+	absorb_and_release.on_damage_received(_attacker, _di.total_damage)
 
 # region SETTERs
 func set_current_hp_and_mana() -> void:
@@ -264,9 +269,6 @@ func verify_freed_target_view(entity_name: String) -> void:
 
 func charge_skill(index: int) -> void:
 	if is_silenced: return
-	print("AM HOST: ", GameManager.AM_I_HOST)
-	print("self.name: ", self.name)
-	print("_skills[index].learned_level: ", _skills[index].learned_level)
 	if not _skills[index].learned_level: return print("Skill not learned: ", _skills[index])
 	if _skills[index].get_learned_skill().type == SkillType.PASSIVE: return
 	if not _skills[index].can_use(my_owner()): return
@@ -301,7 +303,6 @@ func use_charged_skill(_target: Entity) -> void:
 	charged_skill.use(my_owner(), _target)
 
 	uncharge_skill()
-
 
 func toogle_keep_ground() -> void:
 	keep_ground = not keep_ground
@@ -502,15 +503,15 @@ func global_receive_damage_or_heal(_di: DamageInfo):
 	var melee_attack = _di.projectile_type == Projectile.TYPES.NONE && _di.damage_type == DamageType.PHYSICAL
 	var arrow_attack = _di.projectile_type == Projectile.TYPES.ARROW && _di.damage_type == DamageType.PHYSICAL
 	if _di.critical > 0:
-		my_owner().hud.show_damage_heal_popup(str(- (_di.total_damage - _di.critical)), Color(1, 0, 0))
-		my_owner().hud.show_damage_heal_popup(str(-_di.critical), Color(1, 1, 0))
+		my_owner().hud.show_message_popup(str(- (_di.total_damage - _di.critical)), Color(1, 0, 0))
+		my_owner().hud.show_message_popup(str(-_di.critical), Color(1, 1, 0))
 		if arrow_attack: SoundsHelper.play_critical_arrow_shot()
 		if melee_attack: SoundsHelper.play_critical_melee_hit()
 	if _di.critical == 0 and _di.total_damage > 0:
 		if melee_attack: SoundsHelper.play_melee_hit()
 
 	if _di.total_damage < 0: # Heal
-		my_owner().hud.show_damage_heal_popup(str(abs(_di.total_damage)), Color(0, 1, 0))
+		my_owner().hud.show_message_popup(str(abs(_di.total_damage)), Color(0, 1, 0))
 	
 	register_attacker(_di.get_attacker())
 

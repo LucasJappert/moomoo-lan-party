@@ -9,6 +9,7 @@ const CANT_USE_COLOR = Color(0.5, 0.5, 0.5)
 var range_in_tiles: float = 1
 var instant_use: bool = false
 var auxiliary_float: float # Used for general purposes, like calculate percentage of damage respect to the strength
+var float_dict: Dictionary = {} # Used for general purposes, like apply damage after xx seconds
 var my_name: String
 var duration_in_seconds: float
 var type: String = SkillType.ACTIVE

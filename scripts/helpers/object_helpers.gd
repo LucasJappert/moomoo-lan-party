@@ -69,7 +69,7 @@ static func from_dict(original_obj: Object, data: Dictionary) -> Object:
 
 		match typeof(value):
 			TYPE_DICTIONARY:
-				# Intentar detectar si es una variante serializada o un objeto complejo
+									# Intentar detectar si es una variante serializada o un objeto complejo
 				if value.has("_type"):
 					original_obj.set(key, _deserialize_variant(value))
 					continue
@@ -84,6 +84,16 @@ static func from_dict(original_obj: Object, data: Dictionary) -> Object:
 					sub_obj = script.new()
 					from_dict(sub_obj, value)
 					original_obj.set(key, sub_obj)
+					continue
+				
+				# Si es un diccionario simple (por ejemplo Dictionary<String, float>), setear directamente
+				var is_simple_dict := true
+				for v in value.values():
+					if typeof(v) == TYPE_DICTIONARY or typeof(v) == TYPE_OBJECT:
+						is_simple_dict = false
+						break
+				if is_simple_dict:
+					original_obj.set(key, value)
 					continue
 
 				print("❗ No se pudo determinar el script para '" + key + "'")

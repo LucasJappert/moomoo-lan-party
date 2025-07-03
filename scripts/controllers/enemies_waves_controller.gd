@@ -80,9 +80,9 @@ static func create_next_wave() -> void:
 			var enemy = _get_enemy(enemy_type, wave_direction, is_boss)
 			enemy.set_current_hp_and_mana()
 
-			enemy.can_attack = false
+			# enemy.can_attack = false
 			GameManager.spawn_enemy(enemy)
-			return
+			# return
 
 static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: bool) -> Enemy:
 	var enemy: Enemy = EnemyFactory.get_enemy_instance(enemy_type)
