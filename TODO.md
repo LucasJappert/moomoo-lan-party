@@ -96,8 +96,7 @@ Let’s build MooMoo LAN Party together! 🎉
 
 📝 MY TODOs: 🔵In Progress🟡Paused✅Done
 
-- 🔵 Cambiar la GUI cuando hacemos click izquierdo en otra entidad.
-- 🔵 Refactorizar la GUI dividiéndola en paneles (TOP-LEFT, BOTTOM-LEFT, BOTTOM-RIGHT)
+- 🔵 Refactor the GUI by dividing it into panels (TOP-LEFT, BOTTOM-LEFT, BOTTOM-RIGHT)
 
 - Agregar skill que brinda un 10/20/30% de evasion
 - Agregar skill, la cual puede activarse o desactivarse, que brindaría chances de matar al enemigo al instante (no aplica a bosses). Consume 20 de mana en cada ataque.
@@ -139,6 +138,13 @@ Let’s build MooMoo LAN Party together! 🎉
 - Encapsular lógica de get/set
 - Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+
+XX/07/2025
+
+- ✅ Change the GUI when we left-click on another entity
+- ✅ Fix the problem of emoticons in web (now using OpenSansEmoji)
+
+# -----------------------------------------------------------------------------------------------
 
 02/07/2025
 

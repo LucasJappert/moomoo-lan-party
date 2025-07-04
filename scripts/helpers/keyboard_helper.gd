@@ -19,3 +19,6 @@ static func key_pressed_server_side(_keycode: int, player: Entity) -> void:
 	# OTHER HOTKEYs
 	if _keycode == KEY_Q:
 		player.toogle_keep_ground()
+
+	if _keycode == KEY_SPACE and GameManager.MY_PLAYER:
+		GameManager.MY_PLAYER.set_target_view(GameManager.MY_PLAYER)

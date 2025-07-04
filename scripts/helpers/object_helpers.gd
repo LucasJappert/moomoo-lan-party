@@ -156,6 +156,8 @@ static func array_to_dict_array(array: Array, just_my_vars: bool = false) -> Arr
 				result.append(to_dict(item, just_my_vars))
 			TYPE_RECT2, TYPE_VECTOR2:
 				result.append(_serialize_variant(item))
+			TYPE_NIL:
+				result.append({})
 			_:
 				push_warning("array_to_dict_array: unsupported type: %s" % typeof(item))
 	return result

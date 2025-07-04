@@ -1,6 +1,6 @@
 extends Node
 
-var my_main: Node2D
+var my_main: MyMain
 var enemies_node: Node2D
 var entities: Dictionary[String, Entity] = {}
 var players_node: Node2D

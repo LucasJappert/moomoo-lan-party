@@ -431,9 +431,9 @@ uppercase = true
 [node name="Level" type="Label" parent="PanelBL"]
 layout_mode = 0
 offset_left = 76.0
-offset_top = 160.0
+offset_top = 162.0
 offset_right = 116.0
-offset_bottom = 196.0
+offset_bottom = 198.0
 theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 26

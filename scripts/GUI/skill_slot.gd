@@ -48,6 +48,7 @@ func _ready():
 func _process(_delta: float) -> void:
 	if not _is_my_player_owner: return _lock_slot()
 	if not skill: return
+	if not GameManager.MY_PLAYER: return
 
 	if skill.can_use(GameManager.MY_PLAYER):
 		label_cool_down.visible = false

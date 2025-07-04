@@ -41,6 +41,9 @@ var _current_state: String = EntityState.States.IDLE
 
 @onready var rpc_handler: RpcHandler = $RpcHandler
 
+func _init() -> void:
+	super._init()
+
 func _ready():
 	collision_layer = 1
 	collision_mask = 1

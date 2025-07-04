@@ -46,8 +46,7 @@ func _process(_delta: float):
 	_try_update_bars_visibility()
 
 func _try_update_bars_visibility():
-	if my_owner.is_my_player(): return
-	
+	# if my_owner.is_my_player(): return
 	if ClientInputs.ALT_PRESSED: bars_container.visible = true; return
 
 	var show_by_last_damage_to_my_player = Time.get_ticks_msec() - _last_damage_to_my_player < HIDE_BARS_AFTER_MILLISECONDS

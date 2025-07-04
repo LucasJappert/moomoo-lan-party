@@ -78,6 +78,8 @@ func _ready() -> void:
 
 	_current_exp_rect.size.y = EXP_BAR_FULL_SIZE.y
 	_current_gold.text = ""
+	
+	_panel_tl.visible = false
 
 	%HpBallCircle.connect("mouse_entered", func():
 		if not _bottom_target: return
@@ -133,17 +135,17 @@ func init_scene(entity: Entity) -> void:
 	_set_items()
 
 func _set_skills() -> void:
-	var skill_slots := get_skill_slots()
-	for i in range(skill_slots.size()):
-		var skill: Skill = _bottom_target._skills[i] if i < _bottom_target._skills.size() else null
-		skill_slots[i].skill_updated(skill, i + 1, _bottom_target is Player)
+	var _slots := get_skill_slots()
+	for i in range(_slots.size()):
+		var _skill: Skill = _bottom_target._skills[i] if i < _bottom_target._skills.size() else null
+		_slots[i].skill_updated(_skill, i + 1, _bottom_target is Player)
 
 func _set_items() -> void:
-	var _item_slots := get_item_slots()
+	var _slots := get_item_slots()
 
-	for i in range(_item_slots.size()):
-		var item: Item = _bottom_target._items[i] if i < _bottom_target._items.size() else null
-		_item_slots[i].item_updated(_bottom_target._items[i])
+	for i in range(SlotItem.HOTKEY_BY_SLOT.size()):
+		_slots[i].slot_number = i + 1
+		_slots[i].item_updated(_bottom_target._items[i])
 
 func _set_my_player_avatar_region(_entity: Entity) -> void:
 	_my_player_avatar.region_rect = _entity.extra_info.rects[0]
@@ -152,7 +154,6 @@ func set_target_avatar_region(region_rect: Rect2) -> void:
 	_sprite_target_avatar.region_rect = region_rect
 
 func _on_new_target_view_selected(_owner: Entity, _viewed_target: Entity) -> void:
-	print("Viewed target: ", _viewed_target)
 	_bottom_target = _viewed_target
 	if not _bottom_target: _bottom_target = GameManager.MY_PLAYER
 	init_scene(_bottom_target)
@@ -191,6 +192,7 @@ func get_items() -> Array[SlotItem]:
 # region 	INTERNAL AUXILIARY METHODS
 
 func _update_panel_top_left(use_lerp: bool = true) -> void:
+	return
 	if not _top_left_target:
 		_panel_tl.visible = false
 		return

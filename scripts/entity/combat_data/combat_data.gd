@@ -13,8 +13,7 @@ var effects_helper: EffectsHelper = EffectsHelper.new()
 @export var is_stunned: bool = false
 var is_silenced: bool = false
 var _skills: Array[Skill] = []
-var ITEMS_SLOTS: int = 6
-var _items: Array[SlotItemInfo] = [SlotItemInfo.new(), SlotItemInfo.new(), SlotItemInfo.new(), SlotItemInfo.new(), SlotItemInfo.new(), SlotItemInfo.new()]
+var _items: Array[Item] = []
 
 var _1_second_timer: float = 0.0
 
@@ -53,6 +52,9 @@ var charged_skill: Skill
 var keep_ground: bool = false
 var enemy_spell_caster: EnemySpellCaster
 
+func _init():
+	for i in range(SlotItem.SLOTS_NUMBER):
+		_items.append(null)
 
 func ready_combat_data() -> void:
 	effects_helper.subscribe_to_changes(Callable(my_owner(), "update_cache_total_stats"))
@@ -100,7 +102,7 @@ func server_execute_physical_damage(_target: Entity) -> void:
 	if my_owner().multiplayer.is_server() == false: return
 	if _target == null: return
 	
-	if not _target.target_view: _target.set_target_view(my_owner())
+	# if not _target.target_view: _target.set_target_view(my_owner()) # Util when we want autoset target view
 
 	var total_stats = cache_total_stats
 	var base_damage = total_stats.physical_attack_power
@@ -213,34 +215,33 @@ func update_base_stats(new_stats: CombatStats) -> void:
 	my_owner().combat_stats = new_stats
 	update_cache_total_stats()
 
-func update_item(index: int, slot_item_info: SlotItemInfo) -> bool:
+func update_item(item: Item, index: int) -> bool:
 	if index >= _items.size(): printerr("Index out of range: ", index)
 
-	slot_item_info.position = index + 1
-	_items[index] = slot_item_info
+	_items[index] = item
 
 	update_cache_total_stats()
 	return true
 
-func add_item(_slot_item_info: SlotItemInfo) -> bool:
-	if _slot_item_info.position > 0:
-		return update_item(_slot_item_info.position - 1, _slot_item_info)
+func add_item(item: Item, index: int = -1) -> bool:
+	if index >= 0:
+		return update_item(item, index)
 
-	for i in range(ITEMS_SLOTS):
-		if _items[i].item == null:
-			return update_item(i, _slot_item_info)
+	for i in range(SlotItem.SLOTS_NUMBER):
+		if _items[i] == null:
+			return update_item(item, i)
 
 	return false
 
-func use_item(slot_position: int) -> void: # Called from _on_key_pressed
-	if _items[slot_position - 1] == null: return print("No item in slot: ", slot_position)
+func use_item(_slot_number: int) -> void: # Called from _on_key_pressed
+	if _items[_slot_number - 1] == null: return print("No item in slot: ", _slot_number)
 
-	_items[slot_position - 1].use_item(my_owner(), null)
+	_items[_slot_number - 1].use_item(_slot_number, my_owner(), null)
 
 
-func item_updated_by_rpc(slot_item_info: SlotItemInfo) -> void:
-	update_item(slot_item_info.position - 1, slot_item_info)
-	EventBus.emit_item_updated(my_owner(), slot_item_info, null)
+func item_updated_by_rpc(_item: Item, _slot_number: int) -> void:
+	update_item(_item, _slot_number - 1)
+	EventBus.emit_item_updated(my_owner(), _item, _slot_number, null)
 
 func set_attack_type_according_to_projectile_type() -> void:
 	attack_type = AttackTypes.MELEE
@@ -349,12 +350,12 @@ func _get_extra_stats_by_skills() -> CombatStats:
 
 func _get_extra_stats_by_items() -> CombatStats:
 	var extra_stats = CombatStats.new()
-	for slot_item_info in _items:
-		if slot_item_info.is_consumable: continue
-		if slot_item_info.item == null: continue
-		if slot_item_info.item.type == SkillType.ACTIVE: continue
-		if slot_item_info.item.stats.has_hostil_stun_effect(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
-		extra_stats.accumulate_combat_stats(slot_item_info.item.stats)
+	for _item in _items:
+		if not _item: continue
+		if _item.is_consumable: continue
+		if _item.type == SkillType.ACTIVE: continue
+		if _item.stats.has_hostil_stun_effect(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
+		extra_stats.accumulate_combat_stats(_item.stats)
 	return extra_stats
 
 func _check_ignore_enemy_evasion(_di: DamageInfo, total_stats: CombatStats) -> bool:
@@ -440,13 +441,13 @@ func get_total_mana() -> int:
 func get_target_entity() -> Entity:
 	return GameManager.get_entity(target_to_attack_name)
 
-func get_items() -> Array[SlotItemInfo]:
+func get_items() -> Array[Item]:
 	return _items
-func get_items_by_name(p_name: String) -> Array[SlotItemInfo]:
-	var result: Array[SlotItemInfo] = []
-	for slot_item in _items:
-		if not slot_item.item: continue
-		if slot_item.item.my_name == p_name: result.append(slot_item)
+func get_items_by_name(p_name: String) -> Array[Item]:
+	var result: Array[Item] = []
+	for _item in _items:
+		if not _item: continue
+		if _item.my_name == p_name: result.append(_item)
 	return result
 # endregion GETTERs
 
