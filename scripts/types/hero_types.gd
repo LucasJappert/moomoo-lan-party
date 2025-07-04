@@ -41,7 +41,7 @@ static func initialize_hero(player: Player) -> void:
 	player.add_item(Item.get_item(Item.Names.MANA_POTION_I, 100, true))
 	player.add_item(Item.get_item(Item.Names.HEALTH_POTION_III, 100, true))
 	player.add_item(Item.get_item(Item.Names.MANA_POTION_III, 100, true))
-	player.add_item(Item.get_item(Item.Names.CLEAVE_EDGE, 1, false))
+	# player.add_item(Item.get_item(Item.Names.CLEAVE_EDGE, 1, false))
 	# player.add_item(Item.get_item(Item.Names.STUNNING_EDGE, 1, false))
 
 

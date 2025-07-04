@@ -47,7 +47,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	_SKILLS[_skill_name].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 7, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
 
 	int_array1 = [60, 120, 180]
-	float_array = [0.1, 0.2, 0.3]
+	float_array = [0.1, 0.15, 0.2]
 	int_array = [12, 10, 8]
 	for i in Skill.AVAILABLE_LEVELS:
 		var seconds_to_release: float = 7.0; var range_in_tiles: int = 3

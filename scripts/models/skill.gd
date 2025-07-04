@@ -138,13 +138,13 @@ static func initialize_skills() -> void:
 
 	int_array = [2, 3, 4]
 	int_array1 = [100, 150, 200]
-	float_array = [1, 1.5, 2]
+	float_array = [0.5, 1, 1.5]
 	for i in AVAILABLE_LEVELS:
 		_skill.item_skill_base[i].range_in_tiles = 2
 		_skill.item_skill_base[i].instant_use = true
 		_skill.item_skill_base[i].damage_type = DamageType.MAGIC
 		_skill.item_skill_base[i].stats.stun_duration = int_array[i]
-		_skill.item_skill_base[i].auxiliary_float = float_array[i]
+		_skill.item_skill_base[i].auxiliary_float = float_array[i] # Strenght percent damage
 		_skill.item_skill_base[i].mana_cost = int_array1[i]
 		_skill.item_skill_base[i].cooldown = 12
 		_skill.item_skill_base[i].description = (
