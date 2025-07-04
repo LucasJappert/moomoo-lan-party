@@ -39,6 +39,10 @@ folder_colors={
 "res://sounds/": "orange"
 }
 
+[gui]
+
+theme/custom_font="uid://cvuud3ka1jrhk"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

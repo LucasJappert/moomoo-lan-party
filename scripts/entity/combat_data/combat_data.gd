@@ -1,33 +1,46 @@
 class_name CombatData
 
-extends Node
+extends CharacterBody2D
+
 const EXP_MULTIPLIER: int = 1
 
+var active_skills: Array[SkillBase] = []
 var effects_helper: EffectsHelper = EffectsHelper.new()
 @export var current_hp: int = 0
 @export var current_mana: int = 0
 @export var attack_type := AttackTypes.MELEE
 @export var projectile_type: String = Projectile.TYPES.NONE
 @export var is_stunned: bool = false
+var is_silenced: bool = false
 var _skills: Array[Skill] = []
-var _items: Array[SlotItemInfo] = [] # We use 6 slots
-var _my_owner: Entity
+var _items: Array[Item] = []
 
 var _1_second_timer: float = 0.0
 
-var _target_entity: Entity #
-@export var target_entity_name: String:
+var target_view: Entity
+@export var target_view_name: String:
 	set(value):
-		if _target_entity_name == value: return
-		_target_entity_name = value
-		_target_entity = GameManager.get_entity(value)
+		if _target_view_name == value: return
+		_target_view_name = value
+		target_view = GameManager.get_entity(value)
+		EventBus.emit_new_target_view_selected(my_owner(), target_view)
+	get:
+		return _target_view_name
+var _target_view_name: String = ""
+
+var target_to_attack: Entity
+@export var target_to_attack_name: String:
+	set(value):
+		if _target_to_attack_name == value: return
+		_target_to_attack_name = value
+		target_to_attack = GameManager.get_entity(value)
 		
-		EventBus.emit_new_target_selected(GlobalsEntityHelpers.get_owner(self), _target_entity)
-		if _target_entity == null: return
+		EventBus.emit_new_target_to_attack_selected(my_owner(), target_to_attack)
+		if target_to_attack == null: return
 
 	get:
-		return _target_entity_name
-var _target_entity_name: String = ""
+		return _target_to_attack_name
+var _target_to_attack_name: String = ""
 
 var last_physical_hit_time: int = 0 # In milliseconds
 var nearest_enemy_focused: Entity
@@ -39,33 +52,27 @@ var charged_skill: Skill
 var keep_ground: bool = false
 var enemy_spell_caster: EnemySpellCaster
 
-func _ready() -> void:
-	effects_helper.subscribe_to_changes(Callable(self, "update_cache_total_stats"))
+func _init():
+	for i in range(SlotItem.SLOTS_NUMBER):
+		_items.append(null)
 
-	if GameManager.AM_I_HOST == false:
-		set_process(false)
-
-	# Initialize items
-	_items.clear()
-	for i in range(SlotItem.HOTKEY_BY_SLOT.size()): _items.append(SlotItemInfo.new(null, i + 1))
+func ready_combat_data() -> void:
+	effects_helper.subscribe_to_changes(Callable(my_owner(), "update_cache_total_stats"))
 
 	update_cache_total_stats()
 
-func _post_ready() -> void:
-	effects_helper.set_my_owner(_my_owner)
+func post_ready_combat_data() -> void:
+	effects_helper.set_my_owner(my_owner())
 
 	if not GameManager.AM_I_HOST: return
 
-	current_hp = int(get_total_hp())
-	current_mana = int(get_total_mana())
+	if current_hp == 0: current_hp = get_total_hp()
+	if current_mana == 0: current_mana = get_total_mana()
 
 	if my_owner() is Enemy:
 		enemy_spell_caster = EnemySpellCaster.new(my_owner())
 
-	for item in _items:
-		my_owner().rpc_handler.send_item_updated(item) # Send items to clients
-
-func _process(_delta: float): # Run only when it is the host
+func process_combat_data(_delta: float): # Run only when it is the host
 	if not my_owner(): return
 
 	effects_helper._process(_delta)
@@ -83,9 +90,19 @@ func _process_on_server(_delta: float):
 
 	if enemy_spell_caster: enemy_spell_caster._process(_delta)
 
+	# Iterate in reverse order to avoid breaking indices when removing elements
+	for i in range(active_skills.size() - 1, -1, -1):
+		var active_skill = active_skills[i]
+		active_skill.process(my_owner(), _delta)
+
+		if not active_skill.active:
+			active_skills.remove_at(i)
+
 func server_execute_physical_damage(_target: Entity) -> void:
 	if my_owner().multiplayer.is_server() == false: return
 	if _target == null: return
+	
+	# if not _target.target_view: _target.set_target_view(my_owner()) # Util when we want autoset target view
 
 	var total_stats = cache_total_stats
 	var base_damage = total_stats.physical_attack_power
@@ -101,14 +118,16 @@ func server_execute_physical_damage(_target: Entity) -> void:
 	_di.damage_type = DamageType.PHYSICAL
 	_di.attacker_name = my_owner().name
 
-	_target.combat_data.server_receive_damage(_di, my_owner())
+	_target.server_receive_damage(_di, my_owner())
 
 func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	if _di.total_damage == 0: return
 	if my_owner().multiplayer.is_server() == false: return
 
+	if not Skill.actions_before_receive_damage(_attacker, my_owner(), _di): return
+
 	var my_stats = cache_total_stats
-	var attacker_stats = _attacker.combat_data.cache_total_stats
+	var attacker_stats = _attacker.cache_total_stats
 	
 	var attacker_can_miss := _check_ignore_enemy_evasion(_di, attacker_stats)
 	if attacker_can_miss: _di.can_be_evaded = false
@@ -126,15 +145,26 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 
 	update_current_hp(-_di.total_damage, _attacker)
 
+	for active_skill in active_skills:
+		active_skill.on_damage_received(_attacker, _di.total_damage)
+
 # region SETTERs
-func _verify_if_am_i_stunned_after_stats_change() -> void:
+func set_current_hp_and_mana() -> void:
+	update_cache_total_stats()
+	current_hp = get_total_hp()
+	current_mana = get_total_mana()
+
+func _verify_combat_states_after_stats_change() -> void:
+	is_stunned = false
+	is_silenced = false
+
 	for effect in effects_helper.get_effects():
 		if effect.stats.has_hostil_stun_effect():
 			is_stunned = true
-			return
+		if effect.stats.has_hostil_silence_effect():
+			is_silenced = true
 
-	is_stunned = false
-	AnimationsHelper.try_to_remove_obsolete_stun_animation(my_owner())
+	if not is_stunned: AnimationsHelper.try_to_remove_obsolete_stun_animation(my_owner())
 
 func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void:
 	if value_to_increase == 0: return
@@ -185,31 +215,33 @@ func update_base_stats(new_stats: CombatStats) -> void:
 	my_owner().combat_stats = new_stats
 	update_cache_total_stats()
 
-func update_item(index: int, slot_item_info: SlotItemInfo) -> void:
-	_items[index] = slot_item_info
-	update_cache_total_stats() # Update the cache of total combat_stats, which includes items
+func update_item(item: Item, index: int) -> bool:
+	if index >= _items.size(): printerr("Index out of range: ", index)
 
-func add_item(_slot_item_info: SlotItemInfo) -> bool:
-	if _slot_item_info.position > 0:
-		update_item(_slot_item_info.position - 1, _slot_item_info)
-		return true
+	_items[index] = item
 
-	for i in range(_items.size()):
-		if _items[i].item == null:
-			_slot_item_info.position = i + 1
-			update_item(i, _slot_item_info)
-			return true
+	update_cache_total_stats()
+	return true
+
+func add_item(item: Item, index: int = -1) -> bool:
+	if index >= 0:
+		return update_item(item, index)
+
+	for i in range(SlotItem.SLOTS_NUMBER):
+		if _items[i] == null:
+			return update_item(item, i)
 
 	return false
 
-func use_item(position: int) -> void: # Called from _on_key_pressed
-	if _items[position - 1] == null: return print("No item in slot: ", position)
+func use_item(_slot_number: int) -> void: # Called from _on_key_pressed
+	if _items[_slot_number - 1] == null: return print("No item in slot: ", _slot_number)
 
-	_items[position - 1].use_item(my_owner(), null)
+	_items[_slot_number - 1].use_item(_slot_number, my_owner(), null)
 
-func item_updated_by_rpc(slot_item_info: SlotItemInfo) -> void:
-	update_item(slot_item_info.position - 1, slot_item_info)
-	EventBus.emit_item_updated(my_owner(), slot_item_info, null)
+
+func item_updated_by_rpc(_item: Item, _slot_number: int) -> void:
+	update_item(_item, _slot_number - 1)
+	EventBus.emit_item_updated(my_owner(), _item, _slot_number, null)
 
 func set_attack_type_according_to_projectile_type() -> void:
 	attack_type = AttackTypes.MELEE
@@ -222,33 +254,63 @@ func remove_effect_by_name(effect_name: String) -> void:
 func register_attacker(attacker: Entity) -> void:
 	latest_attacker = attacker
 	last_damage_received_time = Time.get_ticks_msec()
+	if attacker and ObjectHelpers.is_my_player(self): attacker.hud.set_last_damage_to_my_player()
 
-func set_target_entity(_target: Entity) -> void: # Used only by the server
-	if _target == _target_entity: return
+func set_target_to_attack(_target: Entity) -> void: # Used only by the server
+	if _target == target_to_attack: return
 
-	target_entity_name = str(_target.name) if _target != null else ""
-	_target_entity = _target
+	target_to_attack = _target
+	target_to_attack_name = str(_target.name) if _target else ""
+
+func verify_freed_target_to_attack(entity_name: String) -> void:
+	if target_to_attack_name == entity_name:
+		print("Freed target to attack: ", entity_name)
+		set_target_to_attack(null)
+
+func set_target_view(_target: Entity) -> void:
+	if _target == target_view: return
+
+	target_view = _target
+	target_view_name = str(_target.name) if _target else ""
+func verify_freed_target_view(entity_name: String) -> void:
+	if target_view_name == entity_name:
+		print("Freed target view: ", entity_name)
+		set_target_view(null)
 
 func charge_skill(index: int) -> void:
-	if not _skills[index].learned_level: return
+	if is_silenced: return
+	if not _skills[index].learned_level: return print("Skill not learned: ", _skills[index])
 	if _skills[index].get_learned_skill().type == SkillType.PASSIVE: return
 	if not _skills[index].can_use(my_owner()): return
 
-	print("Charging skill: ", _skills[index].get_learned_skill().my_name)
 	charged_skill = _skills[index]
-func uncharge_skill() -> void:
-	charged_skill = null
-	print("Uncharging skill")
+	
+	if not charged_skill.get_learned_skill().instant_use: return
 
-func upgrade_skill(slot_number: int) -> void:
-	_skills[slot_number - 1].try_to_upgrade(_my_owner)
+	charged_skill.use(my_owner(), null)
+
+func uncharge_skill() -> bool:
+	charged_skill = null
+	return true
+
+func server_upgrade_skill(slot_number: int) -> void:
+	_skills[slot_number - 1].try_to_upgrade(my_owner())
 	update_cache_total_stats()
 
-func use_charged_skill() -> void:
-	if charged_skill == null: return
-	if ObjectHelpers.is_null(_target_entity): return
+func use_charged_skill(_target: Entity) -> void:
+	if not charged_skill: return
+	if is_silenced: return uncharge_skill()
+	if ObjectHelpers.is_null(_target): return uncharge_skill()
+	
+	var learned_skill = charged_skill.get_learned_skill()
 
-	charged_skill.use(my_owner(), _target_entity)
+	# Do not allow the use of damaging skills on oneself
+	if not learned_skill.stats.is_owner_friendly and _target.name == my_owner().name: return uncharge_skill()
+
+	# Update the target to attack if the skill is not friendly
+	if not learned_skill.stats.is_owner_friendly: set_target_to_attack(_target)
+
+	charged_skill.use(my_owner(), _target)
 
 	uncharge_skill()
 
@@ -258,6 +320,7 @@ func toogle_keep_ground() -> void:
 
 # region 	PRIVATE GETTERs
 func _get_total_stats(include_effects := true) -> CombatStats:
+	if not my_owner(): return null
 	# This function returns the total of all combat_stats, including extras from effects and extras from attributes
 	var _total_stats := CombatStats.new()
 	_total_stats.accumulate_combat_stats(my_owner().combat_stats.get_total_stats_including_extras_by_attributes())
@@ -287,12 +350,12 @@ func _get_extra_stats_by_skills() -> CombatStats:
 
 func _get_extra_stats_by_items() -> CombatStats:
 	var extra_stats = CombatStats.new()
-	for slot_item_info in _items:
-		if slot_item_info.is_consumable: continue
-		if slot_item_info.item == null: continue
-		if slot_item_info.item.type == SkillType.ACTIVE: continue
-		if slot_item_info.item.stats.has_hostil_stun_effect(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
-		extra_stats.accumulate_combat_stats(slot_item_info.item.stats)
+	for _item in _items:
+		if not _item: continue
+		if _item.is_consumable: continue
+		if _item.type == SkillType.ACTIVE: continue
+		if _item.stats.has_hostil_stun_effect(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
+		extra_stats.accumulate_combat_stats(_item.stats)
 	return extra_stats
 
 func _check_ignore_enemy_evasion(_di: DamageInfo, total_stats: CombatStats) -> bool:
@@ -345,15 +408,13 @@ func update_cache_total_stats() -> void:
 	cache_total_stats = _get_total_stats()
 	cache_total_stats_no_effects = _get_total_stats(false)
 
-	_verify_if_am_i_stunned_after_stats_change()
+	_verify_combat_states_after_stats_change()
 
 func get_attack_range() -> int:
 	return cache_total_stats.attack_range
 
 func my_owner() -> Entity:
-	if _my_owner: return _my_owner
-	_my_owner = GlobalsEntityHelpers.get_owner(self)
-	return _my_owner
+	return self
 
 func get_skills() -> Array[Skill]:
 	return _skills
@@ -378,15 +439,15 @@ func get_total_mana() -> int:
 	return cache_total_stats.mana
 
 func get_target_entity() -> Entity:
-	return GameManager.get_entity(target_entity_name)
+	return GameManager.get_entity(target_to_attack_name)
 
-func get_items() -> Array[SlotItemInfo]:
+func get_items() -> Array[Item]:
 	return _items
-func get_items_by_name(p_name: String) -> Array[SlotItemInfo]:
-	var result: Array[SlotItemInfo] = []
-	for slot_item in _items:
-		if not slot_item.item: continue
-		if slot_item.item.my_name == p_name: result.append(slot_item)
+func get_items_by_name(p_name: String) -> Array[Item]:
+	var result: Array[Item] = []
+	for _item in _items:
+		if not _item: continue
+		if _item.my_name == p_name: result.append(_item)
 	return result
 # endregion GETTERs
 
@@ -394,11 +455,11 @@ func get_items_by_name(p_name: String) -> Array[SlotItemInfo]:
 func try_physical_attack(_delta: float) -> bool:
 	if not my_owner().multiplayer.is_server(): return false
 
-	if my_owner().current_state != EntityState.StateEnum.IDLE: return false # Cant attack while moving
+	if my_owner().current_state != EntityState.States.IDLE: return false # Cant attack while moving
 	
-	if _target_entity == GameManager.moomoo: set_target_entity(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
+	if target_to_attack == GameManager.moomoo: set_target_to_attack(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
 
-	if _target_entity == null: return false
+	if target_to_attack == null: return false
 
 	if not can_physical_attack(): return false
 
@@ -425,13 +486,13 @@ func _get_nearest_target_in_range_attack():
 func execute_physical_attack(apply_extra_actions: bool = true, _custom_target: Entity = null) -> void:
 	EntityState.change_to_attack(my_owner())
 
-	var final_target = _custom_target if _custom_target else _target_entity
+	var final_target = _custom_target if _custom_target else target_to_attack
 	if projectile_type == Projectile.TYPES.NONE: server_execute_physical_damage(final_target)
 	else: Projectile.launch(my_owner(), final_target, cache_total_stats.physical_attack_power)
 
 	if not apply_extra_actions: return
 
-	Skill.actions_after_execute_physical_attack(my_owner(), _target_entity)
+	Skill.actions_after_execute_physical_attack(my_owner(), target_to_attack)
 		
 func can_physical_attack() -> bool:
 	if not my_owner().can_attack: return false
@@ -442,7 +503,7 @@ func can_physical_attack() -> bool:
 	var interval_ms = 1000.0 / cache_total_stats.get_total_attack_speed()
 	if now - last_physical_hit_time < interval_ms: return false # If enough time has passed, can attack
 
-	if not GlobalsEntityHelpers.is_target_in_attack_range(my_owner(), _target_entity): return false
+	if not GlobalsEntityHelpers.is_target_in_attack_range(my_owner(), target_to_attack): return false
 
 	return true
 # endregion TRY PHISICAL ATTACK
@@ -452,15 +513,15 @@ func global_receive_damage_or_heal(_di: DamageInfo):
 	var melee_attack = _di.projectile_type == Projectile.TYPES.NONE && _di.damage_type == DamageType.PHYSICAL
 	var arrow_attack = _di.projectile_type == Projectile.TYPES.ARROW && _di.damage_type == DamageType.PHYSICAL
 	if _di.critical > 0:
-		my_owner().hud.show_damage_heal_popup(str(- (_di.total_damage - _di.critical)), Color(1, 0, 0))
-		my_owner().hud.show_damage_heal_popup(str(-_di.critical), Color(1, 1, 0))
+		my_owner().hud.show_message_popup(str(- (_di.total_damage - _di.critical)), Color(1, 0, 0))
+		my_owner().hud.show_message_popup(str(-_di.critical), Color(1, 1, 0))
 		if arrow_attack: SoundsHelper.play_critical_arrow_shot()
 		if melee_attack: SoundsHelper.play_critical_melee_hit()
 	if _di.critical == 0 and _di.total_damage > 0:
 		if melee_attack: SoundsHelper.play_melee_hit()
 
 	if _di.total_damage < 0: # Heal
-		my_owner().hud.show_damage_heal_popup(str(abs(_di.total_damage)), Color(0, 1, 0))
+		my_owner().hud.show_message_popup(str(abs(_di.total_damage)), Color(0, 1, 0))
 	
 	register_attacker(_di.get_attacker())
 

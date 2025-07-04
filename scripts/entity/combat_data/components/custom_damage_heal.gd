@@ -1,5 +1,7 @@
 class_name CustomDamageHeal
 
+extends MyInitAuxiliary
+
 var base_damage_heal: int = 0
 var extra_value_by_intelligence: float = 0
 var extra_value_by_agility: float = 0

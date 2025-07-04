@@ -3,23 +3,24 @@ class_name RpcHandler
 extends Node
 
 var _my_owner: Entity
-var _combat_data: CombatData
 var _hud: HUD
 
 func initialize() -> void:
 	_my_owner = GlobalsEntityHelpers.get_owner(self)
-	_combat_data = _my_owner.combat_data
 	_hud = _my_owner.hud
 
 # region 	MESSAGES RECEIVED FROM CLIENT
-func key_pressed(keycode: int): rpc("_on_key_pressed", keycode)
+func notify_key_pressed_to_server(keycode: int): rpc_id(1, "_on_key_pressed", keycode)
 @rpc("authority", "call_local")
-func _on_key_pressed(keycode: int): _my_owner.key_pressed(keycode)
+func _on_key_pressed(keycode: int): KeyboardHelper.key_pressed_server_side(keycode, _my_owner)
 
-func skill_uppgrade_button_pressed(slot_number: int): rpc("_on_skill_uppgrade_button_pressed", slot_number)
-@rpc("authority", "call_local")
+func send_skill_uppgrade_button_pressed_to_server(slot_number: int):
+	if not multiplayer.is_server(): return rpc_id(1, "_on_skill_uppgrade_button_pressed", slot_number)
+
+	_on_skill_uppgrade_button_pressed(slot_number)
+@rpc("any_peer", "reliable")
 func _on_skill_uppgrade_button_pressed(slot_number: int):
-	_combat_data.upgrade_skill(slot_number)
+	_my_owner.server_upgrade_skill(slot_number)
 # endregion MESSAGES RECEIVED FROM CLIENT
 
 
@@ -28,7 +29,7 @@ func _on_skill_uppgrade_button_pressed(slot_number: int):
 # func notify_effects_removed(data: Array): rpc("_on_notify_effects_removed", data)
 # @rpc("authority", "call_local")
 # func _on_notify_effects_removed(data: Array):
-# 	_combat_data.notify_effects_removed(data)
+# 	_my_owner.notify_effects_removed(data)
 
 func show_countdown_message(data: String): rpc("_on_show_countdown_message", data)
 @rpc("authority", "call_local")
@@ -38,7 +39,7 @@ func _on_show_countdown_message(message: String):
 func update_base_stats(new_stats_data: Dictionary): rpc("_on_update_base_stats", new_stats_data)
 @rpc("authority", "call_local")
 func _on_update_base_stats(new_stats_data: Dictionary):
-	_combat_data.update_base_stats(CombatStats.get_instance_from_dict(new_stats_data))
+	_my_owner.update_base_stats(CombatStats.get_instance_from_dict(new_stats_data))
 
 func server_message(data: Dictionary): rpc("_on_server_message", data)
 @rpc("authority", "call_local")
@@ -52,7 +53,7 @@ func receive_damage_or_heal(data: Dictionary): rpc("_on_receive_damage_or_heal",
 func _on_receive_damage_or_heal(data: Dictionary):
 	var di = DamageInfo.get_instance()
 	ObjectHelpers.from_dict(di, data)
-	_combat_data.global_receive_damage_or_heal(di)
+	_my_owner.global_receive_damage_or_heal(di)
 
 func die(): rpc("_on_die")
 @rpc("authority", "call_local")
@@ -76,16 +77,15 @@ func _on_add_animation(data: Dictionary):
 	ObjectHelpers.from_dict(message, data)
 	AnimationsHelper.apply_animation(message, _my_owner)
 
-func send_item_updated(slot_item_info: SlotItemInfo) -> void:
+func send_item_updated(_item: ItemUpdatedMessage) -> void:
 	if not GameManager.AM_I_HOST: return print("Not host")
-	var data = ObjectHelpers.to_dict(slot_item_info, true)
+	var data = ObjectHelpers.to_dict(_item, true)
 	rpc("_on_slot_item_info_updated", data)
 @rpc("authority", "call_local")
 func _on_slot_item_info_updated(data: Dictionary):
-	var slot_item_info := SlotItemInfo.new()
-	slot_item_info.item = Item.new()
-	ObjectHelpers.from_dict(slot_item_info, data)
-	_my_owner.combat_data.item_updated_by_rpc(slot_item_info)
+	var _message := ItemUpdatedMessage.new()
+	ObjectHelpers.from_dict(_message, data)
+	_my_owner.item_updated_by_rpc(_message._item, _message._slot_number)
 # endregion MESSAGES RECEIVED FROM SERVER
 
 
@@ -97,7 +97,7 @@ func notify_effect_added_to_clients(effect: CombatEffect) -> void:
 func _on_effect_added(data: Dictionary) -> void:
 	if GameManager.AM_I_HOST: return
 
-	_combat_data.effects_helper.add_effect(CombatEffect.get_instance_from_dict(data))
+	_my_owner.effects_helper.add_effect(CombatEffect.get_instance_from_dict(data))
 
 func notify_effects_removed_to_clients(removed_ids: Array[int]) -> void:
 	for peer_id in MultiplayerManager.multiplayer.get_peers():
@@ -107,4 +107,4 @@ func notify_effects_removed_to_clients(removed_ids: Array[int]) -> void:
 func _on_effects_removed(removed_ids: Array[int]) -> void:
 	if GameManager.AM_I_HOST: return
 
-	_combat_data.effects_helper.remove_effect_by_ids(removed_ids)
+	_my_owner.effects_helper.remove_effect_by_ids(removed_ids)

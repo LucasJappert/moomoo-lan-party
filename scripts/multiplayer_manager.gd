@@ -37,12 +37,9 @@ func _on_peer_disconnected(id):
 func _add_player_to_game(id):
 	var spawn_data = {
 		"player_id": id,
-		"hero_type": HeroTypes.Names.BLOOD_WARDEN if id == 1 else HeroTypes.Names.FROSTBANE_ARCANIST
+		"key_type": HeroTypes.Names.KAEL_DRAVOK
 	}
-	var new_player = GameManager.my_main.player_spawner.spawn(spawn_data)
-	GameManager.add_entity(new_player)
-	print("Added player: " + new_player.name, " id: " + str(id))
-	print("Total players: " + str(GameManager.players_node.get_child_count()))
+	GameManager.spawn_player(spawn_data)
 
 func _remove_player_from_game(id):
 	var player = GameManager.players_node.get_node(str(id))

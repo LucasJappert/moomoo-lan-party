@@ -4,10 +4,8 @@ extends Entity
 
 static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 const MAX_LEVEL: int = 30
-var extra_info: HeroTypes.Info
 @export var player_id: int = 0
 @export var current_exp: int = 0
-@export var hero_type: String
 const INITIAL_GOLD: int = 100
 @export var current_gold: int:
 	set(_value):
@@ -22,15 +20,14 @@ const EXTRA_ATTRIBUTES_STATS_BY_LEVEL = 4
 
 func set_player(data: Dictionary) -> void:
 	player_id = data["player_id"]
-	hero_type = data["hero_type"]
+	extra_info.key_type = data["key_type"]
 	skill_points_to_assign = 1
 	current_gold = INITIAL_GOLD
+	HeroTypes.initialize_hero(self)
 
 func get_client_inputs(): return %ClientInputs
 
 func _ready():
-	HeroTypes.initialize_hero(self)
-
 	super._ready()
 	global_position = MapManager.cell_to_world(MapManager.PLAYER_CELL_SPAWN)
 
@@ -80,8 +77,8 @@ func level_up() -> void:
 	
 	rpc_handler.add_animation(AnimationsHelper.ANIMATION_NAMES.LEVEL_UP)
 
-	# combat_data.update_current_hp(combat_data.get_total_hp())
-	# combat_data.update_current_mana(combat_data.get_total_mana())
+	# update_current_hp(get_total_hp())
+	# update_current_mana(get_total_mana())
 
 func increment_current_gold(value_to_increment: int) -> void:
 	current_gold += value_to_increment

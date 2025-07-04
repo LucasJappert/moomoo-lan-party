@@ -16,8 +16,9 @@ const Names = {
 static var _ITEMS: Dictionary[String, Item]
 const _ATLAS_START_POS = Vector2(0, 1504)
 
+var quantity: int = 1
+var is_consumable: bool = false
 var cost: int = 0
-
 var region_rect: Rect2 = Rect2()
 
 func _init(_name: String = "", _type: String = SkillType.PASSIVE):
@@ -115,25 +116,61 @@ static func initialize_items() -> void:
 	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.mana) + " mana."
 	# endregion
 
+func use_item(_slot_number: int, _my_owner: Entity, _target: Entity = null) -> void:
+	if not can_use(_my_owner): return print("Cannot use slot: ", my_name)
+
+	var health_names = [Item.Names.HEALTH_POTION_I, Item.Names.HEALTH_POTION_II, Item.Names.HEALTH_POTION_III]
+	if health_names.has(my_name):
+		if not _my_owner.current_hp < _my_owner.get_total_hp(): return
+		_my_owner.update_current_hp(stats.get_total_stats_including_extras_by_attributes().hp)
+
+	var mana_names = [Item.Names.MANA_POTION_I, Item.Names.MANA_POTION_II, Item.Names.MANA_POTION_III]
+	if mana_names.has(my_name):
+		if not _my_owner.current_mana < _my_owner.get_total_mana(): return
+		_my_owner.update_current_mana(stats.get_total_stats_including_extras_by_attributes().mana)
+
+
+	_aux_after_use(_slot_number, _my_owner, _target)
+		
+func _aux_after_use(_slot_number: int, _my_owner: Entity, _target: Entity = null) -> void:
+	if mana_cost > 0: _my_owner.update_current_mana(-mana_cost)
+
+	set_last_used_time()
+
+	quantity -= 1
+	if quantity < 0: quantity = 0
+
+	var _message = ItemUpdatedMessage.new(self, _slot_number)
+	_my_owner.rpc_handler.send_item_updated(_message)
+
 # endregion ................. SETTERs
 
 
 # region :::::::::::::::::::: GETTERs
-static func get_item(_item_name: String, new_copy: bool = true) -> Item:
+static func get_item(_item_name: String, p_quantity: int = 1, p_is_consumable: bool = false, new_copy: bool = true) -> Item:
 	if _ITEMS.is_empty(): initialize_items()
 	
-	if new_copy: return ObjectHelpers.deep_clone(_ITEMS[_item_name])
+	if not new_copy: return _ITEMS[_item_name]
 	
-	return _ITEMS[_item_name]
+	var new_item: Item = ObjectHelpers.deep_clone(_ITEMS[_item_name])
+	new_item.quantity = p_quantity
+	new_item.is_consumable = p_is_consumable
+	return new_item
 
-func get_description() -> String:
-	var result = super.get_description()
+func get_description(include_stats_description: bool = true) -> String:
+	var result = super.get_description(include_stats_description)
 
 	if cost > 0:
 		result += str("- Cost: ", cost, "\n")
 		result += str("- Sell: ", int(cost * 0.7), "\n")
 	
 	return result
+
+func can_use(my_owner: Entity) -> bool:
+	if not is_consumable && type == SkillType.PASSIVE: return false
+	if quantity <= 0: return false
+
+	return super.can_use(my_owner)
 
 # endregion ................. GETTERs
 
@@ -142,8 +179,8 @@ func get_description() -> String:
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
 	# Cleave verification
-	var cleave_items_slots = _attacker.combat_data.get_items_by_name(Names.CLEAVE_EDGE)
-	for item_slot in cleave_items_slots:
-		CleaveEffect.auxiliary_actions_after_hit(item_slot.item.stats, _attacker, _target, _di)
+	var cleave_items := _attacker.get_items_by_name(Names.CLEAVE_EDGE)
+	for _item in cleave_items:
+		CleaveEffect.auxiliary_actions_after_hit(_item.stats, _attacker, _target, _di)
 
 # endregion ................. SKILLS LOGICS

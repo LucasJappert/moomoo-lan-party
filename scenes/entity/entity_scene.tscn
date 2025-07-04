@@ -1,9 +1,8 @@
-[gd_scene load_steps=23 format=3 uid="uid://dh82ovsrtutto"]
+[gd_scene load_steps=22 format=3 uid="uid://dh82ovsrtutto"]
 
 [ext_resource type="Script" uid="uid://ki4w4rg4wu1r" path="res://scripts/entity/entity.gd" id="1_0bgvt"]
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="3_8707b"]
 [ext_resource type="Script" uid="uid://d3sm32sl44mdm" path="res://scripts/entity/components/hud.gd" id="3_wjrb4"]
-[ext_resource type="PackedScene" uid="uid://1myskyslafks" path="res://scenes/entity/combat_data/combat_data.tscn" id="5_wjrb4"]
 [ext_resource type="Script" uid="uid://gdkfgib81pvd" path="res://scripts/entity/components/area_hovered.gd" id="6_8707b"]
 [ext_resource type="Script" uid="uid://db742u3k35mx7" path="res://scripts/entity/components/front_animations_node.gd" id="6_os1up"]
 [ext_resource type="Script" uid="uid://c5wcf673tv8ip" path="res://scripts/entity/helpers/rpc_handler.gd" id="7_os1up"]
@@ -20,10 +19,31 @@ properties/2/spawn = true
 properties/2/replication_mode = 2
 properties/3/path = NodePath(".:_boss_level")
 properties/3/spawn = true
-properties/3/replication_mode = 1
+properties/3/replication_mode = 2
 properties/4/path = NodePath(".:level")
 properties/4/spawn = true
-properties/4/replication_mode = 1
+properties/4/replication_mode = 2
+properties/5/path = NodePath(".:current_hp")
+properties/5/spawn = true
+properties/5/replication_mode = 2
+properties/6/path = NodePath(".:current_mana")
+properties/6/spawn = true
+properties/6/replication_mode = 2
+properties/7/path = NodePath(".:attack_type")
+properties/7/spawn = true
+properties/7/replication_mode = 2
+properties/8/path = NodePath(".:projectile_type")
+properties/8/spawn = true
+properties/8/replication_mode = 2
+properties/9/path = NodePath(".:is_stunned")
+properties/9/spawn = true
+properties/9/replication_mode = 2
+properties/10/path = NodePath(".:target_to_attack_name")
+properties/10/spawn = true
+properties/10/replication_mode = 2
+properties/11/path = NodePath(".:target_view_name")
+properties/11/spawn = true
+properties/11/replication_mode = 2
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_wjrb4"]
 radius = 300.0
@@ -144,14 +164,6 @@ animation = &"idle"
 position = Vector2(0, -13)
 shape = SubResource("CircleShape2D_8707b")
 debug_color = Color(1, 1, 1, 0.054)
-
-[node name="CombatData" parent="." instance=ExtResource("5_wjrb4")]
-current_hp = 0
-current_mana = 0
-attack_type = "melee"
-projectile_type = "none"
-is_stunned = false
-target_entity_name = ""
 
 [node name="HUD" type="Node2D" parent="."]
 script = ExtResource("3_wjrb4")

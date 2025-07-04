@@ -7,19 +7,15 @@ const SPAWN_POSITION = Vector2i(20, 11)
 func _ready():
 	print("🐮 Moomoo ready")
 	super._ready()
-	combat_stats.hp = 1000000
-	combat_data.update_cache_total_stats()
-	combat_data.current_hp = combat_data.get_total_hp()
 
 # region 	GETTERs
-static func get_instance_from_dict(_dict: Dictionary) -> Moomoo:
-	var instance = get_instance()
-	# ObjectHelpers.from_dict(instance, dict)
-	return instance
 # endregion GETTERs
 
 static func get_instance() -> Moomoo:
-	var moomoo = load("res://scenes/entity/moomoo_scene.tscn").instantiate()
+	var moomoo: Moomoo = load("res://scenes/entity/moomoo_scene.tscn").instantiate()
 	moomoo.name = "Moomoo"
 	moomoo.global_position = MapManager.cell_to_world(MapManager.get_safe_cell(SPAWN_POSITION))
+	moomoo.combat_stats.hp = 1000000
+	moomoo.set_current_hp_and_mana()
+	
 	return moomoo

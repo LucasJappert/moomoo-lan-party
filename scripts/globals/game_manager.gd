@@ -1,6 +1,6 @@
 extends Node
 
-var my_main: Node2D
+var my_main: MyMain
 var enemies_node: Node2D
 var entities: Dictionary[String, Entity] = {}
 var players_node: Node2D
@@ -25,49 +25,23 @@ func _ready():
 	terrain = get_tree().root.get_node("MyMain/Terrain")
 	audio_node = get_tree().root.get_node("MyMain/Audio")
 
-	enemies_node.connect("child_entered_tree", func(p_enemy: Enemy): add_entity(p_enemy))
-	players_node.connect("child_entered_tree", func(p_player: Player): add_entity(p_player))
-	moomoo_node.connect("child_entered_tree", func(p_moomoo: Moomoo): add_entity(p_moomoo))
-
-	# Ya eliminamos las entidades desde el metodo _global_die()
-	# enemies_node.connect("child_exiting_tree", func(p_enemy: Enemy): remove_entity(p_enemy))
-	# players_node.connect("child_exiting_tree", func(p_player: Player): remove_entity(p_player))
-	# moomoo_node.connect("child_exiting_tree", func(p_moomoo: Moomoo): remove_entity(p_moomoo))
-
-	call_deferred("_init_projectiles_spawner")
-	call_deferred("_init_enemies_spawner")
-	# call_deferred("_init_moomoo_spawner")
-	# my_main.moomoo_spawner.spawn_function = Callable(self, "_spawn_custom_moomoo")
-	
 
 func _init_projectiles_spawner() -> void:
 	my_main.projectiles_spawner.spawn_function = func(data: Dictionary) -> Node:
 		return Projectile.get_instance_from_dict(data)
-
-func _init_enemies_spawner() -> void:
-	my_main.enemies_spawner.spawn_function = func(data: Dictionary) -> Node:
-		return Enemy.get_instance_from_dict(data)
-
-func _init_moomoo_spawner() -> void:
-	my_main.moomoo_spawner.spawn_function = Callable(self, "_spawn_custom_moomoo")
-	# my_main.moomoo_spawner.spawn_function = func(data: Dictionary) -> Node:
-	# 	return Moomoo.get_instance_from_dict(data)
 
 func _process(delta: float) -> void:
 	CursorManager._static_process(delta)
 	WindowFocusWatcher._process(delta)
 	EnemiesWavesController._process(delta)
 
-func add_enemy(enemy: Enemy) -> void:
-	current_enemies_in_scene += 1
-	my_main.enemies_spawner.spawn(ObjectHelpers.to_dict(enemy))
-	enemy.queue_free()
-
 func add_my_tree(my_tree: MyTree) -> void:
 	my_trees_node.add_child(my_tree, true)
 	MapManager.set_cell_blocked(MapManager.world_to_cell(my_tree.global_position), true)
 
 func add_entity(entity: Entity) -> void:
+	if entity is Enemy:
+		current_enemies_in_scene += 1
 	entities[entity.name] = entity
 
 	if not AM_I_HOST: return
@@ -86,12 +60,14 @@ func remove_entity(entity: Entity) -> void:
 func _actions_for_server_side_after_entity_removed(entity: Entity) -> void:
 	if not AM_I_HOST: return
 	
-	var current_cell = MapManager.world_to_cell(entity.global_position)
-	MapManager.set_cell_blocked(current_cell, false)
-	entity.queue_free() # We shouldn't do this in the client side, server should do it and sync it
 	if entity is Enemy:
 		current_enemies_in_scene -= 1
 		if current_enemies_in_scene == 0: EventBus.emit_wave_finilized()
+	
+	var current_cell = MapManager.world_to_cell(entity.global_position)
+	MapManager.set_cell_blocked(current_cell, false)
+	EventBus.emit_freed_entity(entity.name)
+	entity.queue_free() # We shouldn't do this in the client side, server should do it and sync it
 
 func _on_enemy_exited_tree() -> void:
 	current_enemies_in_scene -= 1
@@ -116,8 +92,19 @@ func add_decoration(sprite: Sprite2D) -> void:
 	decorations.add_child(sprite, true)
 
 func spawn_moomoo() -> void:
-	moomoo = GameManager.my_main.moomoo_spawner.spawn({})
+	moomoo = my_main.moomoo_spawner.spawn({})
+	add_entity(moomoo)
 	print("Moomoo spawned: ", moomoo)
+
+func spawn_player(spawn_data: Dictionary) -> void:
+	var new_player = my_main.player_spawner.spawn(spawn_data)
+	add_entity(new_player)
+	print("Added player: " + new_player.name, " id: " + str(new_player.id))
+	print("Total players: " + str(players_node.get_child_count()))
+
+func spawn_enemy(enemy: Enemy) -> void:
+	var new_enemy = my_main.enemies_spawner.spawn(ObjectHelpers.to_dict(enemy))
+	add_entity(new_enemy)
 
 # region 	SETTERs
 func set_my_player(player: Player) -> void:

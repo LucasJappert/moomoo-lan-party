@@ -6,7 +6,12 @@ const FRAME_SIZE = 64
 const CAN_USE_COLOR = Color.WHITE
 const CANT_USE_COLOR = Color(0.5, 0.5, 0.5)
 
+var range_in_tiles: float = 1
+var instant_use: bool = false
+var auxiliary_float: float # Used for general purposes, like calculate percentage of damage respect to the strength
+var float_dict: Dictionary = {} # Used for general purposes, like apply damage after xx seconds
 var my_name: String
+var duration_in_seconds: float
 var type: String = SkillType.ACTIVE
 var cooldown: float = 0 # In seconds
 var mana_cost: int = 0
@@ -25,15 +30,12 @@ func _init():
 func set_last_used_time() -> void:
 	_last_used_time = Time.get_ticks_msec() / 1000.0
 
-func get_description() -> String:
+func get_description(include_stats_description: bool = true) -> String:
 	var result = ""
 
 	if description: result += description + "\n"
 	
-	result += stats.get_description()
-	
-	if stats.mana > 0:
-		result += str("- Mana: ", stats.mana, "\n")
+	if include_stats_description: result += stats.get_description()
 	
 	if mana_cost > 0:
 		result += str("- Mana cost: ", mana_cost, "\n")
@@ -53,8 +55,10 @@ func get_description() -> String:
 	return result
 
 func can_use(my_owner: Entity) -> bool:
+	if type == SkillType.PASSIVE: return false
+
 	if mana_cost > 0:
-		if my_owner.combat_data.current_mana < mana_cost: return false
+		if my_owner.current_mana < mana_cost: return false
 
 	return get_remaining_cooldown() == 0
 

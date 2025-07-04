@@ -1,6 +1,8 @@
 class_name Entity
 
-extends CharacterBody2D
+extends CombatData
+
+var extra_info := ExtraInfo.new()
 
 @onready var hud: HUD = $HUD
 @onready var collision_shape = $CollisionShape2D
@@ -18,7 +20,6 @@ var can_attack: bool = true
 
 var id: int = 0
 
-@onready var combat_data: CombatData = $CombatData
 @export var direction: Vector2 = Vector2.ZERO
 var combat_stats = CombatStats.new()
 var replicated: bool = false
@@ -26,33 +27,45 @@ var replicated: bool = false
 # Move this logic to a separate module
 var movement_helper: MovementHelper
 
-@export var current_state: EntityState.StateEnum = EntityState.StateEnum.IDLE
+@export var current_state: String:
+	set(value):
+		if _current_state == value: return
+		_current_state = value
+		EntityState.server_and_client_on_state_changed(self)
+	get:
+		return _current_state
+var _current_state: String = EntityState.States.IDLE
+
 @export var _boss_level: int = 0
 @export var level: int = 1
 
 @onready var rpc_handler: RpcHandler = $RpcHandler
 
 func _init() -> void:
-	if not combat_data: combat_data = CombatData.new()
+	super._init()
 
 func _ready():
 	collision_layer = 1
 	collision_mask = 1
 	movement_helper = MovementHelper.new(self)
-	combat_data.set_attack_type_according_to_projectile_type()
+	set_attack_type_according_to_projectile_type()
 	area_attack_shape.shape = area_attack_shape.shape.duplicate() # to avoid changing the original shape
 	for child in front_animations_node.get_children():
 		child.queue_free()
 	_client_init()
 	rpc_handler.initialize()
 	call_deferred("_post_ready")
+	ready_combat_data()
+
+	EventBus.connect_to_freed_entity(Callable(self, "_on_entity_freed"))
 
 func _post_ready():
 	hud._post_ready(self)
-	combat_data._post_ready()
+	post_ready_combat_data()
 	
 func _process(_delta: float) -> void:
-	EntityState.process(self)
+	if GameManager.AM_I_HOST: process_combat_data(_delta)
+	EntityState.server_process(self)
 
 func _physics_process(_delta):
 	movement_helper._physics_process(_delta) # we need this because movement_helper is not a child node
@@ -63,6 +76,9 @@ func _client_physics_process(_delta: float) -> void:
 		
 	sprite.flip_h = direction.x < 0
 
+func _on_entity_freed(entity_name: String) -> void:
+	verify_freed_target_to_attack(entity_name)
+	verify_freed_target_view(entity_name)
 
 # region 	GETTERs
 func is_my_player() -> bool: return false
@@ -84,7 +100,7 @@ func set_boss_level(_level: int) -> void:
 	_boss_level = _level
 
 func _set_area_attack_shape_radius() -> void:
-	area_attack_shape.shape.radius = combat_data.cache_total_stats.attack_range
+	area_attack_shape.shape.radius = cache_total_stats.attack_range
 
 func _client_init() -> void:
 	SpritesHelper.set_entity_sprites(self)

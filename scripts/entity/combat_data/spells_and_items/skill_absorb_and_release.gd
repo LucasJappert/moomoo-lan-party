@@ -1,0 +1,72 @@
+class_name SkillAbsorbAndRelease
+
+extends SkillBase
+
+var percent_to_release: float = 0
+var radius_in_tiles: float
+var damage_accumulated: float
+
+func _init(_name: String, _seconds_to_release: float = 0, _active_on_start: bool = false, _percent_to_release: float = 0, _radius_in_tiles: float = 1):
+	super._init(_name, _seconds_to_release, _active_on_start)
+	percent_to_release = _percent_to_release
+	radius_in_tiles = _radius_in_tiles
+
+func activate() -> void:
+	super.activate()
+	damage_accumulated = 0
+	seconds_elapsed = 0
+
+func process(_owner: Entity, _delta: float) -> void:
+	super.process(_owner, _delta)
+
+	if not action_waiting_on_finish: return
+
+	_apply_release(_owner, _owner)
+	action_waiting_on_finish = false
+
+func on_damage_received(_attacker: Entity, _damage_received: int) -> void:
+	if not active: return
+	if _damage_received <= 0: return
+
+	damage_accumulated += _damage_received
+
+func _apply_release(_attacker: Entity, _target: Entity) -> void:
+	var nearest_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, 30, _attacker.get_my_enemies(), radius_in_tiles)
+	var total_damage_to_release := int(damage_accumulated * percent_to_release)
+	for enemy in nearest_enemies:
+		enemy.server_receive_damage(DamageInfo.new(total_damage_to_release, DamageType.PHYSICAL, _attacker.name), _attacker)
+
+	var message := DamageType.PHYSICAL_EMOTI + " " + str(total_damage_to_release) + " " + DamageType.PHYSICAL_EMOTI
+	_attacker.hud.show_message_popup(message.to_upper(), Color(1, 1, 1), 0.4)
+	SoundsHelper.play_scream_hero_1()
+
+
+static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
+	const _skill_name = Skill.Names.ABSORB_AND_RELEASE
+	_SKILLS[_skill_name] = Skill.new(_skill_name, SkillType.ACTIVE)
+	_SKILLS[_skill_name].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 7, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
+
+	int_array1 = [60, 120, 180]
+	float_array = [0.1, 0.15, 0.2]
+	int_array = [12, 10, 8]
+	for i in Skill.AVAILABLE_LEVELS:
+		var seconds_to_release: float = 7.0; var range_in_tiles: int = 3
+		_SKILLS[_skill_name].item_skill_base[i].instant_use = true
+		_SKILLS[_skill_name].item_skill_base[i].range_in_tiles = range_in_tiles
+		_SKILLS[_skill_name].item_skill_base[i].float_dict["percent_to_release"] = float_array[i]
+		_SKILLS[_skill_name].item_skill_base[i].float_dict["seconds_to_release"] = seconds_to_release
+		_SKILLS[_skill_name].item_skill_base[i].damage_type = DamageType.PHYSICAL
+		_SKILLS[_skill_name].item_skill_base[i].mana_cost = int_array1[i]
+		_SKILLS[_skill_name].item_skill_base[i].cooldown = int_array[i]
+		_SKILLS[_skill_name].item_skill_base[i].description = "Accumulates all damage received over " + StringHelpers.format_float(seconds_to_release) + " seconds. Then releases " + StringHelpers.format_percent(float_array[i]) + " of the accumulated damage as physical damage to all enemies within " + str(range_in_tiles) + " tiles."
+
+static func try_to_use(_my_owner: Entity, _skill: Skill) -> bool:
+	var learned_skill = _skill.get_learned_skill()
+	if learned_skill.my_name != Skill.Names.ABSORB_AND_RELEASE: return true
+
+	var _seconds_to_release: float = learned_skill.float_dict["seconds_to_release"]
+	var _percent_to_release: float = learned_skill.float_dict["percent_to_release"]
+	var skill_absorb_and_release := SkillAbsorbAndRelease.new(learned_skill.my_name, _seconds_to_release, true, _percent_to_release, learned_skill.range_in_tiles)
+	_my_owner.active_skills.append(skill_absorb_and_release)
+
+	return true

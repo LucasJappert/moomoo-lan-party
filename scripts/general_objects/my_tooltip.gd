@@ -3,8 +3,8 @@ class_name MyTooltip
 extends Control
 
 @onready var _panel: NinePatchRect = $Panel
-@onready var _title: Label = $Panel/Title
-@onready var _description: Label = $Panel/Description
+@onready var _title: RichTextLabel = $Panel/Title
+@onready var _description: RichTextLabel = $Panel/Description
 
 const MARGINS = 20
 const PANEL_WIDTH_IN_TILES: float = 14
@@ -13,7 +13,11 @@ const PANEL_WIDTH_IN_TILES: float = 14
 func _ready() -> void:
 	visible = false
 	_title.position = Vector2(MARGINS, MARGINS)
-	_description.position = Vector2(MARGINS, _title.position.y + _title.get_combined_minimum_size().y + 5)
+	_description.position = Vector2(MARGINS, _title.position.y + _title.get_content_height() + 5)
+	_title.bbcode_enabled = true
+	_description.bbcode_enabled = true
+	_title.autowrap_mode = TextServer.AUTOWRAP_WORD
+	_description.autowrap_mode = TextServer.AUTOWRAP_WORD
 
 
 func _process(_delta):
@@ -22,17 +26,19 @@ func _process(_delta):
 	return
 
 func _show_me(title: String, description: String, width_in_tiles: float = PANEL_WIDTH_IN_TILES) -> void:
-	if width_in_tiles == 0: width_in_tiles = PANEL_WIDTH_IN_TILES
-
 	var width_in_pixels = width_in_tiles * MapManager.TILE_SIZE_INT
-	_title.set_size(Vector2(width_in_pixels - MARGINS * 2, 0))
-	_description.set_size(Vector2(width_in_pixels - MARGINS * 2, 0))
 
-	_title.text = title
-	_description.text = description
+	_title.clear()
+	_description.clear()
+	_title.append_text("[u][b]" + title.to_upper() + "[/b][/u]")
+	_description.append_text(description)
 
-	var title_height = _title.get_combined_minimum_size().y
-	var description_height = _description.get_combined_minimum_size().y
+	var title_height = _title.get_content_height()
+	var description_height = _description.get_content_height()
+
+	_title.set_size(Vector2(width_in_pixels - MARGINS * 2, title_height))
+	_description.set_size(Vector2(width_in_pixels - MARGINS * 2, description_height))
+
 	_panel.set_size(Vector2(width_in_pixels, title_height + description_height + MARGINS * 2))
 
 	visible = true
@@ -72,7 +78,7 @@ func _update_position() -> void:
 
 	global_position = final_pos
 
-static func show_tooltip(title: String, text: String, width_in_tiles: float = 0.0) -> void:
+static func show_tooltip(title: String, text: String, width_in_tiles: float = PANEL_WIDTH_IN_TILES) -> void:
 	GameManager.my_main.gui_scene.my_tooltip._show_me(title, text, width_in_tiles)
 static func hide_tooltip() -> void:
 	GameManager.my_main.gui_scene.my_tooltip._hide_me()

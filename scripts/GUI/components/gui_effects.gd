@@ -11,13 +11,20 @@ var my_owner: Entity
 
 func _ready() -> void:
 	clean_effects()
-	EventBus.connect(EventBus.NEW_TARGET_SELECTED, func(_owner: Entity, _target: Entity): _on_new_target_selected(_owner, _target))
+	EventBus.connect_to_new_target_to_attack_selected(func(_owner: Entity, _target: Entity): _on_new_target_to_attack_selected(_owner, _target))
+	EventBus.connect_to_new_target_view_selected(func(_owner: Entity, _target: Entity): _on_new_target_view_selected(_owner, _target))
 
-func _on_new_target_selected(_owner: Entity, _target: Entity) -> void:
+func _on_new_target_to_attack_selected(_owner: Entity, _target: Entity) -> void:
 	if not _type == Type.TARGET_EFFECTS: return
 	clean_effects()
+	if not _target: return
+	
 	_add_current_effects(_target)
+func _on_new_target_view_selected(_owner: Entity, _target: Entity) -> void:
+	if _target == null: _target = ObjectHelpers.get_valid_entity_instance(_owner.target_to_attack)
+	_on_new_target_to_attack_selected(_owner, _target)
 
+	
 func _process(_delta: float) -> void:
 	if GameManager.MY_PLAYER == null:
 		if get_effects().size() > 0:
@@ -37,7 +44,7 @@ func remove_effects_by_ids(ids_to_remove: Array[int]) -> void:
 
 func _add_current_effects(target: Entity) -> void:
 	if not target: return
-	for effect in target.combat_data.effects_helper.get_effects():
+	for effect in target.effects_helper.get_effects():
 		add_effect(effect)
 
 func get_effects() -> Array[CombatEffect]:

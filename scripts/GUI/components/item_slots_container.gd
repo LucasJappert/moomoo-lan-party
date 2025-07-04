@@ -9,14 +9,8 @@ func _ready():
 	for child in get_children():
 		_slots_items.append(child as SlotItem)
 	
-	EventBus.connect(EventBus.ITEM_UPDATED, func(_owner: Entity, slot_item_info: SlotItemInfo, _target: Entity): _on_item_updated(_owner, slot_item_info, _target))
+	EventBus.connect_to_item_updated(func(_owner: Entity, _item: Item, _slot_number: int, _target: Entity): _on_item_updated(_owner, _item, _slot_number, _target))
 
-func _process(_delta: float) -> void:
-	pass
-	# if GlobalsEntityHelpers.get_owner().is_my_player():
-	# 	for child in get_children():
-	# 		child.update()
-
-func _on_item_updated(_owner: Entity, slot_item_info: SlotItemInfo, _target: Entity) -> void:
-	if not _owner.is_my_player(): return
-	_slots_items[slot_item_info.position - 1].set_info(slot_item_info)
+func _on_item_updated(_owner: Entity, _item: Item, _slot_number: int, _target: Entity) -> void:
+	if _owner != GameManager.my_main.gui_scene._bottom_target: return
+	_slots_items[_slot_number - 1].item_updated(_item)

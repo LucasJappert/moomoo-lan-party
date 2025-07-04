@@ -19,6 +19,7 @@ var level: int
 @export var crit_multiplier: float = 0
 @export var stun_chance: float = 0.0
 @export var stun_duration: float = 0.0 # In seconds
+var hostile_silence_duration: float = 0.0 # In seconds
 @export var attack_range: int = 0
 @export var physical_attack_power: int = 0
 @export var physical_attack_power_percent: float = 0
@@ -43,24 +44,23 @@ var custom_damage_heal: CustomDamageHeal = CustomDamageHeal.new()
 @export var is_owner_friendly: bool = true
 var keep_latest_stacks: bool = true
 
-
 static func get_instance_from_dict(dict: Dictionary) -> CombatStats:
 	var instance = CombatStats.new()
 	ObjectHelpers.from_dict(instance, dict)
 	return instance
 
 static func get_default_instance() -> CombatStats:
-	var attr = CombatStats.new()
-	attr.move_speed = 2 # Default move speed for enemies
-	attr.attack_range = CombatStats.MIN_ATTACK_RANGE
-	attr.magic_attack_power = 0
-	attr.physical_attack_power = 1
-	attr.crit_multiplier = 1.5
-	attr.attack_speed = 0.5
-	attr.agility = 10
-	attr.strength = 6
-	attr.intelligence = 10
-	return attr
+	var stats = CombatStats.new()
+	stats.move_speed = 2 # Default move speed for enemies
+	stats.attack_range = CombatStats.MIN_ATTACK_RANGE
+	stats.magic_attack_power = 0
+	stats.physical_attack_power = 1
+	stats.crit_multiplier = 1.5
+	stats.attack_speed = 0.5
+	stats.agility = 10
+	stats.strength = 6
+	stats.intelligence = 10
+	return stats
 
 func accumulate_combat_stats(stats: CombatStats) -> CombatStats:
 	custom_damage_heal.accumulate_props(stats.custom_damage_heal)
@@ -89,6 +89,7 @@ func accumulate_combat_stats(stats: CombatStats) -> CombatStats:
 	hp_regeneration_points_percent += stats.hp_regeneration_points_percent
 	mana_regeneration_points += stats.mana_regeneration_points
 	is_owner_friendly = stats.is_owner_friendly
+	hostile_silence_duration = stats.hostile_silence_duration
 
 	if stats.cleave_effect != null:
 		cleave_effect = stats.cleave_effect
@@ -166,6 +167,11 @@ func has_hostil_stun_effect() -> bool:
 
 	return false
 
+func has_hostil_silence_effect() -> bool:
+	if hostile_silence_duration > 0: return true
+
+	return false
+
 func get_description() -> String:
 	var description = ""
 
@@ -240,6 +246,9 @@ func get_description() -> String:
 
 	if ignore_enemy_evasion_chance != 0:
 		description += str("- Ignore enemy evasion chance: ", StringHelpers.format_percent(ignore_enemy_evasion_chance), "\n")
+
+	if hostile_silence_duration != 0:
+		description += str("- Hostile silence duration: ", StringHelpers.format_float_compact(hostile_silence_duration), "\n")
 
 	if cleave_effect: description += cleave_effect.get_description()
 

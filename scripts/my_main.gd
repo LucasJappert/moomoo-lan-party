@@ -2,9 +2,6 @@ class_name MyMain
 
 extends Node2D
 
-const PLAYER_SCENE = preload("res://scenes/entity/player_scene.tscn")
-# const MOOMOO_SCENE = preload("res://scenes/entity/moomoo_scene.tscn")
-
 static var GLOBAL_MOUSE_POSITION: Vector2 = Vector2.ZERO
 static var VIEWPORT_MOUSE_POSITION: Vector2 = Vector2.ZERO
 static var SCREEN_SIZE: Vector2 = Vector2.ZERO
@@ -27,6 +24,8 @@ func _ready() -> void:
 
 	call_deferred("_init_player_spawner")
 	call_deferred("_init_moomoo_spawner")
+	call_deferred("_init_enemies_spawner")
+	call_deferred("_init_projectiles_spawner")
 
 	MyTree.spawn_trees()
 
@@ -42,16 +41,26 @@ func _process(_delta: float) -> void:
 	SCREEN_SIZE = get_viewport().get_visible_rect().size
 
 func _init_player_spawner():
-	player_spawner.spawn_function = Callable(self, "_spawn_custom")
-
-func _spawn_custom(data: Dictionary) -> Node:
-	var player = PLAYER_SCENE.instantiate()
+	player_spawner.spawn_function = Callable(self, "_spawn_custom_player")
+func _spawn_custom_player(data: Dictionary) -> Node:
+	var player = load("res://scenes/entity/player_scene.tscn").instantiate()
 	player.set_player(data)
+	player.set_current_hp_and_mana()
 	player.get_client_inputs().set_multiplayer_authority(player.player_id)
 	return player
 	
 func _init_moomoo_spawner():
 	moomoo_spawner.spawn_function = Callable(self, "_spawn_custom_moomoo")
-	
-func _spawn_custom_moomoo(data: Dictionary = {}) -> Node:
-	return Moomoo.get_instance_from_dict(data)
+func _spawn_custom_moomoo(_data: Dictionary) -> Node:
+	return Moomoo.get_instance()
+
+func _init_enemies_spawner():
+	enemies_spawner.spawn_function = Callable(self, "_spawn_custom_enemy")
+func _spawn_custom_enemy(data: Dictionary = {}) -> Node:
+	var result = Enemy.get_instance_from_dict(data)
+	return result
+
+func _init_projectiles_spawner():
+	projectiles_spawner.spawn_function = Callable(self, "_spawn_custom_projectile")
+func _spawn_custom_projectile(data: Dictionary = {}) -> Node:
+	return Projectile.get_instance_from_dict(data)
