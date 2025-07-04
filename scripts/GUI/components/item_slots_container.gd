@@ -19,4 +19,4 @@ func _process(_delta: float) -> void:
 
 func _on_item_updated(_owner: Entity, slot_item_info: SlotItemInfo, _target: Entity) -> void:
 	if not _owner.is_my_player(): return
-	_slots_items[slot_item_info.position - 1].set_info(slot_item_info)
+	_slots_items[slot_item_info.position - 1].item_updated(slot_item_info)

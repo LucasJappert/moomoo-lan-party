@@ -51,7 +51,7 @@ func _gui_input(event):
 		if not GameManager.MY_PLAYER: return
 		GameManager.MY_PLAYER.rpc_handler.notify_key_pressed_to_server(KeyboardHelper.INVENTORY_HOTKEYS[info.position - 1])
 		
-func set_info(slot_item_info: SlotItemInfo):
+func item_updated(slot_item_info: SlotItemInfo):
 	info = slot_item_info
 
 	update()

@@ -441,7 +441,6 @@ text = "32"
 horizontal_alignment = 1
 
 [node name="LabelExp" type="Label" parent="PanelBL"]
-unique_name_in_owner = true
 layout_mode = 2
 offset_left = 24.0
 offset_top = 215.0

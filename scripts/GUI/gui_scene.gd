@@ -13,6 +13,7 @@ var reseted_gui := false
 @onready var text_ip = %TextIP
 
 var _top_left_target: Entity
+var _bottom_target: Entity
 
 # region Panel TOP LEFT
 const _RECT_TARGET_MAX_HP = Rect2(81, 27, 189, 21)
@@ -30,6 +31,7 @@ const EXP_BAR_FULL_SIZE = Vector2i(612, 27)
 
 # region Panel BOTTOM LEFT
 @onready var my_effects: GuiEffects = $PanelBL/MyEffects
+@onready var _label_exp = $PanelBL/LabelExp
 @onready var _my_player_avatar = $PanelBL/MyPlayerAvatar
 @onready var _hp_ball = $PanelBL/HpBall
 @onready var _hp_label = $PanelBL/LabelHP
@@ -59,7 +61,6 @@ const EXP_BAR_FULL_SIZE = Vector2i(612, 27)
 @onready var _current_gold = $PanelBR/CurrentGold
 # endregion
 
-var _player_skills: Array[Skill] = []
 var delta: float
 
 func _ready() -> void:
@@ -79,20 +80,20 @@ func _ready() -> void:
 	_current_gold.text = ""
 
 	%HpBallCircle.connect("mouse_entered", func():
-		if not GameManager.MY_PLAYER: return
-		var regen_points = GameManager.MY_PLAYER.cache_total_stats.hp_regeneration_points
+		if not _bottom_target: return
+		var regen_points = _bottom_target.cache_total_stats.hp_regeneration_points
 		MyTooltip.show_tooltip("HP regen", str(regen_points) + " points per second", 7)
 	)
 	%HpBallCircle.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
 
 	%ManaBallCircle.connect("mouse_entered", func():
-		if not GameManager.MY_PLAYER: return
-		var regen_points = GameManager.MY_PLAYER.cache_total_stats.mana_regeneration_points
+		if not _bottom_target: return
+		var regen_points = _bottom_target.cache_total_stats.mana_regeneration_points
 		MyTooltip.show_tooltip("Mana regen", str(regen_points) + " points per second", 7)
 	)
 	%ManaBallCircle.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
 	
-	EventBus.connect_to_new_target_view_selected(func(_owner: Entity, _target: Entity): _on_new_target_view_selected(_owner, _target))
+	EventBus.connect_to_new_target_view_selected(func(_owner: Entity, _viewed_target: Entity): _on_new_target_view_selected(_owner, _viewed_target))
 
 func _on_host_game_pressed() -> void:
 	%MultiplayerHUD.hide()
@@ -113,7 +114,7 @@ func reset_gui() -> void:
 func _process(_delta: float) -> void:
 	# TODO: we should instance the gui when the game starts (and we can access the player)
 	delta = _delta
-	if not GameManager.MY_PLAYER:
+	if not _bottom_target:
 		if not reseted_gui: reset_gui()
 		return
 	if reseted_gui: reseted_gui = false
@@ -125,48 +126,63 @@ func _process(_delta: float) -> void:
 
 
 # region	SETTERS
-func init_scene(player: Player) -> void:
-	_set_my_player_avatar_region(player)
+func init_scene(entity: Entity) -> void:
+	_bottom_target = entity
+	_set_my_player_avatar_region(entity)
 	_set_skills()
 	_set_items()
 
 func _set_skills() -> void:
-	if _player_skills.is_empty():
-		_player_skills = GameManager.MY_PLAYER._skills
-	
-	var skill_slots = _skill_slots_container.get_children() as Array[SkillSlot]
+	var skill_slots := get_skill_slots()
 	for i in range(skill_slots.size()):
-		if i >= _player_skills.size(): continue
-		skill_slots[i].initialize(_player_skills[i], i + 1)
+		var skill: Skill = _bottom_target._skills[i] if i < _bottom_target._skills.size() else null
+		skill_slots[i].skill_updated(skill, i + 1, _bottom_target is Player)
 
 func _set_items() -> void:
-	var _player_items = GameManager.MY_PLAYER._items
-	var _item_slots = _item_slots_container.get_children() as Array[SlotItem]
+	var _item_slots := get_item_slots()
 
 	for i in range(_item_slots.size()):
-		if i >= _player_items.size(): continue
-		_item_slots[i].set_info(_player_items[i])
+		var item: Item = _bottom_target._items[i] if i < _bottom_target._items.size() else null
+		_item_slots[i].item_updated(_bottom_target._items[i])
 
-func _set_my_player_avatar_region(my_player: Player) -> void:
-	_my_player_avatar.region_rect = my_player.extra_info.rects[0]
+func _set_my_player_avatar_region(_entity: Entity) -> void:
+	_my_player_avatar.region_rect = _entity.extra_info.rects[0]
 
 func set_target_avatar_region(region_rect: Rect2) -> void:
 	_sprite_target_avatar.region_rect = region_rect
 
-func _on_new_target_view_selected(_owner: Entity, _target: Entity) -> void:
+func _on_new_target_view_selected(_owner: Entity, _viewed_target: Entity) -> void:
+	print("Viewed target: ", _viewed_target)
+	_bottom_target = _viewed_target
+	if not _bottom_target: _bottom_target = GameManager.MY_PLAYER
+	init_scene(_bottom_target)
+
+	# Actions for the top left panel. TODO: refactor
 	if not ObjectHelpers.is_my_player(_owner): return
-
-	_top_left_target = _target
-
+	_top_left_target = _viewed_target
 	_update_panel_top_left(false)
-
-	if not _target: return
-
-	var region_rect = SpritesHelper.get_region_rect_of_sprite(_target.sprite)
+	if not _viewed_target: return
+	var region_rect = SpritesHelper.get_region_rect_of_sprite(_viewed_target.sprite)
 	set_target_avatar_region(region_rect)
 # endregion SETTERS
 
 # region	GETTERs
+func get_skill_slots() -> Array[SkillSlot]:
+	var result: Array[SkillSlot] = []
+
+	for child in _skill_slots_container.get_children():
+		if child is SkillSlot:
+			result.append(child as SkillSlot)
+
+	return result
+func get_item_slots() -> Array[SlotItem]:
+	var result: Array[SlotItem] = []
+
+	for child in _item_slots_container.get_children():
+		if child is SlotItem:
+			result.append(child as SlotItem)
+
+	return result
 func get_items() -> Array[SlotItem]:
 	return _item_slots_container.get_children() as Array[SlotItem]
 # endregion GETTERs
@@ -175,7 +191,6 @@ func get_items() -> Array[SlotItem]:
 # region 	INTERNAL AUXILIARY METHODS
 
 func _update_panel_top_left(use_lerp: bool = true) -> void:
-	if not GameManager.MY_PLAYER: return
 	if not _top_left_target:
 		_panel_tl.visible = false
 		return
@@ -206,21 +221,22 @@ func _new_lerped_size(max_value: int, current_value: int, full_size: int, curren
 	return lerp(current_size, target_size, delta * 10.0)
 
 func _update_panel_bottom_left() -> void:
-	var current_hp = StringHelpers.format_float_compact(GameManager.MY_PLAYER.current_hp)
-	var max_hp = StringHelpers.format_float_compact(GameManager.MY_PLAYER.get_total_hp())
+	var current_hp = StringHelpers.format_float_compact(_bottom_target.current_hp)
+	var max_hp = StringHelpers.format_float_compact(_bottom_target.get_total_hp())
 	_hp_label.text = "%s / %s" % [current_hp, max_hp]
 
 	var current_exp = StringHelpers.format_float_compact(GameManager.MY_PLAYER.current_exp)
 	var max_exp = StringHelpers.format_float_compact(Player.get_exp_per_level(GameManager.MY_PLAYER.level))
-	%LabelExp.text = "%s / %s" % [current_exp, max_exp]
+	_label_exp.text = "%s / %s" % [current_exp, max_exp]
+
 	_update_hp_ball_sprite()
 	_update_exp_bar()
 
-	_hero_type.text = GameManager.MY_PLAYER.extra_info.key_type
-	_hero_alias.text = GameManager.MY_PLAYER.extra_info.alias
-	_level.text = str(GameManager.MY_PLAYER.level)
+	_hero_type.text = _bottom_target.extra_info.key_type
+	_hero_alias.text = _bottom_target.extra_info.alias
+	_level.text = str(_bottom_target.level)
 
-	var total_stats = GameManager.MY_PLAYER.cache_total_stats
+	var total_stats = _bottom_target.cache_total_stats
 	_str_value.text = StringHelpers.format_float_compact(total_stats.strength)
 	_agi_value.text = StringHelpers.format_float_compact(total_stats.agility)
 	_int_value.text = StringHelpers.format_float_compact(total_stats.intelligence)
@@ -235,13 +251,14 @@ func _update_panel_bottom_left() -> void:
 	_critic_value.text = StringHelpers.format_percent(total_stats.crit_chance) + " (*" + StringHelpers.format_float_compact(total_stats.crit_multiplier) + ")"
 
 func _update_panel_bottom_right() -> void:
-	_current_gold.text = GameManager.MY_PLAYER.current_gold_string
-	var current_mana = StringHelpers.format_float_compact(GameManager.MY_PLAYER.current_mana)
-	var max_mana = StringHelpers.format_float_compact(GameManager.MY_PLAYER.get_total_mana())
+	if _bottom_target is Player: _current_gold.text = _bottom_target.current_gold_string
+	var current_mana = StringHelpers.format_float_compact(_bottom_target.current_mana)
+	var max_mana = StringHelpers.format_float_compact(_bottom_target.get_total_mana())
 	_mana_label.text = "%s / %s" % [current_mana, max_mana]
 	_update_mana_ball_sprite()
 
 func _update_exp_bar() -> void:
+	_current_exp_rect.visible = _bottom_target is Player # TODO: Update visibility on new target change
 	_current_exp_rect.size.x = _new_lerped_size(
 		Player.get_exp_per_level(GameManager.MY_PLAYER.level),
 		GameManager.MY_PLAYER.current_exp,
@@ -251,14 +268,14 @@ func _update_exp_bar() -> void:
 func _update_hp_ball_sprite():
 	_update_ball_sprite(
 		_hp_ball,
-		GameManager.MY_PLAYER.current_hp,
-		GameManager.MY_PLAYER.get_total_hp()
+		_bottom_target.current_hp,
+		_bottom_target.get_total_hp()
 	)
 func _update_mana_ball_sprite():
 	_update_ball_sprite(
 		_mana_ball,
-		GameManager.MY_PLAYER.current_mana,
-		GameManager.MY_PLAYER.get_total_mana()
+		_bottom_target.current_mana,
+		_bottom_target.get_total_mana()
 	)
 func _update_ball_sprite(ball_sprite: Sprite2D, current_value: int, max_value: int) -> void:
 	var current_size = int(ball_sprite.region_rect.size.y)

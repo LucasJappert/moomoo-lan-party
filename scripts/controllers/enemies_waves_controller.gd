@@ -9,7 +9,7 @@ static var TOTAL_ENEMIES_TO_CREATE: int = TOTAL_WAVES * ENEMIES_BY_ZONE * _WAVE_
 static var current_wave: int = 0
 static var _current_wave_info: WaveInfo
 
-static var COUNTDOWN_START := 10 # 10 seconds
+static var COUNTDOWN_START := 1 # 10 seconds
 static var countdown_time_in_secs: float = COUNTDOWN_START
 static var countdown_time_to_show: int
 static var countdown_active := false
@@ -80,9 +80,9 @@ static func create_next_wave() -> void:
 			var enemy = _get_enemy(enemy_type, wave_direction, is_boss)
 			enemy.set_current_hp_and_mana()
 
-			# enemy.can_attack = false
+			enemy.can_attack = false
 			GameManager.spawn_enemy(enemy)
-			# return
+			return
 
 static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: bool) -> Enemy:
 	var enemy: Enemy = EnemyFactory.get_enemy_instance(enemy_type)
