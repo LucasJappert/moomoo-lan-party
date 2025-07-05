@@ -5,3 +5,5 @@ executables/Moomoo LAN Party.sh
 executables/Moomoo LAN Party.x86_64
 .bin/
 .profiler/
+scripts/types/hero_types.gd
+.resources/

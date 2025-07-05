@@ -16,8 +16,8 @@ func activate() -> void:
 	damage_accumulated = 0
 	seconds_elapsed = 0
 
-func process(_owner: Entity, _delta: float) -> void:
-	super.process(_owner, _delta)
+func process_skill(_owner: Entity, _delta: float) -> void:
+	super.process_skill(_owner, _delta)
 
 	if not action_waiting_on_finish: return
 
@@ -60,13 +60,12 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		_SKILLS[_skill_name].item_skill_base[i].cooldown = int_array[i]
 		_SKILLS[_skill_name].item_skill_base[i].description = "Accumulates all damage received over " + StringHelpers.format_float(seconds_to_release) + " seconds. Then releases " + StringHelpers.format_percent(float_array[i]) + " of the accumulated damage as physical damage to all enemies within " + str(range_in_tiles) + " tiles."
 
-static func try_to_use(_my_owner: Entity, _skill: Skill) -> bool:
-	var learned_skill = _skill.get_learned_skill()
-	if learned_skill.my_name != Skill.Names.ABSORB_AND_RELEASE: return true
+static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase) -> bool:
+	if _learned_skill.my_name != Skill.Names.ABSORB_AND_RELEASE: return true
 
-	var _seconds_to_release: float = learned_skill.float_dict["seconds_to_release"]
-	var _percent_to_release: float = learned_skill.float_dict["percent_to_release"]
-	var skill_absorb_and_release := SkillAbsorbAndRelease.new(learned_skill.my_name, _seconds_to_release, true, _percent_to_release, learned_skill.range_in_tiles)
+	var _seconds_to_release: float = _learned_skill.float_dict["seconds_to_release"]
+	var _percent_to_release: float = _learned_skill.float_dict["percent_to_release"]
+	var skill_absorb_and_release := SkillAbsorbAndRelease.new(_learned_skill.my_name, _seconds_to_release, true, _percent_to_release, _learned_skill.range_in_tiles)
 	_my_owner.active_skills.append(skill_absorb_and_release)
 
 	return true

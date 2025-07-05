@@ -22,23 +22,24 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		_SKILLS[_skill_name].item_skill_base[i].duration_in_seconds = float_array1[i]
 		_SKILLS[_skill_name].item_skill_base[i].description = "Grants complete immunity to all damage for " + StringHelpers.format_float(float_array1[i]) + " seconds."
 
-static func try_to_use(_my_owner: Entity, _skill: Skill) -> void:
-	var learned_skill = _skill.get_learned_skill()
-	if learned_skill.my_name != Skill.Names.UNBREAKABLE: return
+static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase) -> bool:
+	if _learned_skill.my_name != Skill.Names.UNBREAKABLE: return true
 
-	var skill_unbreakable := SkillUnbreakable.new(learned_skill.my_name, learned_skill.duration_in_seconds, true)
+	var skill_unbreakable := SkillUnbreakable.new(_learned_skill.my_name, _learned_skill.duration_in_seconds, true)
 	_my_owner.active_skills.append(skill_unbreakable)
 
-	var new_effect = CombatEffect.get_temporal_effect(learned_skill.my_name, learned_skill.duration_in_seconds, learned_skill.max_stacks, learned_skill.stats)
-	new_effect.set_description(learned_skill.description)
-	new_effect.set_region_rect(_skill.region_rect)
+	var new_effect = CombatEffect.get_temporal_effect(_learned_skill.my_name, _learned_skill.duration_in_seconds, _learned_skill.max_stacks, _learned_skill.stats)
+	new_effect.set_description(_learned_skill.description)
+	new_effect.set_region_rect(Skill._SKILLS[_learned_skill.my_name].region_rect)
 	_my_owner.effects_helper.add_effect(new_effect)
 
-	apply_animation(_my_owner, learned_skill.duration_in_seconds)
+	apply_animation(_my_owner, _learned_skill.duration_in_seconds)
+
+	return true
 
 static func apply_animation(_target: Entity, _duration_in_seconds: float = 0) -> void:
 	var frames = SpritesHelper.get_sprite_frames(
-		SkillUnbreakable.ANIMATION_RECT_REGION.position,
+		ANIMATION_RECT_REGION.position,
 		ANIMATION_RECT_REGION.size, FRAMES, 20, _duration_in_seconds > 0
 	)
 

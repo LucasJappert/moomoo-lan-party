@@ -37,7 +37,7 @@ func _on_peer_disconnected(id):
 func _add_player_to_game(id):
 	var spawn_data = {
 		"player_id": id,
-		"key_type": HeroTypes.Names.KAEL_DRAVOK
+		"key_type": HeroLightningWarden.LONG_NAME
 	}
 	GameManager.spawn_player(spawn_data)
 

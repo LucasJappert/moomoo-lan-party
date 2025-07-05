@@ -2,6 +2,9 @@
 
 ⚠️ Keep multiplayer in mind, but for now focus on the game part as a prototype ⚠️
 
+- 🔵 New hero Lightning Warden - Voltrix (Guardian of Lightning)
+- 🔵 Skill Arcane Pulse: Emits a wave of magical energy that damages all nearby enemies in a small area
+
 - 🟣 Crear escena de elección de héroes
 - Agregar skill que brinda un 10/20/30% de evasion
 - Agregar skill, la cual puede activarse o desactivarse, que brindaría chances de matar al enemigo al instante (no aplica a bosses). Consume 20 de mana en cada ataque.

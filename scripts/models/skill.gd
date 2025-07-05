@@ -19,6 +19,7 @@ const Names = {
 	EARTHSHATTER = "Earthshatter", # ✅
 	ABSORB_AND_RELEASE = "Absorb and Release", # ✅
 	UNBREAKABLE = "Unbreakable", # ✅
+	ARC_LIGHTNING_STORM = "Arc Lightning Storm", # ✅
 	DIVINE_SHIELD = "Divine Shield",
 	ENERGY_ABSORPTION = "Energy Absorption",
 	VOID_STEP = "Void Step",
@@ -126,9 +127,7 @@ static func initialize_skills() -> void:
 	var _skill: Skill
 	var int_array: Array[int]; var int_array1: Array[int]; var float_array: Array[float]; var float_array1: Array[float]
 
-	SkillUnbreakable.create_and_add_instance(_SKILLS)
-
-	SkillAbsorbAndRelease.create_and_add_instance(_SKILLS)
+	for skill_class in SkillBase.REGISTERED_SKILLS: skill_class.create_and_add_instance(_SKILLS)
 
 	# region EARTHSHATTER
 	aux_skill_name = Names.EARTHSHATTER
@@ -381,15 +380,14 @@ static func initialize_skills() -> void:
 	# endregion
 
 func use(my_owner: Entity, target_entity: Entity) -> bool:
-	var learned_skill = get_learned_skill()
+	var learned_skill := get_learned_skill()
 	if not learned_skill: return false
 
 	if not can_use(my_owner):
 		print("Cannot use skill: ", learned_skill)
 		return false
 
-	SkillAbsorbAndRelease.try_to_use(my_owner, self)
-	SkillUnbreakable.try_to_use(my_owner, self)
+	for skill_class in SkillBase.REGISTERED_SKILLS: skill_class.try_to_use(my_owner, learned_skill)
 
 	if learned_skill.my_name == Names.EARTHSHATTER:
 		if not _apply_earthshatter(my_owner): return false
@@ -426,16 +424,11 @@ func _apply_earthshatter(_attacker: Entity) -> bool:
 	var target_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, 20, _attacker.get_my_enemies(), learned_skill.range_in_tiles, [])
 
 	var magic_damage: int = _attacker.cache_total_stats.strength * learned_skill.auxiliary_float
-	var stun_stats = CombatStats.new()
-	stun_stats.stun_duration = learned_skill.stats.stun_duration
-	stun_stats.is_owner_friendly = false
 
 	for _enemy in target_enemies:
 		var _di = DamageInfo.new(magic_damage, learned_skill.damage_type, _attacker.name)
 		_enemy.server_receive_damage(_di, _attacker)
-
-		var stun_effect = CombatEffect.get_temporal_effect(CombatEffect.STUN_NAME, stun_stats.stun_duration, 1, stun_stats)
-		_enemy.effects_helper.add_effect(stun_effect)
+		_enemy.apply_stun(learned_skill.stats.stun_duration)
 
 	var message := DamageType.MAGIC_EMOTI + " " + str(magic_damage) + " " + DamageType.MAGIC_EMOTI
 	_attacker.hud.show_message_popup(message.to_upper(), Color(1, 1, 1), 0.4)

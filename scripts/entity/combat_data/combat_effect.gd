@@ -85,11 +85,7 @@ static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _d
 	# Stun verification, we need it after the evasion check
 	if _di.damage_type == DamageType.PHYSICAL:
 		if GlobalsEntityHelpers.roll_chance(_attacker_stats.stun_chance):
-			var _stats = CombatStats.new()
-			_stats.stun_duration = _attacker_stats.stun_duration
-			_stats.is_owner_friendly = false
-			var effect = CombatEffect.get_temporal_effect(STUN_NAME, _stats.stun_duration, 1, _stats)
-			_receiver.effects_helper.add_effect(effect)
+			_receiver.apply_stun(_attacker_stats.stun_duration)
 
 	# Lifesteal verification
 	if not _di.was_a_cleave_damage:

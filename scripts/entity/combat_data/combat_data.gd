@@ -92,11 +92,8 @@ func _process_on_server(_delta: float):
 
 	# Iterate in reverse order to avoid breaking indices when removing elements
 	for i in range(active_skills.size() - 1, -1, -1):
-		var active_skill = active_skills[i]
-		active_skill.process(my_owner(), _delta)
-
-		if not active_skill.active:
-			active_skills.remove_at(i)
+		active_skills[i].process_skill(my_owner(), _delta)
+		if not active_skills[i].active: active_skills.remove_at(i)
 
 func server_execute_physical_damage(_target: Entity) -> void:
 	if my_owner().multiplayer.is_server() == false: return
@@ -149,6 +146,13 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 		active_skill.on_damage_received(_attacker, _di.total_damage)
 
 # region SETTERs
+func apply_stun(_seconds: float) -> void:
+	var _stats = CombatStats.new()
+	_stats.stun_duration = _seconds
+	_stats.is_owner_friendly = false
+	var effect = CombatEffect.get_temporal_effect(CombatEffect.STUN_NAME, _seconds, 1, _stats)
+	effects_helper.add_effect(effect)
+
 func set_current_hp_and_mana() -> void:
 	update_cache_total_stats()
 	current_hp = get_total_hp()
@@ -278,6 +282,7 @@ func verify_freed_target_view(entity_name: String) -> void:
 		set_target_view(null)
 
 func charge_skill(index: int) -> void:
+	if index >= _skills.size(): return
 	if is_silenced: return
 	if not _skills[index].learned_level: return print("Skill not learned: ", _skills[index])
 	if _skills[index].get_learned_skill().type == SkillType.PASSIVE: return

@@ -18,7 +18,7 @@ Este documento contiene el plan detallado para completar una versión jugable y 
 
 ### 📅 30/06/2025 - Semana 1-2: Pulido base y núcleo del juego
 
-- [x] 3 héroes jugables con al menos 2 habilidades
+- [x] 4 héroes jugables con al menos 2 habilidades
 - [ ] Pantalla de inicio y selector de héroes
 - [ ] Gameplay central sólido (moverse, atacar, oleadas, defensa)
 - [ ] Agregar efectos de sonido y visuales

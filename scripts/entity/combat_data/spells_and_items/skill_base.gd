@@ -2,6 +2,13 @@ class_name SkillBase
 
 extends MyInitAuxiliary
 
+# Array of skill classes (each must have .create_and_add_instance)
+static var REGISTERED_SKILLS: Array = [
+	SkillArcLightningStorm,
+	SkillUnbreakable,
+	SkillAbsorbAndRelease
+]
+
 const _ATLAS_START_POS = Skill._ATLAS_START_POS
 const FRAME_SIZE = Skill.FRAME_SIZE
 var my_name: String
@@ -23,7 +30,7 @@ func activate() -> void:
 	seconds_elapsed = 0
 	action_waiting_on_finish = false
 	
-func process(_owner: Entity, _delta: float) -> void:
+func process_skill(_owner: Entity, _delta: float) -> void:
 	if not active: return
 	seconds_elapsed += _delta
 	if seconds_elapsed < duration_in_seconds: return
@@ -31,5 +38,14 @@ func process(_owner: Entity, _delta: float) -> void:
 	active = false
 	action_waiting_on_finish = true
 
+# Must be overriden
 func on_damage_received(_attacker: Entity, _damage_received: int) -> void:
 	pass
+
+# Must be overriden
+static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
+	pass
+
+# Must be overriden
+static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase) -> bool:
+	return true

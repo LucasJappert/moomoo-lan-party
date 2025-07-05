@@ -86,6 +86,9 @@ static func play_critical_melee_hit(volume: float = -15.0):
 static func play_lightning_spell(volume: float = -15.0):
 	_play_sfx("res://sounds/spells/lightning.wav", volume, 4)
 
+static func play_electric(volume: float = -5.0):
+	_play_sfx("res://sounds/spells/electric.wav", volume, 4)
+
 static func play_level_up(volume: float = -5.0):
 	_play_sfx("res://sounds/generals/level-up.wav", volume, 1)
 
