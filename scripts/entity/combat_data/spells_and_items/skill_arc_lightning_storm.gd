@@ -12,14 +12,17 @@ var learned_skill: ItemSkillBase
 var _excluded_targets: Array[Entity]
 var _current_targets_count: int = 0
 
+var _start_pos: Vector2
+var _first_target_position: Vector2
 var _last_target_impacted: Entity
 var _last_pos_impacted: Vector2 = Vector2.ZERO
 
-func _init(p_target: Entity, _learned_skill: ItemSkillBase, _activate_on_start: bool = true):
+func _init(_my_owner: Entity, p_target: Entity, _learned_skill: ItemSkillBase, _activate_on_start: bool = true):
 	super._init(_learned_skill.my_name, _learned_skill.duration_in_seconds, _activate_on_start)
 	learned_skill = _learned_skill
-	_last_target_impacted = p_target
-	_last_pos_impacted = _last_target_impacted.position
+	_start_pos = _my_owner.position
+	_last_pos_impacted = _my_owner.position
+	_first_target_position = p_target.position
 
 func process_skill(_owner: Entity, _delta: float) -> void:
 	if not active: return
@@ -39,8 +42,8 @@ func process_skill(_owner: Entity, _delta: float) -> void:
 func _apply_strikes(_owner: Entity) -> void:
 	if _current_targets_count == 0: SoundsHelper.play_electric()
 
-	var origin = _last_target_impacted.position if not ObjectHelpers.is_null(_last_target_impacted) else _last_pos_impacted
-	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(origin, 1, _owner.get_my_enemies(), learned_skill.range_in_tiles, _excluded_targets)
+	var closest_origin = _last_target_impacted.position if not ObjectHelpers.is_null(_last_target_impacted) else _first_target_position
+	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(closest_origin, 1, _owner.get_my_enemies(), learned_skill.range_in_tiles, _excluded_targets)
 	if nearest_enemies.size() == 0: return
 
 	var next_target: Entity = nearest_enemies[0]
@@ -63,7 +66,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 
 	int_array = [40, 50, 60]
 	float_array1 = [0.2, 0.4, 0.6]
-	aux_array[0] = [4, 5, 6]
+	aux_array[0] = [4, 5, 6] # max targets
 	int_array1 = [120, 180, 240] # mana cost
 	aux_array[1] = [8, 6, 4] # cooldown
 	for i in Skill.AVAILABLE_LEVELS:
@@ -74,14 +77,14 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		_SKILLS[NAME].item_skill_base[i].float_dict["damage_per_target"] = int_array[i]
 		_SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
 		_SKILLS[NAME].item_skill_base[i].mana_cost = int_array1[i]
-		_SKILLS[NAME].item_skill_base[i].cooldown = 15
+		_SKILLS[NAME].item_skill_base[i].cooldown = aux_array[1][i]
 		_SKILLS[NAME].item_skill_base[i].description = "Unleashes a chain lightning that starts from a target and arcs to up to " + str(aux_array[0][i]) + " nearby enemies, dealing " + StringHelpers.format_float(int_array[i]) + " magic damage and stunning each for " + StringHelpers.format_float(float_array1[i]) + " seconds."
 
 
 static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return true
 
-	var skill := SkillArcLightningStorm.new(_target, _learned_skill, true)
+	var skill := SkillArcLightningStorm.new(_my_owner, _target, _learned_skill, true)
 	_my_owner.active_skills.append(skill)
 
 	return true

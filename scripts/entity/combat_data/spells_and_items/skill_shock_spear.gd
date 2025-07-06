@@ -6,48 +6,6 @@ const ANIMATION_RECT_REGION := Rect2(0, 992, 64, 96)
 const FRAMES = 14
 const NAME = "Shock Spear"
 
-var target: Entity
-var learned_skill: ItemSkillBase
-
-func _init(_p_target: Entity, _learned_skill: ItemSkillBase):
-	super._init(_learned_skill.my_name, _learned_skill.duration_in_seconds, true)
-	target = _p_target
-	learned_skill = _learned_skill
-
-func process_skill(_owner: Entity, _delta: float) -> void:
-	if not active: return
-
-	if ObjectHelpers.is_null(target): return
-
-	_apply_strike(_owner)
-	active = false
-
-func _apply_strike(_owner: Entity) -> void:
-	_apply_animation(target)
-	SoundsHelper.play_electric_1()
-
-	var _di := DamageInfo.new(int(learned_skill.float_dict["magic_damage"]), learned_skill.damage_type, _owner.name)
-	target.server_receive_damage(_di, _owner)
-
-	var enemies_to_stun := GlobalsEntityHelpers.get_closest_entities(target.position, 20, _owner.get_my_enemies(), learned_skill.float_dict["stun_radius"], [])
-	for _enemy in enemies_to_stun:
-		_enemy.apply_stun(learned_skill.float_dict["stun_duration"])
-
-func _apply_animation(_target: Entity) -> void:
-	var frames = SpritesHelper.get_sprite_frames(
-		ANIMATION_RECT_REGION.position,
-		ANIMATION_RECT_REGION.size, FRAMES, 20, false
-	)
-
-	var scale := Vector2(1.5, 1.5) if _target is Player else Vector2(1, 1)
-	var anim_position = AnimationsHelper.get_position_of_bottom_of_the_cell(ANIMATION_RECT_REGION.size)
-	if scale.y != 1:
-		anim_position.y = anim_position.y - ANIMATION_RECT_REGION.size.y * 0.5 * (scale.y - 1)
-
-	var sprite := AnimationsHelper.spawn_front_animation(_target, frames, NAME, anim_position)
-	sprite.scale = scale
-
-
 static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	_SKILLS[NAME] = Skill.new(NAME, SkillType.ACTIVE)
 	_SKILLS[NAME].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 8, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
@@ -71,7 +29,31 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return true
 
-	var skill := SkillShockSpear.new(_target, _learned_skill)
-	_my_owner.active_skills.append(skill)
+	_apply_strike(_my_owner, _target, _learned_skill)
 
 	return true
+	
+static func _apply_strike(_owner: Entity, _target: Entity, learned_skill: ItemSkillBase) -> void:
+	_apply_animation(_target)
+	SoundsHelper.play_electric_1()
+
+	var _di := DamageInfo.new(int(learned_skill.float_dict["magic_damage"]), learned_skill.damage_type, _owner.name)
+	_target.server_receive_damage(_di, _owner)
+
+	var enemies_to_stun := GlobalsEntityHelpers.get_closest_entities(_target.position, 20, _owner.get_my_enemies(), learned_skill.float_dict["stun_radius"], [])
+	for _enemy in enemies_to_stun:
+		_enemy.apply_stun(learned_skill.float_dict["stun_duration"])
+
+static func _apply_animation(_target: Entity) -> void:
+	var frames = SpritesHelper.get_sprite_frames(
+		ANIMATION_RECT_REGION.position,
+		ANIMATION_RECT_REGION.size, FRAMES, 20, false
+	)
+
+	var scale := Vector2(1.5, 1.5) if _target is Player else Vector2(1, 1)
+	var anim_position = AnimationsHelper.get_position_of_bottom_of_the_cell(ANIMATION_RECT_REGION.size)
+	if scale.y != 1:
+		anim_position.y = anim_position.y - ANIMATION_RECT_REGION.size.y * 0.5 * (scale.y - 1)
+
+	var sprite := AnimationsHelper.spawn_front_animation(_target, frames, NAME, anim_position)
+	sprite.scale = scale

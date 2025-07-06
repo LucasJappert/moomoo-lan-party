@@ -2,13 +2,6 @@ class_name SkillBase
 
 extends MyInitAuxiliary
 
-# Array of skill classes (each must have .create_and_add_instance)
-static var REGISTERED_SKILLS: Array = [
-	SkillArcLightningStorm,
-	SkillUnbreakable,
-	SkillAbsorbAndRelease,
-	SkillShockSpear
-]
 
 const _ATLAS_START_POS = Skill._ATLAS_START_POS
 const FRAME_SIZE = Skill.FRAME_SIZE
@@ -17,6 +10,7 @@ var active: bool = false
 var seconds_elapsed: float
 var duration_in_seconds: float
 var action_waiting_on_finish: bool = false
+var permanent_effect: bool = false
 
 static var int_array: Array[int]; static var int_array1: Array[int]; static var float_array: Array[float]; static var float_array1: Array[float]
 static var aux_array: Array = [[], [], [], []]
@@ -33,12 +27,16 @@ func activate() -> void:
 	action_waiting_on_finish = false
 	
 func process_skill(_owner: Entity, _delta: float) -> void:
-	if not active: return
+	if not active or permanent_effect: return
 	seconds_elapsed += _delta
 	if seconds_elapsed < duration_in_seconds: return
 
 	active = false
 	action_waiting_on_finish = true
+
+static func actions_after_cast_skill(_owner: Entity, _skill_used: ItemSkillBase) -> void:
+	# At the moment, Implemented in Static Discharge skill
+	pass
 
 # Must be overriden
 func on_damage_received(_attacker: Entity, _damage_received: int) -> void:

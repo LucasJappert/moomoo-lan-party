@@ -42,7 +42,7 @@ func _ready():
 			GameManager.MY_PLAYER.rpc_handler.send_skill_uppgrade_button_pressed_to_server(slot_number)
 		)
 
-	EventBus.connect_to_skill_upgraded(func(_p_owner: Entity): _update_controls())
+	EventBus.connect_to_skill_upgraded(func(_p_owner: Entity, _upgraded_skill: Skill): _update_controls())
 	EventBus.connect_to_skill_points_to_assign_changed(func(_p_owner: Entity): _update_controls())
 		
 func _process(_delta: float) -> void:

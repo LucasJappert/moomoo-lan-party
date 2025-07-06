@@ -2,9 +2,10 @@
 
 ⚠️ Keep multiplayer in mind, but for now focus on the game part as a prototype ⚠️
 
-- 🔵 Agregar skill Shock Spear: Invoca un rayo que realiza daño mágico y stunea tanto al target como a los enemigos cercanos
-- Agregar skill que luego de cada hechizo lanzado, electrifica a los enemigos cercanos al héroe provocando un daño total del 5% de la vida total del enemigo.
-- ✅ Agregar skill Arc Lightning Storm: Emits a wave of magical energy that damages all nearby enemies in a small area
+- 🔵Agregar skill especial
+- ✅ Add skill that after each spell cast, electrifies nearby enemies, dealing xx% of the enemy's total life
+- ✅ Add skill Shock Spear: Invokes a ray of lightning that deals magical damage and stuns the target as well as nearby enemies
+- ✅ Add skill Arc Lightning Storm: Emits a wave of magical energy that damages all nearby enemies in a small area
 - 🔵 New hero Lightning Warden - Voltrix (Guardian of Lightning)
 - Actualizar animación de stun
 

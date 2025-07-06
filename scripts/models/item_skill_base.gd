@@ -55,8 +55,6 @@ func get_description(include_stats_description: bool = true) -> String:
 	return result
 
 func can_use(my_owner: Entity) -> bool:
-	if type == SkillType.PASSIVE: return false
-
 	if mana_cost > 0:
 		if my_owner.current_mana < mana_cost: return false
 

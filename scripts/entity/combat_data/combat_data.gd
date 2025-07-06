@@ -319,6 +319,7 @@ func use_charged_skill(_target: Entity) -> void:
 
 	uncharge_skill()
 
+
 func toogle_keep_ground() -> void:
 	keep_ground = not keep_ground
 # endregion SETTERs

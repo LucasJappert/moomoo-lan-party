@@ -2,6 +2,15 @@ class_name Skill
 
 extends MyInitAuxiliary
 
+# Array of skill classes (each must have .create_and_add_instance)
+static var REGISTERED_SKILLS: Array = [
+	SkillArcLightningStorm,
+	SkillUnbreakable,
+	SkillAbsorbAndRelease,
+	SkillShockSpear,
+	SkillStaticDischarge
+]
+
 const Names = {
 	SHIELDED_CORE = "Shielded Core", # ✅
 	BLESSING_OF_POWER = "Blessing of Power", # ✅
@@ -21,6 +30,7 @@ const Names = {
 	UNBREAKABLE = "Unbreakable", # ✅
 	ARC_LIGHTNING_STORM = "Arc Lightning Storm", # ✅
 	SHOCK_SPEAR = "Shock Spear", # ✅
+	STATIC_DISCHARGE = "Static Discharge", # ✅
 	DIVINE_SHIELD = "Divine Shield",
 	ENERGY_ABSORPTION = "Energy Absorption",
 	VOID_STEP = "Void Step",
@@ -128,7 +138,7 @@ static func initialize_skills() -> void:
 	var _skill: Skill
 	var int_array: Array[int]; var int_array1: Array[int]; var float_array: Array[float]; var float_array1: Array[float]
 
-	for skill_class in SkillBase.REGISTERED_SKILLS: skill_class.create_and_add_instance(_SKILLS)
+	for skill_class in REGISTERED_SKILLS: skill_class.create_and_add_instance(_SKILLS)
 
 	# region EARTHSHATTER
 	aux_skill_name = Names.EARTHSHATTER
@@ -388,14 +398,17 @@ func use(my_owner: Entity, target_entity: Entity) -> bool:
 		print("Cannot use skill: ", learned_skill)
 		return false
 
-	for skill_class in SkillBase.REGISTERED_SKILLS: skill_class.try_to_use(my_owner, learned_skill, target_entity)
+	# New way to use skills
+	for skill_class in REGISTERED_SKILLS:
+		skill_class.try_to_use(my_owner, learned_skill, target_entity)
+		# Actions after cast
+		skill_class.actions_after_cast_skill(my_owner, learned_skill)
 
+	# TODO: Old way to use skills
 	if learned_skill.my_name == Names.EARTHSHATTER:
 		if not _apply_earthshatter(my_owner): return false
-
 	if learned_skill.my_name == Names.STORM_STRIKE:
 		if not _apply_storm_strike(my_owner, target_entity): return false
-
 	if learned_skill.my_name == Names.FRENZIED_SILENCE:
 		if not _apply_frenzied_silence(my_owner, target_entity): return false
 
@@ -411,7 +424,7 @@ func try_to_upgrade(my_owner: Entity) -> void:
 	learned_level += 1
 	my_owner.increment_skill_points_to_assign(-1)
 
-	EventBus.emit_skill_upgraded(my_owner)
+	EventBus.emit_skill_upgraded(my_owner, self)
 
 # endregion ................. SETTERs
 
