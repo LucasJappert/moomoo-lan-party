@@ -9,6 +9,7 @@ static var SCREEN_SIZE: Vector2 = Vector2.ZERO
 @onready var projectiles_spawner = $ProjectilesSpawner
 @onready var enemies_spawner = $EnemiesSpawner
 @onready var moomoo_spawner = $MoomooSpawner
+@onready var general_container = $GeneralContainer
 const HOSTED_GAME = true # In this version of Moomoo this is always true
 
 @onready var player_spawner = $PlayerSpawner

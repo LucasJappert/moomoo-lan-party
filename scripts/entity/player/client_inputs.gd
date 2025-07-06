@@ -56,7 +56,7 @@ func _on_left_click(_target_entity_name: String):
 
 	if target_entity: print("entity name: ", target_entity.name)
 
-	player.set_target_view(target_entity)
+	if not player.charged_skill: player.set_target_view(target_entity)
 
 	player.use_charged_skill(target_entity)
 

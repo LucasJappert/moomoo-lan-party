@@ -18,6 +18,7 @@ var duration_in_seconds: float
 var action_waiting_on_finish: bool = false
 
 static var int_array: Array[int]; static var int_array1: Array[int]; static var float_array: Array[float]; static var float_array1: Array[float]
+static var aux_array: Array = [[], [], [], []]
 
 func _init(_name: String, _duration_in_seconds: float = 0, _active: bool = false) -> void:
 	super._init()
@@ -47,5 +48,5 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	pass
 
 # Must be overriden
-static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase) -> bool:
+static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	return true

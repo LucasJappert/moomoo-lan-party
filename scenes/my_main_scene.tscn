@@ -124,3 +124,8 @@ y_sort_enabled = true
 [node name="Audio" type="Node" parent="."]
 
 [node name="GuiScene" parent="." instance=ExtResource("4_8fhqs")]
+
+[node name="GeneralContainer" type="Node2D" parent="."]
+z_index = 3
+z_as_relative = false
+y_sort_enabled = true

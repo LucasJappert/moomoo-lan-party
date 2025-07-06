@@ -32,7 +32,8 @@ func _post_ready(_entity: Entity):
 
 	var percent := 0.7
 	var scale_diff := my_owner.sprite.scale.y - 1.0
-	bars_container.position.y = bars_container.position.y - (my_owner.sprite_heigth * percent * scale_diff)
+	var diff_player = 40 if my_owner is Player else 0
+	bars_container.position.y = bars_container.position.y - (my_owner.sprite_heigth * percent * scale_diff) - diff_player
 
 	bars_container.visible = false
 
@@ -46,11 +47,11 @@ func _process(_delta: float):
 	_try_update_bars_visibility()
 
 func _try_update_bars_visibility():
-	# if my_owner.is_my_player(): return
 	if ClientInputs.ALT_PRESSED: bars_container.visible = true; return
 
-	var show_by_last_damage_to_my_player = Time.get_ticks_msec() - _last_damage_to_my_player < HIDE_BARS_AFTER_MILLISECONDS
-	if show_by_last_damage_to_my_player: bars_container.visible = true; return
+	if my_owner.is_my_player(): bars_container.visible = true; return
+	# var show_by_last_damage_to_my_player = Time.get_ticks_msec() - _last_damage_to_my_player < HIDE_BARS_AFTER_MILLISECONDS
+	# if show_by_last_damage_to_my_player: bars_container.visible = true; return
 
 	var show_by_last_damage_received = Time.get_ticks_msec() - my_owner.last_damage_received_time < HIDE_BARS_AFTER_MILLISECONDS
 	if show_by_last_damage_received: bars_container.visible = true; return

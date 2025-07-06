@@ -387,7 +387,7 @@ func use(my_owner: Entity, target_entity: Entity) -> bool:
 		print("Cannot use skill: ", learned_skill)
 		return false
 
-	for skill_class in SkillBase.REGISTERED_SKILLS: skill_class.try_to_use(my_owner, learned_skill)
+	for skill_class in SkillBase.REGISTERED_SKILLS: skill_class.try_to_use(my_owner, learned_skill, target_entity)
 
 	if learned_skill.my_name == Names.EARTHSHATTER:
 		if not _apply_earthshatter(my_owner): return false
