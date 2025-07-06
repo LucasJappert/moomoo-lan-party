@@ -1,0 +1,77 @@
+class_name SkillShockSpear
+
+extends SkillBase
+
+const ANIMATION_RECT_REGION := Rect2(0, 992, 64, 96)
+const FRAMES = 14
+const NAME = "Shock Spear"
+
+var target: Entity
+var learned_skill: ItemSkillBase
+
+func _init(_p_target: Entity, _learned_skill: ItemSkillBase):
+	super._init(_learned_skill.my_name, _learned_skill.duration_in_seconds, true)
+	target = _p_target
+	learned_skill = _learned_skill
+
+func process_skill(_owner: Entity, _delta: float) -> void:
+	if not active: return
+
+	if ObjectHelpers.is_null(target): return
+
+	_apply_strike(_owner)
+	active = false
+
+func _apply_strike(_owner: Entity) -> void:
+	_apply_animation(target)
+	SoundsHelper.play_electric_1()
+
+	var _di := DamageInfo.new(int(learned_skill.float_dict["magic_damage"]), learned_skill.damage_type, _owner.name)
+	target.server_receive_damage(_di, _owner)
+
+	var enemies_to_stun := GlobalsEntityHelpers.get_closest_entities(target.position, 20, _owner.get_my_enemies(), learned_skill.float_dict["stun_radius"], [])
+	for _enemy in enemies_to_stun:
+		_enemy.apply_stun(learned_skill.float_dict["stun_duration"])
+
+func _apply_animation(_target: Entity) -> void:
+	var frames = SpritesHelper.get_sprite_frames(
+		ANIMATION_RECT_REGION.position,
+		ANIMATION_RECT_REGION.size, FRAMES, 20, false
+	)
+
+	var scale := Vector2(1.5, 1.5) if _target is Player else Vector2(1, 1)
+	var anim_position = AnimationsHelper.get_position_of_bottom_of_the_cell(ANIMATION_RECT_REGION.size)
+	if scale.y != 1:
+		anim_position.y = anim_position.y - ANIMATION_RECT_REGION.size.y * 0.5 * (scale.y - 1)
+
+	var sprite := AnimationsHelper.spawn_front_animation(_target, frames, NAME, anim_position)
+	sprite.scale = scale
+
+
+static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
+	_SKILLS[NAME] = Skill.new(NAME, SkillType.ACTIVE)
+	_SKILLS[NAME].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 8, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
+
+	aux_array[0] = [60, 100, 140] # magic_damage
+	aux_array[1] = [120, 200, 320] # mana cost
+	aux_array[2] = [8, 6, 4] # cooldown
+	aux_array[3] = [1, 1.5, 2] # stun_duration
+	for i in Skill.AVAILABLE_LEVELS:
+		_SKILLS[NAME].item_skill_base[i].instant_use = false
+		_SKILLS[NAME].item_skill_base[i].range_in_tiles = 7
+		_SKILLS[NAME].item_skill_base[i].float_dict["stun_radius"] = 1
+		_SKILLS[NAME].item_skill_base[i].float_dict["magic_damage"] = aux_array[0][i]
+		_SKILLS[NAME].item_skill_base[i].float_dict["stun_duration"] = aux_array[3][i]
+		_SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
+		_SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]
+		_SKILLS[NAME].item_skill_base[i].cooldown = aux_array[2][i]
+		_SKILLS[NAME].item_skill_base[i].description = "Calls down a lightning strike on a target enemy, dealing " + StringHelpers.format_float(aux_array[0][i]) + " magic damage and stunning them and nearby enemies for " + StringHelpers.format_float(aux_array[3][i]) + " seconds."
+
+
+static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
+	if _learned_skill.my_name != NAME: return true
+
+	var skill := SkillShockSpear.new(_target, _learned_skill)
+	_my_owner.active_skills.append(skill)
+
+	return true

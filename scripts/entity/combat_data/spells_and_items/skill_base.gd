@@ -6,7 +6,8 @@ extends MyInitAuxiliary
 static var REGISTERED_SKILLS: Array = [
 	SkillArcLightningStorm,
 	SkillUnbreakable,
-	SkillAbsorbAndRelease
+	SkillAbsorbAndRelease,
+	SkillShockSpear
 ]
 
 const _ATLAS_START_POS = Skill._ATLAS_START_POS

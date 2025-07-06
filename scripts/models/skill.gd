@@ -20,6 +20,7 @@ const Names = {
 	ABSORB_AND_RELEASE = "Absorb and Release", # ✅
 	UNBREAKABLE = "Unbreakable", # ✅
 	ARC_LIGHTNING_STORM = "Arc Lightning Storm", # ✅
+	SHOCK_SPEAR = "Shock Spear", # ✅
 	DIVINE_SHIELD = "Divine Shield",
 	ENERGY_ABSORPTION = "Energy Absorption",
 	VOID_STEP = "Void Step",

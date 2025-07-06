@@ -59,12 +59,13 @@ func _set_last_target_impacted(_target: Entity) -> void:
 
 static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	_SKILLS[NAME] = Skill.new(NAME, SkillType.ACTIVE)
-	_SKILLS[NAME].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 8, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
+	_SKILLS[NAME].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 9, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
 
-	int_array = [60, 100, 140]
-	int_array1 = [120, 200, 320]
+	int_array = [40, 50, 60]
 	float_array1 = [0.2, 0.4, 0.6]
 	aux_array[0] = [4, 5, 6]
+	int_array1 = [120, 180, 240] # mana cost
+	aux_array[1] = [8, 6, 4] # cooldown
 	for i in Skill.AVAILABLE_LEVELS:
 		_SKILLS[NAME].item_skill_base[i].instant_use = false
 		_SKILLS[NAME].item_skill_base[i].range_in_tiles = 20
@@ -73,7 +74,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		_SKILLS[NAME].item_skill_base[i].float_dict["damage_per_target"] = int_array[i]
 		_SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
 		_SKILLS[NAME].item_skill_base[i].mana_cost = int_array1[i]
-		_SKILLS[NAME].item_skill_base[i].cooldown = 2 # 15
+		_SKILLS[NAME].item_skill_base[i].cooldown = 15
 		_SKILLS[NAME].item_skill_base[i].description = "Unleashes a chain lightning that starts from a target and arcs to up to " + str(aux_array[0][i]) + " nearby enemies, dealing " + StringHelpers.format_float(int_array[i]) + " magic damage and stunning each for " + StringHelpers.format_float(float_array1[i]) + " seconds."
 
 
@@ -84,26 +85,3 @@ static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase, _target
 	_my_owner.active_skills.append(skill)
 
 	return true
-
-static func _apply_animation(_target: Entity, _duration_in_seconds: float = 0) -> void:
-	var frames = SpritesHelper.get_sprite_frames(
-		ANIMATION_RECT_REGION.position,
-		ANIMATION_RECT_REGION.size, FRAMES, 30, _duration_in_seconds > 0
-	)
-
-	var scale := Vector2(1.5, 1.5) if _target is Player else Vector2(1, 1)
-	var anim_position = AnimationsHelper.get_position_of_bottom_of_the_cell(ANIMATION_RECT_REGION.size)
-	if scale.y != 1:
-		anim_position.y = anim_position.y - ANIMATION_RECT_REGION.size.y * 0.5 * (scale.y - 1)
-
-	var sprite := AnimationsHelper.spawn_front_animation(_target, frames, NAME, anim_position)
-	sprite.scale = scale
-
-	if _duration_in_seconds == 0: return
-
-	var timer := Timer.new()
-	timer.one_shot = true
-	timer.wait_time = _duration_in_seconds
-	timer.autostart = true
-	sprite.add_child(timer)
-	timer.timeout.connect(func(): sprite.queue_free())
