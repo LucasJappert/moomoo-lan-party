@@ -25,7 +25,6 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		_SKILLS[NAME].item_skill_base[i].cooldown = aux_array[2][i]
 		_SKILLS[NAME].item_skill_base[i].description = "Calls down a lightning strike on a target enemy, dealing " + StringHelpers.format_float(aux_array[0][i]) + " magic damage and stunning them and nearby enemies for " + StringHelpers.format_float(aux_array[3][i]) + " seconds."
 
-
 static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return true
 
@@ -37,7 +36,8 @@ static func apply_strike(_owner: Entity, _target: Entity, learned_skill: ItemSki
 	_apply_animation(_target)
 	SoundsHelper.play_electric_1()
 
-	var _di := DamageInfo.new(int(learned_skill.float_dict["magic_damage"]), learned_skill.damage_type, _owner.name)
+	var total_magic_damage = _owner.get_total_magic_damage(learned_skill.float_dict["magic_damage"])
+	var _di := DamageInfo.new(total_magic_damage, learned_skill.damage_type, _owner.name)
 	_target.server_receive_damage(_di, _owner)
 
 	var enemies_to_stun := GlobalsEntityHelpers.get_closest_entities(_target.position, 20, _owner.get_my_enemies(), learned_skill.float_dict["stun_radius"], [])

@@ -442,13 +442,14 @@ func _apply_earthshatter(_attacker: Entity) -> bool:
 	var target_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, 20, _attacker.get_my_enemies(), learned_skill.range_in_tiles, [])
 
 	var magic_damage: int = _attacker.cache_total_stats.strength * learned_skill.auxiliary_float
+	var total_magic_damage = _attacker.get_total_magic_damage(magic_damage)
 
 	for _enemy in target_enemies:
-		var _di = DamageInfo.new(magic_damage, learned_skill.damage_type, _attacker.name)
+		var _di = DamageInfo.new(total_magic_damage, learned_skill.damage_type, _attacker.name)
 		_enemy.server_receive_damage(_di, _attacker)
 		_enemy.apply_stun(learned_skill.stats.stun_duration)
 
-	var message := DamageType.MAGIC_EMOTI + " " + str(magic_damage) + " " + DamageType.MAGIC_EMOTI
+	var message := DamageType.MAGIC_EMOTI + " " + str(total_magic_damage) + " " + DamageType.MAGIC_EMOTI
 	_attacker.hud.show_message_popup(message.to_upper(), Color(1, 1, 1), 0.4)
 
 	SoundsHelper.play_scream_hero_1()
@@ -470,15 +471,16 @@ func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:
 
 	var attacker_stats = _attacker.cache_total_stats
 	var total_damage = get_stats().custom_damage_heal.get_total_damage_heal(attacker_stats.agility, attacker_stats.strength, attacker_stats.intelligence)
+	var total_magic_damage = _attacker.get_total_magic_damage(total_damage)
 
 	var targets = [_target]
 	var my_enemies = _attacker.get_my_enemies()
 	targets.append_array(GlobalsEntityHelpers.get_closest_entities(_target.global_position, get_max_targets() - 1, my_enemies, 6, [_target]))
 
 	for target in targets:
-		var _di := DamageInfo.new(total_damage, get_learned_skill().damage_type)
-		var critical_damage = _attacker.try_critical_hit(total_damage)
-		var total_damage_and_crit = total_damage + critical_damage
+		var _di := DamageInfo.new(total_magic_damage, get_learned_skill().damage_type)
+		var critical_damage = _attacker.try_critical_hit(total_magic_damage)
+		var total_damage_and_crit = total_magic_damage + critical_damage
 
 		_di.total_damage = total_damage_and_crit
 		_di.critical = critical_damage

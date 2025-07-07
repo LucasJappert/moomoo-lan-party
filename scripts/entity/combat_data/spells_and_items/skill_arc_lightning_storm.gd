@@ -52,7 +52,8 @@ func _apply_strikes(_owner: Entity) -> void:
 	LineEffect.spawn(GameManager.my_main.general_container, _last_pos_impacted, next_target.position, 0.5, 0.5)
 	_set_last_target_impacted(next_target)
 
-	var _di := DamageInfo.new(int(learned_skill.float_dict["damage_per_target"]), learned_skill.damage_type, _owner.name)
+	var total_magic_damage = _owner.get_total_magic_damage(learned_skill.float_dict["damage_per_target"])
+	var _di := DamageInfo.new(total_magic_damage, learned_skill.damage_type, _owner.name)
 	next_target.server_receive_damage(_di, _owner)
 	next_target.apply_stun(learned_skill.float_dict["ministun_in_seconds"])
 

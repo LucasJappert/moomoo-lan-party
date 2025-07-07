@@ -478,12 +478,19 @@ layout_mode = 2
 offset_right = 55.0
 offset_bottom = 158.0
 
-[node name="Damage" type="Label" parent="PanelBL/StatsContainer/Panel1/VBoxContainer1"]
+[node name="Physical Damage" type="Label" parent="PanelBL/StatsContainer/Panel1/VBoxContainer1"]
 layout_mode = 2
 mouse_filter = 0
 theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
 theme_override_font_sizes/font_size = 16
 text = "- Dam: "
+
+[node name="Magic power multiplier" type="Label" parent="PanelBL/StatsContainer/Panel1/VBoxContainer1"]
+layout_mode = 2
+mouse_filter = 0
+theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_font_sizes/font_size = 16
+text = "- MPM: "
 
 [node name="Defense" type="Label" parent="PanelBL/StatsContainer/Panel1/VBoxContainer1"]
 layout_mode = 2
@@ -530,7 +537,14 @@ offset_bottom = 158.0
 [node name="DamageValue" type="Label" parent="PanelBL/StatsContainer/Panel1/VBoxContainer2"]
 layout_mode = 2
 mouse_filter = 0
-theme_override_colors/font_color = Color(0.820287, 0.806197, 0.256373, 1)
+theme_override_colors/font_color = Color(0.819608, 0.807843, 0.254902, 1)
+theme_override_styles/normal = ExtResource("4_0ehin")
+text = "33"
+
+[node name="MagicPowerMultiplierValue" type="Label" parent="PanelBL/StatsContainer/Panel1/VBoxContainer2"]
+layout_mode = 2
+mouse_filter = 0
+theme_override_colors/font_color = Color(0.192157, 0.654902, 0.788235, 1)
 theme_override_styles/normal = ExtResource("4_0ehin")
 text = "33"
 

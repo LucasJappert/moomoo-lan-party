@@ -21,9 +21,15 @@ static func _ready(gui: GUIScene):
 
 	gui._damage_value.connect("mouse_entered", func():
 		if not GameManager.MY_PLAYER: return
-		MyTooltip.show_tooltip("DAMAGE", "Physical and magic damage")
+		MyTooltip.show_tooltip("DAMAGE", "Physical damage")
 	)
 	gui._damage_value.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
+
+	gui._magic_power_multiplier_value.connect("mouse_entered", func():
+		if not GameManager.MY_PLAYER: return
+		MyTooltip.show_tooltip("Magic extra damage", "Increases the final damage dealt by magic skills based on the hero's intelligence.")
+	)
+	gui._magic_power_multiplier_value.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
 
 	gui._defense_value.connect("mouse_entered", func():
 		if not GameManager.MY_PLAYER: return

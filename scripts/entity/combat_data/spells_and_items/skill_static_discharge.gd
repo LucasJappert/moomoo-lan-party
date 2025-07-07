@@ -26,7 +26,8 @@ static func _apply_strikes(_owner: Entity, learned_skill: ItemSkillBase) -> void
 	for enemy in nearest_enemies:
 		var magic_damage: int = enemy.get_total_hp() * learned_skill.float_dict["percent_damage_from_max_hp"]
 
-		var _di := DamageInfo.new(magic_damage, learned_skill.damage_type, _owner.name)
+		var total_magic_damage = _owner.get_total_magic_damage(magic_damage)
+		var _di := DamageInfo.new(total_magic_damage, learned_skill.damage_type, _owner.name)
 		enemy.server_receive_damage(_di, _owner)
 	
 static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:

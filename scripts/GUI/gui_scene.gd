@@ -44,6 +44,7 @@ const EXP_BAR_FULL_SIZE = Vector2i(612, 27)
 @onready var _attack_speed_value = $PanelBL/StatsContainer/Panel2/VBoxContainer2/AttackSpeedValue
 
 @onready var _damage_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/DamageValue
+@onready var _magic_power_multiplier_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/MagicPowerMultiplierValue
 @onready var _defense_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/DefenseValue
 @onready var _evasion_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/EvasionValue
 @onready var _stun_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/StunValue
@@ -222,6 +223,7 @@ func _new_lerped_size(max_value: int, current_value: int, full_size: int, curren
 	return lerp(current_size, target_size, delta * 10.0)
 
 func _update_panel_bottom_left() -> void:
+	if not GameManager.MY_PLAYER: return
 	var current_hp = StringHelpers.format_float_compact(_bottom_target.current_hp)
 	var max_hp = StringHelpers.format_float_compact(_bottom_target.get_total_hp())
 	_hp_label.text = "%s / %s" % [current_hp, max_hp]
@@ -245,7 +247,8 @@ func _update_panel_bottom_left() -> void:
 	_attack_speed_value.text = StringHelpers.format_float_compact(total_stats.get_total_attack_speed())
 	_lifesteal_value.text = StringHelpers.format_percent(total_stats.life_steal_percent)
 
-	_damage_value.text = StringHelpers.format_float_compact(total_stats.physical_attack_power) + "-" + StringHelpers.format_float_compact(total_stats.magic_attack_power)
+	_damage_value.text = StringHelpers.format_float_compact(_bottom_target.get_physical_attack_power())
+	_magic_power_multiplier_value.text = "+" + StringHelpers.format_percent(_bottom_target.get_magic_power_multiplier() - 1)
 	_defense_value.text = StringHelpers.format_percent(total_stats.physical_defense_percent, false) + "-" + StringHelpers.format_percent(total_stats.magic_defense_percent, false) + " %"
 	_evasion_value.text = StringHelpers.format_percent(total_stats.evasion)
 	_stun_value.text = StringHelpers.format_percent(total_stats.stun_chance)

@@ -133,7 +133,7 @@ static func get_extra_stats_by_strength(_str: int) -> CombatStats:
 	attr.physical_attack_power = _str * _PHYSICAL_ATTACK_POWER_BY_STRENGTH
 	return attr
 
-const _MANA_BY_INTELLIGENCE = 10; const _MANA_REGEN_BY_INTELLIGENCE = 0.05; const _MAGIC_ATTACK_POWER_BY_INTELLIGENCE = 1
+const _MANA_BY_INTELLIGENCE = 10; const _MANA_REGEN_BY_INTELLIGENCE = 0.05; const _MAGIC_ATTACK_POWER_BY_INTELLIGENCE = 0.25
 const _MAGIC_DEFENSE_BY_INTELLIGENCE = 1 / _AUX
 static var INTELLIGENCE_PROPERTIES = "Gives " + StringHelpers.format_float(_MANA_BY_INTELLIGENCE) + " mana, " + \
 	StringHelpers.format_float(_MANA_REGEN_BY_INTELLIGENCE) + " mana regen, " + \

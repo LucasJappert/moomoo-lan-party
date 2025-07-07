@@ -102,7 +102,7 @@ func server_execute_physical_damage(_target: Entity) -> void:
 	# if not _target.target_view: _target.set_target_view(my_owner()) # Util when we want autoset target view
 
 	var total_stats = cache_total_stats
-	var base_damage = total_stats.physical_attack_power
+	var base_damage = get_physical_attack_power()
 	base_damage += base_damage * total_stats.physical_attack_power_percent
 	
 	var critical_damage = try_critical_hit(base_damage)
@@ -411,6 +411,14 @@ func _apply_defenses(_di: DamageInfo, total_stats: CombatStats) -> void:
 # endregion PRIVATE GETTERs
 
 # region GETTERs
+func get_total_magic_damage(base_damage: int) -> int:
+	return int(base_damage * get_magic_power_multiplier())
+func get_magic_power_multiplier() -> float:
+	return 1.0 + get_magic_attack_power() / 100.0
+func get_physical_attack_power() -> int:
+	return cache_total_stats.physical_attack_power
+func get_magic_attack_power() -> int:
+	return cache_total_stats.magic_attack_power
 func try_critical_hit(base_value: int) -> int:
 	var critical_damage = 0
 	var total_stats = cache_total_stats
@@ -504,7 +512,7 @@ func execute_physical_attack(apply_extra_actions: bool = true, _custom_target: E
 
 	var final_target = _custom_target if _custom_target else target_to_attack
 	if projectile_type == Projectile.TYPES.NONE: server_execute_physical_damage(final_target)
-	else: Projectile.launch(my_owner(), final_target, cache_total_stats.physical_attack_power)
+	else: Projectile.launch(my_owner(), final_target, get_physical_attack_power())
 
 	if not apply_extra_actions: return
 

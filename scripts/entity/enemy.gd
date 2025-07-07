@@ -2,6 +2,7 @@ extends Entity
 
 class_name Enemy
 
+const DAMAGE_MODIFIER: float = 0.5 # Used to calculate the damage done to the target
 static var _exp_when_dead: int = 0
 var monster_sounds_helper = MonsterSoundsHelper.new()
 
@@ -41,6 +42,10 @@ func _on_every_timer_500ms() -> void:
 	movement_helper.set_target_entity(target)
 
 # region 	GETTERs
+func get_physical_attack_power() -> int:
+	return int(cache_total_stats.physical_attack_power * DAMAGE_MODIFIER)
+func get_magic_attack_power() -> int:
+	return int(cache_total_stats.magic_attack_power * DAMAGE_MODIFIER)
 
 static func get_instance_from_dict(dict: Dictionary) -> Enemy:
 	var instance = EnemyFactory.get_enemy_instance()
