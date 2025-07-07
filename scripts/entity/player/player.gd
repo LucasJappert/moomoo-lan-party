@@ -66,6 +66,7 @@ func level_up() -> void:
 	increment_skill_points_to_assign(1)
 	if is_my_player(): SoundsHelper.play_level_up()
 	
+	var current_percent_hp := current_hp / float(get_total_hp())
 
 	var stats_to_add = CombatStats.new()
 	stats_to_add.strength += EXTRA_ATTRIBUTES_STATS_BY_LEVEL
@@ -77,7 +78,7 @@ func level_up() -> void:
 	
 	rpc_handler.add_animation(AnimationsHelper.ANIMATION_NAMES.LEVEL_UP)
 
-	# update_current_hp(get_total_hp())
+	set_current_hp(int(get_total_hp() * current_percent_hp))
 	# update_current_mana(get_total_mana())
 
 func increment_current_gold(value_to_increment: int) -> void:

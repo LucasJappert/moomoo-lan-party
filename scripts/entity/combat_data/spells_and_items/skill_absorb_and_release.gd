@@ -17,12 +17,12 @@ func activate() -> void:
 	seconds_elapsed = 0
 
 func process_skill(_owner: Entity, _delta: float) -> void:
+	var prev_active_value := active
 	super.process_skill(_owner, _delta)
 
-	if not action_waiting_on_finish: return
+	if prev_active_value == active: return
 
 	_apply_release(_owner, _owner)
-	action_waiting_on_finish = false
 
 func on_damage_received(_attacker: Entity, _damage_received: int) -> void:
 	if not active: return

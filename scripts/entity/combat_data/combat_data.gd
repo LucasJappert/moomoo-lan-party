@@ -170,21 +170,29 @@ func _verify_combat_states_after_stats_change() -> void:
 
 	if not is_stunned: AnimationsHelper.try_to_remove_obsolete_stun_animation(my_owner())
 
+func set_current_hp(value: int) -> void:
+	current_hp = value
+	_actions_after_current_hp_change()
+
 func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void:
 	if value_to_increase == 0: return
 	if current_hp <= 0: return
 
-	
-	var exp_by_damage = min(current_hp, abs(value_to_increase)) * 0.1
 	current_hp += value_to_increase
 	current_hp = clamp(current_hp, 0, get_total_hp())
-	Skill.verify_blood_fury(my_owner())
 
+	_actions_after_current_hp_change(value_to_increase, _attacker)
+
+func _actions_after_current_hp_change(value_to_increase: int = 0, _attacker: Entity = null) -> void:
+	Skill.verify_blood_fury(my_owner())
+	my_owner().hud.update_health_bar()
+
+	if ObjectHelpers.is_null(_attacker): return
+
+	var exp_by_damage = min(current_hp, abs(value_to_increase)) * 0.1
 	if _attacker: _try_to_give_experience_to_players(exp_by_damage) # Give experience when an enemy takes damage
 	
 	_server_verify_death(_attacker)
-
-	my_owner().hud.update_health_bar()
 
 func _server_verify_death(_attacker: Entity) -> void:
 	if current_hp > 0: return
@@ -299,7 +307,7 @@ func uncharge_skill() -> bool:
 	return true
 
 func server_upgrade_skill(slot_number: int) -> void:
-	_skills[slot_number - 1].try_to_upgrade(my_owner())
+	_skills[slot_number - 1].try_to_upgrade(my_owner(), slot_number)
 	update_cache_total_stats()
 
 func use_charged_skill(_target: Entity) -> void:

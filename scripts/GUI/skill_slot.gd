@@ -42,7 +42,7 @@ func _ready():
 			GameManager.MY_PLAYER.rpc_handler.send_skill_uppgrade_button_pressed_to_server(slot_number)
 		)
 
-	EventBus.connect_to_skill_upgraded(func(_p_owner: Entity, _upgraded_skill: Skill): _update_controls())
+	EventBus.connect_to_skill_upgraded(func(_p_owner: Entity, _upgraded_skill: Skill, _slot_number: int): skill_updated(_upgraded_skill, _p_owner, _slot_number))
 	EventBus.connect_to_skill_points_to_assign_changed(func(_p_owner: Entity): _update_controls())
 		
 func _process(_delta: float) -> void:
@@ -74,17 +74,19 @@ func _clean_slot():
 	hotkey.text = OS.get_keycode_string(KeyboardHelper.SKILL_HOTKEYS[slot_number - 1])
 	sprite.region_rect = Rect2(0, 0, 0, 0)
 
-func skill_updated(p_skill: Skill, _slot_number: int, is_my_player_owner: bool):
-	_is_my_player_owner = is_my_player_owner
-	slot_number = _slot_number
+func skill_updated(new_skill: Skill, _owner: Entity, _slot_number: int):
+	if slot_number == 0: slot_number = _slot_number
+	if slot_number != _slot_number: return
+	
+	_is_my_player_owner = _owner.is_my_player()
 	hotkey.visible = true
 
-	_set_slot_from_skill(p_skill)
+	_set_slot_from_skill(new_skill)
 
 	_update_controls()
 	
-func _set_slot_from_skill(p_skill: Skill):
-	skill = p_skill
+func _set_slot_from_skill(new_skill: Skill):
+	skill = new_skill
 	if not skill: return _clean_slot()
 
 	hotkey.visible = skill.get_safe_learned_skill().type == SkillType.ACTIVE
@@ -106,7 +108,7 @@ func _update_controls():
 		panels_of_skill_level[i].add_theme_stylebox_override("panel", _STYLE_BLACK)
 
 func _refresh_upgrade_button():
-	if not skill:
+	if not skill or not _is_my_player_owner:
 		upgrade_button.visible = false
 		return
 

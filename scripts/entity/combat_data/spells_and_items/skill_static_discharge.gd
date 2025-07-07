@@ -8,7 +8,8 @@ const FRAMES = 14
 
 const SKILL_NAMES_TRIGGERING_DISCHARGE: Array[String] = [
 	SkillArcLightningStorm.NAME,
-	SkillShockSpear.NAME
+	SkillShockSpear.NAME,
+	SkillStormWrath.NAME
 ]
 
 static func actions_after_cast_skill(_owner: Entity, _skill_used: ItemSkillBase) -> void:

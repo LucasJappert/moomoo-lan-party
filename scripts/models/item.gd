@@ -135,7 +135,7 @@ func use_item(_slot_number: int, _my_owner: Entity, _target: Entity = null) -> v
 func _aux_after_use(_slot_number: int, _my_owner: Entity, _target: Entity = null) -> void:
 	if mana_cost > 0: _my_owner.update_current_mana(-mana_cost)
 
-	set_last_used_time()
+	reset_last_used_time()
 
 	quantity -= 1
 	if quantity < 0: quantity = 0

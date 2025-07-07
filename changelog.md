@@ -1,5 +1,10 @@
 XX/07/2025
 
+- ✅ New hero Lightning Warden - Voltrix (Guardian of Lightning)
+- ✅ Add skill Storm Wrath that summons a fierce thunderstorm for 6 seconds, automatically casting Shock Spear on random enemies every 1 second. Each cast replicates the full effects of the Shock Spear skill
+- ✅ Add skill that after each spell cast, electrifies nearby enemies, dealing xx% of the enemy's total life
+- ✅ Add skill Shock Spear: Invokes a ray of lightning that deals magical damage and stuns the target as well as nearby enemies
+- ✅ Add skill Arc Lightning Storm: Emits a wave of magical energy that damages all nearby enemies in a small area
 - ✅ Change the GUI when we left-click on another entity
 - ✅ Fix the problem of emoticons in web (now using OpenSansEmoji)
 

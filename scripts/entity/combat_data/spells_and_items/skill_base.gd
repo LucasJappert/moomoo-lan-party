@@ -9,11 +9,10 @@ var my_name: String
 var active: bool = false
 var seconds_elapsed: float
 var duration_in_seconds: float
-var action_waiting_on_finish: bool = false
 var permanent_effect: bool = false
 
 static var int_array: Array[int]; static var int_array1: Array[int]; static var float_array: Array[float]; static var float_array1: Array[float]
-static var aux_array: Array = [[], [], [], []]
+static var aux_array: Array = [[], [], [], [], [], [], [], [], [], [], [], []]
 
 func _init(_name: String, _duration_in_seconds: float = 0, _active: bool = false) -> void:
 	super._init()
@@ -24,7 +23,6 @@ func _init(_name: String, _duration_in_seconds: float = 0, _active: bool = false
 func activate() -> void:
 	active = true
 	seconds_elapsed = 0
-	action_waiting_on_finish = false
 	
 func process_skill(_owner: Entity, _delta: float) -> void:
 	if not active or permanent_effect: return
@@ -32,7 +30,6 @@ func process_skill(_owner: Entity, _delta: float) -> void:
 	if seconds_elapsed < duration_in_seconds: return
 
 	active = false
-	action_waiting_on_finish = true
 
 static func actions_after_cast_skill(_owner: Entity, _skill_used: ItemSkillBase) -> void:
 	# At the moment, Implemented in Static Discharge skill

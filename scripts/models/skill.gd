@@ -8,7 +8,8 @@ static var REGISTERED_SKILLS: Array = [
 	SkillUnbreakable,
 	SkillAbsorbAndRelease,
 	SkillShockSpear,
-	SkillStaticDischarge
+	SkillStaticDischarge,
+	SkillStormWrath
 ]
 
 const Names = {
@@ -68,7 +69,7 @@ var learned_level: int = 0
 
 var region_rect: Rect2 = Rect2()
 
-func _init(_name: String = "", _type: String = SkillType.PASSIVE):
+func _init(_name: String = "", _type: String = SkillType.ACTIVE):
 	super._init()
 	item_skill_base = []
 	for i in range(AVAILABLE_LEVELS):
@@ -412,19 +413,22 @@ func use(my_owner: Entity, target_entity: Entity) -> bool:
 	if learned_skill.my_name == Names.FRENZIED_SILENCE:
 		if not _apply_frenzied_silence(my_owner, target_entity): return false
 
-	learned_skill.set_last_used_time()
+	learned_skill.reset_last_used_time()
 
 	my_owner.update_current_mana(-learned_skill.mana_cost)
 
 	return my_owner.uncharge_skill()
 
-func try_to_upgrade(my_owner: Entity) -> void:
+func try_to_upgrade(my_owner: Entity, p_slot_number: int) -> void:
 	if learned_level >= AVAILABLE_LEVELS: return
+
+	# Keep the last used time
+	item_skill_base[learned_level].set_last_used_time(item_skill_base[learned_level - 1].get_last_used_time())
 
 	learned_level += 1
 	my_owner.increment_skill_points_to_assign(-1)
 
-	EventBus.emit_skill_upgraded(my_owner, self)
+	EventBus.emit_skill_upgraded(my_owner, self, p_slot_number)
 
 # endregion ................. SETTERs
 

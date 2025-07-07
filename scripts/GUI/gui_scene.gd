@@ -121,7 +121,7 @@ func _process(_delta: float) -> void:
 		return
 	if reseted_gui: reseted_gui = false
 
-	_update_panel_top_left()
+	# _update_panel_top_left()
 	_update_panel_bottom_left() # 3388 a 3427
 	_update_panel_bottom_right() # 3427 a 3453
 	_update_auxiliary_labels(_delta)
@@ -138,7 +138,7 @@ func _set_skills() -> void:
 	var _slots := get_skill_slots()
 	for i in range(_slots.size()):
 		var _skill: Skill = _bottom_target._skills[i] if i < _bottom_target._skills.size() else null
-		_slots[i].skill_updated(_skill, i + 1, _bottom_target is Player)
+		_slots[i].skill_updated(_skill, _bottom_target, i + 1)
 
 func _set_items() -> void:
 	var _slots := get_item_slots()
@@ -161,7 +161,7 @@ func _on_new_target_view_selected(_owner: Entity, _viewed_target: Entity) -> voi
 	# Actions for the top left panel. TODO: refactor
 	if not ObjectHelpers.is_my_player(_owner): return
 	_top_left_target = _viewed_target
-	_update_panel_top_left(false)
+	# _update_panel_top_left(false)
 	if not _viewed_target: return
 	var region_rect = SpritesHelper.get_region_rect_of_sprite(_viewed_target.sprite)
 	set_target_avatar_region(region_rect)
@@ -192,7 +192,6 @@ func get_items() -> Array[SlotItem]:
 # region 	INTERNAL AUXILIARY METHODS
 
 func _update_panel_top_left(use_lerp: bool = true) -> void:
-	return
 	if not _top_left_target:
 		_panel_tl.visible = false
 		return

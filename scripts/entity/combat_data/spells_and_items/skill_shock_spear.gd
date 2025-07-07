@@ -29,11 +29,11 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return true
 
-	_apply_strike(_my_owner, _target, _learned_skill)
+	apply_strike(_my_owner, _target, _learned_skill)
 
 	return true
 	
-static func _apply_strike(_owner: Entity, _target: Entity, learned_skill: ItemSkillBase) -> void:
+static func apply_strike(_owner: Entity, _target: Entity, learned_skill: ItemSkillBase) -> void:
 	_apply_animation(_target)
 	SoundsHelper.play_electric_1()
 

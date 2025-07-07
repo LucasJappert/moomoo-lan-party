@@ -27,8 +27,14 @@ var _last_used_time: float = - INF
 func _init():
 	super._init()
 
-func set_last_used_time() -> void:
+func set_last_used_time(p_last_used_time: float) -> void:
+	_last_used_time = p_last_used_time
+
+func reset_last_used_time() -> void:
 	_last_used_time = Time.get_ticks_msec() / 1000.0
+
+func get_last_used_time() -> float:
+	return _last_used_time
 
 func get_description(include_stats_description: bool = true) -> String:
 	var result = ""
