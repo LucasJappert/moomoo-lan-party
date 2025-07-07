@@ -7,17 +7,6 @@ const ANIMATION_NAMES = {
 	LEVEL_UP = "level_up"
 }
 
-static func try_to_remove_obsolete_stun_animation(target: Entity):
-	if not target: return
-	# Shouldn't happen, we could delete it when we're sure
-	var animation_stun_active = _animation_active(target, ANIMATION_NAMES.STUN)
-	if not animation_stun_active: return
-	
-	for effect in target.effects_helper.get_effects():
-		if effect.stats.has_hostil_stun_effect(): return
-
-	_remove_animations(target, ANIMATION_NAMES.STUN)
-
 static func apply_animation(animation_msg: AddAnimationMessage, target: Entity) -> void:
 	if animation_msg.animation_name == ANIMATION_NAMES.LIGHTNING:
 		_apply_lightning_animation(target)
@@ -28,13 +17,6 @@ static func apply_frost_hit_animation(target: Entity):
 	const sprite_size = Vector2(32, 32)
 	var frames = SpritesHelper.get_sprite_frames(Vector2(0, 576), sprite_size, 11, 30, false)
 	spawn_front_animation(target, frames, ANIMATION_NAMES.FROST_HIT)
-	
-static func apply_stun_animation(target: Entity):
-	if _animation_active(target, ANIMATION_NAMES.STUN): return
-	var sprite_size = CombatEffect.STUN_RECT_REGION.size
-	var frames = SpritesHelper.get_sprite_frames(CombatEffect.STUN_RECT_REGION.position, sprite_size, 14, 30, true)
-	var sprite_position = Vector2(0, target.hud.bars_container.position.y)
-	spawn_front_animation(target, frames, ANIMATION_NAMES.STUN, sprite_position)
 
 static func _apply_level_up_animation(target: Entity):
 	if _animation_active(target, ANIMATION_NAMES.LEVEL_UP): return

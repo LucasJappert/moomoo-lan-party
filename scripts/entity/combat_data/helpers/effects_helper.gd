@@ -40,7 +40,7 @@ func add_effect(p_effect: CombatEffect) -> void:
 	if p_effect.stats.freeze_duration > 0:
 		AnimationsHelper.apply_frost_hit_animation(_my_owner)
 	if p_effect.stats.has_hostil_stun_effect():
-		AnimationsHelper.apply_stun_animation(_my_owner)
+		StunEffect.attach_to(_my_owner.front_animations_node, 2.5)
 	
 	_try_to_add_effect_to_my_gui(p_effect)
 

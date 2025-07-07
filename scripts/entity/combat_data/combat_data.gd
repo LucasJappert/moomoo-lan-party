@@ -153,6 +153,7 @@ func apply_stun(_seconds: float) -> void:
 	var effect = CombatEffect.get_temporal_effect(CombatEffect.STUN_NAME, _seconds, 1, _stats)
 	effects_helper.add_effect(effect)
 
+
 func set_current_hp_and_mana() -> void:
 	update_cache_total_stats()
 	current_hp = get_total_hp()
@@ -168,7 +169,8 @@ func _verify_combat_states_after_stats_change() -> void:
 		if effect.stats.has_hostil_silence_effect():
 			is_silenced = true
 
-	if not is_stunned: AnimationsHelper.try_to_remove_obsolete_stun_animation(my_owner())
+	if not is_stunned:
+		StunEffect.remove_all_from(my_owner().front_animations_node)
 
 func set_current_hp(value: int) -> void:
 	current_hp = value

@@ -1,8 +1,9 @@
 # ✅ TODO List – MooMoo LAN Party - 🔵In Progress🟡Paused✅Done
 
 ⚠️ Keep multiplayer in mind, but for now focus on the game part as a prototype ⚠️
+[Go to Roadmap](./roadmap.md)
 
-- Actualizar animación de stun
+- ✅ Update stun animation (new StunEffect class)
 - Considerar el daño mágico, añadirlo al total de los daños mágicos que genera el héroe
 
 - 🟣 Crear escena de elección de héroes
