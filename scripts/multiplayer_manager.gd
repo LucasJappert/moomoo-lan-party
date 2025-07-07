@@ -4,7 +4,7 @@ extends Node
 
 const SERVER_PORT = 2222
 
-func become_host():
+func become_host(hero_type: String):
 	GameManager.AM_I_HOST = true
 	var server = ENetMultiplayerPeer.new()
 	server.create_server(SERVER_PORT, 2)
@@ -15,7 +15,7 @@ func become_host():
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
 	GameManager.MY_PLAYER_ID = multiplayer.get_unique_id()
-	_add_player_to_game(multiplayer.get_unique_id())
+	_add_player_to_game(multiplayer.get_unique_id(), hero_type)
 
 func become_client():
 	var client = ENetMultiplayerPeer.new()
@@ -28,16 +28,16 @@ func become_client():
 
 func _on_peer_connected(id):
 	print("peer_connected: " + str(id))
-	_add_player_to_game(id)
+	# _add_player_to_game(id)
 
 func _on_peer_disconnected(id):
 	print("peer_disconnected: " + str(id))
 	_remove_player_from_game(id)
 
-func _add_player_to_game(id):
+func _add_player_to_game(id, hero_type: String):
 	var spawn_data = {
 		"player_id": id,
-		"key_type": HeroLightningWarden.LONG_NAME
+		"key_type": hero_type
 	}
 	GameManager.spawn_player(spawn_data)
 

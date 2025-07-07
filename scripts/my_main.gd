@@ -6,6 +6,7 @@ static var GLOBAL_MOUSE_POSITION: Vector2 = Vector2.ZERO
 static var VIEWPORT_MOUSE_POSITION: Vector2 = Vector2.ZERO
 static var SCREEN_SIZE: Vector2 = Vector2.ZERO
 @onready var gui_scene: GUIScene = $GuiScene
+@onready var hero_picker_scene: HeroPickerScene = $HeroPickerScene
 @onready var projectiles_spawner = $ProjectilesSpawner
 @onready var enemies_spawner = $EnemiesSpawner
 @onready var moomoo_spawner = $MoomooSpawner
@@ -14,9 +15,11 @@ const HOSTED_GAME = true # In this version of Moomoo this is always true
 
 @onready var player_spawner = $PlayerSpawner
 @onready var terrain = $Terrain
+@onready var my_tooltip = $MyTooltipContainer/MyTooltip
 
 
 func _ready() -> void:
+	gui_scene.hide()
 	# DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_RESIZE_DISABLED, true)
 	MapManager.initialize()
 
@@ -40,6 +43,13 @@ func _process(_delta: float) -> void:
 	GLOBAL_MOUSE_POSITION = get_global_mouse_position()
 	VIEWPORT_MOUSE_POSITION = get_viewport().get_mouse_position()
 	SCREEN_SIZE = get_viewport().get_visible_rect().size
+
+func _start_game(hero_type: String) -> void:
+	hero_picker_scene.hide()
+	gui_scene.show()
+	MultiplayerManager.become_host(hero_type)
+	GameManager.spawn_moomoo()
+	EnemiesWavesController.start_wave_process()
 
 func _init_player_spawner():
 	player_spawner.spawn_function = Callable(self, "_spawn_custom_player")

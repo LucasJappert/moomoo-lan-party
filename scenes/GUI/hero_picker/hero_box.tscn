@@ -1,0 +1,45 @@
+[gd_scene load_steps=4 format=3 uid="uid://dhknayb0wcjr7"]
+
+[ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="1_hqtxn"]
+[ext_resource type="Script" uid="uid://bjufwkdyrmstd" path="res://scripts/GUI/hero_picker/hero_box.gd" id="1_mno1w"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hqtxn"]
+atlas = ExtResource("1_hqtxn")
+region = Rect2(512, 320, 128, 128)
+
+[node name="HeroBox" type="Control"]
+custom_minimum_size = Vector2(192, 192)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 192.0
+offset_bottom = 193.0
+script = ExtResource("1_mno1w")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -96.0
+offset_top = -96.5
+offset_right = 96.0
+offset_bottom = 96.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_hqtxn")
+region_rect = Rect2(1056, 1952, 64, 64)
+patch_margin_left = 20
+patch_margin_top = 20
+patch_margin_right = 20
+patch_margin_bottom = 20
+
+[node name="TextureRect" type="TextureRect" parent="NinePatchRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_hqtxn")

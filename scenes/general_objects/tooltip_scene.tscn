@@ -4,13 +4,15 @@
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="2_jtx8c"]
 
 [node name="MyTooltip" type="Control"]
-top_level = true
+light_mask = 0
+visibility_layer = 524288
+z_index = 10
+z_as_relative = false
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_vyso7")
 
 [node name="Panel" type="NinePatchRect" parent="."]
-layout_mode = 2
 offset_right = 200.0
 offset_bottom = 112.0
 texture = ExtResource("2_jtx8c")
@@ -39,5 +41,6 @@ offset_right = 189.0
 offset_bottom = 103.0
 theme_override_colors/default_color = Color(0.827451, 0.772549, 0.67451, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+bbcode_enabled = true
 text = "asdad"
 autowrap_mode = 2

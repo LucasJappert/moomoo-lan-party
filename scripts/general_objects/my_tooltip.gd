@@ -79,6 +79,6 @@ func _update_position() -> void:
 	global_position = final_pos
 
 static func show_tooltip(title: String, text: String, width_in_tiles: float = PANEL_WIDTH_IN_TILES) -> void:
-	GameManager.my_main.gui_scene.my_tooltip._show_me(title, text, width_in_tiles)
+	GameManager.my_main.my_tooltip._show_me(title, text, width_in_tiles)
 static func hide_tooltip() -> void:
-	GameManager.my_main.gui_scene.my_tooltip._hide_me()
+	GameManager.my_main.my_tooltip._hide_me()

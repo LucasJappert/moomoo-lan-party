@@ -2,8 +2,6 @@ class_name GUIScene
 
 extends CanvasLayer
 
-@onready var my_tooltip = $MyTooltip
-
 static var SHOW_DEBUG_DATA = false
 
 var _ORIGINAL_BALL_SIZE: Vector2
@@ -70,7 +68,6 @@ func _ready() -> void:
 	# tailscale IP = 100.99.208.97
 	if multiplayer.is_server() && not MyMain.HOSTED_GAME: return
 
-	%HostGameButton.connect("pressed", _on_host_game_pressed)
 	%JoinAsPlayerButton.connect("pressed", _on_join_as_player_pressed)
 	%MultiplayerHUD.show()
 	_ORIGINAL_BALL_SIZE = _hp_ball.region_rect.size
@@ -98,11 +95,6 @@ func _ready() -> void:
 	
 	EventBus.connect_to_new_target_view_selected(func(_owner: Entity, _viewed_target: Entity): _on_new_target_view_selected(_owner, _viewed_target))
 
-func _on_host_game_pressed() -> void:
-	%MultiplayerHUD.hide()
-	MultiplayerManager.become_host()
-	GameManager.spawn_moomoo()
-	EnemiesWavesController.start_wave_process()
 	
 func _on_join_as_player_pressed() -> void:
 	%MultiplayerHUD.hide()

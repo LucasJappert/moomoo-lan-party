@@ -1,21 +1,27 @@
-[gd_scene load_steps=4 format=3 uid="uid://c74ayl7vuifnf"]
+[gd_scene load_steps=6 format=3 uid="uid://c74ayl7vuifnf"]
 
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="1_5yip2"]
+[ext_resource type="PackedScene" uid="uid://buj7u3vemtwye" path="res://scenes/GUI/skill_slot.tscn" id="2_br6uy"]
+[ext_resource type="Script" uid="uid://cajc5rb21ost4" path="res://scripts/GUI/hero_picker/skills_container.gd" id="2_mymk7"]
+[ext_resource type="PackedScene" uid="uid://dhknayb0wcjr7" path="res://scenes/GUI/hero_picker/hero_box.tscn" id="3_mymk7"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5yip2"]
 atlas = ExtResource("1_5yip2")
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_cjoid"]
-atlas = ExtResource("1_5yip2")
-region = Rect2(512, 320, 128, 128)
-
 [node name="HeroPickerScene" type="CanvasLayer"]
 
-[node name="Panel" type="NinePatchRect" parent="."]
-offset_left = 100.0
-offset_top = 100.0
-offset_right = 1820.0
-offset_bottom = 1080.0
+[node name="MainPanel" type="NinePatchRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -860.0
+offset_top = -490.0
+offset_right = 860.0
+offset_bottom = 490.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("1_5yip2")
 region_rect = Rect2(1056, 1952, 64, 64)
 patch_margin_left = 20
@@ -23,7 +29,7 @@ patch_margin_top = 20
 patch_margin_right = 20
 patch_margin_bottom = 20
 
-[node name="Panel" type="NinePatchRect" parent="Panel"]
+[node name="HeroSelectedPanel" type="NinePatchRect" parent="MainPanel"]
 layout_mode = 0
 offset_left = 1158.0
 offset_top = 32.0
@@ -36,7 +42,14 @@ patch_margin_top = 20
 patch_margin_right = 20
 patch_margin_bottom = 20
 
-[node name="Button" type="NinePatchRect" parent="Panel/Panel"]
+[node name="Sprite2D" type="Sprite2D" parent="MainPanel/HeroSelectedPanel"]
+position = Vector2(267, 165.25)
+scale = Vector2(2.42969, 2.4336)
+texture = SubResource("AtlasTexture_5yip2")
+region_enabled = true
+region_rect = Rect2(0, 320, 128, 128)
+
+[node name="ChooseAndPlayPanel" type="NinePatchRect" parent="MainPanel/HeroSelectedPanel"]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 844.0
@@ -49,7 +62,7 @@ patch_margin_top = 20
 patch_margin_right = 20
 patch_margin_bottom = 20
 
-[node name="Label" type="Label" parent="Panel/Panel/Button"]
+[node name="Label" type="Label" parent="MainPanel/HeroSelectedPanel/ChooseAndPlayPanel"]
 layout_mode = 0
 offset_left = 2.0
 offset_top = 3.0
@@ -58,18 +71,33 @@ offset_bottom = 83.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_shadow_color = Color(0.577008, 0.577008, 0.577008, 1)
 theme_override_font_sizes/font_size = 48
-text = "PICK AND PLAY"
+text = "CHOOSE AND PLAY"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Sprite2D" type="Sprite2D" parent="Panel/Panel"]
-position = Vector2(267, 165)
-scale = Vector2(2.42969, 2.42969)
-texture = SubResource("AtlasTexture_5yip2")
-region_enabled = true
-region_rect = Rect2(0, 320, 128, 128)
+[node name="SkillsContainer" type="GridContainer" parent="MainPanel/HeroSelectedPanel"]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 439.0
+offset_right = 498.0
+offset_bottom = 525.0
+theme_override_constants/h_separation = 40
+columns = 4
+script = ExtResource("2_mymk7")
 
-[node name="Panel2" type="NinePatchRect" parent="Panel"]
+[node name="SkillSlot" parent="MainPanel/HeroSelectedPanel/SkillsContainer" instance=ExtResource("2_br6uy")]
+layout_mode = 2
+
+[node name="SkillSlot2" parent="MainPanel/HeroSelectedPanel/SkillsContainer" instance=ExtResource("2_br6uy")]
+layout_mode = 2
+
+[node name="SkillSlot3" parent="MainPanel/HeroSelectedPanel/SkillsContainer" instance=ExtResource("2_br6uy")]
+layout_mode = 2
+
+[node name="SkillSlot4" parent="MainPanel/HeroSelectedPanel/SkillsContainer" instance=ExtResource("2_br6uy")]
+layout_mode = 2
+
+[node name="HeroOptionsPanel" type="NinePatchRect" parent="MainPanel"]
 layout_mode = 0
 offset_left = 25.0
 offset_top = 32.0
@@ -82,45 +110,18 @@ patch_margin_top = 20
 patch_margin_right = 20
 patch_margin_bottom = 20
 
-[node name="Panel2" type="NinePatchRect" parent="Panel/Panel2"]
+[node name="CenterContainer" type="CenterContainer" parent="MainPanel/HeroOptionsPanel"]
 layout_mode = 0
-offset_left = 33.0
-offset_top = 31.0
-offset_right = 225.0
-offset_bottom = 224.0
-texture = ExtResource("1_5yip2")
-region_rect = Rect2(1056, 1952, 64, 64)
-patch_margin_left = 20
-patch_margin_top = 20
-patch_margin_right = 20
-patch_margin_bottom = 20
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 1117.0
+offset_bottom = 924.0
 
-[node name="Sprite2D" type="Sprite2D" parent="Panel/Panel2/Panel2"]
-position = Vector2(11, 12)
-scale = Vector2(1.33594, 1.33594)
-texture = SubResource("AtlasTexture_5yip2")
-centered = false
-region_enabled = true
-region_rect = Rect2(0, 320, 128, 128)
+[node name="GridHerosContainer" type="GridContainer" parent="MainPanel/HeroOptionsPanel/CenterContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 40
+columns = 5
 
-[node name="Panel3" type="NinePatchRect" parent="Panel/Panel2"]
-layout_mode = 0
-offset_left = 260.0
-offset_top = 31.0
-offset_right = 452.0
-offset_bottom = 224.0
-texture = ExtResource("1_5yip2")
-region_rect = Rect2(1056, 1952, 64, 64)
-patch_margin_left = 20
-patch_margin_top = 20
-patch_margin_right = 20
-patch_margin_bottom = 20
-
-[node name="TextureRect" type="TextureRect" parent="Panel/Panel2/Panel3"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = SubResource("AtlasTexture_cjoid")
+[node name="HeroBox" parent="MainPanel/HeroOptionsPanel/CenterContainer/GridHerosContainer" instance=ExtResource("3_mymk7")]
+layout_mode = 2

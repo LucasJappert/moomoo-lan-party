@@ -47,11 +47,24 @@ shadow_color = Color(0.568973, 0.568973, 0.568973, 0.6)
 shadow_size = 1
 
 [node name="SkillSlot" type="Control"]
+custom_minimum_size = Vector2(86, 86)
 layout_mode = 3
 anchors_preset = 0
-offset_right = 85.0
+offset_right = 86.0
 offset_bottom = 86.0
 script = ExtResource("1_0fsu4")
+
+[node name="Panel2" type="NinePatchRect" parent="."]
+offset_left = -7.0
+offset_top = -7.0
+offset_right = 93.0
+offset_bottom = 93.0
+texture = ExtResource("2_1knxt")
+region_rect = Rect2(1056, 1952, 64, 64)
+patch_margin_left = 20
+patch_margin_top = 20
+patch_margin_right = 20
+patch_margin_bottom = 20
 
 [node name="Sprite" type="Sprite2D" parent="."]
 scale = Vector2(1.34375, 1.34375)

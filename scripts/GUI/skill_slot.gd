@@ -16,6 +16,7 @@ const SKILL_LEVEL_REQUIREMENTS := {
 @onready var sprite = $Sprite
 @onready var hotkey = $Hotkey
 @onready var label_cool_down = $LabelCoolDown
+@onready var container_of_skill_levels: Panel = $Panel
 @onready var panel1: Panel = $Panel/CenterContainer/HBoxContainer/Panel1
 @onready var panel2: Panel = $Panel/CenterContainer/HBoxContainer/Panel2
 @onready var panel3: Panel = $Panel/CenterContainer/HBoxContainer/Panel3
@@ -25,17 +26,21 @@ var slot_number: int
 var _STYLE_BLACK := StyleBoxFlat.new()
 var _STYLE_BEIGE := StyleBoxFlat.new()
 var _is_my_player_owner: bool
+var HERO_PICKER_SCENE_NAME = "HeroPickerScene"
 
 
 func _ready():
+	# Commons settings
 	label_cool_down.visible = false
 	upgrade_button.visible = false
 	_initialize_styles()
-
-	hotkey.text = OS.get_keycode_string(KeyboardHelper.SKILL_HOTKEYS[get_index()])
-
 	connect("mouse_entered", func(): _on_mouse_entered())
 	connect("mouse_exited", func(): _on_mouse_exited())
+	
+	# Try settings for hero picker
+	if _try_settings_for_hero_picker(): return
+
+	hotkey.text = OS.get_keycode_string(KeyboardHelper.SKILL_HOTKEYS[get_index()])
 
 	upgrade_button.gui_input.connect(func(event):
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
@@ -44,7 +49,14 @@ func _ready():
 
 	EventBus.connect_to_skill_upgraded(func(_p_owner: Entity, _upgraded_skill: Skill, _slot_number: int): skill_updated(_upgraded_skill, _p_owner, _slot_number))
 	EventBus.connect_to_skill_points_to_assign_changed(func(_p_owner: Entity): _update_controls())
-		
+
+func _try_settings_for_hero_picker():
+	if get_owner().name != HERO_PICKER_SCENE_NAME: return false
+
+	hotkey.visible = false
+	container_of_skill_levels.visible = false
+
+
 func _process(_delta: float) -> void:
 	if not _is_my_player_owner: return _lock_slot()
 	if not skill: return

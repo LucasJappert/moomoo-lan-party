@@ -114,6 +114,7 @@ func get_description(include_stats_description: bool = true) -> String:
 
 	var tag_color_1 = "[color=#D3C5AC]"; var tag_color_2 = "[color=#605A4F]";
 	for index in range(item_skill_base.size()):
+		if index > 0: result += "\n"
 		var color = tag_color_1 if index + 1 == learned_level else tag_color_2
 		result += color + "⚔ [u]Level " + str(index + 1) + ":[/u] " + item_skill_base[index].get_description(include_stats_description) + "[/color]"
 

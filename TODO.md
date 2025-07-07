@@ -3,7 +3,8 @@
 ⚠️ Keep multiplayer in mind, but for now focus on the game part as a prototype ⚠️
 [Go to Roadmap](./roadmap.md)
 
-- 🟣 Crear escena de elección de héroes
+- 🔵 Crear escena de elección de héroes
+
 - Refactorizar logica de skills antiguos, seguir la nueva metodologia creando un módulo para cada skill
 - Agregar skill que brinda un 10/20/30% de evasion
 - Agregar skill, la cual puede activarse o desactivarse, que brindaría chances de matar al enemigo al instante (no aplica a bosses). Consume 20 de mana en cada ataque.
