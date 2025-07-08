@@ -37,7 +37,6 @@ static func _loop(tree: SceneTree):
 	if current_playing < max_simultaneous and night_sounds.size() > 0:
 		var path = night_sounds[randi() % night_sounds.size()]
 		current_playing += 1
-		print("🎵 Playing sound: ", path)
 		SoundsHelper.play_sfx(path, -10.0, max_simultaneous)
 
 		# Simula duración aproximada

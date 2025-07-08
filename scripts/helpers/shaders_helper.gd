@@ -1,3 +1,5 @@
+class_name ShadersHelper
+
 static func set_dissolve_shader_material(entity: Entity) -> void:
 	var shader := load("res://shaders/dissolve.gdshader")
 	var material := ShaderMaterial.new()

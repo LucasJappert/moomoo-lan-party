@@ -8,9 +8,11 @@ const HERO_BOX_SCENE: PackedScene = preload("res://scenes/GUI/hero_picker/hero_b
 @onready var hero_box_preview: HeroBox = %HeroBoxPreview
 @onready var name_and_alias: Label = %NameAndAlias
 @onready var choose_and_play_button: NinePatchRect = %ChooseAndPlayButton
+@onready var total_int_label: Label = %TotalIntLabel
+@onready var total_str_label: Label = %TotalStrLabel
+@onready var total_agi_label: Label = %TotalAgiLabel
 
 var selected_hero: Player
-
 
 func _ready() -> void:
 	EventBusHeroPicker.connect_to_hero_selected(func(player: Player): _on_hero_selected(player))
@@ -63,6 +65,9 @@ func _clean_hero_selected() -> void:
 	_set_skills()
 	hero_box_preview.set_texture()
 	name_and_alias.text = ""
+	total_int_label.text = ""
+	total_str_label.text = ""
+	total_agi_label.text = ""
 
 func _set_hero_options() -> void:
 	for i in range(16):
@@ -76,10 +81,12 @@ func _on_hero_selected(player: Player) -> void:
 	selected_hero = player
 	choose_and_play_button.modulate = Color(1, 1, 1, 1)
 	_set_skills(player)
+	_set_effects_for_selected_hero_box()
 	hero_box_preview.set_texture(player.extra_info.rects[0])
 	name_and_alias.text = player.extra_info.key_type + "\n (" + player.extra_info.alias + ")"
-	_set_effects_for_selected_hero_box()
-
+	total_int_label.text = str(player.cache_total_stats.intelligence)
+	total_str_label.text = str(player.cache_total_stats.strength)
+	total_agi_label.text = str(player.cache_total_stats.agility)
 
 func _set_skills(_hero: Entity = null) -> void:
 	var _slots := get_skill_slots()
