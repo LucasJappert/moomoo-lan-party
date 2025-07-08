@@ -90,7 +90,7 @@ func skill_updated(new_skill: Skill, _owner: Entity, _slot_number: int):
 	if slot_number == 0: slot_number = _slot_number
 	if slot_number != _slot_number: return
 	
-	_is_my_player_owner = _owner.is_my_player()
+	_is_my_player_owner = _owner.is_my_player() if _owner else false
 	hotkey.visible = true
 
 	_set_slot_from_skill(new_skill)
@@ -167,8 +167,5 @@ func _on_mouse_exited():
 func _gui_input(event) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		if not _is_my_player_owner: return
-
-		if GameManager.MY_PLAYER.charged_skill:
-			return GameManager.MY_PLAYER.use_charged_skill(GameManager.MY_PLAYER)
 
 		GameManager.MY_PLAYER.rpc_handler.notify_key_pressed_to_server(KeyboardHelper.SKILL_HOTKEYS[slot_number - 1])

@@ -94,6 +94,10 @@ static func get_new_learned_skill(_skill_name: String, skill_level: int = 1) -> 
 	result.learned_level = skill_level
 	return result
 	
+func get_name() -> String:
+	if item_skill_base.size() == 0: return ""
+	return item_skill_base[0].my_name
+
 func get_learned_skill() -> ItemSkillBase:
 	if not learned_level: return null
 	return item_skill_base[learned_level - 1]

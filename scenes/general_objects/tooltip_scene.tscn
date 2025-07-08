@@ -13,6 +13,7 @@ anchors_preset = 0
 script = ExtResource("1_vyso7")
 
 [node name="Panel" type="NinePatchRect" parent="."]
+layout_mode = 0
 offset_right = 200.0
 offset_bottom = 112.0
 texture = ExtResource("2_jtx8c")

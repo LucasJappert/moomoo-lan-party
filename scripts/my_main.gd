@@ -44,13 +44,6 @@ func _process(_delta: float) -> void:
 	VIEWPORT_MOUSE_POSITION = get_viewport().get_mouse_position()
 	SCREEN_SIZE = get_viewport().get_visible_rect().size
 
-func _start_game(hero_type: String) -> void:
-	hero_picker_scene.hide()
-	gui_scene.show()
-	MultiplayerManager.become_host(hero_type)
-	GameManager.spawn_moomoo()
-	EnemiesWavesController.start_wave_process()
-
 func _init_player_spawner():
 	player_spawner.spawn_function = Callable(self, "_spawn_custom_player")
 func _spawn_custom_player(data: Dictionary) -> Node:

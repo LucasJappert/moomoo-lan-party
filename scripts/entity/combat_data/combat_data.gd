@@ -298,6 +298,9 @@ func charge_skill(index: int) -> void:
 	if _skills[index].get_learned_skill().type == SkillType.PASSIVE: return
 	if not _skills[index].can_use(my_owner()): return
 
+	if charged_skill and charged_skill.get_name() == _skills[index].get_name():
+		return use_charged_skill(my_owner())
+
 	charged_skill = _skills[index]
 	
 	if not charged_skill.get_learned_skill().instant_use: return

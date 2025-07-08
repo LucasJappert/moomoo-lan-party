@@ -1,14 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://c74ayl7vuifnf"]
+[gd_scene load_steps=5 format=3 uid="uid://c74ayl7vuifnf"]
 
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="1_5yip2"]
+[ext_resource type="Script" uid="uid://pfs258ouxpsn" path="res://scripts/GUI/hero_picker/hero_picker_scene.gd" id="1_mymk7"]
 [ext_resource type="PackedScene" uid="uid://buj7u3vemtwye" path="res://scenes/GUI/skill_slot.tscn" id="2_br6uy"]
-[ext_resource type="Script" uid="uid://cajc5rb21ost4" path="res://scripts/GUI/hero_picker/skills_container.gd" id="2_mymk7"]
 [ext_resource type="PackedScene" uid="uid://dhknayb0wcjr7" path="res://scenes/GUI/hero_picker/hero_box.tscn" id="3_mymk7"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_5yip2"]
-atlas = ExtResource("1_5yip2")
-
 [node name="HeroPickerScene" type="CanvasLayer"]
+script = ExtResource("1_mymk7")
 
 [node name="MainPanel" type="NinePatchRect" parent="."]
 anchors_preset = 8
@@ -42,19 +40,50 @@ patch_margin_top = 20
 patch_margin_right = 20
 patch_margin_bottom = 20
 
-[node name="Sprite2D" type="Sprite2D" parent="MainPanel/HeroSelectedPanel"]
-position = Vector2(267, 165.25)
-scale = Vector2(2.42969, 2.4336)
-texture = SubResource("AtlasTexture_5yip2")
-region_enabled = true
-region_rect = Rect2(0, 320, 128, 128)
+[node name="HeroBoxPreview" parent="MainPanel/HeroSelectedPanel" instance=ExtResource("3_mymk7")]
+unique_name_in_owner = true
+layout_mode = 2
+offset_left = 117.0
+offset_top = 19.0
+offset_right = 309.0
+offset_bottom = 211.0
+scale = Vector2(1.5, 1.5)
 
-[node name="ChooseAndPlayPanel" type="NinePatchRect" parent="MainPanel/HeroSelectedPanel"]
+[node name="SkillsLabel" type="Label" parent="MainPanel/HeroSelectedPanel"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 389.0
+offset_right = 97.0
+offset_bottom = 426.0
+theme_override_colors/font_color = Color(0.489128, 0.477569, 0.469861, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "Skills:"
+vertical_alignment = 1
+
+[node name="NameAndAlias" type="Label" parent="MainPanel/HeroSelectedPanel"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 49.0
+offset_top = 310.0
+offset_right = 481.0
+offset_bottom = 373.0
+theme_override_colors/font_color = Color(0.827451, 0.772549, 0.337255, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+text = "asdadasd
+adad"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ChooseAndPlayButton" type="NinePatchRect" parent="MainPanel/HeroSelectedPanel"]
+unique_name_in_owner = true
 layout_mode = 0
 offset_left = 4.0
 offset_top = 844.0
 offset_right = 531.0
 offset_bottom = 929.0
+mouse_filter = 0
 texture = ExtResource("1_5yip2")
 region_rect = Rect2(992, 1952, 64, 64)
 patch_margin_left = 20
@@ -62,7 +91,7 @@ patch_margin_top = 20
 patch_margin_right = 20
 patch_margin_bottom = 20
 
-[node name="Label" type="Label" parent="MainPanel/HeroSelectedPanel/ChooseAndPlayPanel"]
+[node name="Label" type="Label" parent="MainPanel/HeroSelectedPanel/ChooseAndPlayButton"]
 layout_mode = 0
 offset_left = 2.0
 offset_top = 3.0
@@ -76,6 +105,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SkillsContainer" type="GridContainer" parent="MainPanel/HeroSelectedPanel"]
+unique_name_in_owner = true
 layout_mode = 0
 offset_left = 34.0
 offset_top = 439.0
@@ -83,7 +113,6 @@ offset_right = 498.0
 offset_bottom = 525.0
 theme_override_constants/h_separation = 40
 columns = 4
-script = ExtResource("2_mymk7")
 
 [node name="SkillSlot" parent="MainPanel/HeroSelectedPanel/SkillsContainer" instance=ExtResource("2_br6uy")]
 layout_mode = 2
@@ -121,7 +150,8 @@ offset_bottom = 924.0
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 40
-columns = 5
+theme_override_constants/v_separation = 20
+columns = 4
 
 [node name="HeroBox" parent="MainPanel/HeroOptionsPanel/CenterContainer/GridHerosContainer" instance=ExtResource("3_mymk7")]
 layout_mode = 2

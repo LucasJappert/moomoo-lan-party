@@ -16,6 +16,7 @@ offset_bottom = 193.0
 script = ExtResource("1_mno1w")
 
 [node name="NinePatchRect" type="NinePatchRect" parent="."]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

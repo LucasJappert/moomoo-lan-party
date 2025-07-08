@@ -27,19 +27,31 @@ func _process(_delta):
 
 func _show_me(title: String, description: String, width_in_tiles: float = PANEL_WIDTH_IN_TILES) -> void:
 	var width_in_pixels = width_in_tiles * MapManager.TILE_SIZE_INT
+	var content_width = width_in_pixels - MARGINS * 2
 
 	_title.clear()
 	_description.clear()
 	_title.append_text("[u][b]" + title.to_upper() + "[/b][/u]")
 	_description.append_text(description)
 
+	# Step 1: Set width BEFORE calculating heights
+	_title.set_size(Vector2(content_width, 0))
+	_description.set_size(Vector2(content_width, 0))
+
+	await get_tree().process_frame
+
+	# Step 2: Now we can get the heights
 	var title_height = _title.get_content_height()
 	var description_height = _description.get_content_height()
 
-	_title.set_size(Vector2(width_in_pixels - MARGINS * 2, title_height))
-	_description.set_size(Vector2(width_in_pixels - MARGINS * 2, description_height))
+	# Adjust heights
+	_title.set_size(Vector2(content_width, title_height))
+	_description.set_size(Vector2(content_width, description_height))
+	_description.position = Vector2(MARGINS, _title.position.y + title_height + 5)
 
+	# Final panel size
 	_panel.set_size(Vector2(width_in_pixels, title_height + description_height + MARGINS * 2))
+	set_size(_panel.size)
 
 	visible = true
 	_update_position()

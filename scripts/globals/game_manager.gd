@@ -25,6 +25,12 @@ func _ready():
 	terrain = get_tree().root.get_node("MyMain/Terrain")
 	audio_node = get_tree().root.get_node("MyMain/Audio")
 
+func start_game(hero_type: String) -> void:
+	my_main.hero_picker_scene.hide()
+	my_main.gui_scene.show()
+	MultiplayerManager.become_host(hero_type)
+	GameManager.spawn_moomoo()
+	EnemiesWavesController.start_wave_process()
 
 func _init_projectiles_spawner() -> void:
 	my_main.projectiles_spawner.spawn_function = func(data: Dictionary) -> Node:

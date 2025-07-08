@@ -1,11 +1,10 @@
-[gd_scene load_steps=14 format=4 uid="uid://cwrqk21prcrn7"]
+[gd_scene load_steps=13 format=4 uid="uid://cwrqk21prcrn7"]
 
 [ext_resource type="Script" uid="uid://chkbvq7eklg1a" path="res://scripts/my_main.gd" id="1_4c3a5"]
 [ext_resource type="Texture2D" uid="uid://b6jnkm7kk6mgc" path="res://assets/grass-earth-64.png" id="2_j8dyc"]
 [ext_resource type="Script" uid="uid://q7hedgd8mftv" path="res://scripts/grid_debugger.gd" id="3_3ladc"]
 [ext_resource type="PackedScene" uid="uid://dywrecu6pml77" path="res://scenes/GUI/gui_scene.tscn" id="4_8fhqs"]
 [ext_resource type="PackedScene" uid="uid://c74ayl7vuifnf" path="res://scenes/GUI/hero_picker_scene.tscn" id="5_j8dyc"]
-[ext_resource type="Script" uid="uid://dry30nfau8ixx" path="res://scenes/GUI/hero_picker/hero_picker_scene.gd" id="6_3ladc"]
 [ext_resource type="PackedScene" uid="uid://bhbym0sv2knf8" path="res://scenes/general_objects/tooltip_scene.tscn" id="7_8fhqs"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_lnu2h"]
@@ -134,7 +133,6 @@ z_as_relative = false
 y_sort_enabled = true
 
 [node name="HeroPickerScene" parent="." instance=ExtResource("5_j8dyc")]
-script = ExtResource("6_3ladc")
 
 [node name="MyTooltipContainer" type="CanvasLayer" parent="."]
 

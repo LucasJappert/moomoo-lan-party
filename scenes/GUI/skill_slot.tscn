@@ -55,6 +55,7 @@ offset_bottom = 86.0
 script = ExtResource("1_0fsu4")
 
 [node name="Panel2" type="NinePatchRect" parent="."]
+layout_mode = 0
 offset_left = -7.0
 offset_top = -7.0
 offset_right = 93.0
