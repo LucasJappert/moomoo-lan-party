@@ -56,6 +56,7 @@ func _ready():
 	rpc_handler.initialize()
 	call_deferred("_post_ready")
 	ready_combat_data()
+	ShadersHelper.set_dissolve_shader_material(self)
 
 	EventBus.connect_to_freed_entity(Callable(self, "_on_entity_freed"))
 
@@ -108,10 +109,18 @@ func _client_init() -> void:
 # endregion SETTERs
 
 # region OTHERS
-func _global_die():
-	# Implemented in Player and Enemy
-	# if multiplayer.is_server(): GameManager.remove_entity(self)
-	GameManager.remove_entity(self)
-	print("GameManager: " + str(GameManager.entities))
+func global_die():
+	var tween := create_tween()
+
+	# Función auxiliar para disolver
+	var dissolve_updater := func(value: float):
+		if is_instance_valid(sprite.material):
+			sprite.material.set_shader_parameter("dissolve_amount", value)
+
+	# Tween en paralelo para el shader
+	tween.parallel().tween_method(dissolve_updater, 0.0, 1.0, 1.5).set_trans(Tween.TRANS_LINEAR)
+
+	# Eliminar entidad al final
+	tween.tween_callback(func(): GameManager.remove_entity(self))
 
 # endregion OTHERS

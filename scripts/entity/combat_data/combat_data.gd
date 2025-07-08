@@ -146,13 +146,26 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 		active_skill.on_damage_received(_attacker, _di.total_damage)
 
 # region SETTERs
+func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void:
+	if value_to_increase == 0: return
+	if current_hp <= 0: return
+
+	current_hp += value_to_increase
+	current_hp = clamp(current_hp, 0, get_total_hp())
+
+	_actions_after_current_hp_change(value_to_increase, _attacker)
+
+func update_current_mana(value_to_increase: int) -> void:
+	if value_to_increase == 0: return
+	current_mana = clamp(current_mana + value_to_increase, 0, get_total_mana())
+	my_owner().hud.update_mana_bar()
+
 func apply_stun(_seconds: float) -> void:
 	var _stats = CombatStats.new()
 	_stats.stun_duration = _seconds
 	_stats.is_owner_friendly = false
 	var effect = CombatEffect.get_temporal_effect(CombatEffect.STUN_NAME, _seconds, 1, _stats)
 	effects_helper.add_effect(effect)
-
 
 func set_current_hp_and_mana() -> void:
 	update_cache_total_stats()
@@ -175,15 +188,6 @@ func _verify_combat_states_after_stats_change() -> void:
 func set_current_hp(value: int) -> void:
 	current_hp = value
 	_actions_after_current_hp_change()
-
-func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void:
-	if value_to_increase == 0: return
-	if current_hp <= 0: return
-
-	current_hp += value_to_increase
-	current_hp = clamp(current_hp, 0, get_total_hp())
-
-	_actions_after_current_hp_change(value_to_increase, _attacker)
 
 func _actions_after_current_hp_change(value_to_increase: int = 0, _attacker: Entity = null) -> void:
 	Skill.verify_blood_fury(my_owner())
@@ -220,11 +224,6 @@ func _try_to_add_gold_to_players(_attacker: Entity) -> void:
 	for player in GameManager.get_players():
 		player.increment_current_gold(earned_gold)
 
-func update_current_mana(value_to_increase: int) -> void:
-	if value_to_increase == 0: return
-	current_mana = clamp(current_mana + value_to_increase, 0, get_total_mana())
-	my_owner().hud.update_mana_bar()
-
 func update_base_stats(new_stats: CombatStats) -> void:
 	my_owner().combat_stats = new_stats
 	update_cache_total_stats()
@@ -251,7 +250,6 @@ func use_item(_slot_number: int) -> void: # Called from _on_key_pressed
 	if _items[_slot_number - 1] == null: return print("No item in slot: ", _slot_number)
 
 	_items[_slot_number - 1].use_item(_slot_number, my_owner(), null)
-
 
 func item_updated_by_rpc(_item: Item, _slot_number: int) -> void:
 	update_item(_item, _slot_number - 1)
@@ -331,7 +329,6 @@ func use_charged_skill(_target: Entity) -> void:
 	charged_skill.use(my_owner(), _target)
 
 	uncharge_skill()
-
 
 func toogle_keep_ground() -> void:
 	keep_ground = not keep_ground

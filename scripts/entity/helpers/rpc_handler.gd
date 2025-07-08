@@ -60,7 +60,7 @@ func die(): rpc("_on_die")
 func _on_die():
 	print("⚔️ Entity died")
 	print("Multiplayer: ", _my_owner.multiplayer.is_server())
-	_my_owner._global_die()
+	_my_owner.global_die()
 
 func add_animation(anim_name: String, anim_speed: float = 25, repeat_count: int = 1) -> void:
 	if not GameManager.AM_I_HOST: return print("Not host")

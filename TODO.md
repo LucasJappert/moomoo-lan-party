@@ -2,9 +2,9 @@
 
 ⚠️ Keep multiplayer in mind, but for now focus on the game part as a prototype ⚠️
 [Go to Roadmap](./roadmap.md)
+[Go to Changelog](./changelog.md)
 
 - Revisar seleccion de targets al lanzar hechizos
-- Agregar animacion de muerte a enemigos
 
 - Refactorizar logica de skills antiguos, seguir la nueva metodologia creando un módulo para cada skill
 - Agregar skill que brinda un 10/20/30% de evasion

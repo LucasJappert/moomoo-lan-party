@@ -17,6 +17,7 @@ func _init(p_owner: Entity):
 
 
 func _physics_process(_delta: float) -> void:
+	if my_owner.current_hp <= 0: return
 	if not _can_move: return
 	if not GameManager.AM_I_HOST: return
 
