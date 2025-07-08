@@ -2,7 +2,7 @@ class_name CombatData
 
 extends CharacterBody2D
 
-const EXP_MULTIPLIER: int = 1
+const EXP_MULTIPLIER: int = 2
 
 var active_skills: Array[SkillBase] = []
 var effects_helper: EffectsHelper = EffectsHelper.new()
@@ -195,7 +195,8 @@ func _actions_after_current_hp_change(value_to_increase: int = 0, _attacker: Ent
 
 	if ObjectHelpers.is_null(_attacker): return
 
-	var exp_by_damage = min(current_hp, abs(value_to_increase)) * 0.1
+	var percent_hp_lost = value_to_increase / float(get_total_hp())
+	var exp_by_damage = Enemy.get_enemy_exp_when_dead() * percent_hp_lost
 	if _attacker: _try_to_give_experience_to_players(exp_by_damage) # Give experience when an enemy takes damage
 	
 	_server_verify_death(_attacker)

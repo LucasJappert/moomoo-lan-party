@@ -70,8 +70,8 @@ func _actions_for_server_side_after_entity_removed(entity: Entity) -> void:
 		current_enemies_in_scene -= 1
 		if current_enemies_in_scene == 0: EventBus.emit_wave_finilized()
 	
-	var current_cell = MapManager.world_to_cell(entity.global_position)
-	MapManager.set_cell_blocked(current_cell, false)
+	# var current_cell = MapManager.world_to_cell(entity.movement_helper.current_cell)
+	MapManager.set_cell_blocked(entity.movement_helper.next_target_cell, false)
 	EventBus.emit_freed_entity(entity.name)
 	entity.queue_free() # We shouldn't do this in the client side, server should do it and sync it
 

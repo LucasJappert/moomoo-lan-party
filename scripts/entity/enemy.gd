@@ -54,12 +54,12 @@ static func get_instance_from_dict(dict: Dictionary) -> Enemy:
 # endregion GETTERs
 
 static func get_enemy_exp_when_dead() -> int:
-	if _exp_when_dead > 0: return _exp_when_dead
+	if _exp_when_dead > 0: return _exp_when_dead * EnemiesWavesController.current_wave
 
 	var player_total_accumulated_exp: float = Player.get_total_accumulated_exp()
 	_exp_when_dead = int(player_total_accumulated_exp / EnemiesWavesController.TOTAL_ENEMIES_TO_CREATE * 0.05)
 
-	return _exp_when_dead
+	return _exp_when_dead * EnemiesWavesController.current_wave
 
 func get_nearest_player_inside_vision() -> Entity:
 	var closest_player: Entity

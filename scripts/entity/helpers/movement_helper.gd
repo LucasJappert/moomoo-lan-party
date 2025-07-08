@@ -5,7 +5,7 @@ var current_target_pos = null
 var _target_entity: Entity
 var _target_cell
 var current_path: Array[Vector2i] = []
-var current_cell = null
+var next_target_cell: Vector2i
 var _attack_move = false
 var _can_move := true
 var _last_current_path_update_time: float = - INF
@@ -91,7 +91,7 @@ func _try_set_next_current_target_pos() -> void:
 		var target_in_attack_range = GlobalsEntityHelpers.is_target_in_attack_range(my_owner, my_owner.get_target_entity())
 		if target_in_attack_range: return _clean_movements()
 
-	var next_target_cell = current_path[0]
+	next_target_cell = current_path[0]
 	if MapManager._astar_grid.is_point_solid(next_target_cell): return
 
 	MapManager.set_cell_blocked(MapManager.world_to_cell(my_owner.global_position), false)

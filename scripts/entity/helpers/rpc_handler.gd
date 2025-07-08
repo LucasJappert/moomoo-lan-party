@@ -58,8 +58,6 @@ func _on_receive_damage_or_heal(data: Dictionary):
 func die(): rpc("_on_die")
 @rpc("authority", "call_local")
 func _on_die():
-	print("⚔️ Entity died")
-	print("Multiplayer: ", _my_owner.multiplayer.is_server())
 	_my_owner.global_die()
 
 func add_animation(anim_name: String, anim_speed: float = 25, repeat_count: int = 1) -> void:

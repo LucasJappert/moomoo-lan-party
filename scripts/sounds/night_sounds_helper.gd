@@ -20,15 +20,11 @@ static func stop():
 
 static func _load_night_sounds():
 	night_sounds.clear()
-	var dir := DirAccess.open("res://sounds/night")
-	if dir:
-		dir.list_dir_begin()
-		var file_name = dir.get_next()
-		while file_name != "":
-			if file_name.ends_with(".wav"):
-				night_sounds.append("res://sounds/night/" + file_name)
-			file_name = dir.get_next()
-		dir.list_dir_end()
+
+	for i in range(1, 13 + 1): # From 1 to 13 inclusive
+		var path = "res://sounds/night/night%d.wav" % i
+		night_sounds.append(path)
+
 
 static func _loop(tree: SceneTree):
 	if not running:
