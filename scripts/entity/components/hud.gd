@@ -47,6 +47,7 @@ func _process(_delta: float):
 	_try_update_bars_visibility()
 
 func _try_update_bars_visibility():
+	if my_owner.is_dead(): bars_container.visible = false; return
 	if ClientInputs.ALT_PRESSED: bars_container.visible = true; return
 
 	if my_owner.is_my_player(): bars_container.visible = true; return

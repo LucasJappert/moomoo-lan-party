@@ -2,6 +2,7 @@
 
 📆 XX/07/2025
 
+- ✅ Lightning effect as projectile for hero Lightning Warden
 - ✅ Add death animation to enemies (dissolve effect using a shader)
 - ✅ Create a module to play random nighttime sounds. Also, a first try at a background music
 - ✅ Create hero selection scene

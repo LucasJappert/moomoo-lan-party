@@ -20,7 +20,8 @@ const TYPES = {
 	FIREBALL = "fireball",
 	ARROW = "arrow",
 	DARK_BOLT = "dark_bolt",
-	ICE_BOLT = "ice_bolt"
+	ICE_BOLT = "ice_bolt",
+	ARC_LIGHTNING = "arc_lightning"
 }
 
 func set_type(type: String):

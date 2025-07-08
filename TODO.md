@@ -4,7 +4,6 @@
 [Go to Roadmap](./roadmap.md)
 [Go to Changelog](./changelog.md)
 
-- Efecto de rayo como proyectil
 - Revisar seleccion de targets al lanzar hechizos
 
 - Refactorizar logica de skills antiguos, seguir la nueva metodologia creando un módulo para cada skill

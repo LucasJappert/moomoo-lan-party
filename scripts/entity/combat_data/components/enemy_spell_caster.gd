@@ -12,6 +12,8 @@ func _init(enemy: Entity):
 func _process(delta):
 	if not _enemy: return
 	if _enemy._boss_level == 0: return
+	if _enemy.is_dead(): return
+	if not _enemy.can_attack: return
 
 	cast_timer += delta
 	if cast_timer < next_cast_delay: return
@@ -27,7 +29,6 @@ func _set_next_cast_delay() -> void:
 	next_cast_delay = randf_range(min_delay, max_delay)
 
 func _try_cast_random_skill() -> bool:
-	if not _enemy.can_attack: return false
 	if _enemy.target_to_attack == null: return false
 
 	var available_skills: Array[Skill] = _enemy.get_skills().filter(func(skill):

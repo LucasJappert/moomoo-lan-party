@@ -411,6 +411,7 @@ func _apply_defenses(_di: DamageInfo, total_stats: CombatStats) -> void:
 # endregion PRIVATE GETTERs
 
 # region GETTERs
+func is_dead() -> bool: return current_hp <= 0
 func get_total_magic_damage(base_damage: int) -> int:
 	return int(base_damage * get_magic_power_multiplier())
 func get_magic_power_multiplier() -> float:
@@ -478,7 +479,7 @@ func get_items_by_name(p_name: String) -> Array[Item]:
 # region TRY PHISICAL ATTACK
 func try_physical_attack(_delta: float) -> bool:
 	if not my_owner().multiplayer.is_server(): return false
-
+	if my_owner().is_dead(): return false
 	if my_owner().current_state != EntityState.States.IDLE: return false # Cant attack while moving
 	
 	if target_to_attack == GameManager.moomoo: set_target_to_attack(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
@@ -511,8 +512,19 @@ func execute_physical_attack(apply_extra_actions: bool = true, _custom_target: E
 	EntityState.change_to_attack(my_owner())
 
 	var final_target = _custom_target if _custom_target else target_to_attack
-	if projectile_type == Projectile.TYPES.NONE: server_execute_physical_damage(final_target)
-	else: Projectile.launch(my_owner(), final_target, get_physical_attack_power())
+	match projectile_type:
+		Projectile.TYPES.NONE:
+			server_execute_physical_damage(final_target)
+		Projectile.TYPES.ARC_LIGHTNING:
+			SoundsHelper.play_electric(-20)
+			LineEffect.spawn(GameManager.my_main.general_container, my_owner().position, final_target.position, 0.1, 0.4)
+			server_execute_physical_damage(final_target)
+		Projectile.TYPES.ARROW, Projectile.TYPES.FIREBALL:
+			Projectile.launch(my_owner(), final_target, get_physical_attack_power())
+		_:
+			print("ERROR: Unimplemented projectile type: " + projectile_type + " 🚀")
+			server_execute_physical_damage(final_target)
+	
 
 	if not apply_extra_actions: return
 
@@ -541,7 +553,7 @@ func global_receive_damage_or_heal(_di: DamageInfo):
 		my_owner().hud.show_message_popup(str(-_di.critical), Color(1, 1, 0))
 		if arrow_attack: SoundsHelper.play_critical_arrow_shot()
 		if melee_attack: SoundsHelper.play_critical_melee_hit()
-	if _di.critical == 0 and _di.total_damage > 0:
+	if _di.critical == 0 and _di.total_damage > 0 and melee_attack:
 		if melee_attack: SoundsHelper.play_melee_hit()
 
 	if _di.total_damage < 0: # Heal
