@@ -3,7 +3,6 @@
 ⚠️ Keep multiplayer in mind, but for now focus on the game part as a prototype ⚠️
 [Go to Roadmap](./roadmap.md)
 
-- 🔵 Crear modulo para reproducir sonidos aleatorios nocturnos
 - Revisar seleccion de targets al lanzar hechizos
 - Agregar animacion de muerte a enemigos
 

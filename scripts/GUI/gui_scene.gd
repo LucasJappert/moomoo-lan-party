@@ -141,6 +141,7 @@ func _set_items() -> void:
 		_slots[i].item_updated(_bottom_target._items[i])
 
 func _set_my_player_avatar_region(_entity: Entity) -> void:
+	if _entity is Moomoo: return # TODO: fix
 	_my_player_avatar.region_rect = _entity.extra_info.rects[0]
 
 func set_target_avatar_region(region_rect: Rect2) -> void:

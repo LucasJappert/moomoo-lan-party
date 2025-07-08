@@ -38,6 +38,7 @@ func _ready() -> void:
 
 	SoundsHelper.initialize()
 	DamagePopupPool.preload_popups()
+	NightAmbienceHelper.start(get_tree())
 
 func _process(_delta: float) -> void:
 	GLOBAL_MOUSE_POSITION = get_global_mouse_position()
