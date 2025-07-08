@@ -28,11 +28,10 @@ static func set_flame_cultist(_enemy: Enemy):
 
 	_enemy.attack_type = AttackTypes.RANGED
 	_enemy.projectile_type = Projectile.TYPES.FIREBALL
-	_enemy.combat_stats.crit_chance = 0.2
+	_enemy.combat_stats.crit_chance = 0.1
 	_enemy.combat_stats.crit_multiplier = 1.5
 	_enemy.combat_stats.attack_range = 200
 	_enemy.combat_stats.physical_attack_power = 1
-	_enemy.combat_stats.attack_speed = 1
 	
 	_enemy._skills.append_array([
 		Skill.get_new_learned_skill(Skill.Names.STORM_STRIKE)

@@ -215,6 +215,7 @@ offset_left = -23.0
 offset_top = 13.0
 offset_right = 23.0
 offset_bottom = 36.0
+mouse_filter = 2
 mouse_default_cursor_shape = 3
 
 [node name="Label" type="Label" parent="HUD/PanelContainer"]

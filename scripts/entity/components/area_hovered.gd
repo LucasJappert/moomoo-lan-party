@@ -49,5 +49,6 @@ static func _update_hovered_entity():
 			if best_entity is Enemy: best_entity.sprite.modulate = Color.WHITE
 			best_entity = e
 
-	if best_entity is Enemy: best_entity.sprite.modulate = Color(1, 0.6, 0.6, 1)
+	if best_entity is Enemy:
+		best_entity.sprite.modulate = Color(1, 0.6, 0.6, 1)
 	hovered_entity = best_entity

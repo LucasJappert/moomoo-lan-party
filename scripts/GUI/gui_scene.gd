@@ -69,7 +69,6 @@ func _ready() -> void:
 	if multiplayer.is_server() && not MyMain.HOSTED_GAME: return
 
 	%JoinAsPlayerButton.connect("pressed", _on_join_as_player_pressed)
-	%MultiplayerHUD.show()
 	_ORIGINAL_BALL_SIZE = _hp_ball.region_rect.size
 	_ORIGINAL_BALL_POS_Y = _hp_ball.position.y
 	_ORIGINAL_BALL_RECT_POS_Y = _hp_ball.region_rect.position.y
@@ -97,7 +96,6 @@ func _ready() -> void:
 
 	
 func _on_join_as_player_pressed() -> void:
-	%MultiplayerHUD.hide()
 	MultiplayerManager.become_client()
 
 

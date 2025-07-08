@@ -41,7 +41,7 @@ var hostile_silence_duration: float = 0.0 # In seconds
 
 var custom_damage_heal: CustomDamageHeal = CustomDamageHeal.new()
 
-@export var is_owner_friendly: bool = true
+@export var is_owner_friendly: bool = false
 var keep_latest_stacks: bool = true
 
 static func get_instance_from_dict(dict: Dictionary) -> CombatStats:

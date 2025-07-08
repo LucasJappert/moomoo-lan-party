@@ -6,7 +6,7 @@ const ANIMATION_RECT_REGION := Rect2(64, 992, 64, 96)
 const FRAMES = 14
 const ICON_SLOT = Vector2(11, 0)
 
-var shock_spear_learned_skill: ItemSkillBase
+var skill_chain_to_exceute: ItemSkillBase
 var learned_skill: ItemSkillBase
 var interval: float
 var seconds_elapsed_from_last_strike: float = INF
@@ -14,7 +14,7 @@ var seconds_elapsed_from_last_strike: float = INF
 func _init(_learned_skill: ItemSkillBase, _shock_spear_learned_skill: ItemSkillBase) -> void:
 	super._init(_learned_skill.my_name, _learned_skill.duration_in_seconds, true)
 	learned_skill = _learned_skill
-	shock_spear_learned_skill = _shock_spear_learned_skill
+	skill_chain_to_exceute = _shock_spear_learned_skill
 	interval = learned_skill.float_dict["strike_interval_in_seconds"]
 
 func process_skill(_owner: Entity, _delta: float) -> void:
@@ -34,7 +34,7 @@ func apply_strike(_owner: Entity) -> void:
 	var random_enemy_index := randi() % nearest_enemies.size()
 	var random_enemy = nearest_enemies[random_enemy_index]
 
-	SkillShockSpear.apply_strike(_owner, random_enemy, shock_spear_learned_skill)
+	SkillArcLightningStorm.try_to_use(_owner, skill_chain_to_exceute, random_enemy)
 
 
 static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
@@ -55,19 +55,19 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		_SKILLS[NAME].item_skill_base[i].cooldown = aux_array[4][i]
 		_SKILLS[NAME].item_skill_base[i].description = (
 			"Summons a fierce thunderstorm for "
-			+ str(aux_array[2][i]) + " seconds, automatically casting " + SkillShockSpear.NAME + " on random enemies every "
-			+ str(aux_array[1][i]) + " second(s). Each cast replicates the full effects of the " + SkillShockSpear.NAME + " skill."
+			+ str(aux_array[2][i]) + " seconds, automatically casting " + SkillArcLightningStorm.NAME + " on random enemies every "
+			+ str(aux_array[1][i]) + " second(s). Each cast replicates the full effects of the " + SkillArcLightningStorm.NAME + " skill."
 		)
 
 		
 static func try_to_use(_owner: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return true
 
-	var shock_spear := _owner.get_skill(SkillShockSpear.NAME)
-	if not shock_spear: return false
-	if not shock_spear.get_learned_skill(): return false
+	var _skill_to_exceute := _owner.get_skill(SkillArcLightningStorm.NAME)
+	if not _skill_to_exceute: return false
+	if not _skill_to_exceute.get_learned_skill(): return false
 
-	var skill_storm_wrath := SkillStormWrath.new(_learned_skill, shock_spear.get_learned_skill())
+	var skill_storm_wrath := SkillStormWrath.new(_learned_skill, _skill_to_exceute.get_learned_skill())
 	_owner.active_skills.append(skill_storm_wrath)
 
 	return true

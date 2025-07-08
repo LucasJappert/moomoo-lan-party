@@ -36,10 +36,10 @@ func process_skill(_owner: Entity, _delta: float) -> void:
 
 
 	seconds_elapsed_from_last_strike = 0
-	_apply_strikes(_owner)
+	apply_strike(_owner)
 	_current_targets_count += 1
 
-func _apply_strikes(_owner: Entity) -> void:
+func apply_strike(_owner: Entity) -> void:
 	if _current_targets_count == 0: SoundsHelper.play_electric()
 
 	var closest_origin = _last_target_impacted.position if not ObjectHelpers.is_null(_last_target_impacted) else _first_target_position
@@ -67,7 +67,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 
 	int_array = [40, 50, 60]
 	float_array1 = [0.2, 0.4, 0.6]
-	aux_array[0] = [4, 5, 6] # max targets
+	aux_array[0] = [5, 7, 9] # max targets
 	int_array1 = [120, 180, 240] # mana cost
 	aux_array[1] = [8, 6, 4] # cooldown
 	for i in Skill.AVAILABLE_LEVELS:

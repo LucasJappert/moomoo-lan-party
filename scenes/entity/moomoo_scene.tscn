@@ -23,7 +23,7 @@ animations = [{
 position = Vector2(0, -5)
 script = ExtResource("2_xowpe")
 
-[node name="AnimatedSprite2D" parent="." index="5"]
-position = Vector2(4, -29)
+[node name="AnimatedSprite2D" parent="." index="4"]
+position = Vector2(1, -35)
 scale = Vector2(0.734375, 0.734375)
 sprite_frames = SubResource("SpriteFrames_xowpe")

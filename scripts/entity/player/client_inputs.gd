@@ -20,15 +20,20 @@ func _process(_delta: float) -> void:
 func _get_hovered_entity_name() -> String:
 	return str(AreaHovered.hovered_entity.name) if AreaHovered.hovered_entity else ""
 
-func _unhandled_input(event):
+
+func _input(event):
 	MyCamera.handle_input(event)
 	
 	if event is InputEventMouseButton and event.pressed:
-		var mouse_position = player.get_global_mouse_position()
+		# var pos = get_viewport().get_mouse_position()
+		# var window := get_viewport().get_window() # 👈 importante!
+		# var node := window.gui_get_hovered_control()
+		# print("Clicked at: ", pos, " - Hovered control: ", node)
 		if event.button_index == MOUSE_BUTTON_RIGHT:
 			if ObjectHelpers.is_enemy(AreaHovered.hovered_entity):
 				if not SHIFT_PRESSED: return rpc_id(1, "_on_right_click_on_entity", _get_hovered_entity_name())
 				
+			var mouse_position = player.get_global_mouse_position()
 			rpc_id(1, "_on_try_to_move", MapManager.world_to_cell(mouse_position))
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			rpc_id(1, "_on_left_click", _get_hovered_entity_name())
@@ -56,7 +61,7 @@ func _on_left_click(_target_entity_name: String):
 
 	if target_entity: print("entity name: ", target_entity.name)
 
-	if not player.charged_skill: player.set_target_view(target_entity)
+	# if not player.charged_skill: player.set_target_view(target_entity)
 
 	player.use_charged_skill(target_entity)
 

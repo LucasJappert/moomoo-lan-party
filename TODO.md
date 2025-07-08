@@ -4,7 +4,7 @@
 [Go to Roadmap](./roadmap.md)
 [Go to Changelog](./changelog.md)
 
-- Revisar seleccion de targets al lanzar hechizos
+- Crear pantalla de derrota
 
 - Refactorizar logica de skills antiguos, seguir la nueva metodologia creando un módulo para cada skill
 - Agregar skill que brinda un 10/20/30% de evasion

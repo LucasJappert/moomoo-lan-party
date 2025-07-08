@@ -193,6 +193,7 @@ script = ExtResource("1_li5rb")
 
 [node name="MultiplayerHUD" type="Control" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_left = 767.0
@@ -201,7 +202,6 @@ offset_right = 1170.0
 offset_bottom = 507.0
 
 [node name="Panel" type="Panel" parent="MultiplayerHUD"]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
