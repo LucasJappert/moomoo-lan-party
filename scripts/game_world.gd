@@ -1,4 +1,4 @@
-class_name MyMain
+class_name GameWorld
 
 extends Node2D
 
@@ -6,37 +6,42 @@ static var GLOBAL_MOUSE_POSITION: Vector2 = Vector2.ZERO
 static var VIEWPORT_MOUSE_POSITION: Vector2 = Vector2.ZERO
 static var SCREEN_SIZE: Vector2 = Vector2.ZERO
 @onready var gui_scene: GUIScene = $GuiScene
-@onready var hero_picker_scene: HeroPickerScene = $HeroPickerScene
+@onready var player_spawner = $PlayerSpawner
 @onready var projectiles_spawner = $ProjectilesSpawner
 @onready var enemies_spawner = $EnemiesSpawner
 @onready var moomoo_spawner = $MoomooSpawner
 @onready var general_container = $GeneralContainer
+
+@onready var my_trees_node: Node2D = $MyTrees
+@onready var terrain: Node2D = $Terrain
+@onready var decorations_node: Node2D = $Terrain/Decorations
+
+static var current_enemies_in_scene = 0
 const HOSTED_GAME = true # In this version of Moomoo this is always true
 
-@onready var player_spawner = $PlayerSpawner
-@onready var terrain = $Terrain
-@onready var my_tooltip = $MyTooltipContainer/MyTooltip
 
+static func load_scene() -> void:
+	var scene = load("res://scenes/game_world_scene.tscn").instantiate()
+	GameManager.game_world = scene
+	GameManager.main_scene.load_scene(scene)
 
 func _ready() -> void:
-	gui_scene.hide()
+	current_enemies_in_scene = 0
 	# DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_RESIZE_DISABLED, true)
+	# GameManager.start_game(GameManager.hero_picked_type)
 	MapManager.initialize()
-
-	MyCamera.set_screen_size()
-	MyCamera.create_camera()
 
 	call_deferred("_init_player_spawner")
 	call_deferred("_init_moomoo_spawner")
 	call_deferred("_init_enemies_spawner")
 	call_deferred("_init_projectiles_spawner")
+	call_deferred("_spawn_player_moomoo_and_enemies")
 
 	MyTree.spawn_trees()
 
 	DecorationsFactory.add_random_decorations_over_grass_terrain()
 	DecorationsFactory.add_random_decorations_over_dirt_terrain()
 
-	SoundsHelper.initialize()
 	DamagePopupPool.preload_popups()
 	NightAmbienceHelper.start(get_tree())
 
@@ -44,6 +49,11 @@ func _process(_delta: float) -> void:
 	GLOBAL_MOUSE_POSITION = get_global_mouse_position()
 	VIEWPORT_MOUSE_POSITION = get_viewport().get_mouse_position()
 	SCREEN_SIZE = get_viewport().get_visible_rect().size
+
+func _spawn_player_moomoo_and_enemies() -> void:
+	GameManager.spawn_player(HeroPickerScene.hero_picked_type)
+	GameManager.spawn_moomoo()
+	EnemiesWavesController.start_wave_process()
 
 func _init_player_spawner():
 	player_spawner.spawn_function = Callable(self, "_spawn_custom_player")

@@ -11,7 +11,7 @@ const PANEL_WIDTH_IN_TILES: float = 14
 
 
 func _ready() -> void:
-	visible = false
+	_panel.visible = false
 	_title.position = Vector2(MARGINS, MARGINS)
 	_description.position = Vector2(MARGINS, _title.position.y + _title.get_content_height() + 5)
 	_title.bbcode_enabled = true
@@ -53,11 +53,11 @@ func _show_me(title: String, description: String, width_in_tiles: float = PANEL_
 	_panel.set_size(Vector2(width_in_pixels, title_height + description_height + MARGINS * 2))
 	set_size(_panel.size)
 
-	visible = true
+	_panel.visible = true
 	_update_position()
 
 func _hide_me() -> void:
-	visible = false
+	_panel.visible = false
 
 func _update_position() -> void:
 	var mouse_pos = get_global_mouse_position()
@@ -88,9 +88,9 @@ func _update_position() -> void:
 	final_pos.x = clamp(final_pos.x, 0, screen_size.x - tooltip_size.x)
 	final_pos.y = clamp(final_pos.y, 0, screen_size.y - tooltip_size.y)
 
-	global_position = final_pos
+	_panel.global_position = final_pos
 
 static func show_tooltip(title: String, text: String, width_in_tiles: float = PANEL_WIDTH_IN_TILES) -> void:
-	GameManager.my_main.my_tooltip._show_me(title, text, width_in_tiles)
+	GameManager.main_scene.my_tooltip._show_me(title, text, width_in_tiles)
 static func hide_tooltip() -> void:
-	GameManager.my_main.my_tooltip._hide_me()
+	GameManager.main_scene.my_tooltip._hide_me()

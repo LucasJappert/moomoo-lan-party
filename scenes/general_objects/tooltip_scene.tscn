@@ -4,12 +4,11 @@
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="2_jtx8c"]
 
 [node name="MyTooltip" type="Control"]
-light_mask = 0
+light_mask = 16384
 visibility_layer = 524288
-z_index = 10
-z_as_relative = false
 layout_mode = 3
 anchors_preset = 0
+mouse_filter = 2
 script = ExtResource("1_vyso7")
 
 [node name="Panel" type="NinePatchRect" parent="."]
@@ -28,10 +27,14 @@ layout_mode = 0
 offset_left = 12.0
 offset_top = 8.0
 offset_right = 191.0
-offset_bottom = 31.0
+offset_bottom = 37.0
 theme_override_colors/default_color = Color(1, 0.984314, 0.819608, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/normal_font_size = 16
+theme_override_font_sizes/bold_italics_font_size = 22
+theme_override_font_sizes/italics_font_size = 22
+theme_override_font_sizes/mono_font_size = 22
+theme_override_font_sizes/normal_font_size = 22
+theme_override_font_sizes/bold_font_size = 22
 text = "Title"
 
 [node name="Description" type="RichTextLabel" parent="Panel"]
@@ -42,6 +45,11 @@ offset_right = 189.0
 offset_bottom = 103.0
 theme_override_colors/default_color = Color(0.827451, 0.772549, 0.67451, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/bold_italics_font_size = 22
+theme_override_font_sizes/italics_font_size = 22
+theme_override_font_sizes/mono_font_size = 22
+theme_override_font_sizes/normal_font_size = 22
+theme_override_font_sizes/bold_font_size = 22
 bbcode_enabled = true
 text = "asdad"
 autowrap_mode = 2

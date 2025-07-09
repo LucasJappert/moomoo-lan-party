@@ -4,19 +4,6 @@ extends Node
 
 const SERVER_PORT = 2222
 
-func become_host(hero_type: String):
-	GameManager.AM_I_HOST = true
-	var server = ENetMultiplayerPeer.new()
-	server.create_server(SERVER_PORT, 2)
-	print("Server running on port: " + str(SERVER_PORT))
-	multiplayer.multiplayer_peer = server
-
-	multiplayer.peer_connected.connect(_on_peer_connected)
-	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
-
-	GameManager.MY_PLAYER_ID = multiplayer.get_unique_id()
-	_add_player_to_game(multiplayer.get_unique_id(), hero_type)
-
 func become_client():
 	var client = ENetMultiplayerPeer.new()
 	var ip: String = GameManager.get_gui_scene().text_ip.text
@@ -32,19 +19,3 @@ func _on_peer_connected(id):
 
 func _on_peer_disconnected(id):
 	print("peer_disconnected: " + str(id))
-	_remove_player_from_game(id)
-
-func _add_player_to_game(id, hero_type: String):
-	var spawn_data = {
-		"player_id": id,
-		"key_type": hero_type
-	}
-	GameManager.spawn_player(spawn_data)
-
-func _remove_player_from_game(id):
-	var player = GameManager.players_node.get_node(str(id))
-	if player == null:
-		return
-
-	print("Removed player: " + player.name)
-	GameManager.remove_entity(player)

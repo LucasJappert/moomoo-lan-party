@@ -43,6 +43,7 @@ func _ready():
 	hotkey.text = OS.get_keycode_string(KeyboardHelper.SKILL_HOTKEYS[get_index()])
 
 	upgrade_button.gui_input.connect(func(event):
+		if not GameManager.MY_PLAYER: return
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			GameManager.MY_PLAYER.rpc_handler.send_skill_uppgrade_button_pressed_to_server(slot_number)
 		)

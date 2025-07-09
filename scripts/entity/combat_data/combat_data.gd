@@ -73,6 +73,7 @@ func post_ready_combat_data() -> void:
 		enemy_spell_caster = EnemySpellCaster.new(my_owner())
 
 func process_combat_data(_delta: float): # Run only when it is the host
+	if GameManager.main_scene.PAUSED: return
 	if not my_owner(): return
 
 	effects_helper._process(_delta)
@@ -195,20 +196,20 @@ func _actions_after_current_hp_change(value_to_increase: int = 0, _attacker: Ent
 
 	if ObjectHelpers.is_null(_attacker): return
 
-	var percent_hp_lost = value_to_increase / float(get_total_hp())
+	var percent_hp_lost = abs(value_to_increase) / float(get_total_hp())
 	var exp_by_damage = Enemy.get_enemy_exp_when_dead() * percent_hp_lost
 	if _attacker: _try_to_give_experience_to_players(exp_by_damage) # Give experience when an enemy takes damage
 	
 	_server_verify_death(_attacker)
 
-func _server_verify_death(_attacker: Entity) -> void:
+func _server_verify_death(_killed_by: Entity) -> void:
 	if current_hp > 0: return
 
-	Skill.actions_before_entity_death(my_owner(), _attacker)
+	Skill.actions_before_entity_death(my_owner(), _killed_by)
 	current_hp = 0
 	_try_to_give_experience_to_players(Enemy.get_enemy_exp_when_dead()) # Give experience when an enemy dies
-	my_owner().rpc_handler.die()
-	_try_to_add_gold_to_players(_attacker)
+	my_owner().global_die(_killed_by)
+	_try_to_add_gold_to_players(_killed_by)
 
 func _try_to_give_experience_to_players(_exp: int) -> void:
 	_exp *= EXP_MULTIPLIER
@@ -518,7 +519,7 @@ func execute_physical_attack(apply_extra_actions: bool = true, _custom_target: E
 			server_execute_physical_damage(final_target)
 		Projectile.TYPES.ARC_LIGHTNING:
 			SoundsHelper.play_electric(-20)
-			LineEffect.spawn(GameManager.my_main.general_container, my_owner().position, final_target.position, 0.1, 0.4)
+			LineEffect.spawn(GameManager.game_world.general_container, my_owner().projectile_zone.global_position, final_target.projectile_zone.global_position, 0.1, 0.4)
 			server_execute_physical_damage(final_target)
 		Projectile.TYPES.ARROW, Projectile.TYPES.FIREBALL:
 			Projectile.launch(my_owner(), final_target, get_physical_attack_power())

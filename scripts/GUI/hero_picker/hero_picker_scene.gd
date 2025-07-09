@@ -13,6 +13,7 @@ const HERO_BOX_SCENE: PackedScene = preload("res://scenes/GUI/hero_picker/hero_b
 @onready var total_agi_label: Label = %TotalAgiLabel
 
 var selected_hero: Player
+static var hero_picked_type: String
 
 func _ready() -> void:
 	EventBusHeroPicker.connect_to_hero_selected(func(player: Player): _on_hero_selected(player))
@@ -47,8 +48,15 @@ func get_selected_hero_box() -> HeroBox:
 # endregion GETTERS
 
 # region	SETTERS
+static func load_scene() -> void:
+	GameManager.main_scene.resume()
+	var scene = load("res://scenes/GUI/hero_picker_scene.tscn").instantiate()
+	GameManager.main_scene.load_scene(scene)
+
 func _start_game() -> void:
-	GameManager.start_game(selected_hero.extra_info.key_type)
+	GameManager.main_scene.clear_scenes()
+	hero_picked_type = selected_hero.extra_info.key_type
+	GameWorld.load_scene()
 
 func _set_effects_for_selected_hero_box() -> void:
 	for hero_box in get_hero_options():

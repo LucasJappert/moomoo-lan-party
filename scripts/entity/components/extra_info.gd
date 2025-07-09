@@ -13,3 +13,6 @@ func _init(_key_type: String = "", _rects: Array[Rect2] = [], _alias: String = "
 	key_type = _key_type
 	rects = _rects
 	alias = _alias
+
+func get_name_and_alias() -> String:
+	return key_type + " (" + alias + ")"

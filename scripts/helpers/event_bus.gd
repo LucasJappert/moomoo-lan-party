@@ -1,10 +1,11 @@
 extends Node
 
-# const STATE_UPDATED := "state_updated"
-# signal state_updated(p_owner: Entity)
-# func emit_state_updated(p_owner: Entity): emit_signal(STATE_UPDATED, p_owner)
-# func connect_to_state_updated(p_callback: Callable) -> void:
-# 	EventBus.connect(STATE_UPDATED, p_callback)
+const ENTITY_DIED := "entity_died"
+signal entity_died(entitiy_died: Entity, killed_by: Entity)
+func emit_entity_died(entitiy_died: Entity, killed_by: Entity): emit_signal(ENTITY_DIED, entitiy_died, killed_by)
+func connect_to_entity_died(p_callback: Callable) -> void:
+	EventBus.connect(ENTITY_DIED, p_callback)
+
 
 const FREED_ENTITY := "freed_entity"
 signal freed_entity(p_owner: Entity)

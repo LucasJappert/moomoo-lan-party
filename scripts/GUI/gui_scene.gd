@@ -66,7 +66,7 @@ func _ready() -> void:
 	GUIStatsHelper._ready(self)
 	text_ip.text = "127.0.0.1"
 	# tailscale IP = 100.99.208.97
-	if multiplayer.is_server() && not MyMain.HOSTED_GAME: return
+	if multiplayer.is_server() && not GameWorld.HOSTED_GAME: return
 
 	%JoinAsPlayerButton.connect("pressed", _on_join_as_player_pressed)
 	_ORIGINAL_BALL_SIZE = _hp_ball.region_rect.size

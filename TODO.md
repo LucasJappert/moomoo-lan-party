@@ -1,10 +1,11 @@
 # ✅ TODO List – MooMoo LAN Party - 🔵In Progress🟡Paused✅Done
 
 ⚠️ Keep multiplayer in mind, but for now focus on the game part as a prototype ⚠️
-[Go to Roadmap](./roadmap.md)
-[Go to Changelog](./changelog.md)
 
-- Crear pantalla de derrota
+📍 [Go to Roadmap](./roadmap.md)  
+📝 [Go to Changelog](./changelog.md)
+
+- Mejorar escena de derrota
 
 - Refactorizar logica de skills antiguos, seguir la nueva metodologia creando un módulo para cada skill
 - Agregar skill que brinda un 10/20/30% de evasion

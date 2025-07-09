@@ -11,7 +11,7 @@ static var _looping_players: Array[AudioStreamPlayer] = []
 static var _active_players: Array[AudioStreamPlayer] = []
 static var _original_volumes := {}
 
-static func initialize():
+static func initialize(audio_node: Node):
 	if _initialized: return
 
 	EventBus.connect(EventBus.WINDOW_FOCUSED, func(): restore_volumes())
@@ -21,7 +21,7 @@ static func initialize():
 		var player := AudioStreamPlayer.new()
 		player.bus = "Master"
 		player.name = "SoundPlayer_%d" % i
-		GameManager.audio_node.add_child(player, true)
+		audio_node.add_child(player, true)
 		_players.append(player)
 
 	_initialized = true

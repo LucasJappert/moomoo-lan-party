@@ -30,16 +30,24 @@ static var WAVES_INFO = [
 ]
 
 static func start_wave_process() -> void:
+	_reset_wave_process()
 	process_running = true
 	extra_stats_by_wave = CombatStats.new()
 	EventBus.connect_to_wave_finilized(func(): _wave_finilized())
+
+static func _reset_wave_process() -> void:
+	process_running = false
+	current_wave = 0
+	countdown_time_to_show = COUNTDOWN_START
+	countdown_active = false
+	_current_wave_info = null
 
 static func _process(_delta: float) -> void:
 	# return
 	if not GameManager.AM_I_HOST: return
 	if not process_running: return
 	if not GameManager.MY_PLAYER: return
-	if GameManager.current_enemies_in_scene > 0: return
+	if GameWorld.current_enemies_in_scene > 0: return
 
 	if countdown_active == false: countdown_active = true
 
@@ -60,6 +68,7 @@ static func _process(_delta: float) -> void:
 
 static func create_next_wave() -> void:
 	current_wave += 1
+	GameManager.MY_PLAYER.statistics.set_wave(current_wave)
 	print("Wave " + str(current_wave) + " started!")
 	
 	extra_stats_by_wave.agility = 5 * current_wave

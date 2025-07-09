@@ -25,6 +25,7 @@ func _input(event):
 	MyCamera.handle_input(event)
 	
 	if event is InputEventMouseButton and event.pressed:
+		#### Keep this code for debug 🔍
 		# var pos = get_viewport().get_mouse_position()
 		# var window := get_viewport().get_window() # 👈 importante!
 		# var node := window.gui_get_hovered_control()

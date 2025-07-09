@@ -55,10 +55,6 @@ func _on_receive_damage_or_heal(data: Dictionary):
 	ObjectHelpers.from_dict(di, data)
 	_my_owner.global_receive_damage_or_heal(di)
 
-func die(): rpc("_on_die")
-@rpc("authority", "call_local")
-func _on_die():
-	_my_owner.global_die()
 
 func add_animation(anim_name: String, anim_speed: float = 25, repeat_count: int = 1) -> void:
 	if not GameManager.AM_I_HOST: return print("Not host")

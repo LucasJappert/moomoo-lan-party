@@ -83,6 +83,7 @@ func level_up() -> void:
 
 func increment_current_gold(value_to_increment: int) -> void:
 	current_gold += value_to_increment
+	statistics.add_gold(value_to_increment)
 	if is_my_player(): SoundsHelper.play_gold_sound()
 # endregion SETTERs
 

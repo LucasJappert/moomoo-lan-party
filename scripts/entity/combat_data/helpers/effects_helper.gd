@@ -97,14 +97,14 @@ func _try_to_add_effect_to_my_gui(p_effect: CombatEffect) -> void:
 	if not GameManager.MY_PLAYER: return
 
 	if _my_owner.is_my_player(): # Update my GUI
-		GameManager.my_main.gui_scene.my_effects.add_effect(p_effect)
+		GameManager.game_world.gui_scene.my_effects.add_effect(p_effect)
 	if _my_owner.name == GameManager.MY_PLAYER.target_view_name: # Update target GUI
-		GameManager.my_main.gui_scene.target_effects.add_effect(p_effect)
+		GameManager.game_world.gui_scene.target_effects.add_effect(p_effect)
 
 func _try_to_remove_effects_from_my_gui(ids_to_remove: Array[int]) -> void:
 	if not GameManager.MY_PLAYER: return
 
 	if _my_owner.is_my_player(): # Update my GUI
-		GameManager.my_main.gui_scene.my_effects.remove_effects_by_ids(ids_to_remove)
+		GameManager.game_world.gui_scene.my_effects.remove_effects_by_ids(ids_to_remove)
 	if _my_owner.name == GameManager.MY_PLAYER.target_view_name: # Update target GUI
-		GameManager.my_main.gui_scene.target_effects.remove_effects_by_ids(ids_to_remove)
+		GameManager.game_world.gui_scene.target_effects.remove_effects_by_ids(ids_to_remove)

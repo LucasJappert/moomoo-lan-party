@@ -19,16 +19,17 @@ Este documento contiene el plan detallado para completar una versión jugable y 
 ### 📅 30/06/2025 - Semana 1-2: Pulido base y núcleo del juego
 
 - [x] 4 héroes jugables con sus 4 habilidades
-- [ ] Pantalla de inicio y selector de héroes
+- [x] Pantalla de inicio y selector de héroes
+- [ ] Transiciones de pantalla, inicio y derrota
 - [ ] Gameplay central sólido (moverse, atacar, oleadas, defensa)
 - [ ] Agregar efectos de sonido y visuales
 - [ ] IA enemiga básica con mínima diversidad
-- [ ] Sistema de oleadas desde esquinas del mapa
 - [ ] Estatua central funcional (vida, daño, derrota)
 - [ ] IA mejorada para priorizar jugador o estatua
 
 ### 📅 14/07/2025 - Semana 3-4: Menús y presentación
 
+- [ ] Sistema de oleadas desde esquinas del mapa
 - [ ] Balance básico de dificultad y progresión
 - [ ] Identidad visual consistente y música de fondo
 - [ ] Panel de habilidades, mejoras y retroalimentación visual
@@ -43,7 +44,6 @@ Este documento contiene el plan detallado para completar una versión jugable y 
 - [ ] Crear versión exportable (Linux/Windows/Web)
 - [ ] Recibir feedback real de amigos/jugadores
 - [ ] Interfaz completa con HUD, vida, habilidades y oro
-- [ ] Transiciones de pantalla, inicio y derrota
 - [ ] Ajustes de balance (dificultad progresiva)
 
 ### 📅 14/08/2025 - Post-demo: Difusión y primeros pasos de escalamiento

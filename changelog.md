@@ -1,6 +1,11 @@
 # Here you can find all the changes made to the game 🎮📜
 
-📆 XX/07/2025
+📆 xx/07/2025
+
+- ✅ Create defeat screen and statistics to play again
+- ✅ Create a tutorial to show the controls inside picker hero scene
+
+📆 09/07/2025
 
 - ✅ Lightning effect as projectile for hero Lightning Warden
 - ✅ Add death animation to enemies (dissolve effect using a shader)

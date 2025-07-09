@@ -128,15 +128,15 @@ static func get_dirt_cells() -> Array[Vector2i]:
 static func _get_cells_with_atlas_coords(target_coords: Vector2i) -> Array[Vector2i]:
 	var cells_64x64: Array[Vector2i] = []
 
-	var used_rect: Rect2i = GameManager.terrain.get_used_rect()
+	var used_rect: Rect2i = GameManager.game_world.terrain.get_used_rect()
 	for y in range(used_rect.position.y, used_rect.position.y + used_rect.size.y):
 		for x in range(used_rect.position.x, used_rect.position.x + used_rect.size.x):
 			var cell = Vector2i(x, y)
 
-			if GameManager.terrain.get_cell_source_id(cell) == -1:
+			if GameManager.game_world.terrain.get_cell_source_id(cell) == -1:
 				continue # empty cell
 
-			var coords = GameManager.terrain.get_cell_atlas_coords(cell)
+			var coords = GameManager.game_world.terrain.get_cell_atlas_coords(cell)
 			if coords == target_coords:
 				cells_64x64.append(cell)
 

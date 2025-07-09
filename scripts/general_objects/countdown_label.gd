@@ -26,7 +26,7 @@ func _ready():
 static func show_countdown_number(message: String):
 	var countdown_label = SCENE.instantiate()
 	countdown_label.text_to_show = message
-	var screen_center := MyMain.SCREEN_SIZE / 2
+	var screen_center := GameWorld.SCREEN_SIZE / 2
 	countdown_label.global_position = screen_center - Vector2(0, MapManager.TILE_SIZE_INT * 6)
-	GameManager.my_main.gui_scene.add_child(countdown_label)
+	GameManager.game_world.gui_scene.add_child(countdown_label)
 	SoundsHelper.play_beep()

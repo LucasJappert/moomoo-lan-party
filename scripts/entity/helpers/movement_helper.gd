@@ -15,8 +15,8 @@ func _init(p_owner: Entity):
 	my_owner = p_owner
 	if my_owner is Moomoo: _can_move = false
 
-
 func _physics_process(_delta: float) -> void:
+	if GameManager.main_scene.PAUSED: return
 	if my_owner.current_hp <= 0: return
 	if not _can_move: return
 	if not GameManager.AM_I_HOST: return

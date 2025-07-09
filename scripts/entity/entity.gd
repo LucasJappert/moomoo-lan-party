@@ -2,7 +2,9 @@ class_name Entity
 
 extends CombatData
 
+var statistics: Statistics
 var extra_info := ExtraInfo.new()
+var movement_helper: MovementHelper
 
 @onready var hud: HUD = $HUD
 @onready var collision_shape = $CollisionShape2D
@@ -23,9 +25,6 @@ var id: int = 0
 @export var direction: Vector2 = Vector2.ZERO
 var combat_stats = CombatStats.new()
 var replicated: bool = false
-
-# Move this logic to a separate module
-var movement_helper: MovementHelper
 
 @export var current_state: String:
 	set(value):
@@ -48,6 +47,7 @@ func _ready():
 	collision_layer = 1
 	collision_mask = 1
 	movement_helper = MovementHelper.new(self)
+	statistics = Statistics.new(self)
 	set_attack_type_according_to_projectile_type()
 	area_attack_shape.shape = area_attack_shape.shape.duplicate() # to avoid changing the original shape
 	for child in front_animations_node.get_children():
@@ -67,13 +67,14 @@ func _post_ready():
 func _process(_delta: float) -> void:
 	if GameManager.AM_I_HOST: process_combat_data(_delta)
 	EntityState.server_process(self)
+	statistics._process(_delta)
 
 func _physics_process(_delta):
 	movement_helper._physics_process(_delta) # we need this because movement_helper is not a child node
 	_client_physics_process(_delta)
 
 func _client_physics_process(_delta: float) -> void:
-	if multiplayer.is_server() && not MyMain.HOSTED_GAME: return
+	if multiplayer.is_server() && not GameWorld.HOSTED_GAME: return
 		
 	sprite.flip_h = direction.x < 0
 
@@ -109,7 +110,8 @@ func _client_init() -> void:
 # endregion SETTERs
 
 # region OTHERS
-func global_die():
+func global_die(_killed_by: Entity) -> void:
+	if _killed_by: _killed_by.statistics.register_kill()
 	var tween := create_tween()
 
 	# Función auxiliar para disolver
@@ -121,6 +123,6 @@ func global_die():
 	tween.parallel().tween_method(dissolve_updater, 0.0, 1.0, 1.5).set_trans(Tween.TRANS_LINEAR)
 
 	# Eliminar entidad al final
-	tween.tween_callback(func(): GameManager.remove_entity(self))
+	tween.tween_callback(func(): GameManager.remove_entity(self, _killed_by))
 
 # endregion OTHERS

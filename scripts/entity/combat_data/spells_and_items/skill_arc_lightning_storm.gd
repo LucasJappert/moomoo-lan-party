@@ -20,9 +20,9 @@ var _last_pos_impacted: Vector2 = Vector2.ZERO
 func _init(_my_owner: Entity, p_target: Entity, _learned_skill: ItemSkillBase, _activate_on_start: bool = true):
 	super._init(_learned_skill.my_name, _learned_skill.duration_in_seconds, _activate_on_start)
 	learned_skill = _learned_skill
-	_start_pos = _my_owner.position
-	_last_pos_impacted = _my_owner.position
-	_first_target_position = p_target.position
+	_start_pos = _my_owner.projectile_zone.global_position
+	_last_pos_impacted = _my_owner.projectile_zone.global_position
+	_first_target_position = p_target.projectile_zone.global_position
 
 func process_skill(_owner: Entity, _delta: float) -> void:
 	if not active: return
@@ -42,14 +42,14 @@ func process_skill(_owner: Entity, _delta: float) -> void:
 func apply_strike(_owner: Entity) -> void:
 	if _current_targets_count == 0: SoundsHelper.play_electric()
 
-	var closest_origin = _last_target_impacted.position if not ObjectHelpers.is_null(_last_target_impacted) else _first_target_position
+	var closest_origin = _last_target_impacted.projectile_zone.global_position if not ObjectHelpers.is_null(_last_target_impacted) else _first_target_position
 	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(closest_origin, 1, _owner.get_my_enemies(), learned_skill.range_in_tiles, _excluded_targets)
 	if nearest_enemies.size() == 0: return
 
 	var next_target: Entity = nearest_enemies[0]
 	_excluded_targets.append(next_target)
 	
-	LineEffect.spawn(GameManager.my_main.general_container, _last_pos_impacted, next_target.position, 0.5, 0.5)
+	LineEffect.spawn(GameManager.game_world.general_container, _last_pos_impacted, next_target.projectile_zone.global_position, 0.5, 0.5)
 	_set_last_target_impacted(next_target)
 
 	var total_magic_damage = _owner.get_total_magic_damage(learned_skill.float_dict["damage_per_target"])
