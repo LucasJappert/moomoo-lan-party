@@ -53,5 +53,5 @@ offset_bottom = 59.0
 theme_override_colors/font_color = Color(0.605274, 0.605274, 0.605274, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 21
-text = "🡐 Hover your mouse here"
+text = "<< Hover your mouse here"
 vertical_alignment = 1

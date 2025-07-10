@@ -122,7 +122,7 @@ static func play_projectile_hit(type: String, volume: float = -10.0):
 static func play_critical_arrow_shot(volume: float = -15.0):
 	play_sfx("res://sounds/hits/critic_arrow.wav", volume, 1) # ← Max 3 at the same time
 
-static func play_melee_hit(volume: float = -20.0):
+static func play_melee_hit(volume: float = -25.0):
 	var random_melee_hit := randi() % 3 + 1
 	play_sfx("res://sounds/hits/melee%d.wav" % random_melee_hit, volume, 1)
 

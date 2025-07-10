@@ -9,7 +9,7 @@ static var TOTAL_ENEMIES_TO_CREATE: int = TOTAL_WAVES * ENEMIES_BY_ZONE * _WAVE_
 static var current_wave: int = 0
 static var _current_wave_info: WaveInfo
 
-static var COUNTDOWN_START := 10 # 10 seconds
+static var COUNTDOWN_START := 1 # 10 seconds
 static var countdown_time_in_secs: float = COUNTDOWN_START
 static var countdown_time_to_show: int
 static var countdown_active := false
@@ -108,6 +108,7 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 	
 	enemy.combat_stats.accumulate_combat_stats(extra_stats_by_wave)
 	if enemy._boss_level: enemy.combat_stats.accumulate_combat_stats(extra_stats_by_wave)
+	enemy.combat_stats.attack_speed = round(enemy.combat_stats.attack_speed * (1.0 + randf_range(-0.05, 0.05)) * 100.0) / 100.0
 	return enemy
 
 static func _wave_finilized() -> void:

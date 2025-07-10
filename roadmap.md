@@ -20,7 +20,7 @@ Este documento contiene el plan detallado para completar una versión jugable y 
 
 - [x] 4 héroes jugables con sus 4 habilidades
 - [x] Pantalla de inicio y selector de héroes
-- [ ] Transiciones de pantalla, inicio y derrota
+- [x] Transiciones de pantalla, inicio y derrota
 - [ ] Gameplay central sólido (moverse, atacar, oleadas, defensa)
 - [ ] Agregar efectos de sonido y visuales
 - [ ] IA enemiga básica con mínima diversidad

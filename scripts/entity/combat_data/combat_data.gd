@@ -518,7 +518,7 @@ func execute_physical_attack(apply_extra_actions: bool = true, _custom_target: E
 		Projectile.TYPES.NONE:
 			server_execute_physical_damage(final_target)
 		Projectile.TYPES.ARC_LIGHTNING:
-			SoundsHelper.play_electric(-20)
+			SoundsHelper.play_electric(-10)
 			LineEffect.spawn(GameManager.game_world.general_container, my_owner().projectile_zone.global_position, final_target.projectile_zone.global_position, 0.1, 0.4)
 			server_execute_physical_damage(final_target)
 		Projectile.TYPES.ARROW, Projectile.TYPES.FIREBALL:

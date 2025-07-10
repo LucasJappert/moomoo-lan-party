@@ -27,7 +27,7 @@ static func set_flame_cultist(_enemy: Enemy):
 	if _enemy.extra_info.key_type != EnemyTypes.Names.FLAME_CULTIST: return false
 
 	_enemy.attack_type = AttackTypes.RANGED
-	_enemy.projectile_type = Projectile.TYPES.FIREBALL
+	_enemy.projectile_type = Projectile.TYPES.ARC_LIGHTNING
 	_enemy.combat_stats.crit_chance = 0.1
 	_enemy.combat_stats.crit_multiplier = 1.5
 	_enemy.combat_stats.attack_range = 200
