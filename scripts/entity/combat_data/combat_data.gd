@@ -2,14 +2,13 @@ class_name CombatData
 
 extends CharacterBody2D
 
-const EXP_MULTIPLIER: int = 2
+const EXP_MULTIPLIER: int = 1
 
 var active_skills: Array[SkillBase] = []
 var effects_helper: EffectsHelper = EffectsHelper.new()
 @export var current_hp: int = 0
 @export var current_mana: int = 0
-@export var attack_type := AttackTypes.MELEE
-@export var projectile_type: String = Projectile.TYPES.NONE
+@export var projectile_type: String = ProjectileBase.NONE
 @export var is_stunned: bool = false
 var is_silenced: bool = false
 var _skills: Array[Skill] = []
@@ -256,11 +255,6 @@ func use_item(_slot_number: int) -> void: # Called from _on_key_pressed
 func item_updated_by_rpc(_item: Item, _slot_number: int) -> void:
 	update_item(_item, _slot_number - 1)
 	EventBus.emit_item_updated(my_owner(), _item, _slot_number, null)
-
-func set_attack_type_according_to_projectile_type() -> void:
-	attack_type = AttackTypes.MELEE
-	if projectile_type != Projectile.TYPES.NONE:
-		attack_type = AttackTypes.RANGED
 
 func remove_effect_by_name(effect_name: String) -> void:
 	effects_helper.remove_effect_by_name(effect_name)
@@ -513,25 +507,23 @@ func _get_nearest_target_in_range_attack():
 func execute_physical_attack(apply_extra_actions: bool = true, _custom_target: Entity = null) -> void:
 	EntityState.change_to_attack(my_owner())
 
-	var final_target = _custom_target if _custom_target else target_to_attack
-	match projectile_type:
-		Projectile.TYPES.NONE:
-			server_execute_physical_damage(final_target)
-		Projectile.TYPES.ARC_LIGHTNING:
-			SoundsHelper.play_electric(-10)
-			LineEffect.spawn(GameManager.game_world.general_container, my_owner().projectile_zone.global_position, final_target.projectile_zone.global_position, 0.1, 0.4)
-			server_execute_physical_damage(final_target)
-		Projectile.TYPES.ARROW, Projectile.TYPES.FIREBALL:
-			Projectile.launch(my_owner(), final_target, get_physical_attack_power())
-		_:
-			print("ERROR: Unimplemented projectile type: " + projectile_type + " 🚀")
-			server_execute_physical_damage(final_target)
-	
+	var final_target := _custom_target if _custom_target else target_to_attack
+
+	_execute_attack_or_launch_projectile(final_target)
 
 	if not apply_extra_actions: return
 
 	Skill.actions_after_execute_physical_attack(my_owner(), target_to_attack)
-		
+
+func _execute_attack_or_launch_projectile(final_target: Entity) -> void:
+	if projectile_type == ProjectileBase.NONE:
+		return server_execute_physical_damage(final_target)
+
+	for registered_projectile in ProjectileBase.REGISTERED_CLASSES:
+		if registered_projectile.try_launch(projectile_type, my_owner(), final_target, get_physical_attack_power()): return
+
+	printerr("ERROR: Projectile type not found: " + projectile_type + " 🚀") # Should never happen
+
 func can_physical_attack() -> bool:
 	if not my_owner().can_attack: return false
 	if my_owner().velocity != Vector2.ZERO: return false # If moving, can't attack
@@ -548,15 +540,13 @@ func can_physical_attack() -> bool:
 
 # region 	SERVER METHODS
 func global_receive_damage_or_heal(_di: DamageInfo):
-	var melee_attack = _di.projectile_type == Projectile.TYPES.NONE && _di.damage_type == DamageType.PHYSICAL
-	var arrow_attack = _di.projectile_type == Projectile.TYPES.ARROW && _di.damage_type == DamageType.PHYSICAL
 	if _di.critical > 0:
 		my_owner().hud.show_message_popup(str(- (_di.total_damage - _di.critical)), Color(1, 0, 0))
 		my_owner().hud.show_message_popup(str(-_di.critical), Color(1, 1, 0))
-		if arrow_attack: SoundsHelper.play_critical_arrow_shot()
-		if melee_attack: SoundsHelper.play_critical_melee_hit()
-	if _di.critical == 0 and _di.total_damage > 0 and melee_attack:
-		if melee_attack: SoundsHelper.play_melee_hit()
+		if _di.is_arrow_attack(): SoundsHelper.play_critical_arrow_shot()
+		if _di.is_melee_attack(): SoundsHelper.play_critical_melee_hit()
+	if _di.critical == 0 and _di.total_damage > 0 and _di.is_melee_attack():
+		SoundsHelper.play_melee_hit()
 
 	if _di.total_damage < 0: # Heal
 		my_owner().hud.show_message_popup(str(abs(_di.total_damage)), Color(0, 1, 0))

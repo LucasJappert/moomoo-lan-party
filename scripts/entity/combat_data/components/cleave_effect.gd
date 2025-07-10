@@ -26,7 +26,7 @@ static func auxiliary_actions_after_hit(stats: CombatStats, _attacker: Entity, _
 	if nearest_enemies.size() == 0: return
 
 	var _cdi := DamageInfo.new(stats.cleave_effect.get_cleave_damage(_di.total_damage), _di.damage_type)
-	_cdi.projectile_type = Projectile.TYPES.NONE
+	_cdi.projectile_type = ProjectileBase.NONE
 	_cdi.attacker_name = _attacker.name
 	_cdi.can_be_evaded = false
 	_cdi.was_a_cleave_damage = true

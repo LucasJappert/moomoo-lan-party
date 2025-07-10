@@ -489,7 +489,7 @@ func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:
 
 		_di.total_damage = total_damage_and_crit
 		_di.critical = critical_damage
-		_di.projectile_type = Projectile.TYPES.NONE
+		_di.projectile_type = ProjectileBase.NONE
 		_di.damage_type = DamageType.MAGIC
 		_di.attacker_name = _attacker.name
 

@@ -27,26 +27,47 @@ static func initialize(audio_node: Node):
 	_initialized = true
 	print("✅ SoundsHelper initialized with %d players" % MAX_PLAYERS)
 
-static func _internal_play(path: String, volume: float, is_looping: bool, max_simultaneous: int = 0):
-	if FORCE_MUTED or _MUTED:
-		return
-	if not _initialized:
-		push_error("⚠️ SoundsHelper not initialized.")
+static var _audio_cache: Dictionary = {}
+static func _internal_play(path: String, volume: float, is_looping: bool, max_simultaneous: int = 0) -> void:
+	if FORCE_MUTED or _MUTED or not _initialized:
+		if not _initialized:
+			push_error("⚠️ SoundsHelper not initialized.")
 		return
 
-	if not is_looping and max_simultaneous > 0:
-		if _playing_counts.has(path) and _playing_counts[path] >= max_simultaneous:
-			return
+	if not _can_play(path, is_looping, max_simultaneous):
+		return
 
-	var stream: AudioStream = load(path)
+	var stream := _get_or_load_stream(path)
 	if stream == null:
-		push_error("🔇 Sound not found at path: " + path)
 		return
 
 	var player := _get_available_player()
 	if not player:
 		return
 
+	_setup_player(player, stream, volume, is_looping, path)
+	player.play()
+static func _can_play(path: String, is_looping: bool, max_simultaneous: int) -> bool:
+	if not is_looping and max_simultaneous > 0:
+		if _playing_counts.get(path, 0) >= max_simultaneous:
+			return false
+	return true
+static func _get_or_load_stream(path: String) -> AudioStream:
+	if _audio_cache.has(path):
+		return _audio_cache[path]
+
+	if not ResourceLoader.exists(path):
+		push_error("❌ Sound path not found: " + path)
+		return null
+
+	var stream: AudioStream = load(path)
+	if stream == null:
+		push_error("🔇 Failed to load stream from path: " + path)
+		return null
+
+	_audio_cache[path] = stream
+	return stream
+static func _setup_player(player: AudioStreamPlayer, stream: AudioStream, volume: float, is_looping: bool, path: String) -> void:
 	player.stop()
 	player.stream = stream
 	player.volume_db = volume
@@ -68,8 +89,6 @@ static func _internal_play(path: String, volume: float, is_looping: bool, max_si
 			_active_players.erase(player)
 			_original_volumes.erase(player)
 		)
-		
-	player.play()
 
 static func play_sfx(path: String, volume: float = 0.0, max_simultaneous: int = 2):
 	_internal_play(path, volume, false, max_simultaneous)

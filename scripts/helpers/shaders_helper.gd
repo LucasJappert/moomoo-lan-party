@@ -11,3 +11,12 @@ static func set_dissolve_shader_material(entity: Entity) -> void:
 	material.set_shader_parameter("noise_scale", 2.0) # 👈 cuanto mayor, más pequeñas las "partículas"
 
 	entity.sprite.material = material
+
+static func set_distortion_shader_material(sprite: AnimatedSprite2D, scroll_speed := 1.0, distortion_strength := 0.03) -> void:
+	var shader := load("res://shaders/flame_distortion.gdshader")
+	var material := ShaderMaterial.new()
+	material.shader = shader
+	material.set_shader_parameter("scroll_speed", scroll_speed)
+	material.set_shader_parameter("distortion_strength", distortion_strength)
+
+	sprite.material = material

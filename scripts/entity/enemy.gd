@@ -48,7 +48,7 @@ func get_magic_attack_power() -> int:
 	return int(cache_total_stats.magic_attack_power * DAMAGE_MODIFIER)
 
 static func get_instance_from_dict(dict: Dictionary) -> Enemy:
-	var instance = EnemyFactory.get_enemy_instance()
+	var instance = EnemyBase.get_new_instance()
 	ObjectHelpers.from_dict(instance, dict)
 	return instance
 # endregion GETTERs

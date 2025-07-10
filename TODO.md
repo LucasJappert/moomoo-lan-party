@@ -5,8 +5,11 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Agregar nuevo enemigo que binra un escudo protector a sus aliados
 - Mejorar escena de derrota
+- Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)
 
+- Sistema de particulas para poder aplicarlo como colas en proyectiles
 - Refactorizar logica de skills antiguos, seguir la nueva metodologia creando un módulo para cada skill
 - Agregar skill que brinda un 10/20/30% de evasion
 - Agregar skill, la cual puede activarse o desactivarse, que brindaría chances de matar al enemigo al instante (no aplica a bosses). Consume 20 de mana en cada ataque.

@@ -1,8 +1,6 @@
 class_name HeroBase
 
-extends MyInitAuxiliary
-
-static var REGISTERED_HEROS = [
+static var REGISTERED_CLASSES = [
 	HeroLightningWarden,
 	HeroBloodWarden,
 	HeroFrostbaneArcanist,
@@ -15,10 +13,11 @@ const _FRAMES := 2
 
 static func initialize_from_name(_name: String, player: Player) -> void:
 	var stats = CombatStats.new()
+	player.id = UniqueIdGenerator.get_id()
 
 	_commons_initialize(player, stats)
 
-	for hero_class in REGISTERED_HEROS: hero_class.try_to_init_from_name(_name, player, stats)
+	for hero_class in REGISTERED_CLASSES: hero_class.try_to_init_from_name(_name, player, stats)
 	
 	# GlobalsEntityHelpers.print_description_skills(player)
 	player.update_base_stats(stats)

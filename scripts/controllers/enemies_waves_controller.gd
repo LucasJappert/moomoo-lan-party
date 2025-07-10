@@ -25,8 +25,9 @@ class WaveInfo:
 		boss_enemies = p_boss_enemies
 
 static var WAVES_INFO = [
-	WaveInfo.new([EnemyTypes.Names.FROST_REVENANT], [EnemyTypes.Names.FLAME_CULTIST]),
-	
+	WaveInfo.new([EnemyMosswoodShaman.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME]),
+	WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME]),
+	WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME]),
 ]
 
 static func start_wave_process() -> void:
@@ -75,7 +76,7 @@ static func create_next_wave() -> void:
 	extra_stats_by_wave.strength = 5 * current_wave
 	extra_stats_by_wave.intelligence = 5 * current_wave
 
-	if not _current_wave_info and WAVES_INFO.size() > current_wave - 1:
+	if WAVES_INFO.size() > current_wave - 1:
 		_current_wave_info = WAVES_INFO[current_wave - 1]
 
 	for wave_direction in _WAVE_DIRECTIONS:
@@ -87,14 +88,13 @@ static func create_next_wave() -> void:
 			else: enemy_type = _current_wave_info.common_enemies[randi() % _current_wave_info.common_enemies.size()]
 
 			var enemy = _get_enemy(enemy_type, wave_direction, is_boss)
-			enemy.set_current_hp_and_mana()
 
 			# enemy.can_attack = false
 			GameManager.spawn_enemy(enemy)
 			# return
 
 static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: bool) -> Enemy:
-	var enemy: Enemy = EnemyFactory.get_enemy_instance(enemy_type)
+	var enemy: Enemy = EnemyBase.get_new_instance(enemy_type)
 
 	var random_noise = Vector2(randi_range(-64, 64), randi_range(-64, 64))
 	var position = GameManager.moomoo.global_position + wave_direction * TILES_DISTANCE_TO_MOOMOO * 64 + random_noise
@@ -102,13 +102,17 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 	cell = MapManager.get_valid_grid_cell(cell)
 	enemy.global_position = MapManager.cell_to_world(cell)
 
-	enemy.id = UniqueIdGenerator.get_id()
 	enemy.level = current_wave
 	enemy._boss_level = current_wave if is_boss else 0
 	
 	enemy.combat_stats.accumulate_combat_stats(extra_stats_by_wave)
 	if enemy._boss_level: enemy.combat_stats.accumulate_combat_stats(extra_stats_by_wave)
+
 	enemy.combat_stats.attack_speed = round(enemy.combat_stats.attack_speed * (1.0 + randf_range(-0.05, 0.05)) * 100.0) / 100.0
+
+	enemy.set_current_hp_and_mana()
+	enemy.update_cache_total_stats()
+
 	return enemy
 
 static func _wave_finilized() -> void:

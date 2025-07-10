@@ -6,6 +6,7 @@ extends Node2D
 
 static var SHIFT_PRESSED = false
 static var ALT_PRESSED = false
+static var CONTROL_PRESSED = false
 
 func _ready():
 	if get_multiplayer_authority() != multiplayer.get_unique_id():
@@ -16,6 +17,7 @@ func _ready():
 func _process(_delta: float) -> void:
 	SHIFT_PRESSED = Input.is_key_pressed(KEY_SHIFT)
 	ALT_PRESSED = Input.is_key_pressed(KEY_ALT)
+	CONTROL_PRESSED = Input.is_key_pressed(KEY_CTRL)
 
 func _get_hovered_entity_name() -> String:
 	return str(AreaHovered.hovered_entity.name) if AreaHovered.hovered_entity else ""
@@ -51,7 +53,6 @@ func _on_try_to_move(_target_cell: Vector2i):
 @rpc("authority", "call_local")
 func _on_right_click_on_entity(_target_entity_name: String):
 	var target_entity = GameManager.get_entity(_target_entity_name)
-	# player.set_target_view(target_entity)
 	player.set_target_to_attack(target_entity)
 	player.movement_helper.set_target_entity(target_entity)
 	
@@ -62,7 +63,7 @@ func _on_left_click(_target_entity_name: String):
 
 	if target_entity: print("entity name: ", target_entity.name)
 
-	# if not player.charged_skill: player.set_target_view(target_entity)
+	if CONTROL_PRESSED: player.set_target_view(target_entity)
 
 	player.use_charged_skill(target_entity)
 

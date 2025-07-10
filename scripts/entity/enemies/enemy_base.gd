@@ -1,4 +1,47 @@
-class_name EnemyTypes
+class_name EnemyBase
+
+static var REGISTERED_CLASSES = [
+	EnemyFrostRevenant,
+	EnemyFlameCultist,
+	EnemyWardenOfDecay,
+	EnemyMosswoodShaman
+]
+
+const _START_REGION = Vector2i(0, 0)
+const _FRAME_SIZE = Vector2i(64, 64)
+const _FRAMES = 2
+
+static func get_new_instance(_name: String = "") -> Enemy:
+	var _enemy: Enemy = load("res://scenes/entity/enemy_scene.tscn").instantiate()
+	_enemy.id = UniqueIdGenerator.get_id()
+	if _name.is_empty(): return _enemy
+
+	_enemy.set_enemy_type(_name)
+
+	_commons_initialize(_enemy)
+
+	for registered_class in REGISTERED_CLASSES: registered_class.try_to_init_from_name(_name, _enemy)
+	
+	_enemy.update_base_stats(_enemy.combat_stats)
+
+	return _enemy
+
+static func _commons_initialize(_enemy: Enemy) -> void:
+	_enemy.combat_stats.move_speed = 2
+	_enemy.combat_stats.attack_range = CombatStats.MIN_ATTACK_RANGE
+	_enemy.combat_stats.magic_attack_power = 0
+	_enemy.combat_stats.physical_attack_power = 1
+	_enemy.combat_stats.crit_multiplier = 1.5
+	_enemy.combat_stats.attack_speed = 0.5
+	_enemy.combat_stats.agility = 10
+	_enemy.combat_stats.strength = 6
+	_enemy.combat_stats.intelligence = 10
+
+static func get_rect_frames(pos: Vector2i) -> Array[Rect2]:
+	var result: Array[Rect2] = []
+	result.append(Rect2(_START_REGION.x + (pos.x * _FRAMES) * _FRAME_SIZE.x, _START_REGION.y + pos.y * _FRAME_SIZE.y, _FRAME_SIZE.x, _FRAME_SIZE.y))
+	result.append(Rect2(_START_REGION.x + (pos.x * _FRAMES + 1) * _FRAME_SIZE.x, _START_REGION.y + pos.y * _FRAME_SIZE.y, _FRAME_SIZE.x, _FRAME_SIZE.y))
+	return result
 
 # const Names = {
 # 	FROST_REVENANT = "Frost Revenant", # (Revenant de Escarcha) - alias: Frostreign
@@ -33,11 +76,4 @@ class_name EnemyTypes
 # 	MOONFANG_DUELIST = "Moonfang Duelist", # (Duelista de Colmillo Lunar) - alias: Lurien
 # 	BONE_BULWARK = "Bone Bulwark", # (Muralla Ósea) - alias: Marrak
 # 	FROSTBONE_WARRIOR = "Frostbone Warrior", # (Guerrero de Hueso Helado) - alias: Halgrim
-# }
-
-# static var ENEMY_TYPES: Dictionary[String, ExtraInfo] = {
-# 	Names.FROST_REVENANT: ExtraInfo.new(Names.FROST_REVENANT, get_rect_frames(Vector2i(0, 0)), "Frostreign"),
-# 	Names.WARDEN_OF_DECAY: ExtraInfo.new(Names.WARDEN_OF_DECAY, get_rect_frames(Vector2i(1, 0)), "Decaywarden"),
-# 	Names.FLAME_CULTIST: ExtraInfo.new(Names.FLAME_CULTIST, get_rect_frames(Vector2i(2, 0)), "Pyraeth"),
-# 	# ... y así para cada enemigo
 # }

@@ -49,19 +49,6 @@ static func get_instance_from_dict(dict: Dictionary) -> CombatStats:
 	ObjectHelpers.from_dict(instance, dict)
 	return instance
 
-static func get_default_instance() -> CombatStats:
-	var stats = CombatStats.new()
-	stats.move_speed = 2 # Default move speed for enemies
-	stats.attack_range = CombatStats.MIN_ATTACK_RANGE
-	stats.magic_attack_power = 0
-	stats.physical_attack_power = 1
-	stats.crit_multiplier = 1.5
-	stats.attack_speed = 0.5
-	stats.agility = 10
-	stats.strength = 6
-	stats.intelligence = 10
-	return stats
-
 func accumulate_combat_stats(stats: CombatStats) -> CombatStats:
 	custom_damage_heal.accumulate_props(stats.custom_damage_heal)
 	ignore_enemy_evasion_chance += stats.ignore_enemy_evasion_chance
@@ -99,9 +86,6 @@ func accumulate_combat_stats(stats: CombatStats) -> CombatStats:
 	intelligence += stats.intelligence
 
 	return self
-
-func initialize_default_values() -> void:
-	accumulate_combat_stats(get_default_instance())
 	
 func get_combat_stats_instance() -> CombatStats:
 	var result = CombatStats.new()

@@ -14,7 +14,6 @@
 - crit_multiplier: Multiplicador de daño crítico (ej: 2.0 para +100%)
 - attack_speed: Ataques por segundo
 - attack_range: Rango de ataque en píxeles (0 para melee)
-- attack_type: "melee", "ranged", "magic"
 - projectile_type: (Opcional) "arrow", "fireball", etc.
 
 🧙‍♂️ Habilidades (Skills)

@@ -80,8 +80,8 @@ func _clean_hero_selected() -> void:
 func _set_hero_options() -> void:
 	for i in range(16):
 		var hero_box = HERO_BOX_SCENE.instantiate()
-		if i < HeroBase.REGISTERED_HEROS.size():
-			var hero_class = HeroBase.REGISTERED_HEROS[i]
+		if i < HeroBase.REGISTERED_CLASSES.size():
+			var hero_class = HeroBase.REGISTERED_CLASSES[i]
 			hero_box.set_hero_type(hero_class.LONG_NAME)
 		grid_heros_container.add_child(hero_box)
 
