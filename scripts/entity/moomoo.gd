@@ -3,6 +3,8 @@ class_name Moomoo
 extends Entity
 
 const SPAWN_POSITION = Vector2i(20, 11)
+const RECT_REGION = Rect2(512, 864, 128, 128)
+const BODY_SCALE: float = 1
 
 func _ready():
 	print("🐮 Moomoo ready")

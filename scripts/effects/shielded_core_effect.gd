@@ -6,21 +6,16 @@ class_name ShieldOrbitEffect
 @export var rotation_speed: float = 3.0
 @export var rect_region: Rect2 = Rect2(96, 256, 32, 32) # magic shield
 
+var PULSE_SPEED := 40.0 # pulse speed (higher = faster)
 const COLOR_TINT := Color(0.4, 0.7, 1.1)
 
 const VERTICAL_FLATTENING := 0.3 # menor = más achatado
 const FADE_DURATION := 0.1
 
 const BASE_SCALE := 0.3
-const SHIELDS_BY_WAVE := 4
-var shields: Array[ShieldData] = []
+var shields: Array[Sprite2D] = []
 var rotation_offset := 0.0
 
-class ShieldData:
-	var sprite: Sprite2D
-	var base_angle: float
-	var direction: int
-	var use_tint: bool
 
 static func attach_to(target_node: Node2D, duration: float = 1.0, max_stacks: int = 1) -> ShieldOrbitEffect:
 	if not target_node: return null
@@ -66,51 +61,36 @@ func _ready():
 	atlas_tex.atlas = SpritesHelper._ATLAS1
 	atlas_tex.region = rect_region
 
-	_create_shield_group(+1, false, atlas_tex) # derecha sin tinte
-	_create_shield_group(-1, true, atlas_tex) # izquierda con tinte
-
-func _create_shield_group(direction: int, use_tint: bool, atlas_tex: Texture2D):
-	for i in range(SHIELDS_BY_WAVE):
+	for i in range(num_shields):
 		var shield := Sprite2D.new()
 		shield.texture = atlas_tex
-		shield.z_as_relative = true
 		add_child(shield)
-
-		var data := ShieldData.new()
-		data.sprite = shield
-		data.base_angle = TAU * i / SHIELDS_BY_WAVE
-		data.direction = direction
-		data.use_tint = use_tint
-
-		shields.append(data)
+		shields.append(shield)
 
 func _process(_delta: float) -> void:
 	var time := Time.get_ticks_msec() / 1000.0
-	var base_color := Color(1, 1, 1)
-	var pulse_speed := 20.0
+	var base_color := Color(1, 1, 1) # o el color original del escudo si tenés uno
 
-	for data in shields:
-		var angle := data.base_angle + time * rotation_speed * data.direction
+	for i in range(num_shields):
+		var angle := (float(i) / num_shields) * TAU + time * rotation_speed + rotation_offset
 
 		var x := radius * cos(angle)
-		var y := radius * sin(angle) * VERTICAL_FLATTENING
-		var depth := -sin(angle)
+		var y := radius * sin(angle) * VERTICAL_FLATTENING # vertical squash para sensación de profundidad
 
+		var depth := -sin(angle) # más cerca cuando sin(angle) es negativo
 		var scale_factor := BASE_SCALE * (0.5 + 0.5 * (1.0 - depth))
-		var alpha = clamp((1.0 - depth), 0.0, 1.0)
+		var alpha: float = clamp((1.0 - depth), 0.0, 1.0)
 
-		var shield := data.sprite
+		var shield := shields[i]
 		shield.position = Vector2(x, y)
 		shield.scale = Vector2.ONE * scale_factor
 		shield.modulate.a = alpha
 
-		if data.use_tint:
-			shield.modulate = COLOR_TINT
-		else:
-			shield.modulate = base_color
-
-		shield.modulate.a = alpha # en ambos casos
-
+		# 💡 Alternar entre color base y tintado
+		var color_t := (sin(time * PULSE_SPEED + i) + 1.0) / 2.0 # oscila entre 0 y 1
+		var tint := base_color.lerp(COLOR_TINT, color_t)
+		tint.a = alpha
+		shield.modulate = tint
 
 func _start_timer(duration: float) -> void:
 	var timer := Timer.new()

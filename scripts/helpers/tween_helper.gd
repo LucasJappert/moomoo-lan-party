@@ -65,3 +65,15 @@ static func apply_rotation_loop(
 	tween.tween_property(sprite, "rotation", base_rotation - angle, duration * 2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(sprite, "rotation", base_rotation, duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	return tween
+
+static func apply_tween_to_property(
+	p_node: Object,
+	p_tween: Tween,
+	p_property: String,
+	p_to_value: Variant,
+	p_duration: float,
+	p_trans := Tween.TRANS_SINE,
+	p_ease := Tween.EASE_OUT
+) -> Tween:
+	p_tween.parallel().tween_property(p_node, p_property, p_to_value, p_duration).set_trans(p_trans).set_ease(p_ease)
+	return p_tween

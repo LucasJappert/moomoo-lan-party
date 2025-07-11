@@ -15,7 +15,8 @@ var movement_helper: MovementHelper
 @onready var area_vision_shape = $AreaVision/CollisionShape2D
 @onready var area_hovered_shape = $AreaHovered/CollisionShape2D
 @onready var projectile_zone = $ProjectileZone/CollisionShape2D
-@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var body_sprite: AnimatedSprite2D = %BodySprite
+@onready var body_shadow: Sprite2D = %BodyShadow
 @onready var front_animations_node = $FrontAnimationsNode
 
 var sprite_height: float = 0
@@ -77,7 +78,7 @@ func _physics_process(_delta):
 func _client_physics_process(_delta: float) -> void:
 	if multiplayer.is_server() && not GameWorld.HOSTED_GAME: return
 		
-	sprite.flip_h = direction.x < 0
+	body_sprite.flip_h = direction.x < 0
 
 func _on_entity_freed(entity_name: String) -> void:
 	verify_freed_target_to_attack(entity_name)
@@ -117,22 +118,34 @@ func _set_area_attack_shape_radius() -> void:
 func _client_init() -> void:
 	SpritesHelper.set_entity_sprites(self)
 
-# endregion SETTERs
-
-# region OTHERS
 func global_die(_killed_by: Entity) -> void:
 	if _killed_by: _killed_by.statistics.register_kill()
+
+	_apply_effects_after_die(_killed_by, func():
+		GameManager.remove_entity(self, _killed_by)
+	)
+
+# endregion SETTERs
+
+
+# region 	INTERNAL AUXILIARY METHODS
+func _apply_effects_after_die(_killed_by: Entity, on_finished: Callable) -> void:
+	const TWEEN_DURATION := 1.5
 	var tween := create_tween()
 
-	# Función auxiliar para disolver
 	var dissolve_updater := func(value: float):
-		if is_instance_valid(sprite.material):
-			sprite.material.set_shader_parameter("dissolve_amount", value)
+		if is_instance_valid(body_sprite.material):
+			body_sprite.material.set_shader_parameter("dissolve_amount", value)
 
-	# Tween en paralelo para el shader
-	tween.parallel().tween_method(dissolve_updater, 0.0, 1.0, 1.5).set_trans(Tween.TRANS_LINEAR)
+	tween.parallel().tween_method(dissolve_updater, 0.0, 1.0, TWEEN_DURATION).set_trans(Tween.TRANS_LINEAR)
 
-	# Eliminar entidad al final
-	tween.tween_callback(func(): GameManager.remove_entity(self, _killed_by))
+	TweenHelper.apply_tween_to_property(body_sprite, tween, "position", body_sprite.position + Vector2(0, -64), TWEEN_DURATION)
+	TweenHelper.apply_tween_to_property(body_sprite, tween, "scale", Vector2(1.5, 1.5), TWEEN_DURATION)
+	TweenHelper.apply_tween_to_property(body_sprite, tween, "modulate:a", 0.0, TWEEN_DURATION + 1)
 
-# endregion OTHERS
+	TweenHelper.apply_tween_to_property(body_shadow, tween, "modulate:a", 0.0, TWEEN_DURATION)
+
+
+	# Al finalizar el tween, llamamos al callback
+	tween.tween_callback(on_finished)
+# endregion INTERNAL AUXILIARY METHODS

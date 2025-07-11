@@ -19,7 +19,7 @@ func start_idle_effect():
 		tweens[TYPES.IDLE].play()
 		return
 
-	var sprite := _owner.sprite
+	var sprite := _owner.body_sprite
 	var t := _owner.create_tween()
 	t.set_loops()
 

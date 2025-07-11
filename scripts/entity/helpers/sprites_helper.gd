@@ -8,13 +8,16 @@ const _ENEMIES_SCALE: float = 0.85
 static func set_entity_sprites(entity: Entity) -> void:
 	if entity is Player:
 		_set_sprites(entity, entity.extra_info.rects, _PLAYERS_SCALE)
-		entity.sprite.position.y = -38 * _PLAYERS_SCALE
+		entity.body_sprite.position.y = -38 * _PLAYERS_SCALE
 	elif entity is Enemy:
 		var scale_factor = 1.1 if entity._boss_level > 0 else _ENEMIES_SCALE
 		_set_sprites(entity, entity.extra_info.rects, scale_factor)
-		entity.sprite.position.y = -24 * scale_factor
+		entity.body_sprite.position.y = -24 * scale_factor
+	elif entity is Moomoo:
+		_set_sprites(entity, [Moomoo.RECT_REGION], Moomoo.BODY_SCALE)
+		entity.body_sprite.position.y -= 24
 	
-	entity.sprite_height = entity.sprite.sprite_frames.get_frame_texture("idle", 0).get_height() * entity.sprite.scale.y
+	entity.sprite_height = entity.body_sprite.sprite_frames.get_frame_texture("idle", 0).get_height() * entity.body_sprite.scale.y
 
 
 static func get_sprite_frames(start_region: Vector2, frame_size: Vector2, frames_number: int, speed: float, looped: bool) -> SpriteFrames:
@@ -28,7 +31,7 @@ static func get_sprite_frames(start_region: Vector2, frame_size: Vector2, frames
 	frames.set_animation_loop("default", looped)
 	return frames
 
-static func _set_sprites(entity: Entity, rects: Array[Rect2], scale: float) -> void:
+static func _set_sprites(entity: Entity, rects: Array[Rect2], scale: float = 1) -> void:
 	var frames := SpriteFrames.new()
 
 	# Setup "idle" animation using the first frame
@@ -48,9 +51,9 @@ static func _set_sprites(entity: Entity, rects: Array[Rect2], scale: float) -> v
 	frames.set_animation_loop("attack", false)
 
 	# Apply the animations and set initial animation
-	entity.sprite.frames = frames
-	entity.sprite.scale = Vector2(scale, scale)
-	entity.sprite.play("idle")
+	entity.body_sprite.frames = frames
+	entity.body_sprite.scale = Vector2(scale, scale)
+	entity.body_sprite.play("idle")
 
 static func _add_animation(frames: SpriteFrames, name: String, regions: Array[Rect2]) -> void:
 	# Create a new animation and configure its properties

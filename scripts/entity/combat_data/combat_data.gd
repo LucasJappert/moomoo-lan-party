@@ -481,6 +481,7 @@ func try_physical_attack(_delta: float) -> bool:
 	if target_to_attack == GameManager.moomoo: set_target_to_attack(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
 
 	if target_to_attack == null: return false
+	if target_to_attack.is_dead(): return false
 
 	if not can_physical_attack(): return false
 

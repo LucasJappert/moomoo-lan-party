@@ -3,8 +3,8 @@ class_name EnemySpellCaster
 var _enemy_owner: Entity
 var cast_timer: float = 0.0
 var next_cast_delay: float = 0.0
-const MIN_DELAY = 1.0
-const MAX_DELAY = 2.0
+const MIN_DELAY = 3
+const MAX_DELAY = 6
 
 func _init(enemy: Entity):
 	_enemy_owner = enemy
@@ -25,10 +25,7 @@ func _process(delta):
 	cast_timer = 0.0
 
 func _set_next_cast_delay() -> void:
-	var factor = clamp(float(_enemy_owner.level - 1) / EnemiesWavesController.TOTAL_WAVES, 0.0, 1.0) # Normalize level 1-30 to 0-1
-	var min_delay = lerp(MIN_DELAY, 2.0, factor)
-	var max_delay = lerp(MAX_DELAY, 5.0, factor)
-	next_cast_delay = randf_range(min_delay, max_delay)
+	next_cast_delay = randf_range(MIN_DELAY, MAX_DELAY)
 
 func _try_cast_random_skill() -> bool:
 	if _enemy_owner.target_to_attack == null: return false

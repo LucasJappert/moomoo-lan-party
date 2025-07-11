@@ -74,8 +74,7 @@ static func create_next_wave() -> void:
 	extra_stats_by_wave.strength = 5 * current_wave
 	extra_stats_by_wave.intelligence = 5 * current_wave
 
-	if WAVES_INFO.size() > current_wave - 1:
-		_current_wave_info = WAVES_INFO[current_wave - 1]
+	_current_wave_info = WAVES_INFO[current_wave % WAVES_INFO.size()]
 
 	for wave_direction in _WAVE_DIRECTIONS:
 		for i in range(ENEMIES_BY_ZONE):

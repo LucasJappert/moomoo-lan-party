@@ -150,7 +150,16 @@ debug_color = Color(0, 0.6, 0.7, 0.052)
 shape = SubResource("CircleShape2D_idfl5")
 debug_color = Color(0.98, 0, 0.408, 0)
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="Node2D" type="Node2D" parent="."]
+
+[node name="BodyShadow" type="Sprite2D" parent="Node2D"]
+unique_name_in_owner = true
+texture = ExtResource("3_8707b")
+region_enabled = true
+region_rect = Rect2(128, 256, 32, 32)
+
+[node name="BodySprite" type="AnimatedSprite2D" parent="Node2D"]
+unique_name_in_owner = true
 position = Vector2(0, -24)
 sprite_frames = SubResource("SpriteFrames_os1up")
 animation = &"idle"
@@ -225,13 +234,6 @@ script = ExtResource("6_os1up")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="FrontAnimationsNode"]
 visible = false
 sprite_frames = SubResource("SpriteFrames_gchfm")
-
-[node name="Node2D" type="Node2D" parent="FrontAnimationsNode"]
-
-[node name="Sprite2D" type="Sprite2D" parent="FrontAnimationsNode/Node2D"]
-texture = ExtResource("3_8707b")
-region_enabled = true
-region_rect = Rect2(0, 0, 64, 64)
 
 [node name="AreaHovered" type="Area2D" parent="."]
 script = ExtResource("6_8707b")

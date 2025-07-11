@@ -14,8 +14,8 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	
 	aux_array[0] = [0.3, 0.4, 0.5] # precent defense
 	aux_array[1] = [60, 80, 100] # mana cost
-	aux_array[2] = [1, 10, 6] # cooldown
-	aux_array[3] = [88, 8, 8] # duration
+	aux_array[2] = [8, 6, 4] # cooldown
+	aux_array[3] = [12, 15, 18] # duration
 	for i in Skill.AVAILABLE_LEVELS:
 		_SKILLS[NAME].item_skill_base[i].create_effect = true
 		_SKILLS[NAME].item_skill_base[i].stats.is_owner_friendly = true

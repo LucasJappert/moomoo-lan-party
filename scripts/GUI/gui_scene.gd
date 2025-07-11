@@ -155,7 +155,7 @@ func _on_new_target_view_selected(_owner: Entity, _viewed_target: Entity) -> voi
 	_top_left_target = _viewed_target
 	# _update_panel_top_left(false)
 	if not _viewed_target: return
-	var region_rect = SpritesHelper.get_region_rect_of_sprite(_viewed_target.sprite)
+	var region_rect = SpritesHelper.get_region_rect_of_sprite(_viewed_target.body_sprite)
 	set_target_avatar_region(region_rect)
 # endregion SETTERS
 
