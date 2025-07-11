@@ -44,7 +44,7 @@ func get_summary() -> String:
 	var summary := ""
 	summary += "⚡ Time: %s\n" % _get_formatted_time()
 	summary += "⚡ Enemies: %d\n" % _enemies_killed
-	summary += "⚡ Gold Earned: %d\n" % _gold_earned
+	summary += "⚡ Gold Earned: %s\n" % StringHelpers.format_float(_gold_earned)
 	summary += "⚡ Hero: %s\n" % _hero_name
 	summary += "⚡ Wave Reached: %d" % _wave_reached
 	return summary

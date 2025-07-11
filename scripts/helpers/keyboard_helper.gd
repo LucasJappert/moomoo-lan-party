@@ -23,6 +23,9 @@ static func key_pressed_server_side(_keycode: int, player: Entity) -> void:
 	if _keycode == KEY_SPACE and GameManager.MY_PLAYER:
 		GameManager.MY_PLAYER.set_target_view(GameManager.MY_PLAYER)
 
+	if _keycode == KEY_ENTER and GameManager.MY_PLAYER:
+		GameManager.main_scene.toogle_pause()
+
 	if _keycode == KEY_P:
 		# StunEffect.attach_to(player.front_animations_node, 2.5)
 		AdminHelper.kill_all_enemies()

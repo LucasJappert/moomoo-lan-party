@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dywrecu6pml77"]
+[gd_scene load_steps=15 format=3 uid="uid://dywrecu6pml77"]
 
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="1_gbqeo"]
 [ext_resource type="Script" uid="uid://0x16271fub0a" path="res://scripts/GUI/gui_scene.gd" id="1_li5rb"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://c1csmsd22qmft" path="res://scenes/GUI/gui_effects_scene.tscn" id="4_fo7ei"]
 [ext_resource type="Script" uid="uid://csnhbkb1cdu7g" path="res://scripts/GUI/components/item_slots_container.gd" id="6_7pojj"]
 [ext_resource type="PackedScene" uid="uid://dcn21jl37cx7s" path="res://scenes/GUI/slot_item.tscn" id="6_itjmd"]
+[ext_resource type="PackedScene" uid="uid://cw6gwpmh46624" path="res://scenes/general_objects/tutorial_button_scene.tscn" id="8_7pojj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fo7ei"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -243,6 +244,7 @@ theme_override_font_sizes/font_size = 32
 text = "Join as Player (beta)"
 
 [node name="PanelTL" type="Panel" parent="."]
+visible = false
 theme_override_styles/panel = SubResource("StyleBoxFlat_acekp")
 
 [node name="TargetRectCurrentHP" type="ColorRect" parent="PanelTL"]
@@ -828,3 +830,10 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "asdasd"
+
+[node name="TutorialButton" parent="." instance=ExtResource("8_7pojj")]
+unique_name_in_owner = true
+offset_left = 1816.0
+offset_top = 804.0
+offset_right = 1816.0
+offset_bottom = 804.0

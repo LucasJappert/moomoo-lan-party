@@ -44,7 +44,8 @@ text = "TUTORIAL"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label2" type="Label" parent="NinePatchRect"]
+[node name="MouseMessageLabel" type="Label" parent="NinePatchRect"]
+unique_name_in_owner = true
 layout_mode = 0
 offset_left = 213.0
 offset_top = 4.0

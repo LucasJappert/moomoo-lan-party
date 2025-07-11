@@ -172,4 +172,8 @@ static func play_gold_sound(volume: float = -5.0):
 static func play_track1():
 	SoundsHelper.play_looping_sfx("res://sounds/music/track1.wav", -10.0)
 
+static func play_random_ice_hit():
+	var random_ice_hit := randi() % 4 + 1
+	play_sfx("res://sounds/hits/ice/%d.wav" % random_ice_hit, -10.0, 1)
+
 # endregion AUXILIARIES FOR EXTERNALS

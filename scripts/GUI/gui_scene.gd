@@ -53,6 +53,7 @@ const EXP_BAR_FULL_SIZE = Vector2i(612, 27)
 # endregion
 
 # region Panel BOTTOM RIGHT
+@onready var tutorial_button = %TutorialButton
 @onready var _mana_ball = $PanelBR/ManaBall
 @onready var _mana_label = $PanelBR/LabelMana
 @onready var _skill_slots_container = $PanelBR/SkillSlotsContainer
@@ -69,6 +70,7 @@ func _ready() -> void:
 	if multiplayer.is_server() && not GameWorld.HOSTED_GAME: return
 
 	%JoinAsPlayerButton.connect("pressed", _on_join_as_player_pressed)
+	tutorial_button.hide_mouse_message_label()
 	_ORIGINAL_BALL_SIZE = _hp_ball.region_rect.size
 	_ORIGINAL_BALL_POS_Y = _hp_ball.position.y
 	_ORIGINAL_BALL_RECT_POS_Y = _hp_ball.region_rect.position.y

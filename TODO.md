@@ -5,8 +5,9 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Mejorar escena de derrota
+- Revisar el autocasteo del hechizo 3 del arquero, luego de varias veces deja de verse el efecto
 - Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)
+- Sonidos limitarlos a la vista en pantalla
 
 - Sistema de particulas para poder aplicarlo como colas en proyectiles
 - Refactorizar logica de skills antiguos, seguir la nueva metodologia creando un módulo para cada skill

@@ -39,11 +39,12 @@ func _server_move(delta: float):
 	if direction != Vector2.ZERO:
 		position += direction.normalized() * speed * delta
 
-	if position.distance_to(target_position) < 10:
-		if _get_target_entity() != null && _get_origin_entity() != null:
-			_get_origin_entity().server_execute_physical_damage(_get_target_entity())
-		queue_free()
+	if position.distance_to(target_position) < 10: _projectile_reached_target()
 
+func _projectile_reached_target():
+	if _get_target_entity() != null && _get_origin_entity() != null:
+		_get_origin_entity().server_execute_physical_damage(_get_target_entity())
+	queue_free()
 
 static func get_instance_from_dict(dict: Dictionary) -> Projectile:
 	var instance = PROJECTILE_SCENE.instantiate()

@@ -24,6 +24,10 @@ func clear_scenes():
 	for child in layer_1.get_children():
 		child.queue_free()
 
+func toogle_pause():
+	if PAUSED: resume()
+	else: pause()
+
 func pause():
 	PAUSED = true
 

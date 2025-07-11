@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Add ice sound effects when receiving damage with such effect
 - ✅ Add new enemy that grants a protective shield to its allies (SHIELDED CORE)
 - ✅ Add active skill that grants a protective shield of magic and physical defense (SHIELDED CORE)
 - ✅ Improve dying animation, body moves up, dissolving and becoming transparent (it looks great!)

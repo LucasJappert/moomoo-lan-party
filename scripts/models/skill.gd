@@ -186,6 +186,7 @@ static func initialize_skills() -> void:
 		_skill.item_skill_base[i].stats.attack_speed_percent = float_array[i]
 		_skill.item_skill_base[i].stats.hostile_silence_duration = int_array1[i]
 		_skill.item_skill_base[i].create_effect = true
+		_skill.item_skill_base[i].stats.is_owner_friendly = true
 		_skill.item_skill_base[i].mana_cost = int_array[i]
 		_skill.item_skill_base[i].cooldown = float_array1[i]
 		_skill.item_skill_base[i].duration_in_seconds = int_array1[i]
@@ -536,6 +537,7 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 		effect.stats.is_owner_friendly = false
 		effect.set_region_rect(Skill.get_skill(Names.FROZEN_TOUCH, false).region_rect)
 		_target.effects_helper.add_effect(effect)
+		SoundsHelper.play_random_ice_hit()
 
 	# Cleave verification
 	var cleave_skill = _attacker.get_learned_skill(Names.CLEAVE_STRIKE)

@@ -6,15 +6,27 @@
 [node name="EndGameScene" type="CanvasLayer"]
 script = ExtResource("1_n1x8e")
 
-[node name="GridContainer" type="NinePatchRect" parent="."]
+[node name="MainContainer" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -371.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="NinePatchRect" parent="MainContainer"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -370.5
 offset_top = -306.0
-offset_right = 370.0
+offset_right = 370.5
 offset_bottom = 306.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -25,24 +37,29 @@ patch_margin_top = 20
 patch_margin_right = 20
 patch_margin_bottom = 20
 
-[node name="CenterContainer" type="VBoxContainer" parent="GridContainer"]
-layout_mode = 0
-offset_left = 148.0
-offset_top = 73.0
-offset_right = 610.0
-offset_bottom = 471.0
-theme_override_constants/separation = 50
-
-[node name="Label" type="Label" parent="GridContainer/CenterContainer"]
+[node name="DefeatLabel" type="Label" parent="MainContainer/GridContainer"]
+unique_name_in_owner = true
 layout_mode = 2
+offset_left = 11.0
+offset_top = 73.0
+offset_right = 736.0
+offset_bottom = 158.0
 theme_override_colors/font_color = Color(0.623529, 0.627451, 0.133333, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 70
-text = "VICTORY !!!"
+text = "VICTORY"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="StatisticLabel" type="Label" parent="GridContainer/CenterContainer"]
+[node name="CenterContainer" type="VBoxContainer" parent="MainContainer/GridContainer"]
+layout_mode = 0
+offset_left = 212.0
+offset_top = 205.0
+offset_right = 547.0
+offset_bottom = 471.0
+theme_override_constants/separation = 50
+
+[node name="StatisticLabel" type="Label" parent="MainContainer/GridContainer/CenterContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.605274, 0.605274, 0.605274, 1)
@@ -55,7 +72,7 @@ text = "⏱ Time:
 🌊 Wave Reached:"
 vertical_alignment = 1
 
-[node name="RetryButton" type="NinePatchRect" parent="GridContainer"]
+[node name="RetryButton" type="NinePatchRect" parent="MainContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 242.0
@@ -71,7 +88,7 @@ patch_margin_top = 20
 patch_margin_right = 20
 patch_margin_bottom = 20
 
-[node name="Label" type="Label" parent="GridContainer/RetryButton"]
+[node name="Label" type="Label" parent="MainContainer/GridContainer/RetryButton"]
 layout_mode = 0
 offset_left = 2.0
 offset_top = 3.0
