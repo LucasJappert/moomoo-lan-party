@@ -15,7 +15,7 @@ func _ready() -> void:
 	EventBus.connect_to_new_target_view_selected(func(_owner: Entity, _target: Entity): _on_new_target_view_selected(_owner, _target))
 
 func _on_new_target_to_attack_selected(_owner: Entity, _target: Entity) -> void:
-	if not _type == Type.TARGET_EFFECTS: return
+	# if not _type == Type.TARGET_EFFECTS: return
 	clean_effects()
 	if not _target: return
 	
@@ -55,8 +55,8 @@ func get_effects() -> Array[CombatEffect]:
 
 func clean_effects() -> void:
 	for child in get_children():
-		remove_child(child)
 		child.queue_free()
+		# remove_child(child)
 
 func _sort_children_by_effect_name() -> void:
 	var gui_effects := get_children().filter(func(c): return c is GuiEffect)

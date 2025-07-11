@@ -2,14 +2,14 @@ class_name ProjectileArrow
 
 extends ProjectileBase
 
-const TYPE = "arrow"
+const NAME = "arrow"
 const RECTS: Array[Rect2] = [Rect2(Vector2(0, 256), Vector2(64, 32))]
 const SPEED: float = 400
 const SCALE: float = 1
 const VOLUME: float = -15
 
 static func try_init(_projectile: Projectile):
-	if _projectile.type != TYPE: return
+	if _projectile.type != NAME: return
 
 	_projectile.speed = SPEED
 	set_frames(_projectile, RECTS)

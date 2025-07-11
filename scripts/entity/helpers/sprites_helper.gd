@@ -14,7 +14,7 @@ static func set_entity_sprites(entity: Entity) -> void:
 		_set_sprites(entity, entity.extra_info.rects, scale_factor)
 		entity.sprite.position.y = -24 * scale_factor
 	
-	entity.sprite_heigth = entity.sprite.sprite_frames.get_frame_texture("idle", 0).get_height() * entity.sprite.scale.y
+	entity.sprite_height = entity.sprite.sprite_frames.get_frame_texture("idle", 0).get_height() * entity.sprite.scale.y
 
 
 static func get_sprite_frames(start_region: Vector2, frame_size: Vector2, frames_number: int, speed: float, looped: bool) -> SpriteFrames:

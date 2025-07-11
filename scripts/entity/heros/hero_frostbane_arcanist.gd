@@ -9,7 +9,7 @@ static func try_to_init_from_name(_name: String, player: Player, stats: CombatSt
 	if _name != LONG_NAME: return
 	
 	player.extra_info = ExtraInfo.new(LONG_NAME, get_rect_frames(Vector2i(2, 0)), ALIAS)
-	player.projectile_type = ProjectileArrow.TYPE
+	player.projectile_type = ProjectileArrow.NAME
 	stats.attack_range = 200
 	stats.agility = 45
 	stats.strength = 38

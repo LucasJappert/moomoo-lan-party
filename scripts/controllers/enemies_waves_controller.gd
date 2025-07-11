@@ -25,9 +25,8 @@ class WaveInfo:
 		boss_enemies = p_boss_enemies
 
 static var WAVES_INFO = [
-	WaveInfo.new([EnemyMosswoodShaman.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME]),
-	WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME]),
-	WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME]),
+	WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME]), # wave 2
+	WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME]), # wave 1
 ]
 
 static func start_wave_process() -> void:
@@ -44,7 +43,6 @@ static func _reset_wave_process() -> void:
 	_current_wave_info = null
 
 static func _process(_delta: float) -> void:
-	# return
 	if not GameManager.AM_I_HOST: return
 	if not process_running: return
 	if not GameManager.MY_PLAYER: return

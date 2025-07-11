@@ -61,7 +61,7 @@ func _on_left_click(_target_entity_name: String):
 	# Always run in server
 	var target_entity = GameManager.get_entity(_target_entity_name)
 
-	if target_entity: print("entity name: ", target_entity.name)
+	# if target_entity: print("entity name: ", target_entity.name)
 
 	if CONTROL_PRESSED: player.set_target_view(target_entity)
 

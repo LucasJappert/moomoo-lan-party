@@ -26,3 +26,42 @@ static func apply_pulsing_modulate_and_scale(
 	# Pulso de escala
 	tween.parallel().tween_property(sprite, "scale", Vector2.ONE * scale_min, pulse_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(sprite, "scale", Vector2.ONE * scale_max, pulse_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+static func apply_scaling_pulse(
+	sprite: Node2D,
+	tween: Tween,
+	scale_min := 0.9,
+	scale_max := 1.0,
+	duration := 0.2,
+) -> Tween:
+	sprite.scale = Vector2.ONE * scale_max
+
+	tween.parallel().tween_property(sprite, "scale", Vector2.ONE * scale_min, duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(sprite, "scale", Vector2.ONE * scale_max, duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	return tween
+
+static func apply_fading_pulse(
+	sprite: CanvasItem,
+	tween: Tween,
+	alpha_min := 0.6,
+	alpha_max := 1.0,
+	duration := 0.3,
+) -> Tween:
+	sprite.modulate.a = alpha_max
+
+	tween.parallel().tween_property(sprite, "modulate:a", alpha_min, duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(sprite, "modulate:a", alpha_max, duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	return tween
+
+static func apply_rotation_loop(
+	sprite: Node2D,
+	tween: Tween,
+	angle := PI / 12, # 15 grados
+	duration := 0.4,
+) -> Tween:
+	var base_rotation := sprite.rotation
+
+	tween.parallel().tween_property(sprite, "rotation", base_rotation + angle, duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(sprite, "rotation", base_rotation - angle, duration * 2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(sprite, "rotation", base_rotation, duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	return tween

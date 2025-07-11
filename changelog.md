@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Agregar efecto de respiracion a las entidades
 - ✅ Create defeat screen and statistics to play again
 - ✅ Create a tutorial to show the controls inside picker hero scene
 

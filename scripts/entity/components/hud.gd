@@ -33,7 +33,7 @@ func _post_ready(_entity: Entity):
 	var percent := 0.7
 	var scale_diff := my_owner.sprite.scale.y - 1.0
 	var diff_player = 40 if my_owner is Player else 0
-	bars_container.position.y = bars_container.position.y - (my_owner.sprite_heigth * percent * scale_diff) - diff_player
+	bars_container.position.y = bars_container.position.y - (my_owner.sprite_height * percent * scale_diff) - diff_player
 	if my_owner is Moomoo:
 		bars_container.position.y = bars_container.position.y - 40
 
@@ -66,7 +66,7 @@ func _try_update_label():
 	# _label.text = str(my_owner.effects_helper.get_effects().size())
 	_label_container.visible = _label.text != ""
 		
-	# _label.text = str(GameWorld.current_enemies_in_scene)
+	# _label.text = str(my_owner.cache_total_stats.magic_defense_percent)
 
 func update_health_bar():
 	_health_current_bar.size.x = my_owner.current_hp * BAR_SIZE / my_owner.get_total_hp()

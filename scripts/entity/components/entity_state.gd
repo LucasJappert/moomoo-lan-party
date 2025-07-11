@@ -19,14 +19,14 @@ static func _is_playing_attack_animation(entity: Entity) -> bool:
 	return entity.sprite.is_playing()
 
 static func _update_state(entity: Entity, state: String) -> void:
-	if entity is Moomoo: return
 	if not entity.sprite: return
 	
+	if entity.current_state == state: return
+
 	entity.current_state = state
 
 static func _verify_state_and_animation(entity: Entity) -> void:
 	if not entity: return
-	if entity is Moomoo: return
 	if not entity.sprite: return
 
 	if entity.is_stunned or entity.current_hp <= 0: # we must call it before the attack animation to cut it off when we are stunned
@@ -43,6 +43,9 @@ static func change_to_attack(entity: Entity) -> void:
 	_update_state(entity, States.ATTACK)
 
 static func server_and_client_on_state_changed(entity: Entity) -> void:
-	if entity.sprite.animation == entity.current_state and entity.sprite.is_playing(): return
+	match entity.current_state:
+		States.IDLE:
+			entity.tween_effects.start_idle_effect()
 
+	if entity.sprite.animation == entity.current_state and entity.sprite.is_playing(): return
 	entity.sprite.play(entity.current_state)

@@ -9,7 +9,8 @@ static var REGISTERED_SKILLS: Array = [
 	SkillAbsorbAndRelease,
 	SkillShockSpear,
 	SkillStaticDischarge,
-	SkillStormWrath
+	SkillStormWrath,
+	SkillShieldedCore
 ]
 
 const Names = {
@@ -234,24 +235,6 @@ static func initialize_skills() -> void:
 	for i in float_array.size():
 		_skill.item_skill_base[i].stats.ignore_enemy_evasion_chance = float_array[i]
 		_skill.item_skill_base[i].description = "Grants " + StringHelpers.format_percent(_skill.item_skill_base[i].stats.ignore_enemy_evasion_chance) + " chance to ignore the target's evasion."
-
-	# endregion
-
-	# region SKILL SHIELDED_CORE
-	aux_skill_name = Names.SHIELDED_CORE
-	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
-	_skill = _SKILLS[aux_skill_name]
-	_skill.region_rect = Rect2(0 * FRAME_SIZE + _ATLAS_START_POS.x, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
-	
-	float_array = [0.2, 0.25, 0.3]
-	for i in float_array.size():
-		_skill.item_skill_base[i].stats.magic_defense_percent = float_array[i]
-		_skill.item_skill_base[i].stats.physical_defense_percent = float_array[i]
-		_skill.item_skill_base[i].max_stacks = 1
-		_skill.item_skill_base[i].apply_to_owner = true
-		_skill.item_skill_base[i].create_effect = true
-		aux_text = StringHelpers.format_percent(_skill.item_skill_base[i].stats.magic_defense_percent)
-		_skill.item_skill_base[i].description = "Reduces magic and physical defense by " + aux_text
 
 	# endregion
 

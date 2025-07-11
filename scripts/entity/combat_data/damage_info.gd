@@ -18,7 +18,7 @@ func get_attacker() -> Entity:
 	return GameManager.get_entity(attacker_name)
 
 func is_arrow_attack() -> bool:
-	return projectile_type == ProjectileArrow.TYPE and damage_type == DamageType.PHYSICAL
+	return projectile_type == ProjectileArrow.NAME and damage_type == DamageType.PHYSICAL
 
 func is_melee_attack() -> bool:
 	return projectile_type == ProjectileBase.NONE and damage_type == DamageType.PHYSICAL

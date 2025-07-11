@@ -10,14 +10,15 @@ static func try_to_init_from_name(_name: String, player: Player, stats: CombatSt
 
 	player.extra_info = ExtraInfo.new(LONG_NAME, get_rect_frames(Vector2i(2, 1)), ALIAS)
 	
-	player.projectile_type = ProjectileArcLightning.TYPE
+	player.projectile_type = ProjectileArcLightning.NAME
 	stats.attack_range = 220
 	stats.agility = 35
 	stats.strength = 30
 	stats.intelligence = 70
 	player._skills = [
+		Skill.get_skill(SkillShieldedCore.NAME),
 		Skill.get_skill(SkillShockSpear.NAME),
 		Skill.get_skill(SkillArcLightningStorm.NAME),
 		Skill.get_skill(SkillStaticDischarge.NAME),
-		Skill.get_skill(SkillStormWrath.NAME),
+		# Skill.get_skill(SkillStormWrath.NAME),
 	]

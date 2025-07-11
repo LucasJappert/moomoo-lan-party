@@ -2,6 +2,7 @@ class_name Entity
 
 extends CombatData
 
+var tween_effects: TweenEffects
 var statistics: Statistics
 var extra_info := ExtraInfo.new()
 var movement_helper: MovementHelper
@@ -17,7 +18,7 @@ var movement_helper: MovementHelper
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var front_animations_node = $FrontAnimationsNode
 
-var sprite_heigth: float = 0
+var sprite_height: float = 0
 var can_attack: bool = true
 
 var id: int = 0
@@ -33,7 +34,7 @@ var replicated: bool = false
 		EntityState.server_and_client_on_state_changed(self)
 	get:
 		return _current_state
-var _current_state: String = EntityState.States.IDLE
+var _current_state: String = ""
 
 @export var _boss_level: int = 0
 @export var level: int = 1
@@ -48,6 +49,7 @@ func _ready():
 	collision_mask = 1
 	movement_helper = MovementHelper.new(self)
 	statistics = Statistics.new(self)
+	tween_effects = TweenEffects.new(self)
 	area_attack_shape.shape = area_attack_shape.shape.duplicate() # to avoid changing the original shape
 	for child in front_animations_node.get_children():
 		child.queue_free()
@@ -94,6 +96,15 @@ func get_my_enemies() -> Array[Entity]:
 		return result
 		
 	return []
+
+func get_allies(include_me: bool = false) -> Array[Entity]:
+	var result: Array[Entity] = []
+
+	if self is Player or self is Moomoo: result.append_array(GameManager.get_players())
+	if self is Enemy: result.append_array(GameManager.get_enemies())
+	if include_me: result.append(self)
+		
+	return result
 # endregion GETTERs
 
 # region 	SETTERs

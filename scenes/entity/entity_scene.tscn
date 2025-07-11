@@ -223,7 +223,15 @@ horizontal_alignment = 1
 script = ExtResource("6_os1up")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="FrontAnimationsNode"]
+visible = false
 sprite_frames = SubResource("SpriteFrames_gchfm")
+
+[node name="Node2D" type="Node2D" parent="FrontAnimationsNode"]
+
+[node name="Sprite2D" type="Sprite2D" parent="FrontAnimationsNode/Node2D"]
+texture = ExtResource("3_8707b")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 64)
 
 [node name="AreaHovered" type="Area2D" parent="."]
 script = ExtResource("6_8707b")

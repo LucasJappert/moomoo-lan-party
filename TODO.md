@@ -5,7 +5,7 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Agregar nuevo enemigo que binra un escudo protector a sus aliados
+- 🔵 Agregar nuevo enemigo que brinda un escudo protector a sus aliados (SHIELDED CORE)
 - Mejorar escena de derrota
 - Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)
 
