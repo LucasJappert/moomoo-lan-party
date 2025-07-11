@@ -144,8 +144,9 @@ func _apply_effects_after_die(_killed_by: Entity, on_finished: Callable) -> void
 	TweenHelper.apply_tween_to_property(body_sprite, tween, "modulate:a", 0.0, TWEEN_DURATION + 1)
 
 	TweenHelper.apply_tween_to_property(body_shadow, tween, "modulate:a", 0.0, TWEEN_DURATION)
+	
+	TweenHelper.apply_tween_to_property(front_animations_node, tween, "modulate:a", 0.0, TWEEN_DURATION)
 
-
-	# Al finalizar el tween, llamamos al callback
 	tween.tween_callback(on_finished)
+	
 # endregion INTERNAL AUXILIARY METHODS

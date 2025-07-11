@@ -47,6 +47,9 @@ func add_effect(p_effect: CombatEffect) -> void:
 	if GameManager.AM_I_HOST: # Notify if we are host
 		_my_owner.rpc_handler.notify_effect_added_to_clients(p_effect)
 
+func remove_effects() -> void:
+	_remove_effects_by_predicate(func(): return true)
+
 func remove_effect_by_ids(ids: Array[int]) -> void:
 	if not ids: return
 	_remove_effects_by_predicate(func(effect): return effect.id in ids)

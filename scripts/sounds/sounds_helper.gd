@@ -154,7 +154,7 @@ static func play_lightning_spell(volume: float = -20.0):
 static func play_electric(volume: float = -5.0):
 	play_sfx("res://sounds/spells/electric.wav", volume, 4)
 
-static func play_electric_1(volume: float = -15.0):
+static func play_electric_1(volume: float = -10.0):
 	play_sfx("res://sounds/spells/shock_spear.wav", volume, 4)
 
 static func play_level_up(volume: float = -5.0):

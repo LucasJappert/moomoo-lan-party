@@ -13,7 +13,8 @@ func _on_mouse_entered():
 		[b]⚡ Basic Controls[/b]
 		• [b]Move and Attack:[/b] Right-click to move your hero — clicking on an enemy will also trigger an attack.  
 		• [b]Camera Focus:[/b] Press [i]Spacebar[/i] to center the camera on your hero.  
-		• [b]Zoom:[/b] Use the [i]mouse wheel[/i] to zoom in and out.
+		• [b]Zoom:[/b] Use the [i]mouse wheel[/i] to zoom in and out.  
+		• [b]Inspect Units:[/b] Hold [i]Ctrl[/i] and click on any unit to view its stats. Press [i]Spacebar[/i] again to quickly return to your hero.
 
 		[b]⚡ Skills and Leveling[/b]
 		• At the start, you can learn [b]one of four skills[/b] shown in the bottom-right corner.  
