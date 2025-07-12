@@ -17,6 +17,20 @@ static func key_pressed_server_side(_keycode: int, player: Entity) -> void:
 			return player.use_item(i + 1)
 
 	# OTHER HOTKEYs
+	if _keycode == KEY_T:
+		FireEffect.spawn_fire_effect(
+			GameManager.game_world.over_terrain_layer,
+			Vector2(player.position.x + 32, player.position.y))
+		FireEffect.spawn_fire_effect(
+			GameManager.game_world.over_terrain_layer,
+			Vector2(player.position.x - 32, player.position.y), 2)
+		FireEffect.spawn_fire_effect(
+			GameManager.game_world.over_terrain_layer,
+			Vector2(player.position.x, player.position.y - 32), 10)
+		FireEffect.spawn_fire_effect(
+			GameManager.game_world.over_terrain_layer,
+			Vector2(player.position.x, player.position.y + 32), 10)
+
 	if _keycode == KEY_Q:
 		player.toogle_keep_ground()
 

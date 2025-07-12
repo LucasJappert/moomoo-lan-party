@@ -43,6 +43,7 @@ static func _reset_wave_process() -> void:
 	_current_wave_info = null
 
 static func _process(_delta: float) -> void:
+	return
 	if not GameManager.AM_I_HOST: return
 	if not process_running: return
 	if not GameManager.MY_PLAYER: return

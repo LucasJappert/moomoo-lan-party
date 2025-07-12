@@ -83,3 +83,9 @@ static func get_sprite_2d(region_rect: Rect2) -> Sprite2D:
 	sprite.texture = atlas
 	sprite.centered = true
 	return sprite
+
+static func get_texture_from_region(region_rect: Rect2) -> Texture2D:
+	var atlas := AtlasTexture.new()
+	atlas.atlas = _ATLAS1
+	atlas.region = region_rect
+	return atlas

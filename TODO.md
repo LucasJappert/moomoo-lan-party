@@ -5,6 +5,8 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Agregar una habilidad que pone en llamas a todos los tiles alrededor del jugador en un radio de 2 casillas
+- 🔵 Generar efecto de fuego para utilizar luego en hechizos y habilidades
 - Revisar el autocasteo del hechizo 3 del arquero, luego de varias veces deja de verse el efecto
 - Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)
 - Sonidos limitarlos a la vista en pantalla
