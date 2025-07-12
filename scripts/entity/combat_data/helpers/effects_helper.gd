@@ -67,7 +67,7 @@ func _remove_effects_by_predicate(predicate: Callable) -> void:
 	
 	notify_changes_to_subscribers()
 
-	_try_to_remove_effects_from_my_gui(removed_ids)
+	EventBus.emit_effects_removed(_my_owner, removed_ids)
 
 	if GameManager.AM_I_HOST and removed_ids:
 		_my_owner.rpc_handler.notify_effects_removed_to_clients(removed_ids)
@@ -99,17 +99,4 @@ func _server_verifications_before_adding_effect(p_effect: CombatEffect) -> void:
 func _try_to_add_effect_to_my_gui(p_effect: CombatEffect) -> void:
 	if not GameManager.MY_PLAYER: return
 
-	if _my_owner.is_my_player(): # Update my GUI
-		GameManager.game_world.gui_scene.my_effects.add_effect(p_effect)
-	if _my_owner.name == GameManager.MY_PLAYER.target_view_name: # Update target GUI
-		GameManager.game_world.gui_scene.my_effects.add_effect(p_effect)
-		# GameManager.game_world.gui_scene.target_effects.add_effect(p_effect)
-
-func _try_to_remove_effects_from_my_gui(ids_to_remove: Array[int]) -> void:
-	if not GameManager.MY_PLAYER: return
-
-	if _my_owner.is_my_player(): # Update my GUI
-		GameManager.game_world.gui_scene.my_effects.remove_effects_by_ids(ids_to_remove)
-	if _my_owner.name == GameManager.MY_PLAYER.target_view_name: # Update target GUI
-		# GameManager.game_world.gui_scene.target_effects.remove_effects_by_ids(ids_to_remove)
-		GameManager.game_world.gui_scene.my_effects.remove_effects_by_ids(ids_to_remove)
+	EventBus.emit_effect_added(_my_owner, p_effect)

@@ -9,7 +9,7 @@ const _DRAW_GRID := false
 const _DRAW_SOLID_CELLS := false
 const _PRINT_COORDINATES := false
 const _DRAW_PATHS := false
-const _DRAW_MOUSE_HOVERED_CELL := true
+const _DRAW_MOUSE_HOVERED_CELL := false
 
 func _ready():
 	if get_multiplayer_authority() != multiplayer.get_unique_id():

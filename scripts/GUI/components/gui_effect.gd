@@ -35,11 +35,6 @@ func _ready():
 	)
 	%Area2D.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
 
-	EventBus.connect_to_effect_removed(func(_owner: Entity, p_effect: CombatEffect):
-		if _owner.is_my_player() == false: return
-		if p_effect.id != _effect.id: return
-		queue_free()
-	)
 
 func _process(delta: float):
 	if GameManager.MY_PLAYER == null: return

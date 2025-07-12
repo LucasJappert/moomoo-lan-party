@@ -15,9 +15,9 @@ func connect_to_freed_entity(p_callback: Callable) -> void:
 
 const EFFECT_REMOVED := "effect_removed"
 signal effect_removed(p_owner: Entity, p_effect: CombatEffect)
-func emit_effect_removed(p_owner: Entity, p_effect: CombatEffect) -> void:
-	emit_signal(EFFECT_REMOVED, p_owner, p_effect)
-func connect_to_effect_removed(p_callback: Callable) -> void:
+func emit_effects_removed(p_owner: Entity, ids_to_remove: Array[int]) -> void:
+	emit_signal(EFFECT_REMOVED, p_owner, ids_to_remove)
+func connect_to_effects_removed(p_callback: Callable) -> void:
 	EventBus.connect(EFFECT_REMOVED, p_callback)
 
 const EFFECT_ADDED := "effect_added"

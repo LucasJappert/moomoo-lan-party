@@ -2,7 +2,7 @@ class_name EnemiesWavesController
 
 const ENEMIES_BY_ZONE = 7
 const TOTAL_WAVES = 20
-const TILES_DISTANCE_TO_MOOMOO = 9
+const TILES_DISTANCE_TO_MOOMOO = 9 # TODO: Set spawn points
 const _WAVE_DIRECTIONS = [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]
 static var TOTAL_ENEMIES_TO_CREATE: int = TOTAL_WAVES * ENEMIES_BY_ZONE * _WAVE_DIRECTIONS.size()
 
@@ -25,8 +25,9 @@ class WaveInfo:
 		boss_enemies = p_boss_enemies
 
 static var WAVES_INFO = [
-	WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME]), # wave 2
-	WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME]), # wave 1
+	WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME]),
+	WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME]),
+	WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME]),
 ]
 
 static func start_wave_process() -> void:
@@ -43,7 +44,6 @@ static func _reset_wave_process() -> void:
 	_current_wave_info = null
 
 static func _process(_delta: float) -> void:
-	return
 	if not GameManager.AM_I_HOST: return
 	if not process_running: return
 	if not GameManager.MY_PLAYER: return

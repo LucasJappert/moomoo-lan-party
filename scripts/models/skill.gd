@@ -2,17 +2,6 @@ class_name Skill
 
 extends MyInitAuxiliary
 
-# Array of skill classes (each must have .create_and_add_instance)
-static var REGISTERED_SKILLS: Array = [
-	SkillArcLightningStorm,
-	SkillUnbreakable,
-	SkillAbsorbAndRelease,
-	SkillShockSpear,
-	SkillStaticDischarge,
-	SkillStormWrath,
-	SkillShieldedCore
-]
-
 const Names = {
 	SHIELDED_CORE = "Shielded Core", # ✅
 	BLESSING_OF_POWER = "Blessing of Power", # ✅
@@ -145,7 +134,7 @@ static func initialize_skills() -> void:
 	var _skill: Skill
 	var int_array: Array[int]; var int_array1: Array[int]; var float_array: Array[float]; var float_array1: Array[float]
 
-	for skill_class in REGISTERED_SKILLS: skill_class.create_and_add_instance(_SKILLS)
+	for skill_class in SkillBase.REGISTERED_SKILLS: skill_class.create_and_add_instance(_SKILLS)
 
 	# region EARTHSHATTER
 	aux_skill_name = Names.EARTHSHATTER
@@ -389,7 +378,7 @@ func use(my_owner: Entity, target_entity: Entity) -> bool:
 		return false
 
 	# New way to use skills
-	for skill_class in REGISTERED_SKILLS:
+	for skill_class in SkillBase.REGISTERED_SKILLS:
 		skill_class.try_to_use(my_owner, learned_skill, target_entity)
 		# Actions after cast
 		skill_class.actions_after_cast_skill(my_owner, learned_skill)
@@ -558,7 +547,7 @@ static func actions_after_execute_physical_attack(_attacker: Entity, _target: En
 				_attacker.execute_physical_attack(false, extra_target)
 
 static func actions_before_receive_damage(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
-	for active_skill in _target.active_skills:
+	for active_skill in _target._active_skills:
 		if active_skill.my_name == Names.UNBREAKABLE: return false
 	return true
 

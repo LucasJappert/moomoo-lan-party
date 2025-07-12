@@ -5,12 +5,12 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Agregar una habilidad que pone en llamas a todos los tiles alrededor del jugador en un radio de 2 casillas
-- 🔵 Generar efecto de fuego para utilizar luego en hechizos y habilidades
-- Revisar el autocasteo del hechizo 3 del arquero, luego de varias veces deja de verse el efecto
 - Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)
 - Sonidos limitarlos a la vista en pantalla
+- Configurar nueva oleada con criaturas arqueras que ralentizan con frost
+- Agregar boton para adelantar la oleada
 
+- Agregar estadísticas in game, como el tiempo transcurrido, el daño causado, el daño recibido, etc.
 - Sistema de particulas para poder aplicarlo como colas en proyectiles
 - Refactorizar logica de skills antiguos, seguir la nueva metodologia creando un módulo para cada skill
 - Agregar skill que brinda un 10/20/30% de evasion

@@ -3,8 +3,8 @@ class_name EnemySpellCaster
 var _enemy_owner: Entity
 var cast_timer: float = 0.0
 var next_cast_delay: float = 0.0
-const MIN_DELAY = 3
-const MAX_DELAY = 6
+const MIN_DELAY = 5
+const MAX_DELAY = 30
 
 func _init(enemy: Entity):
 	_enemy_owner = enemy

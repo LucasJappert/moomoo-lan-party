@@ -25,13 +25,8 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != Skill.Names.UNBREAKABLE: return true
 
-	var skill_unbreakable := SkillUnbreakable.new(_learned_skill.my_name, _learned_skill.duration_in_seconds, true)
-	_my_owner.active_skills.append(skill_unbreakable)
-
-	var new_effect = CombatEffect.get_temporal_effect(_learned_skill.my_name, _learned_skill.duration_in_seconds, _learned_skill.max_stacks, _learned_skill.stats)
-	new_effect.set_description(_learned_skill.description)
-	new_effect.set_region_rect(Skill._SKILLS[_learned_skill.my_name].region_rect)
-	_my_owner.effects_helper.add_effect(new_effect)
+	var skill := SkillUnbreakable.new(_learned_skill, true)
+	_my_owner.add_active_skill(skill)
 
 	apply_animation(_my_owner, _learned_skill.duration_in_seconds)
 

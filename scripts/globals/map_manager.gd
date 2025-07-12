@@ -1,8 +1,8 @@
 class_name MapManager
 
 const TILE_SIZE_INT: int = 32
+const TILE_SIZE_FLOAT: float = TILE_SIZE_INT
 const TILE_SIZE: Vector2 = Vector2(TILE_SIZE_INT, TILE_SIZE_INT)
-const PLAYER_CELL_SPAWN: Vector2i = Vector2i(20, 12)
 
 const grid_width: int = 56
 const grid_height: int = 44
@@ -148,3 +148,14 @@ static func _get_cells_with_atlas_coords(target_coords: Vector2i) -> Array[Vecto
 		cells_32x32.append(Vector2i(cell.x * 2 + 1, cell.y * 2 + 1))
 
 	return cells_32x32
+
+static func get_cells_in_radius(origin: Vector2i, radius: int, include_center: bool = false) -> Array[Vector2i]:
+	var cells: Array[Vector2i] = []
+	var radius_squared := radius * radius
+	for dx in range(-radius, radius + 1):
+		for dy in range(-radius, radius + 1):
+			if dx * dx + dy * dy > radius_squared: continue
+			if include_center == false and dx == 0 and dy == 0: continue
+			var cell := origin + Vector2i(dx, dy)
+			cells.append(cell)
+	return cells

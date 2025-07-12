@@ -9,10 +9,12 @@ var next_target_cell: Vector2i
 var _attack_move = false
 var _can_move := true
 var _last_current_path_update_time: float = - INF
+var current_cell: Vector2i
 const _NEXT_PATH_RECALC_MS = 1000
 
 func _init(p_owner: Entity):
 	my_owner = p_owner
+	current_cell = MapManager.world_to_cell(my_owner.global_position)
 	if my_owner is Moomoo: _can_move = false
 
 func _physics_process(_delta: float) -> void:
@@ -96,6 +98,7 @@ func _try_set_next_current_target_pos() -> void:
 
 	MapManager.set_cell_blocked(MapManager.world_to_cell(my_owner.global_position), false)
 	MapManager.set_cell_blocked(next_target_cell, true)
+	current_cell = next_target_cell
 	current_target_pos = MapManager.cell_to_world(next_target_cell)
 	current_path.remove_at(0)
 

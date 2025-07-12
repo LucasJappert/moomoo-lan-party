@@ -7,13 +7,11 @@ const FRAMES = 14
 const ICON_SLOT = Vector2(11, 0)
 
 var skill_chain_to_exceute: ItemSkillBase
-var learned_skill: ItemSkillBase
 var interval: float
 var seconds_elapsed_from_last_strike: float = INF
 
 func _init(_learned_skill: ItemSkillBase, _shock_spear_learned_skill: ItemSkillBase) -> void:
-	super._init(_learned_skill.my_name, _learned_skill.duration_in_seconds, true)
-	learned_skill = _learned_skill
+	super._init(_learned_skill, true)
 	skill_chain_to_exceute = _shock_spear_learned_skill
 	interval = learned_skill.float_dict["strike_interval_in_seconds"]
 
@@ -67,7 +65,7 @@ static func try_to_use(_owner: Entity, _learned_skill: ItemSkillBase, _target: E
 	if not _skill_to_exceute: return false
 	if not _skill_to_exceute.get_learned_skill(): return false
 
-	var skill_storm_wrath := SkillStormWrath.new(_learned_skill, _skill_to_exceute.get_learned_skill())
-	_owner.active_skills.append(skill_storm_wrath)
+	var skill := SkillStormWrath.new(_learned_skill, _skill_to_exceute.get_learned_skill())
+	_owner.add_active_skill(skill)
 
 	return true

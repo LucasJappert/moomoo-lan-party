@@ -8,7 +8,6 @@ const NAME = "Arc Lightning Storm"
 
 var interval: float = 0.1 # In seconds
 var seconds_elapsed_from_last_strike: float = interval # To apply on start
-var learned_skill: ItemSkillBase
 var _excluded_targets: Array[Entity]
 var _current_targets_count: int = 0
 
@@ -18,8 +17,7 @@ var _last_target_impacted: Entity
 var _last_pos_impacted: Vector2 = Vector2.ZERO
 
 func _init(_my_owner: Entity, p_target: Entity, _learned_skill: ItemSkillBase, _activate_on_start: bool = true):
-	super._init(_learned_skill.my_name, _learned_skill.duration_in_seconds, _activate_on_start)
-	learned_skill = _learned_skill
+	super._init(_learned_skill, _activate_on_start)
 	_start_pos = _my_owner.projectile_zone.global_position
 	_last_pos_impacted = _my_owner.projectile_zone.global_position
 	_first_target_position = p_target.projectile_zone.global_position
@@ -86,6 +84,6 @@ static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase, _target
 	if _learned_skill.my_name != NAME: return true
 
 	var skill := SkillArcLightningStorm.new(_my_owner, _target, _learned_skill, true)
-	_my_owner.active_skills.append(skill)
+	_target.add_active_skill(skill)
 
 	return true

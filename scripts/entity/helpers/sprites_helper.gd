@@ -15,7 +15,7 @@ static func set_entity_sprites(entity: Entity) -> void:
 		entity.body_sprite.position.y = -24 * scale_factor
 	elif entity is Moomoo:
 		_set_sprites(entity, [Moomoo.RECT_REGION], Moomoo.BODY_SCALE)
-		entity.body_sprite.position.y -= 24
+		entity.body_sprite.position.y -= 10
 	
 	entity.sprite_height = entity.body_sprite.sprite_frames.get_frame_texture("idle", 0).get_height() * entity.body_sprite.scale.y
 

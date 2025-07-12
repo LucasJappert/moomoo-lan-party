@@ -2,6 +2,10 @@
 
 📆 xx/07/2025
 
+- ✅ Add Cinderflame Wielder creature that uses Burning Presence skill
+- ✅ Add Ember Fiend creature that accompanies Cinderflame Wielder
+- ✅ Add Burning Presence skill that sets all tiles around the player on fire
+- ✅ Create fire effect for later use in spells and abilities
 - ✅ Add ice sound effects when receiving damage with such effect
 - ✅ Add new enemy that grants a protective shield to its allies (SHIELDED CORE)
 - ✅ Add active skill that grants a protective shield of magic and physical defense (SHIELDED CORE)

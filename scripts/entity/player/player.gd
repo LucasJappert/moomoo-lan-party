@@ -2,6 +2,7 @@ class_name Player
 
 extends Entity
 
+const PLAYER_CELL_SPAWN: Vector2i = Vector2i(20, 12)
 static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 const MAX_LEVEL: int = 30
 @export var player_id: int = 0
@@ -28,8 +29,8 @@ func set_player(data: Dictionary) -> void:
 func get_client_inputs(): return %ClientInputs
 
 func _ready():
+	global_position = MapManager.cell_to_world(PLAYER_CELL_SPAWN)
 	super._ready()
-	global_position = MapManager.cell_to_world(MapManager.PLAYER_CELL_SPAWN)
 
 	# We need to update the radius of the attack area node here as it enters the scene
 	_set_area_attack_shape_radius()

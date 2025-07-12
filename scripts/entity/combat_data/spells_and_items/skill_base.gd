@@ -1,7 +1,17 @@
 class_name SkillBase
-
 extends MyInitAuxiliary
 
+# Array of skill classes (each must have .create_and_add_instance)
+static var REGISTERED_SKILLS: Array = [
+	SkillBurningPresence,
+	SkillArcLightningStorm,
+	SkillUnbreakable,
+	SkillAbsorbAndRelease,
+	SkillShockSpear,
+	SkillStaticDischarge,
+	SkillStormWrath,
+	SkillShieldedCore
+]
 
 const _ATLAS_START_POS = Skill._ATLAS_START_POS
 const FRAME_SIZE = Skill.FRAME_SIZE
@@ -10,14 +20,16 @@ var active: bool = false
 var seconds_elapsed: float
 var duration_in_seconds: float
 var permanent_effect: bool = false
+var learned_skill: ItemSkillBase
 
 static var int_array: Array[int]; static var int_array1: Array[int]; static var float_array: Array[float]; static var float_array1: Array[float]
 static var aux_array: Array = [[], [], [], [], [], [], [], [], [], [], [], []]
 
-func _init(_name: String, _duration_in_seconds: float = 0, _active: bool = false) -> void:
+func _init(_learned_skill: ItemSkillBase, _active: bool = false) -> void:
 	super._init()
-	my_name = _name
-	duration_in_seconds = _duration_in_seconds
+	learned_skill = _learned_skill
+	my_name = learned_skill.my_name
+	duration_in_seconds = _learned_skill.duration_in_seconds
 	active = _active
 
 func activate() -> void:

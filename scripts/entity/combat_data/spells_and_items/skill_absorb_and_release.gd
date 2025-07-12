@@ -6,8 +6,8 @@ var percent_to_release: float = 0
 var radius_in_tiles: float
 var damage_accumulated: float
 
-func _init(_name: String, _seconds_to_release: float = 0, _active_on_start: bool = false, _percent_to_release: float = 0, _radius_in_tiles: float = 1):
-	super._init(_name, _seconds_to_release, _active_on_start)
+func _init(_learned_skill: ItemSkillBase, _active_on_start: bool = false, _percent_to_release: float = 0, _radius_in_tiles: float = 1):
+	super._init(_learned_skill, _active_on_start)
 	percent_to_release = _percent_to_release
 	radius_in_tiles = _radius_in_tiles
 
@@ -54,7 +54,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		_SKILLS[_skill_name].item_skill_base[i].instant_use = true
 		_SKILLS[_skill_name].item_skill_base[i].range_in_tiles = range_in_tiles
 		_SKILLS[_skill_name].item_skill_base[i].float_dict["percent_to_release"] = float_array[i]
-		_SKILLS[_skill_name].item_skill_base[i].float_dict["seconds_to_release"] = seconds_to_release
+		_SKILLS[_skill_name].item_skill_base[i].duration_in_seconds = seconds_to_release
 		_SKILLS[_skill_name].item_skill_base[i].damage_type = DamageType.PHYSICAL
 		_SKILLS[_skill_name].item_skill_base[i].mana_cost = int_array1[i]
 		_SKILLS[_skill_name].item_skill_base[i].cooldown = int_array[i]
@@ -63,9 +63,8 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != Skill.Names.ABSORB_AND_RELEASE: return true
 
-	var _seconds_to_release: float = _learned_skill.float_dict["seconds_to_release"]
 	var _percent_to_release: float = _learned_skill.float_dict["percent_to_release"]
-	var skill_absorb_and_release := SkillAbsorbAndRelease.new(_learned_skill.my_name, _seconds_to_release, true, _percent_to_release, _learned_skill.range_in_tiles)
-	_my_owner.active_skills.append(skill_absorb_and_release)
+	var skill_base := SkillAbsorbAndRelease.new(_learned_skill, true, _percent_to_release, _learned_skill.range_in_tiles)
+	_target.add_active_skill(skill_base)
 
 	return true

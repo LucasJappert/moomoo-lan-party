@@ -32,17 +32,17 @@ static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase, _target
 
 	return true
 	
-static func apply_strike(_owner: Entity, _target: Entity, learned_skill: ItemSkillBase) -> void:
+static func apply_strike(_owner: Entity, _target: Entity, _learned_skill: ItemSkillBase) -> void:
 	_apply_animation(_target)
 	SoundsHelper.play_electric_1()
 
-	var total_magic_damage = _owner.get_total_magic_damage(learned_skill.float_dict["magic_damage"])
-	var _di := DamageInfo.new(total_magic_damage, learned_skill.damage_type, _owner.name)
+	var total_magic_damage = _owner.get_total_magic_damage(_learned_skill.float_dict["magic_damage"])
+	var _di := DamageInfo.new(total_magic_damage, _learned_skill.damage_type, _owner.name)
 	_target.server_receive_damage(_di, _owner)
 
-	var enemies_to_stun := GlobalsEntityHelpers.get_closest_entities(_target.position, 20, _owner.get_my_enemies(), learned_skill.float_dict["stun_radius"], [])
+	var enemies_to_stun := GlobalsEntityHelpers.get_closest_entities(_target.position, 20, _owner.get_my_enemies(), _learned_skill.float_dict["stun_radius"], [])
 	for _enemy in enemies_to_stun:
-		_enemy.apply_stun(learned_skill.float_dict["stun_duration"])
+		_enemy.apply_stun(_learned_skill.float_dict["stun_duration"])
 
 static func _apply_animation(_target: Entity) -> void:
 	var frames = SpritesHelper.get_sprite_frames(

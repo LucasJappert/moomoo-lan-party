@@ -43,6 +43,9 @@ func get_description(include_stats_description: bool = true) -> String:
 	
 	if include_stats_description: result += stats.get_description()
 	
+	if duration_in_seconds > 0:
+		result += str("- Duration: ", StringHelpers.format_float_compact(duration_in_seconds), "s\n")
+
 	if mana_cost > 0:
 		result += str("- Mana cost: ", mana_cost, "\n")
 

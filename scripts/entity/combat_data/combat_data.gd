@@ -4,7 +4,7 @@ extends CharacterBody2D
 
 const EXP_MULTIPLIER: int = 1
 
-var active_skills: Array[SkillBase] = []
+var _active_skills: Array[SkillBase] = []
 var effects_helper: EffectsHelper = EffectsHelper.new()
 @export var current_hp: int = 0
 @export var current_mana: int = 0
@@ -91,9 +91,9 @@ func _process_on_server(_delta: float):
 	if enemy_spell_caster: enemy_spell_caster._process(_delta)
 
 	# Iterate in reverse order to avoid breaking indices when removing elements
-	for i in range(active_skills.size() - 1, -1, -1):
-		active_skills[i].process_skill(my_owner(), _delta)
-		if not active_skills[i].active: active_skills.remove_at(i)
+	for i in range(_active_skills.size() - 1, -1, -1):
+		_active_skills[i].process_skill(my_owner(), _delta)
+		if not _active_skills[i].active: _active_skills.remove_at(i)
 
 func server_execute_physical_damage(_target: Entity) -> void:
 	if my_owner().multiplayer.is_server() == false: return
@@ -142,7 +142,7 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 
 	update_current_hp(-_di.total_damage, _attacker)
 
-	for active_skill in active_skills:
+	for active_skill in _active_skills:
 		active_skill.on_damage_received(_attacker, _di.total_damage)
 
 # region SETTERs
@@ -159,6 +159,18 @@ func update_current_mana(value_to_increase: int) -> void:
 	if value_to_increase == 0: return
 	current_mana = clamp(current_mana + value_to_increase, 0, get_total_mana())
 	my_owner().hud.update_mana_bar()
+
+func add_active_skill(_skill: SkillBase) -> void:
+	_active_skills.append(_skill)
+
+	if not _skill.learned_skill.create_effect: return
+
+	var skill = _skill.learned_skill
+	var new_effect = CombatEffect.get_temporal_effect(skill.my_name, skill.duration_in_seconds, skill.max_stacks, skill.stats)
+	new_effect.set_description(skill.description)
+	new_effect.set_region_rect(Skill._SKILLS[skill.my_name].region_rect)
+	effects_helper.add_effect(new_effect)
+	
 
 func apply_stun(_seconds: float) -> void:
 	var _stats = CombatStats.new()
@@ -299,7 +311,7 @@ func charge_skill(index: int) -> void:
 	
 	if not charged_skill.get_learned_skill().instant_use: return
 
-	charged_skill.use(my_owner(), null)
+	charged_skill.use(my_owner(), my_owner())
 
 func uncharge_skill() -> bool:
 	charged_skill = null
