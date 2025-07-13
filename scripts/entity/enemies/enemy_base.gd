@@ -1,6 +1,8 @@
 class_name EnemyBase
 
 static var REGISTERED_CLASSES = [
+	EnemyBoneguard,
+	EnemyFrostboneArcher,
 	EnemyEmberFiend,
 	EnemyCinderflameWielder,
 	EnemyFrostRevenant,
@@ -56,13 +58,13 @@ static func get_rect_frames(pos: Vector2i) -> Array[Rect2]:
 # 	ROTPIERCER = "Rotpiercer", # (Perforador Pútrido) - alias: Rukmar
 # 	ORC_BERSERKER = "Orc Berserker", # (Orco Rabioso) - alias: Gorthak
 # 	LICH_COMMANDER = "Lich Commander", # (Comandante Lich) - alias: Varnor
-# 	SOULBURN_SKELETON = "Soulburn Skeleton", # (Esqueleto Quemaalmas) - alias: Ashrack
+# 	FROSTBONE_ARCHER = "Frostbone Archer", # (Arquero Huesohelado) - alias: Frostbite
 # 	GRAVE_WARDEN = "Grave Warden", # (Guardián de la Tumba) - alias: Tharn
 # 	BLAZELEAF_ROGUE = "Blazeleaf Rogue", # (Pícaro de Hoja Llameante) - alias: Sylza
 # 	HELLHORN_BRUTE = "Hellhorn Brute", # (Bruto de Cuerno Infernal) - alias: Braknor
 # 	ASHEN_KNIGHT = "Ashen Knight", # (Caballero Cenizo) - alias: Duskar
 # 	INFERNO_HORNBEAST = "Inferno Hornbeast", # (Bestia Cornuda del Infierno) - alias: Moltrax
-# 	BONEGUARD = "Boneguard", # (Guardián Óseo) - alias: Dravok
+# 	BONEGUARD = "Warden", # (Guardián Óseo) - alias: Dravok
 # 	WRAITHMANCER = "Wraithmancer", # (Nigromante Espectral) - alias: Kaelmor
 # 	BOGSHADE_ADEPT = "Bogshade Adept", # (Adepto del Pantano Sombrío) - alias: Morgrin
 # 	INFERNAL_MINOTAUR = "Infernal Minotaur", # (Minotauro Infernal) - alias: Threx

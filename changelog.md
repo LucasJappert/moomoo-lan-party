@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Configure new wave with archer creatures that slow with frost
 - ✅ Add Cinderflame Wielder creature that uses Burning Presence skill
 - ✅ Add Ember Fiend creature that accompanies Cinderflame Wielder
 - ✅ Add Burning Presence skill that sets all tiles around the player on fire

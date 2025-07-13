@@ -7,7 +7,6 @@
 
 - Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)
 - Sonidos limitarlos a la vista en pantalla
-- Configurar nueva oleada con criaturas arqueras que ralentizan con frost
 - Agregar boton para adelantar la oleada
 
 - Agregar estadísticas in game, como el tiempo transcurrido, el daño causado, el daño recibido, etc.

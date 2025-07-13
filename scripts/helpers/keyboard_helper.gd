@@ -18,6 +18,14 @@ static func key_pressed_server_side(_keycode: int, player: Entity) -> void:
 
 	# OTHER HOTKEYs
 	if _keycode == KEY_T:
+		# Aplicar efecto de escudo por 5 segundos
+		# var _effect = ShieldEffect.attach_to(GameManager.MY_PLAYER.front_animations_node, 225.0)
+		# O dejarlo permanente
+		# var permanent = ShieldEffect.show(player_node, 0.0)
+		# Eliminar manualmente cuando quieras
+		# permanent.destroy()
+		# for degree in range(-90, 91, 5):
+		# 	var my_effect := RotatingRingEffect.play_loop(GameManager.MY_PLAYER.front_animations_node, degree, Vector2(0, -20))
 		pass
 
 	if _keycode == KEY_Q:

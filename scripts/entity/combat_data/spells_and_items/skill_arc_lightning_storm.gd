@@ -84,6 +84,6 @@ static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase, _target
 	if _learned_skill.my_name != NAME: return true
 
 	var skill := SkillArcLightningStorm.new(_my_owner, _target, _learned_skill, true)
-	_target.add_active_skill(skill)
+	_my_owner.add_active_skill(skill)
 
 	return true

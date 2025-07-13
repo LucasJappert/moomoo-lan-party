@@ -12,8 +12,8 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	_SKILLS[_skill_name].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 7, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
 	
 	int_array = [100, 250, 300]
-	float_array = [4, 12, 9]
-	float_array1 = [4, 4, 5]
+	float_array = [20, 18, 16]
+	float_array1 = [6, 7, 8]
 	for i in Skill.AVAILABLE_LEVELS:
 		_SKILLS[_skill_name].item_skill_base[i].create_effect = true
 		_SKILLS[_skill_name].item_skill_base[i].instant_use = true
@@ -28,7 +28,8 @@ static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase, _target
 	var skill := SkillUnbreakable.new(_learned_skill, true)
 	_my_owner.add_active_skill(skill)
 
-	apply_animation(_my_owner, _learned_skill.duration_in_seconds)
+	# apply_animation(_my_owner, _learned_skill.duration_in_seconds)
+	ShieldEffect.attach_to(_my_owner.front_animations_node, _learned_skill.duration_in_seconds)
 
 	return true
 

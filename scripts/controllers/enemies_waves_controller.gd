@@ -28,6 +28,7 @@ static var WAVES_INFO = [
 	WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME]),
 	WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME]),
 	WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME]),
+	WaveInfo.new([EnemyBoneguard.LONG_NAME], [EnemyFrostboneArcher.LONG_NAME]),
 ]
 
 static func start_wave_process() -> void:
@@ -70,7 +71,7 @@ static func create_next_wave() -> void:
 	current_wave += 1
 	GameManager.MY_PLAYER.statistics.set_wave(current_wave)
 	print("Wave " + str(current_wave) + " started!")
-	
+
 	extra_stats_by_wave.agility = 5 * current_wave
 	extra_stats_by_wave.strength = 5 * current_wave
 	extra_stats_by_wave.intelligence = 5 * current_wave
@@ -81,7 +82,7 @@ static func create_next_wave() -> void:
 		for i in range(ENEMIES_BY_ZONE):
 			var enemy_type = ""
 			var is_boss = i == 0
-			
+
 			if is_boss: enemy_type = _current_wave_info.boss_enemies[randi() % _current_wave_info.boss_enemies.size()]
 			else: enemy_type = _current_wave_info.common_enemies[randi() % _current_wave_info.common_enemies.size()]
 
@@ -102,7 +103,7 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 
 	enemy.level = current_wave
 	enemy._boss_level = current_wave if is_boss else 0
-	
+
 	enemy.combat_stats.accumulate_combat_stats(extra_stats_by_wave)
 	if enemy._boss_level: enemy.combat_stats.accumulate_combat_stats(extra_stats_by_wave)
 

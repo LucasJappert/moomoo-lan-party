@@ -1,7 +1,7 @@
 extends Node
 class_name SoundsHelper
 
-const FORCE_MUTED := false
+const FORCE_MUTED := true
 static var _MUTED := false
 const MAX_PLAYERS := 10
 static var _players: Array[AudioStreamPlayer] = []
