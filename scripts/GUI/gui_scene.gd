@@ -9,6 +9,7 @@ var _ORIGINAL_BALL_POS_Y: float
 var _ORIGINAL_BALL_RECT_POS_Y: float
 var reseted_gui := false
 @onready var text_ip = %TextIP
+@onready var countdown_scene: CountdownScene = %CountdownScene
 
 var _top_left_target: Entity
 var _bottom_target: Entity

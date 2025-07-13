@@ -77,6 +77,12 @@ z_index = 1
 z_as_relative = false
 y_sort_enabled = true
 
+[node name="OverTerrainLayer" type="Node2D" parent="."]
+unique_name_in_owner = true
+z_index = 2
+z_as_relative = false
+y_sort_enabled = true
+
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://bs7blwah20esy")
 spawn_path = NodePath("../Players")
@@ -126,11 +132,5 @@ y_sort_enabled = true
 
 [node name="GeneralContainer" type="Node2D" parent="."]
 z_index = 3
-z_as_relative = false
-y_sort_enabled = true
-
-[node name="OverTerrainLayer" type="Node2D" parent="."]
-unique_name_in_owner = true
-z_index = 2
 z_as_relative = false
 y_sort_enabled = true

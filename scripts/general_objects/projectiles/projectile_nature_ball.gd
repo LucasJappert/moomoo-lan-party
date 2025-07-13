@@ -23,3 +23,23 @@ static func try_launch(_proj_type: String, _entity: Entity, _target: Entity, _da
 
 	Projectile.launch(_entity, _target, _damage)
 	return true
+
+static func actions_while_flying(_projectile: Projectile):
+	if NAME != _projectile.type: return
+	for i in range(10):
+		var spawn_position = Vector2(randf_range(-4, 4), randf_range(-4, 4))
+		ParticleTrail.spawn(
+			_projectile.global_position + spawn_position,
+			GameManager.game_world.general_container,
+			0.1, Color(1, 1, 1, 0.5), 0.4
+		)
+	pass
+
+static func actions_on_reaching_target(_projectile: Projectile) -> void:
+	if NAME != _projectile.type: return
+
+	var target = _projectile.get_target_entity()
+	if target: return ParticleTrail.spawn_explosion(Vector2.ZERO, target.projectile_zone)
+
+	ParticleTrail.spawn_explosion(_projectile.global_position, GameManager.game_world.over_terrain_layer)
+	pass

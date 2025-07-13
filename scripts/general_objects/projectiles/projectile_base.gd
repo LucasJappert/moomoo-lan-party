@@ -27,3 +27,9 @@ static func set_frames(_projectile: Projectile, rects: Array[Rect2]):
 
 static func try_launch(_proj_type: String, _entity: Entity, _target: Entity, _damage: int) -> bool:
 	return false
+
+static func actions_while_flying(_projectile: Projectile):
+	pass
+
+static func actions_on_reaching_target(_projectile: Projectile):
+	pass

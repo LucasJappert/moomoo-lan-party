@@ -17,7 +17,7 @@ var movement_helper: MovementHelper
 @onready var projectile_zone = $ProjectileZone/CollisionShape2D
 @onready var body_sprite: AnimatedSprite2D = %BodySprite
 @onready var body_shadow: Sprite2D = %BodyShadow
-@onready var front_animations_node = $FrontAnimationsNode
+@onready var front_animations_node: Node2D = $FrontAnimationsNode
 
 var sprite_height: float = 0
 var can_attack: bool = true

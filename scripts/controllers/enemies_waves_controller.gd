@@ -9,7 +9,7 @@ static var TOTAL_ENEMIES_TO_CREATE: int = TOTAL_WAVES * ENEMIES_BY_ZONE * _WAVE_
 static var current_wave: int = 0
 static var _current_wave_info: WaveInfo
 
-static var COUNTDOWN_START := 1 # 10 seconds
+static var COUNTDOWN_START := 10
 static var countdown_time_in_secs: float = COUNTDOWN_START
 static var countdown_time_to_show: int
 static var countdown_active := false
@@ -26,9 +26,9 @@ class WaveInfo:
 
 static var WAVES_INFO = [
 	WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME]),
-	WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME]),
 	WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME]),
 	WaveInfo.new([EnemyBoneguard.LONG_NAME], [EnemyFrostboneArcher.LONG_NAME]),
+	WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME]),
 ]
 
 static func start_wave_process() -> void:
@@ -43,6 +43,9 @@ static func _reset_wave_process() -> void:
 	countdown_time_to_show = COUNTDOWN_START
 	countdown_active = false
 	_current_wave_info = null
+
+static func _get_final_message() -> String:
+	return "Wave " + str(current_wave + 1) + " is coming!\nLet's fight!"
 
 static func _process(_delta: float) -> void:
 	if not GameManager.AM_I_HOST: return
@@ -64,8 +67,12 @@ static func _process(_delta: float) -> void:
 	if int(countdown_time_in_secs) != countdown_time_to_show:
 		countdown_time_to_show = int(countdown_time_in_secs)
 		var message = str(countdown_time_to_show)
-		if countdown_time_to_show == 0: message = "Wave " + str(current_wave + 1) + " is coming!\nLet's fight!"
-		GameManager.MY_PLAYER.rpc_handler.show_countdown_message(message)
+		if countdown_time_to_show == 0: message = _get_final_message()
+		CountdownScene.show_countdown_number(message, countdown_time_to_show == 0)
+
+static func skip_countdown() -> void:
+	countdown_time_in_secs = 0.01 # ✅ un poco mayor a 0 para que _process reste y lo lleve a 0
+	countdown_time_to_show = 1 # ✅ fuerza el cambio a 0 en el siguiente frame
 
 static func create_next_wave() -> void:
 	current_wave += 1

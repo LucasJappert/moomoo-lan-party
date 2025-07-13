@@ -11,7 +11,7 @@ static var SCREEN_SIZE: Vector2 = Vector2.ZERO
 @onready var enemies_spawner = $EnemiesSpawner
 @onready var moomoo_spawner = $MoomooSpawner
 @onready var general_container = $GeneralContainer
-@onready var over_terrain_layer = %OverTerrainLayer
+@onready var over_terrain_layer: Node2D = %OverTerrainLayer
 
 @onready var my_trees_node: Node2D = $MyTrees
 @onready var terrain: Node2D = $Terrain

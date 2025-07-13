@@ -18,6 +18,7 @@ static func key_pressed_server_side(_keycode: int, player: Entity) -> void:
 
 	# OTHER HOTKEYs
 	if _keycode == KEY_T:
+		ParticleTrail.spawn_explosion(GameManager.MY_PLAYER.global_position, GameManager.game_world.general_container)
 		# Aplicar efecto de escudo por 5 segundos
 		# var _effect = ShieldEffect.attach_to(GameManager.MY_PLAYER.front_animations_node, 225.0)
 		# O dejarlo permanente

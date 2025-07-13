@@ -82,7 +82,6 @@ func add_decoration(sprite: Sprite2D) -> void:
 func spawn_moomoo() -> void:
 	moomoo = game_world.moomoo_spawner.spawn({})
 	add_entity(moomoo)
-	print("Moomoo spawned: ", moomoo)
 
 func spawn_player(hero_type: String) -> void:
 	GameManager.MY_PLAYER_ID = 1

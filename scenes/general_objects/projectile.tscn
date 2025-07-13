@@ -29,6 +29,9 @@ animations = [{
 [node name="Projectile" type="Node2D"]
 script = ExtResource("1_5icix")
 
+[node name="GeneralObjectsContainer" type="Node2D" parent="."]
+unique_name_in_owner = true
+
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_5icix")
 

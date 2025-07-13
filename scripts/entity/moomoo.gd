@@ -7,7 +7,6 @@ const RECT_REGION = Rect2(512, 864, 128, 128)
 const BODY_SCALE: float = 0.7
 
 func _ready():
-	print("🐮 Moomoo ready")
 	super._ready()
 
 # region 	GETTERs

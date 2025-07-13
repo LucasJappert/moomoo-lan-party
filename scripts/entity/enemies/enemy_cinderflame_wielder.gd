@@ -16,6 +16,5 @@ static func try_to_init_from_name(_name: String, _enemy: Enemy) -> void:
 	_enemy.combat_stats.intelligence = 15
 
 	_enemy._skills.append_array([
-		Skill.get_new_learned_skill(SkillShieldedCore.NAME),
 		Skill.get_new_learned_skill(SkillBurningPresence.NAME),
 	])

@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://dywrecu6pml77"]
+[gd_scene load_steps=16 format=3 uid="uid://dywrecu6pml77"]
 
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="1_gbqeo"]
 [ext_resource type="Script" uid="uid://0x16271fub0a" path="res://scripts/GUI/gui_scene.gd" id="1_li5rb"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://csnhbkb1cdu7g" path="res://scripts/GUI/components/item_slots_container.gd" id="6_7pojj"]
 [ext_resource type="PackedScene" uid="uid://dcn21jl37cx7s" path="res://scenes/GUI/slot_item.tscn" id="6_itjmd"]
 [ext_resource type="PackedScene" uid="uid://cw6gwpmh46624" path="res://scenes/general_objects/tutorial_button_scene.tscn" id="8_7pojj"]
+[ext_resource type="PackedScene" uid="uid://crronhxfsf3a1" path="res://scenes/general_objects/countdown_scene.tscn" id="9_b6l0f"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fo7ei"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -326,7 +327,6 @@ offset_left = 81.0
 offset_top = 79.0
 offset_right = 473.0
 offset_bottom = 111.0
-_type = 1
 
 [node name="PanelBL" type="Panel" parent="."]
 offset_top = 824.0
@@ -837,3 +837,7 @@ offset_left = 1816.0
 offset_top = 804.0
 offset_right = 1816.0
 offset_bottom = 804.0
+
+[node name="CountdownScene" parent="." instance=ExtResource("9_b6l0f")]
+unique_name_in_owner = true
+position = Vector2(895, 329)

@@ -16,18 +16,18 @@ static func actions_after_cast_skill(_owner: Entity, _skill_used: ItemSkillBase)
 	if not SKILL_NAMES_TRIGGERING_DISCHARGE.has(_skill_used.my_name): return
 
 	for skill in _owner.get_skills():
-		var learned_skill = skill.get_learned_skill()
-		if not learned_skill: continue
-		if learned_skill.my_name != NAME: continue
-		_apply_strikes(_owner, learned_skill)
+		var _learned_skill = skill.get_learned_skill()
+		if not _learned_skill: continue
+		if _learned_skill.my_name != NAME: continue
+		_apply_strikes(_owner, _learned_skill)
 
-static func _apply_strikes(_owner: Entity, learned_skill: ItemSkillBase) -> void:
-	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(_owner.global_position, 30, _owner.get_my_enemies(), learned_skill.range_in_tiles)
+static func _apply_strikes(_owner: Entity, _learned_skill: ItemSkillBase) -> void:
+	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(_owner.global_position, 30, _owner.get_my_enemies(), _learned_skill.range_in_tiles)
 	for enemy in nearest_enemies:
-		var magic_damage: int = enemy.get_total_hp() * learned_skill.float_dict["percent_damage_from_max_hp"]
+		var magic_damage: int = enemy.get_total_hp() * _learned_skill.float_dict["percent_damage_from_max_hp"]
 
 		var total_magic_damage = _owner.get_total_magic_damage(magic_damage)
-		var _di := DamageInfo.new(total_magic_damage, learned_skill.damage_type, _owner.name)
+		var _di := DamageInfo.new(total_magic_damage, _learned_skill.damage_type, _owner.name)
 		enemy.server_receive_damage(_di, _owner)
 	
 static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:

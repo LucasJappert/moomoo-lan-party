@@ -9,10 +9,6 @@ class_name EndGameScene
 const WIN_COLOR: Color = Color(0.5, 1.0, 0.5)
 const LOSE_COLOR: Color = Color(1.0, 0.5, 0.5)
 
-func _init():
-	print("⚠️ EndGameScene instanciado. Stack trace:")
-	print_stack()
-
 func _ready():
 	visible = false
 	EventBus.connect_to_entity_died(func(_entity_died: Entity, _killed_by: Entity):

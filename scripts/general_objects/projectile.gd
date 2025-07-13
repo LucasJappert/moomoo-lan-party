@@ -4,6 +4,7 @@ extends Node2D
 
 const PROJECTILE_SCENE = preload("res://scenes/general_objects/projectile.tscn")
 
+@onready var general_objects_container = %GeneralObjectsContainer
 var speed: float = 400.0
 var direction := Vector2.ZERO
 var target_position := Vector2.ZERO
@@ -18,7 +19,7 @@ static var projectile_frames: Dictionary[String, SpriteFrames] = {}
 func _ready():
 	for registered_class in ProjectileBase.REGISTERED_CLASSES: registered_class.try_init(self)
 
-func _get_target_entity() -> Entity:
+func get_target_entity() -> Entity:
 	return GameManager.get_entity(target_entity_name)
 
 func _get_origin_entity() -> Entity:
@@ -26,13 +27,14 @@ func _get_origin_entity() -> Entity:
 
 func _physics_process(delta: float) -> void:
 	_server_move(delta)
+	for registered_class in ProjectileBase.REGISTERED_CLASSES: registered_class.actions_while_flying(self)
 
 func _server_move(delta: float):
 	if not multiplayer.is_server():
 		return
 
-	if _get_target_entity() != null:
-		target_position = _get_target_entity().global_position
+	if get_target_entity() != null:
+		target_position = get_target_entity().projectile_zone.global_position
 		direction = (target_position - position)
 		rotation = direction.angle()
 
@@ -42,9 +44,10 @@ func _server_move(delta: float):
 	if position.distance_to(target_position) < 10: _projectile_reached_target()
 
 func _projectile_reached_target():
-	if _get_target_entity() != null && _get_origin_entity() != null:
-		_get_origin_entity().server_execute_physical_damage(_get_target_entity())
+	if get_target_entity() != null && _get_origin_entity() != null:
+		_get_origin_entity().server_execute_physical_damage(get_target_entity())
 	queue_free()
+	for registered_class in ProjectileBase.REGISTERED_CLASSES: registered_class.actions_on_reaching_target(self)
 
 static func get_instance_from_dict(dict: Dictionary) -> Projectile:
 	var instance = PROJECTILE_SCENE.instantiate()
