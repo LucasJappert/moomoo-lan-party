@@ -27,6 +27,7 @@ var _STYLE_BLACK := StyleBoxFlat.new()
 var _STYLE_BEIGE := StyleBoxFlat.new()
 var _owner: Entity
 var HERO_PICKER_SCENE_NAME = "HeroPickerScene"
+var _is_hovering := false
 
 
 func _ready():
@@ -34,6 +35,7 @@ func _ready():
 	label_cool_down.visible = false
 	upgrade_button.visible = false
 	_initialize_styles()
+	connect("child_exiting_tree", _on_child_exiting_tree)
 	connect("mouse_entered", func(): _on_mouse_entered())
 	connect("mouse_exited", func(): _on_mouse_exited())
 	
@@ -88,6 +90,7 @@ func _clean_slot():
 	sprite.region_rect = Rect2(0, 0, 0, 0)
 
 func _skill_updated(new_skill: Skill, p_owner: Entity, _slot_number: int):
+	if _is_hovering: MyTooltip.hide_tooltip()
 	if not p_owner: return
 	_owner = p_owner
 	if slot_number == 0: slot_number = _slot_number
@@ -105,9 +108,6 @@ func _set_slot_from_skill(new_skill: Skill):
 
 	hotkey.visible = skill.get_safe_learned_skill().type == SkillType.ACTIVE
 	sprite.region_rect = skill.region_rect
-
-func _on_skill_changed():
-	_update_controls()
 
 func _update_controls():
 	_refresh_upgrade_button()
@@ -165,6 +165,9 @@ func _on_mouse_entered():
 func _on_mouse_exited():
 	if not skill: return
 	MyTooltip.hide_tooltip()
+
+func _on_child_exiting_tree(_child) -> void:
+	if _is_hovering: MyTooltip.hide_tooltip()
 
 func _gui_input(event) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:

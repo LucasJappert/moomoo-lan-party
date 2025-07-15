@@ -49,11 +49,12 @@ func process_skill(_owner: Entity, _delta: float) -> void:
 	super.process_skill(_owner, _delta)
 
 	if not active: return _try_to_remove_all_effects()
+	if _owner.current_hp <= 0:
+		active = false
+		return _try_to_remove_all_effects()
 
 	# Try to update the animation
-	if _owner.movement_helper.current_cell != _current_cell:
-		_current_cell = _owner.movement_helper.current_cell
-		_update_effects_to_new_cell(_current_cell)
+	_try_update_effects_to_new_cell(_owner)
 
 	# Try to apply damage
 	time_accumulator += _delta
@@ -66,10 +67,9 @@ func process_skill(_owner: Entity, _delta: float) -> void:
 
 		_total_damage += integer_damage
 		_apply_damage_to_enemies(integer_damage)
-		# print("Total damage: ", _total_damage)
 
-	# print("Burning Presence aux: ", aux)
 func _apply_damage_to_enemies(damage: int) -> void:
+	if ObjectHelpers.is_null(_my_owner): return
 	var _di = DamageInfo.get_instance()
 	_di.total_damage = damage
 	_di.attacker_name = _my_owner.name
@@ -80,12 +80,18 @@ func _apply_damage_to_enemies(damage: int) -> void:
 	for target in targets:
 		target.server_receive_damage(_di, _my_owner)
 
-func _update_effects_to_new_cell(new_cell_position: Vector2i) -> void:
+func _remove_effects() -> void:
 	_try_to_remove_all_effects()
 
-	_current_cell = new_cell_position
+func _try_update_effects_to_new_cell(_owner: Entity) -> void:
+	if _owner.movement_helper.current_cell == _current_cell: return
+
+	_current_cell = _owner.movement_helper.current_cell
+
+	_try_to_remove_all_effects()
+
 	var radius = learned_skill.range_in_tiles
-	var neighbors_cells = MapManager.get_cells_in_radius(new_cell_position, radius, false)
+	var neighbors_cells = MapManager.get_cells_in_radius(_current_cell, radius, false)
 	for neighbor_cell in neighbors_cells:
 		var fixed_position := MapManager.cell_to_world(neighbor_cell) + Vector2(MapManager.TILE_SIZE_FLOAT / 4, MapManager.TILE_SIZE_FLOAT / 4)
 		var fire_effect = FireEffect.spawn_fire_effect(

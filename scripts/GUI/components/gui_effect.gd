@@ -8,6 +8,7 @@ var _duration: float = 0 # In seconds
 var _elapsed: float = 0
 var _effect: CombatEffect
 var my_owner: Entity
+var _is_hovering := false
 
 static func get_instance(p_effect: CombatEffect) -> GuiEffect:
 	var gui_effect = load("res://scenes/GUI/gui_effect_scene.tscn").instantiate()
@@ -27,14 +28,19 @@ func _ready():
 	_sprite.region_rect = _effect._region_rect
 	_sprite.scale = Vector2(32.0 / region_size.x, 32.0 / region_size.y)
 
-	%Area2D.connect("mouse_entered", func():
-		if _effect == null:
-			print("GuiEffect: Effect is null")
-			return
-		MyTooltip.show_tooltip(_effect.effect_name, _effect.get_description(), 16)
-	)
-	%Area2D.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
+	connect("child_exiting_tree", _on_child_exiting_tree)
+	%Area2D.connect("mouse_entered", _on_mouse_entered)
+	%Area2D.connect("mouse_exited", _on_mouse_exited)
 
+func _on_mouse_entered() -> void:
+	if _effect == null: return print("GuiEffect: Effect is null")
+	_is_hovering = true
+	MyTooltip.show_tooltip(_effect.effect_name, _effect.get_description(), 16)
+func _on_mouse_exited() -> void:
+	_is_hovering = false
+	MyTooltip.hide_tooltip()
+func _on_child_exiting_tree(_child) -> void:
+	if _is_hovering: MyTooltip.hide_tooltip()
 
 func _process(delta: float):
 	if GameManager.MY_PLAYER == null: return

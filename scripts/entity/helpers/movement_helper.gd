@@ -75,7 +75,7 @@ func update_path() -> void:
 
 	var from_pos = current_target_pos if current_target_pos else my_owner.global_position
 	var from_cell = MapManager.world_to_cell(from_pos)
-	var target_cell = _target_cell if _target_cell else MapManager.world_to_cell(_target_entity.global_position)
+	var target_cell = _target_cell if _target_cell != null else MapManager.world_to_cell(_target_entity.global_position)
 	current_path = MapManager.find_path(from_cell, target_cell)
 
 # endregion SETTERs

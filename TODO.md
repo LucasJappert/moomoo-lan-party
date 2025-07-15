@@ -5,8 +5,8 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Fix tooltips when releasing the slot where the mouse entered
 - Configurar skill que hace daño de quemaduras
-- Ver tooltips cuando se libera el slot donde entró el mouse
 - Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)
 - Sonidos limitarlos a la vista en pantalla
 

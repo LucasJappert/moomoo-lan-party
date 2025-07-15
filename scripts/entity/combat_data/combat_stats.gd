@@ -245,4 +245,8 @@ func get_total_move_speed() -> float:
 
 func get_total_attack_speed() -> float:
 	return clamp(attack_speed + (attack_speed * attack_speed_percent), 0.1, 20)
+
+func get_critic_description() -> String:
+	if crit_chance == 0: return ""
+	return StringHelpers.format_percent(crit_chance) + " (*" + StringHelpers.format_float_compact(crit_multiplier) + ")"
 # endregion GETTERs

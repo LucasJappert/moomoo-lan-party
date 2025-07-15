@@ -246,7 +246,7 @@ func _update_panel_bottom_left() -> void:
 	_defense_value.text = StringHelpers.format_percent(total_stats.physical_defense_percent, false) + "-" + StringHelpers.format_percent(total_stats.magic_defense_percent, false) + " %"
 	_evasion_value.text = StringHelpers.format_percent(total_stats.evasion)
 	_stun_value.text = StringHelpers.format_percent(total_stats.stun_chance)
-	_critic_value.text = StringHelpers.format_percent(total_stats.crit_chance) + " (*" + StringHelpers.format_float_compact(total_stats.crit_multiplier) + ")"
+	_critic_value.text = total_stats.get_critic_description()
 
 func _update_panel_bottom_right() -> void:
 	if _bottom_target is Player: _current_gold.text = _bottom_target.current_gold_string
