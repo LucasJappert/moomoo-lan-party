@@ -5,7 +5,6 @@ var current_target_pos = null
 var _target_entity: Entity
 var _target_cell
 var current_path: Array[Vector2i] = []
-var next_target_cell: Vector2i
 var _attack_move = false
 var _can_move := true
 var _last_current_path_update_time: float = - INF
@@ -62,7 +61,7 @@ func set_target_entity(target: Entity) -> void:
 
 func set_target_cell(target_cell: Vector2i) -> void:
 	_clean_movements()
-	_target_cell = MapManager.get_valid_grid_cell(target_cell)
+	_target_cell = MapManager.get_safe_cell(target_cell)
 	update_path()
 	my_owner.register_attacker(null)
 
@@ -93,13 +92,12 @@ func _try_set_next_current_target_pos() -> void:
 		var target_in_attack_range = GlobalsEntityHelpers.is_target_in_attack_range(my_owner, my_owner.get_target_entity())
 		if target_in_attack_range: return _clean_movements()
 
-	next_target_cell = current_path[0]
-	if MapManager._astar_grid.is_point_solid(next_target_cell): return
-
-	MapManager.set_cell_blocked(MapManager.world_to_cell(my_owner.global_position), false)
-	MapManager.set_cell_blocked(next_target_cell, true)
-	current_cell = next_target_cell
-	current_target_pos = MapManager.cell_to_world(next_target_cell)
+	if MapManager._astar_grid.is_point_solid(current_path[0]): return
+	MapManager.set_cell_blocked(current_cell, false)
+	current_cell = current_path[0]
+	MapManager.set_cell_blocked(current_cell, true)
+	
+	current_target_pos = MapManager.cell_to_world(current_cell)
 	current_path.remove_at(0)
 
 func _try_to_update_target_from_latest_attacker():

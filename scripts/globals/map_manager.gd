@@ -4,6 +4,10 @@ const TILE_SIZE_INT: int = 32
 const TILE_SIZE_FLOAT: float = TILE_SIZE_INT
 const TILE_SIZE: Vector2 = Vector2(TILE_SIZE_INT, TILE_SIZE_INT)
 
+static var HOVERED_CELL: Vector2i
+static var HOVERED_CELL_IN_GLOBAL_POSITION := Vector2.ZERO
+static var GLOBAL_MOUSE_POSITION: Vector2 = Vector2.ZERO
+static var VIEWPORT_MOUSE_POSITION: Vector2 = Vector2.ZERO
 const grid_width: int = 56
 const grid_height: int = 44
 const grid_origin: Vector2i = Vector2i(-8, -12)
@@ -25,22 +29,22 @@ static func initialize():
 			var cell = Vector2i(x, y)
 			_astar_grid.set_point_solid(cell, false)
 
-static func find_nearest_valid_point(target: Vector2i) -> Vector2i:
-	var closest_point := Vector2i.ZERO
-	var min_distance := INF
+# static func find_nearest_valid_point(target: Vector2i) -> Vector2i:
+# 	var closest_point := Vector2i.ZERO
+# 	var min_distance := INF
 
-	for y in range(grid_origin.y, grid_origin.y + grid_height):
-		for x in range(grid_origin.x, grid_origin.x + grid_width):
-			var point := Vector2i(x, y)
-			if _astar_grid.is_point_solid(point):
-				continue
+# 	for y in range(grid_origin.y, grid_origin.y + grid_height):
+# 		for x in range(grid_origin.x, grid_origin.x + grid_width):
+# 			var point := Vector2i(x, y)
+# 			if _astar_grid.is_point_solid(point):
+# 				continue
 
-			var dist := target.distance_squared_to(point)
-			if dist < min_distance:
-				min_distance = dist
-				closest_point = point
+# 			var dist := target.distance_squared_to(point)
+# 			if dist < min_distance:
+# 				min_distance = dist
+# 				closest_point = point
 
-	return closest_point
+# 	return closest_point
 
 static func find_path(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
 	var path: Array[Vector2i] = _astar_grid.get_id_path(start, end, true)
@@ -105,11 +109,6 @@ static func get_safe_cell(cell: Vector2i):
 			queue.append(neighbor) # Keep searching outward
 
 	return null # Fallback, no free cell found within radius
-
-static func get_valid_grid_cell(cell: Vector2i) -> Vector2i:
-	if _astar_grid.is_in_boundsv(cell): return cell
-
-	return find_nearest_valid_point(cell)
 	
 static func get_grass_cells() -> Array[Vector2i]:
 	var grass_cell_type = Vector2i(0, 3)

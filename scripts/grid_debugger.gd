@@ -4,7 +4,6 @@ extends Node2D
 @export var text_color: Color = Color(1, 1, 1)
 @export var font: Font
 @export var solid_cell_color: Color = Color(1, 0, 0, 0.5)
-var hovered_cell: Vector2i
 const _DRAW_GRID := false
 const _DRAW_SOLID_CELLS := false
 const _PRINT_COORDINATES := false
@@ -18,17 +17,15 @@ func _ready():
 
 func _process(_delta):
 	if GameManager.MY_PLAYER != null:
-		hovered_cell = MapManager.world_to_cell(GameWorld.GLOBAL_MOUSE_POSITION)
-		
+		MapManager.HOVERED_CELL = MapManager.world_to_cell(MapManager.GLOBAL_MOUSE_POSITION)
+		MapManager.HOVERED_CELL_IN_GLOBAL_POSITION = MapManager.cell_to_world(MapManager.HOVERED_CELL)
 		
 	queue_redraw()
-
 
 func _draw():
 	_draw_hovered_cell()
 
-	if not _DRAW_GRID:
-		return
+	if not _DRAW_GRID: return
 		
 	var tile_size := MapManager.TILE_SIZE
 
@@ -97,7 +94,7 @@ func _try_draw_solid_cells(cell: Vector2, pos: Vector2):
 		draw_rect(Rect2(pos - MapManager.TILE_SIZE / 2.0, MapManager.TILE_SIZE), solid_cell_color, true)
 
 func _draw_hovered_cell():
-	if GameManager.MY_PLAYER == null: return
+	if GameManager.MY_PLAYER == null or not _DRAW_MOUSE_HOVERED_CELL: return
 
-	var pos := MapManager.cell_to_world(hovered_cell)
+	var pos := MapManager.cell_to_world(MapManager.HOVERED_CELL)
 	draw_rect(Rect2(pos - MapManager.TILE_SIZE / 2.0, MapManager.TILE_SIZE), Color(0, 0, 0, 0.2), true)

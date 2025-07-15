@@ -48,6 +48,7 @@ func _input(event):
 # region 	SERVER MESSAGES RECEIVED FROM CLIENT
 @rpc("authority", "call_local")
 func _on_try_to_move(_target_cell: Vector2i):
+	CursorManager.show_move_effect()
 	player.movement_helper.set_target_cell(_target_cell)
 
 @rpc("authority", "call_local")
@@ -58,12 +59,14 @@ func _on_right_click_on_entity(_target_entity_name: String):
 	
 @rpc("authority", "call_local")
 func _on_left_click(_target_entity_name: String):
+	if not GameManager.MY_PLAYER: return
 	# Always run in server
 	var target_entity = GameManager.get_entity(_target_entity_name)
 
 	# if target_entity: print("entity name: ", target_entity.name)
 
-	if CONTROL_PRESSED: player.set_target_view(target_entity)
+	if not GameManager.MY_PLAYER.charged_skill: player.set_target_view(target_entity)
+	# if CONTROL_PRESSED: player.set_target_view(target_entity)
 
 	player.use_charged_skill(target_entity)
 

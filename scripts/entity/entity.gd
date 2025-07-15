@@ -51,6 +51,7 @@ func _ready():
 	movement_helper = MovementHelper.new(self)
 	statistics = Statistics.new(self)
 	tween_effects = TweenEffects.new(self)
+	tween_effects.apply_spawn_effect()
 	area_attack_shape.shape = area_attack_shape.shape.duplicate() # to avoid changing the original shape
 	for child in front_animations_node.get_children():
 		child.queue_free()
@@ -103,7 +104,7 @@ func get_allies(include_me: bool = false) -> Array[Entity]:
 
 	if self is Player or self is Moomoo: result.append_array(GameManager.get_players())
 	if self is Enemy: result.append_array(GameManager.get_enemies())
-	if include_me: result.append(self)
+	if not include_me: result.erase(self)
 		
 	return result
 # endregion GETTERs
@@ -121,6 +122,7 @@ func _client_init() -> void:
 func global_die(_killed_by: Entity) -> void:
 	if _killed_by: _killed_by.statistics.register_kill()
 
+	MapManager.set_cell_blocked(movement_helper.current_cell, false)
 	_apply_effects_after_die(_killed_by, func():
 		GameManager.remove_entity(self, _killed_by)
 	)

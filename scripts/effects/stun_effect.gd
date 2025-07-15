@@ -63,5 +63,4 @@ func _start_timer(duration: float) -> void:
 	add_child(timer)
 
 func _on_timer_timeout():
-	print("StunEffect expired at ", self.get_path())
 	queue_free()

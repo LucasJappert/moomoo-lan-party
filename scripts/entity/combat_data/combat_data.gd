@@ -65,6 +65,8 @@ func post_ready_combat_data() -> void:
 
 	if not GameManager.AM_I_HOST: return
 
+	for index in range(_skills.size()): effects_helper.on_skill_updated(my_owner(), _skills[index], index + 1)
+
 	if current_hp == 0: current_hp = get_total_hp()
 	if current_mana == 0: current_mana = get_total_mana()
 
@@ -84,8 +86,6 @@ func _process_on_server(_delta: float):
 
 	try_physical_attack(_delta)
 
-	_try_to_add_effect_from_skills() # TODO: Try to improve this (maybe using signals)
-
 	_actions_after_1_second(_delta)
 
 	if enemy_spell_caster: enemy_spell_caster._process(_delta)
@@ -101,9 +101,7 @@ func server_execute_physical_damage(_target: Entity) -> void:
 	
 	# if not _target.target_view: _target.set_target_view(my_owner()) # Util when we want autoset target view
 
-	var total_stats = cache_total_stats
 	var base_damage = get_physical_attack_power()
-	base_damage += base_damage * total_stats.physical_attack_power_percent
 	
 	var critical_damage = try_critical_hit(base_damage)
 	var total_damage = base_damage + critical_damage
@@ -274,6 +272,7 @@ func remove_effect_by_name(effect_name: String) -> void:
 func register_attacker(attacker: Entity) -> void:
 	latest_attacker = attacker
 	last_damage_received_time = Time.get_ticks_msec()
+	# print("Latest attacker: ", latest_attacker.name, " Time: ", last_damage_received_time)
 	if attacker and ObjectHelpers.is_my_player(self): attacker.hud.set_last_damage_to_my_player()
 
 func set_target_to_attack(_target: Entity) -> void: # Used only by the server
@@ -300,7 +299,7 @@ func verify_freed_target_view(entity_name: String) -> void:
 func charge_skill(index: int) -> void:
 	if index >= _skills.size(): return
 	if is_silenced: return
-	if not _skills[index].learned_level: return print("Skill not learned: ", _skills[index])
+	if not _skills[index].learned_level: return
 	if _skills[index].get_learned_skill().type == SkillType.PASSIVE: return
 	if not _skills[index].can_use(my_owner()): return
 
@@ -425,15 +424,13 @@ func get_total_magic_damage(base_damage: int) -> int:
 func get_magic_power_multiplier() -> float:
 	return 1.0 + get_magic_attack_power() / 100.0
 func get_physical_attack_power() -> int:
-	return cache_total_stats.physical_attack_power
+	return int(cache_total_stats.physical_attack_power * (1 + cache_total_stats.physical_attack_power_percent))
 func get_magic_attack_power() -> int:
-	return cache_total_stats.magic_attack_power
+	return int(cache_total_stats.magic_attack_power * (1 + cache_total_stats.magic_attack_power_percent))
 func try_critical_hit(base_value: int) -> int:
-	var critical_damage = 0
-	var total_stats = cache_total_stats
-	if GlobalsEntityHelpers.roll_chance(total_stats.crit_chance):
-		critical_damage = base_value * total_stats.crit_multiplier
-	return critical_damage
+	if GlobalsEntityHelpers.roll_chance(cache_total_stats.crit_chance):
+		return int(base_value * cache_total_stats.crit_multiplier)
+	return 0
 
 var cache_total_stats: CombatStats = CombatStats.new()
 var cache_total_stats_no_effects: CombatStats = CombatStats.new()
@@ -565,19 +562,6 @@ func global_receive_damage_or_heal(_di: DamageInfo):
 		my_owner().hud.show_message_popup(str(abs(_di.total_damage)), Color(0, 1, 0))
 	
 	register_attacker(_di.get_attacker())
-
-func _try_to_add_effect_from_skills() -> void:
-	for skill in _skills:
-		if not skill.learned_level: continue
-		var skill_base = skill.get_learned_skill()
-		if skill_base.type != SkillType.PASSIVE: continue
-		if not skill_base.create_effect: continue
-		if not skill_base.stats.is_owner_friendly: continue
-		if effects_helper.get_effect_by_name(skill_base.my_name): continue # Already has this effect
-
-		var new_effect = CombatEffect.get_permanent_effect(skill_base.my_name, skill_base.max_stacks, skill_base.stats)
-		new_effect.set_region_rect(skill.region_rect)
-		effects_helper.add_effect(new_effect)
 
 func _actions_after_1_second(_delta: float) -> void:
 	_1_second_timer += _delta

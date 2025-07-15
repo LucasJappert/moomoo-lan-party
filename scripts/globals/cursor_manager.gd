@@ -24,6 +24,7 @@ const CURSORS := {
 	}
 }
 
+const MOUSE_MOVE_RECT := Rect2(256, 288, 32, 32)
 # Static tracking
 static var _current_cursor = -1
 static var _initialized := false
@@ -63,3 +64,16 @@ static func set_cursor(cursor_type: CursorType):
 static func reset_cursor():
 	Input.set_custom_mouse_cursor(null)
 	_current_cursor = -1
+
+static func show_move_effect():
+	var effect := Sprite2D.new()
+	effect.texture = SpritesHelper.get_texture_from_region(MOUSE_MOVE_RECT)
+	effect.global_position = MapManager.HOVERED_CELL_IN_GLOBAL_POSITION
+	GameManager.game_world.over_terrain_layer.add_child(effect)
+
+	const DURATION := 1
+	var tween := effect.create_tween()
+	# tween.tween_property(effect, "scale", Vector2.ZERO, DURATION).set_trans(Tween.TRANS_SINE)
+	tween.parallel().tween_property(effect, "modulate", Color(1, 1, 1, 0), DURATION)
+	# tween.parallel().tween_property(effect, "rotation", PI * 4, DURATION).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_callback(effect.queue_free)

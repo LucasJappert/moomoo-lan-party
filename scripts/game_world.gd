@@ -2,8 +2,6 @@ class_name GameWorld
 
 extends Node2D
 
-static var GLOBAL_MOUSE_POSITION: Vector2 = Vector2.ZERO
-static var VIEWPORT_MOUSE_POSITION: Vector2 = Vector2.ZERO
 static var SCREEN_SIZE: Vector2 = Vector2.ZERO
 @onready var gui_scene: GUIScene = $GuiScene
 @onready var player_spawner = $PlayerSpawner
@@ -47,8 +45,8 @@ func _ready() -> void:
 	NightAmbienceHelper.start(get_tree())
 
 func _process(_delta: float) -> void:
-	GLOBAL_MOUSE_POSITION = get_global_mouse_position()
-	VIEWPORT_MOUSE_POSITION = get_viewport().get_mouse_position()
+	MapManager.GLOBAL_MOUSE_POSITION = get_global_mouse_position()
+	MapManager.VIEWPORT_MOUSE_POSITION = get_viewport().get_mouse_position()
 	SCREEN_SIZE = get_viewport().get_visible_rect().size
 
 func _spawn_player_moomoo_and_enemies() -> void:

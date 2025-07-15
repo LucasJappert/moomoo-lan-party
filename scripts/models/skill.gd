@@ -228,24 +228,6 @@ static func initialize_skills() -> void:
 
 	# endregion
 
-	# region SKILL BLESSING_OF_POWER
-	aux_skill_name = Names.BLESSING_OF_POWER
-	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
-	_skill = _SKILLS[aux_skill_name]
-	_skill.region_rect = Rect2(1 * FRAME_SIZE + _ATLAS_START_POS.x, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
-
-	float_array = [0.2, 0.25, 0.3]
-	for i in float_array.size():
-		_skill.item_skill_base[i].stats.physical_attack_power_percent = float_array[i]
-		_skill.item_skill_base[i].stats.magic_attack_power_percent = float_array[i]
-		_skill.item_skill_base[i].max_stacks = 1
-		_skill.item_skill_base[i].apply_to_owner = true
-		_skill.item_skill_base[i].create_effect = true
-		aux_text = StringHelpers.format_percent(_skill.item_skill_base[i].stats.physical_attack_power_percent)
-		_skill.item_skill_base[i].description = "Increases physical and magic attack power by " + aux_text
-	
-	# endregion
-
 	# region SKILL MIRROR_DEMISE
 	aux_skill_name = Names.MIRROR_DEMISE
 	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
@@ -289,22 +271,6 @@ static func initialize_skills() -> void:
 		aux_text1 = StringHelpers.format_float_compact(_skill.item_skill_base[i].stats.stun_duration)
 		_skill.item_skill_base[i].description = "Has a " + aux_text + " chance to stun the target for " + aux_text1 + " seconds."
 	
-	# endregion
-
-	# region SKILL LIFESTEAL
-	aux_skill_name = Names.LIFESTEAL
-	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
-	_skill = _SKILLS[aux_skill_name]
-	_skill.region_rect = Rect2(5 * FRAME_SIZE + _ATLAS_START_POS.x, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
-	
-	float_array = [0.15, 0.2, 0.25]
-	for i in float_array.size():
-		_skill.item_skill_base[i].apply_to_owner = false
-		_skill.item_skill_base[i].create_effect = true
-		_skill.item_skill_base[i].stats.life_steal_percent = float_array[i]
-
-		aux_text = StringHelpers.format_percent(float_array[i])
-		_skill.item_skill_base[i].description = "Steals " + aux_text + " of dealt damage as life."
 	# endregion
 
 	# region SKILL STORM_STRIKE
@@ -362,7 +328,7 @@ static func initialize_skills() -> void:
 	_skill = _SKILLS[aux_skill_name]
 	_skill.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 2, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
 
-	float_array = [0.2, 0.3, 0.4]
+	float_array = [0.4, 0.5, 0.5]
 	int_array = [1, 1, 2]
 	for i in AVAILABLE_LEVELS:
 		_skill.item_skill_base[i].stats.cleave_effect = CleaveEffect.new(float_array[i], int_array[i])
@@ -491,8 +457,7 @@ static func verify_blood_fury(my_owner: Entity) -> void:
 
 	my_owner.remove_effect_by_name(Names.BLOOD_FURY)
 
-	var new_effect = CombatEffect.get_permanent_effect(Names.BLOOD_FURY, learned_skill.max_stacks, effect_stats)
-	new_effect.set_region_rect(_SKILLS[Names.BLOOD_FURY].region_rect)
+	var new_effect = CombatEffect.get_permanent_effect(Names.BLOOD_FURY, _SKILLS[Names.BLOOD_FURY].region_rect, learned_skill.max_stacks, effect_stats)
 	my_owner.effects_helper.add_effect(new_effect)
 
 static func actions_before_entity_death(_dead_entity: Entity, _attacker: Entity) -> void:
@@ -517,7 +482,6 @@ static func actions_before_entity_death(_dead_entity: Entity, _attacker: Entity)
 			GameManager.spawn_enemy(new_enemy)
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
-	# Should be called only on the server
 	# Freeze verification
 	var frozen_skill = _attacker.get_learned_skill(Names.FROZEN_TOUCH)
 	if frozen_skill:

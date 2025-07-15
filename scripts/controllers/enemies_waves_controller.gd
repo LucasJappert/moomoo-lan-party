@@ -29,6 +29,7 @@ static var WAVES_INFO = [
 	WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME]),
 	WaveInfo.new([EnemyBoneguard.LONG_NAME], [EnemyFrostboneArcher.LONG_NAME]),
 	WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME]),
+	WaveInfo.new([EnemyInfernalMinotaur.LONG_NAME], [EnemyNightArcher.LONG_NAME]),
 ]
 
 static func start_wave_process() -> void:
@@ -97,7 +98,7 @@ static func create_next_wave() -> void:
 
 			# enemy.can_attack = false
 			GameManager.spawn_enemy(enemy)
-			# return
+		return
 
 static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: bool) -> Enemy:
 	var enemy: Enemy = EnemyBase.get_new_instance(enemy_type)
@@ -105,7 +106,7 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 	var random_noise = Vector2(randi_range(-64, 64), randi_range(-64, 64))
 	var position = GameManager.moomoo.global_position + wave_direction * TILES_DISTANCE_TO_MOOMOO * 64 + random_noise
 	var cell = MapManager.world_to_cell(position)
-	cell = MapManager.get_valid_grid_cell(cell)
+	cell = MapManager.get_safe_cell(cell)
 	enemy.global_position = MapManager.cell_to_world(cell)
 
 	enemy.level = current_wave

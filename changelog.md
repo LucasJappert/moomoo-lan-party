@@ -2,6 +2,9 @@
 
 📆 xx/07/2025
 
+- ✅ New enemy Infernal Minotaur and Night Archer
+- ✅ Configure enemies for wave 5
+- ✅ Add animation when clicking to move to a tile
 - ✅ Add button to advance the wave
 - ✅ Configure new wave with archer creatures that slow with frost
 - ✅ Add Cinderflame Wielder creature that uses Burning Presence skill

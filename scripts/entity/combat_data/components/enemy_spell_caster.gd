@@ -3,8 +3,8 @@ class_name EnemySpellCaster
 var _enemy_owner: Entity
 var cast_timer: float = 0.0
 var next_cast_delay: float = 0.0
-const MIN_DELAY = 5
-const MAX_DELAY = 30
+const MIN_DELAY = 1
+const MAX_DELAY = 5
 
 func _init(enemy: Entity):
 	_enemy_owner = enemy
@@ -47,7 +47,11 @@ func _try_cast_random_skill() -> bool:
 		var closest_allies := GlobalsEntityHelpers.get_closest_entities(_enemy_owner.global_position, 20, near_allies, 6, [])
 		if closest_allies.is_empty(): return false
 
-		closest_allies.shuffle()
+		# Ordena los aliados por el más reciente daño recibido (valor más alto)
+		closest_allies.sort_custom(func(a, b):
+			return a.last_damage_received_time > b.last_damage_received_time
+		)
+		# closest_allies.shuffle()
 		for ally in closest_allies:
 			if ally.effects_helper.get_effect_by_name(friendly_effect.my_name): continue
 			return skill_to_cast.use(_enemy_owner, ally)

@@ -2,4 +2,4 @@ class_name AdminHelper
 
 static func kill_all_enemies():
 	for enemy in GameManager.get_enemies():
-		enemy.update_current_hp(-enemy.get_total_hp(), GameManager.MY_PLAYER)
+		enemy.server_receive_damage(DamageInfo.new(enemy.current_hp, DamageType.PURE, GameManager.MY_PLAYER.name), GameManager.MY_PLAYER)

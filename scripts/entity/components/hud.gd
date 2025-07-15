@@ -66,7 +66,7 @@ func _try_update_label():
 	# _label.text = str(my_owner.effects_helper.get_effects().size())
 	_label_container.visible = _label.text != ""
 		
-	# _label.text = str(my_owner.cache_total_stats.magic_defense_percent)
+	_label.text = str(my_owner.name)
 
 func update_health_bar():
 	_health_current_bar.size.x = my_owner.current_hp * BAR_SIZE / my_owner.get_total_hp()

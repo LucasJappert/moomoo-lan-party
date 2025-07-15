@@ -1,6 +1,8 @@
 class_name EnemyBase
 
 static var REGISTERED_CLASSES = [
+	EnemyNightArcher,
+	EnemyInfernalMinotaur,
 	EnemyBoneguard,
 	EnemyFrostboneArcher,
 	EnemyEmberFiend,
@@ -60,7 +62,7 @@ static func get_rect_frames(pos: Vector2i) -> Array[Rect2]:
 # 	LICH_COMMANDER = "Lich Commander", # (Comandante Lich) - alias: Varnor
 # 	FROSTBONE_ARCHER = "Frostbone Archer", # (Arquero Huesohelado) - alias: Frostbite
 # 	GRAVE_WARDEN = "Grave Warden", # (Guardián de la Tumba) - alias: Tharn
-# 	BLAZELEAF_ROGUE = "Blazeleaf Rogue", # (Pícaro de Hoja Llameante) - alias: Sylza
+# 	NIGHT_ARCHER = "Night Archer", # (Arquero Nocturno) - alias: Shadebolt
 # 	HELLHORN_BRUTE = "Hellhorn Brute", # (Bruto de Cuerno Infernal) - alias: Braknor
 # 	ASHEN_KNIGHT = "Ashen Knight", # (Caballero Cenizo) - alias: Duskar
 # 	INFERNO_HORNBEAST = "Inferno Hornbeast", # (Bestia Cornuda del Infierno) - alias: Moltrax

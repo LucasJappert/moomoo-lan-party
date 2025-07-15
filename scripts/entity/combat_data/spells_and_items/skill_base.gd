@@ -3,6 +3,8 @@ extends MyInitAuxiliary
 
 # Array of skill classes (each must have .create_and_add_instance)
 static var REGISTERED_SKILLS: Array = [
+	SkillBlessingOfPower,
+	SkillLifesteal,
 	SkillBurningPresence,
 	SkillArcLightningStorm,
 	SkillUnbreakable,
@@ -58,3 +60,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 # Must be overriden
 static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	return true
+
+# Must be overriden
+static func try_add_effect_from_skill(_owner: Entity, _skill: Skill) -> bool:
+	return false

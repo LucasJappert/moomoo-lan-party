@@ -37,6 +37,9 @@ func add_entity(entity: Entity) -> void:
 	var safe_cell = MapManager.get_safe_cell(MapManager.world_to_cell(entity.global_position))
 	if safe_cell == null:
 		return print("⚠️ No safe cell found for entity: " + entity.name)
+	
+	if entity.movement_helper.current_cell != safe_cell:
+		print("⚠️ safe_cell, entity.current_cell: " + str(safe_cell) + ", " + str(entity.movement_helper.current_cell))
 
 	entity.global_position = MapManager.cell_to_world(safe_cell)
 	MapManager.set_cell_blocked(safe_cell, true)
@@ -52,8 +55,6 @@ func _actions_for_server_side_after_entity_removed(entity_died: Entity, killed_b
 		GameWorld.current_enemies_in_scene -= 1
 		if GameWorld.current_enemies_in_scene == 0: EventBus.emit_wave_finilized()
 	
-	# var current_cell = MapManager.world_to_cell(entity.movement_helper.current_cell)
-	MapManager.set_cell_blocked(entity_died.movement_helper.next_target_cell, false)
 	EventBus.emit_freed_entity(entity_died.name)
 	EventBus.emit_entity_died(entity_died, killed_by)
 	entity_died.queue_free() # We shouldn't do this in the client side, server should do it and sync it

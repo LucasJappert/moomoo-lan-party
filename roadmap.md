@@ -21,22 +21,22 @@ Este documento contiene el plan detallado para completar una versión jugable y 
 - [x] 4 héroes jugables con sus 4 habilidades
 - [x] Pantalla de inicio y selector de héroes
 - [x] Transiciones de pantalla, inicio y derrota
-- [ ] Gameplay central sólido (moverse, atacar, oleadas, defensa)
-- [ ] Agregar efectos de sonido y visuales
-- [ ] IA enemiga básica con mínima diversidad
-- [ ] Estatua central funcional (vida, daño, derrota)
-- [ ] IA mejorada para priorizar jugador o estatua
+- [x] Gameplay central sólido (moverse, atacar, oleadas, defensa)
+- [x] Agregar efectos de sonido y visuales
+- [x] IA enemiga básica con mínima diversidad
+- [x] Estatua central funcional (vida, daño, derrota)
+- [x] IA mejorada para priorizar jugador o estatua
 
 ### 📅 14/07/2025 - Semana 3-4: Menús y presentación
 
-- [ ] Sistema de oleadas desde esquinas del mapa
+- [x] Sistema de oleadas desde esquinas del mapa
 - [ ] Balance básico de dificultad y progresión
 - [ ] Identidad visual consistente y música de fondo
 - [ ] Panel de habilidades, mejoras y retroalimentación visual
 - [ ] Indicadores de progreso (oleadas, oro, EXP)
-- [ ] Efectos visuales básicos (explosiones, stun, partículas)
-- [ ] Sonidos al golpear, matar, recibir oro/exp.
-- [ ] Animaciones de muerte y habilidades
+- [x] Efectos visuales básicos (explosiones, stun, partículas)
+- [x] Sonidos al golpear, matar, recibir oro/exp.
+- [x] Animaciones de muerte y habilidades
 
 ### 📅 28/07/2025 - Semana 5-6: Primer testeo abierto
 

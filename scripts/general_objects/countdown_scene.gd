@@ -19,13 +19,11 @@ func _ready():
 	label_number_model.visible = false
 	_clean_numbers_container()
 	var screen_center := get_viewport().get_visible_rect().size / 2
-	global_position = screen_center - Vector2(0, MapManager.TILE_SIZE_INT * 5)
+	global_position = screen_center - Vector2(0, MapManager.TILE_SIZE_INT * 7)
 	start_now_button.connect("gui_input", func(event: InputEvent): _on_start_now_button_click(event))
 
 func _clean_numbers_container():
-	for child in numbers_container2.get_children():
-		numbers_container2.remove_child(child)
-		child.queue_free()
+	for child in numbers_container2.get_children(): child.queue_free()
 
 func add_new_label(message: String, _final_message: bool = false):
 	if _final_message: _clean_numbers_container()
@@ -39,7 +37,7 @@ func add_new_label(message: String, _final_message: bool = false):
 	new_label.modulate.a = 1.0
 	new_label.scale = SCALE_FROM
 	new_label.position = Vector2.ZERO - Vector2(0, MapManager.TILE_SIZE_INT)
-	var tween := create_tween()
+	var tween := new_label.create_tween()
 	tween.tween_property(new_label, "position:y", new_label.position.y - speed, duration).set_trans(Tween.TRANS_SINE)
 	tween.tween_property(new_label, "modulate:a", 0.0, duration).set_trans(Tween.TRANS_SINE)
 	tween.tween_callback(new_label.queue_free)

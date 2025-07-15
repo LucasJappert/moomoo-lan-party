@@ -25,7 +25,7 @@ var skill: Skill
 var slot_number: int
 var _STYLE_BLACK := StyleBoxFlat.new()
 var _STYLE_BEIGE := StyleBoxFlat.new()
-var _is_my_player_owner: bool
+var _owner: Entity
 var HERO_PICKER_SCENE_NAME = "HeroPickerScene"
 
 
@@ -48,7 +48,7 @@ func _ready():
 			GameManager.MY_PLAYER.rpc_handler.send_skill_uppgrade_button_pressed_to_server(slot_number)
 		)
 
-	EventBus.connect_to_skill_upgraded(func(_p_owner: Entity, _upgraded_skill: Skill, _slot_number: int): skill_updated(_upgraded_skill, _p_owner, _slot_number))
+	EventBus.connect_to_skill_upgraded(func(_p_owner: Entity, _upgraded_skill: Skill, _slot_number: int): _skill_updated(_upgraded_skill, _p_owner, _slot_number))
 	EventBus.connect_to_skill_points_to_assign_changed(func(_p_owner: Entity): _update_controls())
 
 func _try_settings_for_hero_picker():
@@ -59,7 +59,7 @@ func _try_settings_for_hero_picker():
 
 
 func _process(_delta: float) -> void:
-	if not _is_my_player_owner: return _lock_slot()
+	if not _owner or not _owner.is_my_player(): return _lock_slot()
 	if not skill: return
 	if not GameManager.MY_PLAYER: return
 
@@ -87,11 +87,12 @@ func _clean_slot():
 	hotkey.text = OS.get_keycode_string(KeyboardHelper.SKILL_HOTKEYS[slot_number - 1])
 	sprite.region_rect = Rect2(0, 0, 0, 0)
 
-func skill_updated(new_skill: Skill, _owner: Entity, _slot_number: int):
+func _skill_updated(new_skill: Skill, p_owner: Entity, _slot_number: int):
+	if not p_owner: return
+	_owner = p_owner
 	if slot_number == 0: slot_number = _slot_number
 	if slot_number != _slot_number: return
 	
-	_is_my_player_owner = _owner.is_my_player() if _owner else false
 	hotkey.visible = true
 
 	_set_slot_from_skill(new_skill)
@@ -121,7 +122,7 @@ func _update_controls():
 		panels_of_skill_level[i].add_theme_stylebox_override("panel", _STYLE_BLACK)
 
 func _refresh_upgrade_button():
-	if not skill or not _is_my_player_owner:
+	if not skill or not _owner or not _owner.is_my_player():
 		upgrade_button.visible = false
 		return
 
@@ -167,6 +168,6 @@ func _on_mouse_exited():
 
 func _gui_input(event) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		if not _is_my_player_owner: return
+		if not _owner: return
 
 		GameManager.MY_PLAYER.rpc_handler.notify_key_pressed_to_server(KeyboardHelper.SKILL_HOTKEYS[slot_number - 1])

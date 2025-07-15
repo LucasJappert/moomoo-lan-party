@@ -100,11 +100,11 @@ func _set_skills(_hero: Entity = null) -> void:
 	var _slots := get_skill_slots()
 	for i in range(_slots.size()):
 		if not _hero:
-			_slots[i].skill_updated(null, null, i + 1)
+			_slots[i]._skill_updated(null, null, i + 1)
 			continue
 
 		var _skill: Skill = _hero._skills[i] if i < _hero._skills.size() else null
-		_slots[i].skill_updated(_skill, _hero, i + 1)
+		_slots[i]._skill_updated(_skill, _hero, i + 1)
 
 func _clean_grid_heros_container() -> void:
 	for child in grid_heros_container.get_children():

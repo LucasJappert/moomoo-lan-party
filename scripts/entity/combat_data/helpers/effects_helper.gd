@@ -7,6 +7,7 @@ var _my_owner: Entity
 
 func _init() -> void:
 	super._init()
+	EventBus.connect_to_skill_upgraded(func(_p_owner: Entity, _upgraded_skill: Skill, _slot_number: int): on_skill_updated(_p_owner, _upgraded_skill, _slot_number))
 
 func set_my_owner(p_owner: Entity) -> void:
 	_my_owner = p_owner
@@ -100,3 +101,14 @@ func _try_to_add_effect_to_my_gui(p_effect: CombatEffect) -> void:
 	if not GameManager.MY_PLAYER: return
 
 	EventBus.emit_effect_added(_my_owner, p_effect)
+
+func on_skill_updated(_p_owner: Entity, skill: Skill, _slot_number: int) -> void:
+	if not _my_owner or _p_owner.name != _my_owner.name: return
+	if not skill.learned_level: return
+	var skill_base := skill.get_learned_skill()
+	if skill_base.type != SkillType.PASSIVE: return
+	if not skill_base.create_effect: return
+	if not skill_base.stats.is_owner_friendly: return
+
+	for registered_class in SkillBase.REGISTERED_SKILLS:
+		registered_class.try_add_effect_from_skill(_p_owner, skill)

@@ -17,7 +17,7 @@ var current_gold_string: String = ""
 	set(_value):
 		skill_points_to_assign = _value
 		EventBus.emit_skill_points_to_assign_changed(self)
-const EXTRA_ATTRIBUTES_STATS_BY_LEVEL = 4
+const EXTRA_ATTRIBUTES_STATS_BY_LEVEL = 6
 
 func set_player(data: Dictionary) -> void:
 	player_id = data["player_id"]

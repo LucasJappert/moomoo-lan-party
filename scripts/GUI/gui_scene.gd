@@ -132,7 +132,7 @@ func _set_skills() -> void:
 	var _slots := get_skill_slots()
 	for i in range(_slots.size()):
 		var _skill: Skill = _bottom_target._skills[i] if i < _bottom_target._skills.size() else null
-		_slots[i].skill_updated(_skill, _bottom_target, i + 1)
+		_slots[i]._skill_updated(_skill, _bottom_target, i + 1)
 
 func _set_items() -> void:
 	var _slots := get_item_slots()
