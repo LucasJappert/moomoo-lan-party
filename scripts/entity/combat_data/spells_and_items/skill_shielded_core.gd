@@ -18,7 +18,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	aux_array[3] = [12, 15, 18] # duration
 	for i in Skill.AVAILABLE_LEVELS:
 		_SKILLS[NAME].item_skill_base[i].create_effect = true
-		_SKILLS[NAME].item_skill_base[i].stats.is_owner_friendly = true
+		_SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
 		_SKILLS[NAME].item_skill_base[i].stats.physical_defense_percent = aux_array[0][i]
 		_SKILLS[NAME].item_skill_base[i].stats.magic_defense_percent = aux_array[0][i]
 		_SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]
@@ -26,7 +26,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		_SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[3][i]
 		_SKILLS[NAME].item_skill_base[i].description = "Grants " + StringHelpers.format_percent(aux_array[0][i]) + " physical and magic defense for " + StringHelpers.format_float(aux_array[3][i]) + " seconds."
 
-static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
+static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return true
 
 	var new_effect = CombatEffect.get_temporal_effect(NAME, _learned_skill.duration_in_seconds, _learned_skill.max_stacks, _learned_skill.stats)

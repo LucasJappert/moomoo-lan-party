@@ -28,7 +28,7 @@ static func initialize(audio_node: Node):
 	print("✅ SoundsHelper initialized with %d players" % MAX_PLAYERS)
 
 static var _audio_cache: Dictionary = {}
-static func _internal_play(path: String, volume: float, is_looping: bool, max_simultaneous: int = 0) -> void:
+static func _internal_play(path: String, volume: float, is_looping: bool, max_simultaneous: int = 1) -> void:
 	if FORCE_MUTED or _MUTED or not _initialized:
 		if not _initialized:
 			push_error("⚠️ SoundsHelper not initialized.")
@@ -75,6 +75,7 @@ static func _setup_player(player: AudioStreamPlayer, stream: AudioStream, volume
 	_active_players.append(player)
 	_original_volumes[player] = volume
 
+	_playing_counts[path] = _playing_counts.get(path, 0) + 1
 	if is_looping:
 		_looping_players.append(player)
 		player.finished.connect(func():
@@ -82,13 +83,15 @@ static func _setup_player(player: AudioStreamPlayer, stream: AudioStream, volume
 				player.play()
 		)
 	else:
-		_playing_counts[path] = _playing_counts.get(path, 0) + 1
 		player.finished.connect(func():
 			if _playing_counts.has(path):
 				_playing_counts[path] = max(_playing_counts[path] - 1, 0)
 			_active_players.erase(player)
 			_original_volumes.erase(player)
 		)
+
+static func is_playing(path: String) -> bool:
+	return _playing_counts.get(path, 0) > 0
 
 static func play_sfx(path: String, volume: float = 0.0, max_simultaneous: int = 2):
 	_internal_play(path, volume, false, max_simultaneous)
@@ -106,12 +109,18 @@ static func stop_all_loops():
 		
 	_looping_players.clear()
 
-static func stop_loop_by_path(path: String):
+static func stop_loop_by_path(path: String, fade_duration: float = 1.0):
 	for i in range(_looping_players.size() - 1, -1, -1):
 		var player = _looping_players[i]
 		if is_instance_valid(player) and player.stream and player.stream.resource_path == path:
-			player.stop()
-			_looping_players.remove_at(i)
+			var tween := player.create_tween()
+			tween.tween_property(player, "volume_db", -80.0, fade_duration).set_trans(Tween.TRANS_LINEAR)
+			
+			# Callback para detener el sonido y removerlo
+			tween.tween_callback(func():
+				player.stop()
+				_looping_players.erase(player)
+			)
 
 static func mute_all():
 	_MUTED = true

@@ -67,7 +67,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	float_array1 = [0.2, 0.4, 0.6]
 	aux_array[0] = [5, 7, 9] # max targets
 	int_array1 = [120, 180, 240] # mana cost
-	aux_array[1] = [8, 6, 4] # cooldown
+	aux_array[1] = [12, 9, 6] # cooldown
 	for i in Skill.AVAILABLE_LEVELS:
 		_SKILLS[NAME].item_skill_base[i].instant_use = false
 		_SKILLS[NAME].item_skill_base[i].range_in_tiles = 20
@@ -80,10 +80,10 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		_SKILLS[NAME].item_skill_base[i].description = "Unleashes a chain lightning that starts from a target and arcs to up to " + str(aux_array[0][i]) + " nearby enemies, dealing " + StringHelpers.format_float(int_array[i]) + " magic damage and stunning each for " + StringHelpers.format_float(float_array1[i]) + " seconds."
 
 
-static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
+static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return true
 
-	var skill := SkillArcLightningStorm.new(_my_owner, _target, _learned_skill, true)
-	_my_owner.add_active_skill(skill)
+	var skill := SkillArcLightningStorm.new(_caster, _target, _learned_skill, true)
+	_caster.add_active_skill(skill)
 
 	return true

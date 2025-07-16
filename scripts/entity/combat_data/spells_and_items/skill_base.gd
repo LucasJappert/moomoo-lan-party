@@ -3,6 +3,7 @@ extends MyInitAuxiliary
 
 # Array of skill classes (each must have .create_and_add_instance)
 static var REGISTERED_SKILLS: Array = [
+	SkillSilentAgony,
 	SkillBlessingOfPower,
 	SkillLifesteal,
 	SkillBurningPresence,
@@ -14,6 +15,8 @@ static var REGISTERED_SKILLS: Array = [
 	SkillStormWrath,
 	SkillShieldedCore
 ]
+
+static var FIRE_SKILLS: Array = [SkillBurningPresence.NAME]
 
 const _ATLAS_START_POS = Skill._ATLAS_START_POS
 const FRAME_SIZE = Skill.FRAME_SIZE
@@ -45,6 +48,8 @@ func process_skill(_owner: Entity, _delta: float) -> void:
 
 	active = false
 
+func has_fire() -> bool: return my_name in FIRE_SKILLS
+
 static func actions_after_cast_skill(_owner: Entity, _skill_used: ItemSkillBase) -> void:
 	# At the moment, Implemented in Static Discharge skill
 	pass
@@ -58,7 +63,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	pass
 
 # Must be overriden
-static func try_to_use(_my_owner: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
+static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	return true
 
 # Must be overriden

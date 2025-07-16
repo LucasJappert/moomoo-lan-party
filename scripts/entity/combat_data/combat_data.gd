@@ -90,10 +90,7 @@ func _process_on_server(_delta: float):
 
 	if enemy_spell_caster: enemy_spell_caster._process(_delta)
 
-	# Iterate in reverse order to avoid breaking indices when removing elements
-	for i in range(_active_skills.size() - 1, -1, -1):
-		_active_skills[i].process_skill(my_owner(), _delta)
-		if not _active_skills[i].active: _active_skills.remove_at(i)
+	update_active_skills(_delta)
 
 func server_execute_physical_damage(_target: Entity) -> void:
 	if my_owner().multiplayer.is_server() == false: return
@@ -158,9 +155,33 @@ func update_current_mana(value_to_increase: int) -> void:
 	current_mana = clamp(current_mana + value_to_increase, 0, get_total_mana())
 	my_owner().hud.update_mana_bar()
 
-func add_active_skill(_skill: SkillBase) -> void:
-	_active_skills.append(_skill)
+func update_active_skills(_delta: float) -> void:
+	for i in range(_active_skills.size() - 1, -1, -1):
+		_active_skills[i].process_skill(my_owner(), _delta)
+		if not _active_skills[i].active:
+			_active_skills.remove_at(i)
 
+func add_active_skill(_skill: SkillBase) -> bool:
+	if _stacks_reached(_skill): return false
+
+	_active_skills.append(_skill)
+	_try_to_apply_effect(_skill)
+
+	if _skill.learned_skill.stats.silence_duration > 0:
+		SilenceEffect.attach_to(my_owner().front_animations_node, _skill.learned_skill.duration_in_seconds)
+	
+	return true
+
+func _stacks_reached(_skill: SkillBase) -> bool:
+	var current_stacks := 0
+	for active_skill in _active_skills:
+		if active_skill.learned_skill.my_name == _skill.learned_skill.my_name:
+			current_stacks += 1
+
+	if current_stacks < _skill.learned_skill.max_stacks: return false
+
+	return true
+func _try_to_apply_effect(_skill: SkillBase):
 	if not _skill.learned_skill.create_effect: return
 
 	var skill = _skill.learned_skill
@@ -168,12 +189,10 @@ func add_active_skill(_skill: SkillBase) -> void:
 	new_effect.set_description(skill.description)
 	new_effect.set_region_rect(Skill._SKILLS[skill.my_name].region_rect)
 	effects_helper.add_effect(new_effect)
-	
 
 func apply_stun(_seconds: float) -> void:
 	var _stats = CombatStats.new()
 	_stats.stun_duration = _seconds
-	_stats.is_owner_friendly = false
 	var effect = CombatEffect.get_temporal_effect(CombatEffect.STUN_NAME, _seconds, 1, _stats)
 	effects_helper.add_effect(effect)
 
@@ -328,10 +347,10 @@ func use_charged_skill(_target: Entity) -> void:
 	var learned_skill = charged_skill.get_learned_skill()
 
 	# Do not allow the use of damaging skills on oneself
-	if not learned_skill.stats.is_owner_friendly and _target.name == my_owner().name: return uncharge_skill()
+	if learned_skill.apply_to_enemy and _target.name == my_owner().name: return uncharge_skill()
 
 	# Update the target to attack if the skill is not friendly
-	if not learned_skill.stats.is_owner_friendly: set_target_to_attack(_target)
+	# if not learned_skill.stats.is_owner_friendly1: set_target_to_attack(_target)
 
 	charged_skill.use(my_owner(), _target)
 
@@ -364,6 +383,7 @@ func _get_extra_stats_by_effects() -> CombatStats:
 func _get_extra_stats_by_skills() -> CombatStats:
 	var extra_stats = CombatStats.new()
 	for skill in _skills:
+		if not skill: continue
 		var learned_skill = skill.get_learned_skill()
 		if not learned_skill: continue
 		if learned_skill.create_effect: continue

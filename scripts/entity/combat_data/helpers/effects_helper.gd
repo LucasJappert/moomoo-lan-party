@@ -41,7 +41,7 @@ func add_effect(p_effect: CombatEffect) -> void:
 	if p_effect.stats.freeze_duration > 0:
 		AnimationsHelper.apply_frost_hit_animation(_my_owner)
 	if p_effect.stats.has_hostil_stun_effect():
-		StunEffect.attach_to(_my_owner.front_animations_node, 2.5)
+		StunEffect.attach_to(_my_owner.front_animations_node, p_effect.duration_in_seconds)
 	
 	_try_to_add_effect_to_my_gui(p_effect)
 
@@ -108,7 +108,6 @@ func on_skill_updated(_p_owner: Entity, skill: Skill, _slot_number: int) -> void
 	var skill_base := skill.get_learned_skill()
 	if skill_base.type != SkillType.PASSIVE: return
 	if not skill_base.create_effect: return
-	if not skill_base.stats.is_owner_friendly: return
 
 	for registered_class in SkillBase.REGISTERED_SKILLS:
 		registered_class.try_add_effect_from_skill(_p_owner, skill)

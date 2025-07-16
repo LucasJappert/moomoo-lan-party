@@ -18,7 +18,7 @@ static func get_instance(p_effect: CombatEffect) -> GuiEffect:
 func _initialize(p_effect: CombatEffect) -> void:
 	_effect = ObjectHelpers.deep_clone(p_effect) as CombatEffect
 	is_permanent = _effect.is_permanent
-	_duration = _effect._duration_in_seconds
+	_duration = _effect.duration_in_seconds
 
 func _ready():
 	my_owner = GlobalsEntityHelpers.get_owner(self)

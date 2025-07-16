@@ -40,20 +40,52 @@ func _try_cast_random_skill() -> bool:
 	if available_skills.size() == 0: return true
 
 	var skill_to_cast: Skill = available_skills[randi() % available_skills.size()]
-	var friendly_effect = skill_to_cast.get_safe_learned_skill()
 
-	if friendly_effect.stats.is_owner_friendly: # Apply to an ally
-		var near_allies = _enemy_owner.get_allies(true)
-		var closest_allies := GlobalsEntityHelpers.get_closest_entities(_enemy_owner.global_position, 20, near_allies, 6, [])
-		if closest_allies.is_empty(): return false
+	if _try_cast_spell_to_an_ally(skill_to_cast): return true
 
-		# Ordena los aliados por el más reciente daño recibido (valor más alto)
-		closest_allies.sort_custom(func(a, b):
-			return a.last_damage_received_time > b.last_damage_received_time
-		)
-		# closest_allies.shuffle()
-		for ally in closest_allies:
-			if ally.effects_helper.get_effect_by_name(friendly_effect.my_name): continue
-			return skill_to_cast.use(_enemy_owner, ally)
+	return _try_cast_spell_to_an_enemy(skill_to_cast)
 	
+
+func _try_cast_spell_to_an_enemy(skill_to_cast: Skill) -> bool:
+	var learned_skill = skill_to_cast.get_safe_learned_skill()
+	if not learned_skill.apply_to_enemy: return false
+
 	return skill_to_cast.use(_enemy_owner, _enemy_owner.target_to_attack) # Apply to a player
+
+
+func _try_cast_spell_to_an_ally(skill_to_cast: Skill) -> bool:
+	var learned_skill = skill_to_cast.get_safe_learned_skill()
+	if learned_skill.apply_to_enemy: return false
+
+	if learned_skill.stats.grants_attack_bonuses():
+		if not _enemy_owner.effects_helper.get_effect_by_name(learned_skill.my_name):
+			return skill_to_cast.use(_enemy_owner, _enemy_owner)
+
+	var near_allies = _enemy_owner.get_allies(true)
+	var closest_allies := GlobalsEntityHelpers.get_closest_entities(_enemy_owner.global_position, 20, near_allies, 6, [])
+	if closest_allies.is_empty(): return false
+
+	# Ordena los aliados por el más reciente daño recibido (valor más alto)
+	closest_allies.sort_custom(func(a, b):
+		if a.last_damage_received_time != b.last_damage_received_time:
+			return a.last_damage_received_time > b.last_damage_received_time
+
+		return false
+	)
+	# closest_allies.sort_custom(func(a, b):
+	# 	var a_has_effect := a.effects_helper.get_effect_by_name(learned_skill.my_name) != null
+	# 	var b_has_effect := b.effects_helper.get_effect_by_name(learned_skill.my_name) != null
+
+	# 	if a_has_effect != b_has_effect: return not a_has_effect # true si 'a' NO tiene el efecto, lo cual lo posiciona antes
+
+	# 	if a.last_damage_received_time != b.last_damage_received_time: return a.last_damage_received_time < b.last_damage_received_time
+
+	# 	return false
+	# )
+
+	# closest_allies.shuffle()
+	for ally in closest_allies:
+		if ally.effects_helper.get_effect_by_name(learned_skill.my_name): continue
+		return skill_to_cast.use(_enemy_owner, ally)
+
+	return false

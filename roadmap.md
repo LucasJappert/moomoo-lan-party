@@ -31,7 +31,7 @@ Este documento contiene el plan detallado para completar una versión jugable y 
 
 - [x] Sistema de oleadas desde esquinas del mapa
 - [ ] Balance básico de dificultad y progresión
-- [ ] Identidad visual consistente y música de fondo
+- [x] Identidad visual consistente y música de fondo
 - [ ] Panel de habilidades, mejoras y retroalimentación visual
 - [ ] Indicadores de progreso (oleadas, oro, EXP)
 - [x] Efectos visuales básicos (explosiones, stun, partículas)
@@ -44,7 +44,7 @@ Este documento contiene el plan detallado para completar una versión jugable y 
 - [ ] Crear versión exportable (Linux/Windows/Web)
 - [ ] Recibir feedback real de amigos/jugadores
 - [ ] Interfaz completa con HUD, vida, habilidades y oro
-- [ ] Ajustes de balance (dificultad progresiva)
+- [x] Ajustes de balance (dificultad progresiva)
 
 ### 📅 14/08/2025 - Post-demo: Difusión y primeros pasos de escalamiento
 

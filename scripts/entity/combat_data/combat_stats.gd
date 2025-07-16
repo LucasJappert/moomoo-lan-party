@@ -19,7 +19,7 @@ var level: int
 @export var crit_multiplier: float = 0
 @export var stun_chance: float = 0.0
 @export var stun_duration: float = 0.0 # In seconds
-var hostile_silence_duration: float = 0.0 # In seconds
+var silence_duration: float = 0.0 # In seconds
 @export var attack_range: int = 0
 @export var physical_attack_power: int = 0
 @export var physical_attack_power_percent: float = 0
@@ -34,6 +34,7 @@ var hostile_silence_duration: float = 0.0 # In seconds
 @export var hp_regeneration_points: int = 0 # Points per second
 @export var hp_regeneration_points_percent: float = 0
 @export var mana_regeneration_points: int = 0 # Points per second
+@export var mana_regeneration_points_percent: float = 0
 
 @export var agility: int = 0
 @export var strength: int = 0
@@ -41,7 +42,6 @@ var hostile_silence_duration: float = 0.0 # In seconds
 
 var custom_damage_heal: CustomDamageHeal = CustomDamageHeal.new()
 
-@export var is_owner_friendly: bool = false
 var keep_latest_stacks: bool = true
 
 static func get_instance_from_dict(dict: Dictionary) -> CombatStats:
@@ -75,8 +75,8 @@ func accumulate_combat_stats(stats: CombatStats) -> CombatStats:
 	hp_regeneration_points += stats.hp_regeneration_points
 	hp_regeneration_points_percent += stats.hp_regeneration_points_percent
 	mana_regeneration_points += stats.mana_regeneration_points
-	is_owner_friendly = stats.is_owner_friendly
-	hostile_silence_duration = stats.hostile_silence_duration
+	mana_regeneration_points_percent += stats.mana_regeneration_points_percent
+	silence_duration = stats.silence_duration
 
 	if stats.cleave_effect != null:
 		cleave_effect = stats.cleave_effect
@@ -146,13 +146,36 @@ static func get_extra_stats_by_agility(_agi: int) -> CombatStats:
 	return attr
 
 # region 	GETTERs
+
+func grants_defenses() -> bool:
+	if physical_defense_percent > 0: return true
+	if magic_defense_percent > 0: return true
+	if evasion > 0: return true
+	if hp_regeneration_points > 0 or hp_regeneration_points_percent > 0: return true
+	if mana_regeneration_points > 0 or mana_regeneration_points_percent > 0: return true
+	if ignore_enemy_evasion_chance > 0: return true
+	return false
+
+func grants_attack_bonuses() -> bool:
+	if physical_attack_power > 0 or physical_attack_power_percent > 0: return true
+	if magic_attack_power > 0 or magic_attack_power_percent > 0: return true
+	if attack_speed > 0 or attack_speed_percent > 0: return true
+	if crit_chance > 0: return true
+	if stun_chance > 0: return true
+	if life_steal_percent > 0: return true
+	if cleave_effect: return true
+	if multiple_strike: return true
+	if mana_burn: return true
+	return false
+
+
 func has_hostil_stun_effect() -> bool:
-	if stun_duration > 0 && is_owner_friendly == false: return true
+	if stun_duration > 0 && stun_chance == 0: return true
 
 	return false
 
 func has_hostil_silence_effect() -> bool:
-	if hostile_silence_duration > 0: return true
+	if silence_duration > 0: return true
 
 	return false
 
@@ -231,8 +254,8 @@ func get_description() -> String:
 	if ignore_enemy_evasion_chance != 0:
 		description += str("- Ignore enemy evasion chance: ", StringHelpers.format_percent(ignore_enemy_evasion_chance), "\n")
 
-	if hostile_silence_duration != 0:
-		description += str("- Hostile silence duration: ", StringHelpers.format_float_compact(hostile_silence_duration), "\n")
+	if silence_duration != 0:
+		description += str("- Hostile silence duration: ", StringHelpers.format_float_compact(silence_duration), "\n")
 
 	if cleave_effect: description += cleave_effect.get_description()
 

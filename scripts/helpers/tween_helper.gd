@@ -55,15 +55,11 @@ static func apply_fading_pulse(
 
 static func apply_rotation_loop(
 	sprite: Node2D,
-	tween: Tween,
-	angle := PI / 12, # 15 grados
 	duration := 0.4,
 ) -> Tween:
-	var base_rotation := sprite.rotation
-
-	tween.parallel().tween_property(sprite, "rotation", base_rotation + angle, duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(sprite, "rotation", base_rotation - angle, duration * 2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(sprite, "rotation", base_rotation, duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	var tween := sprite.create_tween()
+	tween.set_loops()
+	tween.tween_property(sprite, "rotation", TAU, duration).from(0).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
 	return tween
 
 static func apply_tween_to_property(

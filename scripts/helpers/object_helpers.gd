@@ -188,6 +188,6 @@ static func _deserialize_variant(value: Variant) -> Variant:
 				return Vector2(value.get("x", 0), value.get("y", 0))
 	return value
 
-static func get_valid_entity_instance(object) -> Object:
-	if is_null(object): return null
-	return object
+static func valid_instance(object) -> bool:
+	if is_null(object): return false
+	return true

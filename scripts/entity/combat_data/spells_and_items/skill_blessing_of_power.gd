@@ -13,9 +13,8 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	for i in Skill.AVAILABLE_LEVELS:
 		_SKILLS[NAME].item_skill_base[i].stats.physical_attack_power_percent = aux_array[0][i]
 		_SKILLS[NAME].item_skill_base[i].stats.magic_attack_power_percent = aux_array[0][i]
-		_SKILLS[NAME].item_skill_base[i].stats.is_owner_friendly = true
 		_SKILLS[NAME].item_skill_base[i].max_stacks = 1
-		_SKILLS[NAME].item_skill_base[i].apply_to_owner = true
+		_SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
 		_SKILLS[NAME].item_skill_base[i].create_effect = true
 		aux_array[1] = StringHelpers.format_percent(_SKILLS[NAME].item_skill_base[i].stats.physical_attack_power_percent)
 		_SKILLS[NAME].item_skill_base[i].description = "Increases physical and magic attack power by " + aux_array[1]

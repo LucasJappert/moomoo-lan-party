@@ -5,16 +5,24 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Fix tooltips when releasing the slot where the mouse entered
-- Configurar skill que hace daño de quemaduras
+- ✅ Create new Shuriken projectile
+- ✅ Create a wind effect on the Shuriken projectile
+- ✅ Create skill that silences and causes damage over time for a certain period
+- ✅ Add fire sound
+- ✅ Create 2 new enemy types to later configure wave 6 (Dead Shield and Silent Shuriken)
+
+- Crear sistema para comprar items
 - Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)
 - Sonidos limitarlos a la vista en pantalla
 
+- Ver sonidos que entran en loop indebidamente
+- Crear skill que refleja un % de daño recibido al atacante, este daño es puro
+- Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
+- Crear habilidad que al morir explota provocando un daño del 10% de su vida total en un área de 3 tiles de radio
 - Agregar bordes rojos/animación cuando tenemos poca vida
 - Agregar estadísticas in game, como el tiempo transcurrido, el daño causado, el daño recibido, etc.
 - Sistema de particulas para poder aplicarlo como colas en proyectiles
 - Refactorizar logica de skills antiguos, seguir la nueva metodologia creando un módulo para cada skill
-- Agregar skill que brinda un 10/20/30% de evasion
 - Agregar skill, la cual puede activarse o desactivarse, que brindaría chances de matar al enemigo al instante (no aplica a bosses). Consume 20 de mana en cada ataque.
 - Agregar skill pasiva que luego de matar un enemigo lo transforma en 3 esqueletos que lucharán para él.
 - Agregar skill que brinda chances de crear copias de sí mismo ante cada ataque físico.

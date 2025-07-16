@@ -6,6 +6,7 @@ const FRAME_SIZE = 64
 const CAN_USE_COLOR = Color.WHITE
 const CANT_USE_COLOR = Color(0.5, 0.5, 0.5)
 
+var apply_to_enemy: bool = true
 var range_in_tiles: float = 1
 var instant_use: bool = false
 var auxiliary_float: float # Used for general purposes, like calculate percentage of damage respect to the strength
@@ -20,7 +21,6 @@ var max_stacks: int = 1
 var stats: CombatStats = CombatStats.new()
 var damage_type: String = DamageType.NONE
 var max_targets: int = 1
-var apply_to_owner: bool = true
 var create_effect: bool = false
 var _last_used_time: float = - INF
 

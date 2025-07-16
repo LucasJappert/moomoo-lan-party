@@ -10,8 +10,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 
 	float_array = [0.15, 0.2, 0.25]
 	for i in Skill.AVAILABLE_LEVELS:
-		_SKILLS[NAME].item_skill_base[i].stats.is_owner_friendly = true
-		_SKILLS[NAME].item_skill_base[i].apply_to_owner = true
+		_SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
 		_SKILLS[NAME].item_skill_base[i].create_effect = true
 		_SKILLS[NAME].item_skill_base[i].stats.life_steal_percent = float_array[i]
 		_SKILLS[NAME].item_skill_base[i].description = "Steals " + StringHelpers.format_percent(float_array[i]) + " of dealt damage as life."

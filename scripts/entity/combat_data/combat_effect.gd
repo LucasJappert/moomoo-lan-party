@@ -5,7 +5,7 @@ extends MyInitAuxiliary
 var effect_name: String
 var id: int
 var is_permanent: bool = false
-var _duration_in_seconds: float # In seconds
+var duration_in_seconds: float # In seconds
 var _elapsed: float = 0.0
 var _region_rect: Rect2
 var max_stacks: int = 1
@@ -21,9 +21,9 @@ func _process(delta: float) -> void:
 	if is_permanent: return
 
 	_elapsed += delta
-	if _elapsed <= _duration_in_seconds: return
+	if _elapsed <= duration_in_seconds: return
 
-	_elapsed = _duration_in_seconds
+	_elapsed = duration_in_seconds
 	is_cooldown_finished = true
 	# EventBus.emit_effect_removed(GlobalsEntityHelpers.get_owner(self), self)
 
@@ -32,8 +32,8 @@ func get_description() -> String:
 
 	if _description != "": description += _description + "\n"
 
-	if _duration_in_seconds > 0.0:
-		description += str("- Duration: ", StringHelpers.format_float_compact(_duration_in_seconds), "s\n")
+	if duration_in_seconds > 0.0:
+		description += str("- Duration: ", StringHelpers.format_float_compact(duration_in_seconds), "s\n")
 
 	description += stats.get_description()
 
@@ -60,11 +60,11 @@ static func get_instance_from_dict(dict: Dictionary) -> CombatEffect:
 	ObjectHelpers.from_dict(combat_effect, dict)
 	return combat_effect
 
-static func _get_instance(p_name: String, duration_in_seconds: float, p_is_permanent: bool, _max_stacks: int, _stats: CombatStats) -> CombatEffect:
+static func _get_instance(p_name: String, _duration_in_seconds: float, p_is_permanent: bool, _max_stacks: int, _stats: CombatStats) -> CombatEffect:
 	var combat_effect = CombatEffect.new()
 	combat_effect.max_stacks = _max_stacks
 	if _stats: combat_effect.stats = _stats
-	combat_effect._duration_in_seconds = duration_in_seconds
+	combat_effect.duration_in_seconds = _duration_in_seconds
 	combat_effect.is_permanent = p_is_permanent
 	combat_effect.id = UniqueIdGenerator.get_id()
 	combat_effect.effect_name = p_name
@@ -79,8 +79,8 @@ static func get_permanent_effect_from_skill(skill: Skill) -> CombatEffect:
 	var learned_skill = skill.get_learned_skill()
 	return get_permanent_effect(learned_skill.my_name, skill.region_rect, learned_skill.max_stacks, learned_skill.stats)
 
-static func get_temporal_effect(p_name: String, duration_in_seconds: float, _max_stacks: int, _stats: CombatStats) -> CombatEffect:
-	var result = _get_instance(p_name, duration_in_seconds, false, _max_stacks, _stats)
+static func get_temporal_effect(p_name: String, _duration_in_seconds: float, _max_stacks: int, _stats: CombatStats) -> CombatEffect:
+	var result = _get_instance(p_name, _duration_in_seconds, false, _max_stacks, _stats)
 	if p_name == STUN_NAME: result.set_region_rect(CombatEffect.STUN_RECT_REGION)
 	return result
 

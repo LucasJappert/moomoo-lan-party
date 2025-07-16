@@ -1,6 +1,7 @@
 class_name ProjectileBase
 
 static var REGISTERED_CLASSES = [
+	ProjectileShuriken,
 	ProjectileNatureBall,
 	ProjectileArcLightning,
 	ProjectileFireBall,

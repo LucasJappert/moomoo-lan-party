@@ -10,6 +10,7 @@ static var SCREEN_SIZE: Vector2 = Vector2.ZERO
 @onready var moomoo_spawner = $MoomooSpawner
 @onready var general_container = $GeneralContainer
 @onready var over_terrain_layer: Node2D = %OverTerrainLayer
+var ambient_sounds_helper: AmbientSoundsHelper = AmbientSoundsHelper.new()
 
 @onready var my_trees_node: Node2D = $MyTrees
 @onready var terrain: Node2D = $Terrain
@@ -47,6 +48,7 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	MapManager.GLOBAL_MOUSE_POSITION = get_global_mouse_position()
 	MapManager.VIEWPORT_MOUSE_POSITION = get_viewport().get_mouse_position()
+	ambient_sounds_helper.update_fire_sound()
 	SCREEN_SIZE = get_viewport().get_visible_rect().size
 
 func _spawn_player_moomoo_and_enemies() -> void:

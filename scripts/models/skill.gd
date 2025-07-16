@@ -58,6 +58,7 @@ static var AVAILABLE_LEVELS: int = 3
 var learned_level: int = 0
 
 var region_rect: Rect2 = Rect2()
+var skill_name: String = ""
 
 func _init(_name: String = "", _type: String = SkillType.ACTIVE):
 	super._init()
@@ -66,6 +67,7 @@ func _init(_name: String = "", _type: String = SkillType.ACTIVE):
 		item_skill_base.append(ItemSkillBase.new())
 		item_skill_base[i].my_name = _name
 		item_skill_base[i].type = _type
+	skill_name = _name
 
 
 # region :::::::::::::::::::: GETTERs
@@ -146,6 +148,7 @@ static func initialize_skills() -> void:
 	int_array1 = [100, 150, 200]
 	float_array = [0.5, 1, 1.5]
 	for i in AVAILABLE_LEVELS:
+		_skill.item_skill_base[i].apply_to_enemy = true
 		_skill.item_skill_base[i].range_in_tiles = 2
 		_skill.item_skill_base[i].instant_use = true
 		_skill.item_skill_base[i].damage_type = DamageType.MAGIC
@@ -173,9 +176,9 @@ static func initialize_skills() -> void:
 	int_array1 = [6, 6, 6]
 	for i in AVAILABLE_LEVELS:
 		_skill.item_skill_base[i].stats.attack_speed_percent = float_array[i]
-		_skill.item_skill_base[i].stats.hostile_silence_duration = int_array1[i]
+		_skill.item_skill_base[i].stats.silence_duration = int_array1[i]
 		_skill.item_skill_base[i].create_effect = true
-		_skill.item_skill_base[i].stats.is_owner_friendly = true
+		_skill.item_skill_base[i].apply_to_enemy = false
 		_skill.item_skill_base[i].mana_cost = int_array[i]
 		_skill.item_skill_base[i].cooldown = float_array1[i]
 		_skill.item_skill_base[i].duration_in_seconds = int_array1[i]
@@ -234,6 +237,7 @@ static func initialize_skills() -> void:
 	_skill = _SKILLS[aux_skill_name]
 	_skill.region_rect = Rect2(2 * FRAME_SIZE + _ATLAS_START_POS.x, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
 	for i in range(AVAILABLE_LEVELS):
+		_skill.item_skill_base[i].apply_to_enemy = false
 		_skill.item_skill_base[i].description = "Upon death, splits into " + str((i + 1) * 2) + " copies with half the original HP."
 	# endregion
 
@@ -245,11 +249,11 @@ static func initialize_skills() -> void:
 
 	int_array = [3, 4, 5]
 	for i in AVAILABLE_LEVELS:
+		_skill.item_skill_base[i].apply_to_enemy = true
 		_skill.item_skill_base[i].stats.attack_speed_percent = -0.1
 		_skill.item_skill_base[i].stats.move_speed_percent = -0.1
 		_skill.item_skill_base[i].stats.freeze_duration = 4
 		_skill.item_skill_base[i].max_stacks = int_array[i]
-		_skill.item_skill_base[i].apply_to_owner = false
 		aux_text = StringHelpers.format_percent(_skill.item_skill_base[i].stats.attack_speed_percent)
 		aux_text1 = StringHelpers.format_float_compact(_skill.item_skill_base[i].stats.freeze_duration)
 		_skill.item_skill_base[i].description = "The attacker's icy touch partially freezes the target, reducing their movement and attack speed by " + aux_text + " for " + aux_text1 + " seconds."
@@ -265,7 +269,7 @@ static func initialize_skills() -> void:
 	for i in float_array.size():
 		_skill.item_skill_base[i].stats.stun_chance = float_array[i]
 		_skill.item_skill_base[i].stats.stun_duration = 2
-		_skill.item_skill_base[i].apply_to_owner = true
+		_skill.item_skill_base[i].apply_to_enemy = false
 		_skill.item_skill_base[i].max_stacks = 1
 		aux_text = StringHelpers.format_percent(_skill.item_skill_base[i].stats.stun_chance)
 		aux_text1 = StringHelpers.format_float_compact(_skill.item_skill_base[i].stats.stun_duration)
@@ -295,7 +299,7 @@ static func initialize_skills() -> void:
 	for i in float_array.size():
 		_skill.item_skill_base[i].stats.custom_damage_heal.extra_value_by_intelligence = float_array[i]
 	for i in range(AVAILABLE_LEVELS):
-		_skill.item_skill_base[i].apply_to_owner = false
+		_skill.item_skill_base[i].apply_to_enemy = true
 		_skill.item_skill_base[i].damage_type = DamageType.MAGIC
 
 		aux_text = StringHelpers.format_float_compact(_skill.item_skill_base[i].stats.custom_damage_heal.base_damage_heal)
@@ -312,6 +316,7 @@ static func initialize_skills() -> void:
 
 	float_array = [0.1, 0.15, 0.2]
 	for i in AVAILABLE_LEVELS:
+		_skill.item_skill_base[i].apply_to_enemy = false
 		_skill.item_skill_base[i].stats.physical_attack_power_percent = float_array[i]
 		_skill.item_skill_base[i].stats.attack_speed_percent = float_array[i]
 		_skill.item_skill_base[i].stats.hp_regeneration_points_percent = float_array[i]
@@ -331,6 +336,7 @@ static func initialize_skills() -> void:
 	float_array = [0.4, 0.5, 0.5]
 	int_array = [1, 1, 2]
 	for i in AVAILABLE_LEVELS:
+		_skill.item_skill_base[i].apply_to_enemy = false
 		_skill.item_skill_base[i].stats.cleave_effect = CleaveEffect.new(float_array[i], int_array[i])
 		_skill.item_skill_base[i].description = "Deals " + StringHelpers.format_percent(float_array[i]) + " of the damage as a cleave effect to enemies around " + str(int_array[i]) + " tiles."
 	# endregion
@@ -487,7 +493,6 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 	if frozen_skill:
 		var skill_stats = frozen_skill.stats.get_combat_stats_instance()
 		var effect = CombatEffect.get_temporal_effect(Names.FROZEN_TOUCH, skill_stats.freeze_duration, frozen_skill.max_stacks, skill_stats)
-		effect.stats.is_owner_friendly = false
 		effect.set_region_rect(Skill.get_skill(Names.FROZEN_TOUCH, false).region_rect)
 		_target.effects_helper.add_effect(effect)
 		SoundsHelper.play_random_ice_hit()

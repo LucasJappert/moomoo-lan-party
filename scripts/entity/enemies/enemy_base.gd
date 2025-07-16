@@ -1,6 +1,8 @@
 class_name EnemyBase
 
 static var REGISTERED_CLASSES = [
+	EnemyDeadShield,
+	EnemySilentShuriken,
 	EnemyNightArcher,
 	EnemyInfernalMinotaur,
 	EnemyBoneguard,
