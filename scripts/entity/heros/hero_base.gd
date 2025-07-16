@@ -32,12 +32,12 @@ static func _commons_initialize(player: Player, stats: CombatStats) -> void:
 	stats.intelligence = 50
 	stats.attack_range = CombatStats.MIN_ATTACK_RANGE
 	# region Add some potions 
-	player.add_item(Item.get_item(Item.Names.HEALTH_POTION_I, 100, true))
-	player.add_item(Item.get_item(Item.Names.MANA_POTION_I, 100, true))
-	player.add_item(Item.get_item(Item.Names.HEALTH_POTION_III, 100, true))
-	player.add_item(Item.get_item(Item.Names.MANA_POTION_III, 100, true))
-	# player.add_item(Item.get_item(Item.Names.CLEAVE_EDGE, 1, false))
-	# player.add_item(Item.get_item(Item.Names.STUNNING_EDGE, 1, false))
+	player.add_item(Item.get_item(Item.Names.HEALTH_POTION_I, 20, true))
+	player.add_item(Item.get_item(Item.Names.MANA_POTION_I, 20, true))
+	# player.add_item(Item.get_item(Item.Names.HEALTH_POTION_III, 100, true))
+	# player.add_item(Item.get_item(Item.Names.MANA_POTION_III, 100, true))
+	# player.add_item(Item.get_item(Item.Names.CLEAVE_EDGE, 1, true))
+	# player.add_item(Item.get_item(Item.Names.STUNNING_EDGE, 1, true))
 
 static func get_rect_frames(pos: Vector2i) -> Array[Rect2]:
 	var result: Array[Rect2] = []

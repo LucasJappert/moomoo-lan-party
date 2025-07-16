@@ -210,6 +210,18 @@ columns = 4
 [node name="HeroBox" parent="MainPanel/HeroOptionsPanel/CenterContainer/GridHerosContainer" instance=ExtResource("3_mymk7")]
 layout_mode = 2
 
+[node name="HeroBox2" parent="MainPanel/HeroOptionsPanel/CenterContainer/GridHerosContainer" instance=ExtResource("3_mymk7")]
+layout_mode = 2
+
+[node name="HeroBox3" parent="MainPanel/HeroOptionsPanel/CenterContainer/GridHerosContainer" instance=ExtResource("3_mymk7")]
+layout_mode = 2
+
+[node name="HeroBox4" parent="MainPanel/HeroOptionsPanel/CenterContainer/GridHerosContainer" instance=ExtResource("3_mymk7")]
+layout_mode = 2
+
+[node name="HeroBox5" parent="MainPanel/HeroOptionsPanel/CenterContainer/GridHerosContainer" instance=ExtResource("3_mymk7")]
+layout_mode = 2
+
 [node name="TutorialButtonScene" parent="MainPanel" instance=ExtResource("5_53234")]
 offset_left = 1356.0
 offset_top = 871.0

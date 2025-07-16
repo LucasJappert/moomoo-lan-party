@@ -71,9 +71,9 @@ func connect_to_new_target_to_attack_selected(p_callback: Callable) -> void:
 	EventBus.connect(NEW_TARGET_TO_ATTACK_SELECTED, p_callback)
 
 const ITEM_UPDATED := "item_updated"
-signal item_updated(p_owner: Entity, p_item: Item, p_slot_number: int, p_target: Entity)
-func emit_item_updated(p_owner: Entity, p_item: Item, p_slot_number: int, p_target: Entity):
-	emit_signal(ITEM_UPDATED, p_owner, p_item, p_slot_number, p_target)
+signal item_updated(p_owner: Entity, p_item: Item, p_slot_number: int)
+func emit_item_updated(p_owner: Entity, p_item: Item, p_slot_number: int):
+	emit_signal(ITEM_UPDATED, p_owner, p_item, p_slot_number)
 func connect_to_item_updated(p_callback: Callable) -> void:
 	EventBus.connect(ITEM_UPDATED, p_callback)
 

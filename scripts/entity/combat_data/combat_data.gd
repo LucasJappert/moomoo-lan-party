@@ -4,6 +4,7 @@ extends CharacterBody2D
 
 const EXP_MULTIPLIER: int = 1
 
+var shopping_helper: ShoppingHelper = ShoppingHelper.new(self)
 var _active_skills: Array[SkillBase] = []
 var effects_helper: EffectsHelper = EffectsHelper.new()
 @export var current_hp: int = 0
@@ -261,11 +262,13 @@ func update_base_stats(new_stats: CombatStats) -> void:
 func update_item(item: Item, index: int) -> bool:
 	if index >= _items.size(): printerr("Index out of range: ", index)
 
+	if item.quantity <= 0: item = null
 	_items[index] = item
+	EventBus.emit_item_updated(my_owner(), item, index + 1)
 
 	update_cache_total_stats()
 	return true
-
+		
 func add_item(item: Item, index: int = -1) -> bool:
 	if index >= 0:
 		return update_item(item, index)
@@ -280,10 +283,6 @@ func use_item(_slot_number: int) -> void: # Called from _on_key_pressed
 	if _items[_slot_number - 1] == null: return print("No item in slot: ", _slot_number)
 
 	_items[_slot_number - 1].use_item(_slot_number, my_owner(), null)
-
-func item_updated_by_rpc(_item: Item, _slot_number: int) -> void:
-	update_item(_item, _slot_number - 1)
-	EventBus.emit_item_updated(my_owner(), _item, _slot_number, null)
 
 func remove_effect_by_name(effect_name: String) -> void:
 	effects_helper.remove_effect_by_name(effect_name)

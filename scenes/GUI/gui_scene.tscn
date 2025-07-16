@@ -1,7 +1,8 @@
-[gd_scene load_steps=16 format=3 uid="uid://dywrecu6pml77"]
+[gd_scene load_steps=17 format=3 uid="uid://dywrecu6pml77"]
 
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="1_gbqeo"]
 [ext_resource type="Script" uid="uid://0x16271fub0a" path="res://scripts/GUI/gui_scene.gd" id="1_li5rb"]
+[ext_resource type="PackedScene" uid="uid://c2r1052w1i2rt" path="res://scenes/GUI/shop/shop_interface.tscn" id="2_q1tax"]
 [ext_resource type="PackedScene" uid="uid://buj7u3vemtwye" path="res://scenes/GUI/skill_slot.tscn" id="3_acekp"]
 [ext_resource type="StyleBox" uid="uid://rxq74mic16cg" path="res://bg_label_stats.tres" id="4_0ehin"]
 [ext_resource type="PackedScene" uid="uid://c1csmsd22qmft" path="res://scenes/GUI/gui_effects_scene.tscn" id="4_fo7ei"]
@@ -192,6 +193,13 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [node name="GuiScene" type="CanvasLayer"]
 script = ExtResource("1_li5rb")
+
+[node name="ShopInterface" parent="." instance=ExtResource("2_q1tax")]
+unique_name_in_owner = true
+offset_left = 1492.0
+offset_top = 219.0
+offset_right = 1492.0
+offset_bottom = 219.0
 
 [node name="MultiplayerHUD" type="Control" parent="."]
 unique_name_in_owner = true
@@ -833,10 +841,10 @@ text = "asdasd"
 
 [node name="TutorialButton" parent="." instance=ExtResource("8_7pojj")]
 unique_name_in_owner = true
-offset_left = 1816.0
-offset_top = 804.0
-offset_right = 1816.0
-offset_bottom = 804.0
+offset_left = 1817.0
+offset_top = 28.0
+offset_right = 1817.0
+offset_bottom = 28.0
 
 [node name="CountdownScene" parent="." instance=ExtResource("9_b6l0f")]
 unique_name_in_owner = true

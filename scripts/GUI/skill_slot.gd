@@ -36,8 +36,8 @@ func _ready():
 	upgrade_button.visible = false
 	_initialize_styles()
 	connect("child_exiting_tree", _on_child_exiting_tree)
-	connect("mouse_entered", func(): _on_mouse_entered())
-	connect("mouse_exited", func(): _on_mouse_exited())
+	connect("mouse_entered", _on_mouse_entered)
+	connect("mouse_exited", _on_mouse_exited)
 	
 	# Try settings for hero picker
 	if _try_settings_for_hero_picker(): return
@@ -159,6 +159,7 @@ func _lock_slot() -> void:
 
 
 func _on_mouse_entered():
+	_is_hovering = true
 	if not skill: return
 	MyTooltip.show_tooltip(skill.item_skill_base[0].my_name, skill.get_description(false), 20)
 

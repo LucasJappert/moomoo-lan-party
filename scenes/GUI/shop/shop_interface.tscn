@@ -1,0 +1,102 @@
+[gd_scene load_steps=5 format=3 uid="uid://c2r1052w1i2rt"]
+
+[ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="1_7dpoe"]
+[ext_resource type="Script" uid="uid://bh180u8ub2flw" path="res://scenes/GUI/shop/shop_interface.gd" id="1_t66vx"]
+[ext_resource type="PackedScene" uid="uid://bd8pr2lqlgogp" path="res://scenes/GUI/shop/components/shop_item.tscn" id="2_t66vx"]
+[ext_resource type="PackedScene" uid="uid://3ndqkrmv60an" path="res://scenes/general_objects/my_button.tscn" id="4_85sws"]
+
+[node name="ShopInterface" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_t66vx")
+
+[node name="MainContainer" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 430.0
+offset_bottom = 620.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MainContainerItems" type="NinePatchRect" parent="MainContainer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -215.0
+offset_top = -310.0
+offset_right = 215.0
+offset_bottom = 310.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_7dpoe")
+region_rect = Rect2(1056, 1952, 64, 64)
+patch_margin_left = 20
+patch_margin_top = 20
+patch_margin_right = 20
+patch_margin_bottom = 20
+
+[node name="ContainerOfContainerItemByTypes" type="VBoxContainer" parent="MainContainer/MainContainerItems"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 13.0
+offset_top = 23.0
+offset_right = 417.0
+offset_bottom = 339.0
+theme_override_constants/separation = 20
+
+[node name="ContainerItemByTypesModel" type="VBoxContainer" parent="MainContainer/MainContainerItems/ContainerOfContainerItemByTypes"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LabelTitle" type="Label" parent="MainContainer/MainContainerItems/ContainerOfContainerItemByTypes/ContainerItemByTypesModel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "CONSUMABLES:"
+uppercase = true
+
+[node name="ItemsContainer" type="GridContainer" parent="MainContainer/MainContainerItems/ContainerOfContainerItemByTypes/ContainerItemByTypesModel"]
+layout_mode = 2
+columns = 6
+
+[node name="ShopItem" parent="MainContainer/MainContainerItems/ContainerOfContainerItemByTypes/ContainerItemByTypesModel/ItemsContainer" instance=ExtResource("2_t66vx")]
+layout_mode = 2
+
+[node name="ShopItem2" parent="MainContainer/MainContainerItems/ContainerOfContainerItemByTypes/ContainerItemByTypesModel/ItemsContainer" instance=ExtResource("2_t66vx")]
+layout_mode = 2
+
+[node name="ShopItem3" parent="MainContainer/MainContainerItems/ContainerOfContainerItemByTypes/ContainerItemByTypesModel/ItemsContainer" instance=ExtResource("2_t66vx")]
+layout_mode = 2
+
+[node name="ShopItem4" parent="MainContainer/MainContainerItems/ContainerOfContainerItemByTypes/ContainerItemByTypesModel/ItemsContainer" instance=ExtResource("2_t66vx")]
+layout_mode = 2
+
+[node name="ShopItem5" parent="MainContainer/MainContainerItems/ContainerOfContainerItemByTypes/ContainerItemByTypesModel/ItemsContainer" instance=ExtResource("2_t66vx")]
+layout_mode = 2
+
+[node name="ShopItem6" parent="MainContainer/MainContainerItems/ContainerOfContainerItemByTypes/ContainerItemByTypesModel/ItemsContainer" instance=ExtResource("2_t66vx")]
+layout_mode = 2
+
+[node name="ShopItem7" parent="MainContainer/MainContainerItems/ContainerOfContainerItemByTypes/ContainerItemByTypesModel/ItemsContainer" instance=ExtResource("2_t66vx")]
+layout_mode = 2
+
+[node name="ShopButton" parent="MainContainer" instance=ExtResource("4_85sws")]
+unique_name_in_owner = true
+layout_mode = 2
+offset_left = 289.0
+offset_top = 554.0
+offset_right = 429.0
+offset_bottom = 619.0
+text = "Hide"
+force_width = 80

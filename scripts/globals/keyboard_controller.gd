@@ -5,6 +5,7 @@ func _unhandled_input(event: InputEvent):
 
 	if event is InputEventKey and event.pressed:
 		if event.keycode == KEY_ESCAPE:
+			if GameManager.game_world.gui_scene.shop_interface.close_shop(): return
 			get_tree().quit() # CLOSE THE GAME
 
 		if event.keycode == KEY_I:

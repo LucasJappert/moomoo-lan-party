@@ -18,7 +18,7 @@ const _ATLAS_START_POS = Vector2(0, 1504)
 
 var quantity: int = 1
 var is_consumable: bool = false
-var cost: int = 0
+var buy_price: int = 0
 var region_rect: Rect2 = Rect2()
 
 func _init(_name: String = "", _type: String = SkillType.PASSIVE):
@@ -38,6 +38,8 @@ static func initialize_items() -> void:
 	_item = _ITEMS[aux_item_name]
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 4, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
 	_item.stats.cleave_effect = CleaveEffect.new(0.3, 2)
+	_item.buy_price = 3300
+	_item.description = "Grants a " + StringHelpers.format_percent(_item.stats.cleave_effect.percent) + " extra damage to enemies around " + str(_item.stats.cleave_effect.radius_in_tiles) + " tiles."
 	# endregion
 
 	# region ITEM STUNNING_EDGE
@@ -47,6 +49,8 @@ static func initialize_items() -> void:
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 3, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
 	_item.stats.stun_chance = 0.2
 	_item.stats.stun_duration = 1.5
+	_item.buy_price = 2400
+	_item.description = "Grants a " + StringHelpers.format_percent(_item.stats.stun_chance) + " chance to stun the target for " + StringHelpers.format_float_compact(_item.stats.stun_duration) + " seconds."
 	# endregion
 
 	# region ITEM HEALTH_POTION_I
@@ -56,7 +60,8 @@ static func initialize_items() -> void:
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 0, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
 	_item.stats.hp = 500
 	_item.cooldown = 0.5
-	_item.cost = 10
+	_item.buy_price = 10
+	_item.is_consumable = true
 	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.hp) + " HP."
 	# endregion
 	
@@ -67,7 +72,8 @@ static func initialize_items() -> void:
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 1, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
 	_item.stats.hp = 2000
 	_item.cooldown = 0.5
-	_item.cost = 20
+	_item.buy_price = 20
+	_item.is_consumable = true
 	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.hp) + " HP."
 	# endregion
 
@@ -78,7 +84,8 @@ static func initialize_items() -> void:
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 2, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
 	_item.stats.hp = 10000
 	_item.cooldown = 0.5
-	_item.cost = 50
+	_item.buy_price = 50
+	_item.is_consumable = true
 	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.hp) + " HP."
 	# endregion
 
@@ -90,7 +97,8 @@ static func initialize_items() -> void:
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 0, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
 	_item.stats.mana = 500
 	_item.cooldown = 0.5
-	_item.cost = 10
+	_item.buy_price = 10
+	_item.is_consumable = true
 	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.mana) + " mana."
 	# endregion
 
@@ -101,7 +109,8 @@ static func initialize_items() -> void:
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 1, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
 	_item.stats.mana = 2000
 	_item.cooldown = 0.5
-	_item.cost = 20
+	_item.buy_price = 20
+	_item.is_consumable = true
 	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.mana) + " mana."
 	# endregion
 
@@ -112,7 +121,8 @@ static func initialize_items() -> void:
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 2, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
 	_item.stats.mana = 10000
 	_item.cooldown = 0.5
-	_item.cost = 50
+	_item.buy_price = 50
+	_item.is_consumable = true
 	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.mana) + " mana."
 	# endregion
 
@@ -140,29 +150,43 @@ func _aux_after_use(_slot_number: int, _my_owner: Entity, _target: Entity = null
 	quantity -= 1
 	if quantity < 0: quantity = 0
 
-	var _message = ItemUpdatedMessage.new(self, _slot_number)
-	_my_owner.rpc_handler.send_item_updated(_message)
+	_my_owner.update_item(self, _slot_number - 1)
 
 # endregion ................. SETTERs
 
 
 # region :::::::::::::::::::: GETTERs
-static func get_item(_item_name: String, p_quantity: int = 1, p_is_consumable: bool = false, new_copy: bool = true) -> Item:
+static func get_items_by_consumable(_is_consumable: bool) -> Array[Item]:
+	if _ITEMS.is_empty():
+		initialize_items()
+	
+	var filtered_items: Array[Item] = _ITEMS.values().filter(
+		func(item: Item): return item.is_consumable == _is_consumable
+	)
+	
+	filtered_items.sort_custom(func(a: Item, b: Item):
+		if a.buy_price == b.buy_price: return a.my_name < b.my_name
+		return a.buy_price < b.buy_price
+	)
+	
+	return filtered_items
+
+static func get_item(_item_name: String, p_quantity: int = 1, new_copy: bool = true) -> Item:
 	if _ITEMS.is_empty(): initialize_items()
 	
 	if not new_copy: return _ITEMS[_item_name]
 	
 	var new_item: Item = ObjectHelpers.deep_clone(_ITEMS[_item_name])
 	new_item.quantity = p_quantity
-	new_item.is_consumable = p_is_consumable
 	return new_item
 
 func get_description(include_stats_description: bool = true) -> String:
 	var result = super.get_description(include_stats_description)
 
-	if cost > 0:
-		result += str("- Cost: ", cost, "\n")
-		result += str("- Sell: ", int(cost * 0.7), "\n")
+	if buy_price > 0:
+		result += "\n"
+		result += str("- Buy price: ", StringHelpers.format_float(buy_price), "\n")
+		result += str("- Sell price: ", StringHelpers.format_float(buy_price * 0.7), "\n")
 	
 	return result
 
@@ -180,7 +204,13 @@ func can_use(my_owner: Entity) -> bool:
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
 	# Cleave verification
 	var cleave_items := _attacker.get_items_by_name(Names.CLEAVE_EDGE)
+	if cleave_items.is_empty(): return
 	for _item in cleave_items:
 		CleaveEffect.auxiliary_actions_after_hit(_item.stats, _attacker, _target, _di)
+	
+	# var cleave_stats := CombatStats.new()
+	# for _item in cleave_items:
+	# 	cleave_stats.accumulate_combat_stats(_item.stats)
+	# CleaveEffect.auxiliary_actions_after_hit(_item.stats, _attacker, _target, _di)
 
 # endregion ................. SKILLS LOGICS

@@ -54,6 +54,7 @@ const EXP_BAR_FULL_SIZE = Vector2i(612, 27)
 # endregion
 
 # region Panel BOTTOM RIGHT
+@onready var shop_interface: ShopInterface = %ShopInterface
 @onready var tutorial_button = %TutorialButton
 @onready var _mana_ball = $PanelBR/ManaBall
 @onready var _mana_label = $PanelBR/LabelMana
@@ -122,6 +123,8 @@ func _process(_delta: float) -> void:
 
 
 # region	SETTERS
+func _on_shop_button_pressed() -> void:
+	print("Shop button pressed")
 func init_scene(entity: Entity) -> void:
 	_bottom_target = entity
 	_set_my_player_avatar_region(entity)

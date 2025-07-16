@@ -2,6 +2,12 @@
 
 📆 xx/07/2025
 
+- ✅ Create system to buy items
+- ✅ Create new Shuriken projectile
+- ✅ Create a wind effect on the Shuriken projectile
+- ✅ Create skill that silences and causes damage over time for a certain period
+- ✅ Add fire sound
+- ✅ Create 2 new enemy types to later configure wave 6 (Dead Shield and Silent Shuriken)
 - ✅ New enemy Infernal Minotaur and Night Archer
 - ✅ Configure enemies for wave 5
 - ✅ Add animation when clicking to move to a tile

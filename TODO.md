@@ -5,16 +5,10 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- ✅ Create new Shuriken projectile
-- ✅ Create a wind effect on the Shuriken projectile
-- ✅ Create skill that silences and causes damage over time for a certain period
-- ✅ Add fire sound
-- ✅ Create 2 new enemy types to later configure wave 6 (Dead Shield and Silent Shuriken)
-
-- Crear sistema para comprar items
 - Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)
 - Sonidos limitarlos a la vista en pantalla
 
+- Agregar efecto de daño recibido
 - Ver sonidos que entran en loop indebidamente
 - Crear skill que refleja un % de daño recibido al atacante, este daño es puro
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido

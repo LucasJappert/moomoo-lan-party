@@ -66,15 +66,6 @@ func _on_add_animation(data: Dictionary):
 	ObjectHelpers.from_dict(message, data)
 	AnimationsHelper.apply_animation(message, _my_owner)
 
-func send_item_updated(_item: ItemUpdatedMessage) -> void:
-	if not GameManager.AM_I_HOST: return print("Not host")
-	var data = ObjectHelpers.to_dict(_item, true)
-	rpc("_on_slot_item_info_updated", data)
-@rpc("authority", "call_local")
-func _on_slot_item_info_updated(data: Dictionary):
-	var _message := ItemUpdatedMessage.new()
-	ObjectHelpers.from_dict(_message, data)
-	_my_owner.item_updated_by_rpc(_message._item, _message._slot_number)
 # endregion MESSAGES RECEIVED FROM SERVER
 
 

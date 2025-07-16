@@ -7,11 +7,12 @@ static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 const MAX_LEVEL: int = 30
 @export var player_id: int = 0
 @export var current_exp: int = 0
-const INITIAL_GOLD: int = 100
+const INITIAL_GOLD: int = 20000
 @export var current_gold: int:
 	set(_value):
 		current_gold = _value
-		current_gold_string = StringHelpers.format_float_compact(current_gold)
+		if current_gold > 9999: current_gold_string = StringHelpers.format_float_compact(current_gold)
+		else: current_gold_string = StringHelpers.format_float(current_gold)
 var current_gold_string: String = ""
 @export var skill_points_to_assign: int:
 	set(_value):

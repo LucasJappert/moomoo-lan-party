@@ -1,0 +1,64 @@
+[gd_scene load_steps=5 format=3 uid="uid://bd8pr2lqlgogp"]
+
+[ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="1_3641c"]
+[ext_resource type="Script" uid="uid://p2f3y6x0vvcf" path="res://scenes/GUI/shop/components/shop_item.gd" id="1_x8g3h"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x8g3h"]
+atlas = ExtResource("1_3641c")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3641c"]
+atlas = ExtResource("1_3641c")
+region = Rect2(128, 1568, 64, 64)
+
+[node name="ShopItem" type="Control"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_x8g3h")
+
+[node name="Panel" type="NinePatchRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_3641c")
+region_rect = Rect2(1056, 1952, 64, 64)
+patch_margin_left = 30
+patch_margin_top = 20
+patch_margin_right = 20
+patch_margin_bottom = 20
+
+[node name="Sprite" type="Sprite2D" parent="Panel"]
+unique_name_in_owner = true
+visible = false
+position = Vector2(9, 9)
+scale = Vector2(0.71875, 0.71875)
+texture = SubResource("AtlasTexture_x8g3h")
+centered = false
+region_enabled = true
+region_rect = Rect2(128, 1568, 64, 64)
+
+[node name="TextureRect" type="TextureRect" parent="Panel"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+texture = SubResource("AtlasTexture_3641c")
+expand_mode = 1
