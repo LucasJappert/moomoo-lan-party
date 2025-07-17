@@ -488,6 +488,8 @@ static func actions_before_entity_death(_dead_entity: Entity, _attacker: Entity)
 			GameManager.spawn_enemy(new_enemy)
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
+	if not ObjectHelpers.valid_instance(_attacker): return
+	
 	# Freeze verification
 	var frozen_skill = _attacker.get_learned_skill(Names.FROZEN_TOUCH)
 	if frozen_skill:

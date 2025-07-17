@@ -120,7 +120,7 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	if not Skill.actions_before_receive_damage(_attacker, my_owner(), _di): return
 
 	var my_stats = cache_total_stats
-	var attacker_stats = _attacker.cache_total_stats
+	var attacker_stats = _attacker.cache_total_stats if _attacker else CombatStats.EMPTY_STATS
 	
 	var attacker_can_miss := _check_ignore_enemy_evasion(_di, attacker_stats)
 	if attacker_can_miss: _di.can_be_evaded = false

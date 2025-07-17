@@ -9,6 +9,7 @@ var mana_burn: ManaBurn
 var ignore_enemy_evasion_chance: float = 0.0
 var cleave_effect: CleaveEffect
 var level: int
+static var EMPTY_STATS: CombatStats = CombatStats.new()
 
 @export var hp: int = 0
 @export var mana: int = 0

@@ -85,6 +85,8 @@ static func get_temporal_effect(p_name: String, _duration_in_seconds: float, _ma
 	return result
 
 static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _di: DamageInfo) -> void:
+	if not ObjectHelpers.valid_instance(_attacker): return
+	
 	# Should be called only on the server
 	var _attacker_stats = _attacker.cache_total_stats
 

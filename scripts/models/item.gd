@@ -202,6 +202,8 @@ func can_use(my_owner: Entity) -> bool:
 # region :::::::::::::::::::: ITEMs LOGICS
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
+	if not ObjectHelpers.valid_instance(_attacker): return
+	
 	# Cleave verification
 	var cleave_items := _attacker.get_items_by_name(Names.CLEAVE_EDGE)
 	if cleave_items.is_empty(): return

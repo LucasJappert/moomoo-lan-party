@@ -5,6 +5,13 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Review bug of looping sounds
+- Limitar casteo de hechizos según la distancia determinada por el mismo
+- Agregar un efecto de cleave y modificar la manera que trabaja, solamente deberia hacer daño a los 3 enemigos mas cercanos
+- Implementar sistema de craft de items
+- Agregar item que brinda un 20% de lifesteal
+- Agregar item que brinda 40 puntos de agi, fza e int
+- Agregar un item que
 - Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)
 - Sonidos limitarlos a la vista en pantalla
 
@@ -24,7 +31,6 @@
 - Agregar quinta skill al nivel 20
 - Implementar sistema de asignación de puntos en lugar de skills level
 - Refactorizar escena GUI (dividir en escenas separadas la parte top-left, bottom-right, etc.)
-- Agregar item que brinda un 20% de lifesteal
 - Capear stats como defensas y evasion.
 - Agregar un item/skill que al activarlo te hace inmune a los hechizos y a ciertos debuffs como silencios.
 - Refactor the GUI by dividing it into panels (TOP-LEFT, BOTTOM-LEFT, BOTTOM-RIGHT)

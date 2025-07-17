@@ -72,16 +72,21 @@ static func _setup_player(player: AudioStreamPlayer, stream: AudioStream, volume
 	player.stream = stream
 	player.volume_db = volume
 
+	# 👇 Desconectar cualquier conexión previa a 'finished'
+	_disconnect_all_finished_connections(player)
+
+	# 👇 Forzar valor de loop si el stream lo soporta
+	if stream.has_method("set_loop"):
+		stream.loop = is_looping
+
 	_active_players.append(player)
 	_original_volumes[player] = volume
-
 	_playing_counts[path] = _playing_counts.get(path, 0) + 1
+
 	if is_looping:
 		_looping_players.append(player)
-		player.finished.connect(func():
-			if is_instance_valid(player):
-				player.play()
-		)
+		# Conectar directamente al método 'play' del propio player
+		player.finished.connect(Callable(player, "play"))
 	else:
 		player.finished.connect(func():
 			if _playing_counts.has(path):
@@ -89,6 +94,7 @@ static func _setup_player(player: AudioStreamPlayer, stream: AudioStream, volume
 			_active_players.erase(player)
 			_original_volumes.erase(player)
 		)
+
 
 static func is_playing(path: String) -> bool:
 	return _playing_counts.get(path, 0) > 0
@@ -115,12 +121,27 @@ static func stop_loop_by_path(path: String, fade_duration: float = 1.0):
 		if is_instance_valid(player) and player.stream and player.stream.resource_path == path:
 			var tween := player.create_tween()
 			tween.tween_property(player, "volume_db", -80.0, fade_duration).set_trans(Tween.TRANS_LINEAR)
-			
-			# Callback para detener el sonido y removerlo
+
 			tween.tween_callback(func():
+				# Desconectar reproducción automática en loop
+				if player.is_connected("finished", Callable(player, "play")):
+					player.disconnect("finished", Callable(player, "play"))
+
 				player.stop()
 				_looping_players.erase(player)
+				_active_players.erase(player)
+				_original_volumes.erase(player)
 			)
+			
+static func _on_looping_player_finished(player: AudioStreamPlayer, path: String) -> void:
+	if is_instance_valid(player):
+		print("🔁 Looping sound: ", path)
+		player.play()
+
+static func _disconnect_all_finished_connections(player: AudioStreamPlayer) -> void:
+	for conn in player.get_signal_connection_list("finished"):
+		if conn.has("target") and conn.has("method") and is_instance_valid(conn["target"]):
+			player.disconnect("finished", Callable(conn["target"], conn["method"]))
 
 static func mute_all():
 	_MUTED = true
