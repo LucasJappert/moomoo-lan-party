@@ -64,7 +64,17 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 
 # Must be overriden
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
+	if not _verify_range(_caster, _target, _learned_skill):
+		print("Out of range")
+		return false
+
 	return true
+
+static func _verify_range(_caster: Entity, _target: Entity, _learned_skill: ItemSkillBase) -> bool:
+	if _learned_skill.cast_range_in_tiles == 0: return true
+	if not _caster or not _target: return true
+
+	return _caster.is_in_range(_target.movement_helper.current_cell, _learned_skill.cast_range_in_tiles)
 
 # Must be overriden
 static func try_add_effect_from_skill(_owner: Entity, _skill: Skill) -> bool:

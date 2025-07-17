@@ -7,7 +7,8 @@ const CAN_USE_COLOR = Color.WHITE
 const CANT_USE_COLOR = Color(0.5, 0.5, 0.5)
 
 var apply_to_enemy: bool = true
-var range_in_tiles: float = 1
+var cast_range_in_tiles: int = 7
+var effect_radius_in_tiles: int = 1
 var instant_use: bool = false
 var auxiliary_float: float # Used for general purposes, like calculate percentage of damage respect to the strength
 var float_dict: Dictionary = {} # Used for general purposes, like apply damage after xx seconds
@@ -45,6 +46,12 @@ func get_description(include_stats_description: bool = true) -> String:
 	
 	if duration_in_seconds > 0:
 		result += str("- Duration: ", StringHelpers.format_float_compact(duration_in_seconds), "s\n")
+
+	if effect_radius_in_tiles > 0:
+		result += str("- Area of effect: ", effect_radius_in_tiles, " tiles\n")
+
+	if cast_range_in_tiles > 0:
+		result += str("- Cast range: ", cast_range_in_tiles, " tiles\n")
 
 	if mana_cost > 0:
 		result += str("- Mana cost: ", mana_cost, "\n")

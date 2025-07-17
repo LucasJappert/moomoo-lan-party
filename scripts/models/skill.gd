@@ -149,7 +149,7 @@ static func initialize_skills() -> void:
 	float_array = [0.5, 1, 1.5]
 	for i in AVAILABLE_LEVELS:
 		_skill.item_skill_base[i].apply_to_enemy = true
-		_skill.item_skill_base[i].range_in_tiles = 2
+		_skill.item_skill_base[i].effect_radius_in_tiles = 2
 		_skill.item_skill_base[i].instant_use = true
 		_skill.item_skill_base[i].damage_type = DamageType.MAGIC
 		_skill.item_skill_base[i].stats.stun_duration = int_array[i]
@@ -157,7 +157,7 @@ static func initialize_skills() -> void:
 		_skill.item_skill_base[i].mana_cost = int_array1[i]
 		_skill.item_skill_base[i].cooldown = 12
 		_skill.item_skill_base[i].description = (
-			"Stuns all enemies within " + str(_skill.item_skill_base[i].range_in_tiles) + " tiles for " + str(int_array[i]) +
+			"Stuns all enemies within " + str(_skill.item_skill_base[i].effect_radius_in_tiles) + " tiles for " + str(int_array[i]) +
 			" seconds and deals " + StringHelpers.format_percent(float_array[i]) +
 			" of the hero's total strength as damage."
 		)
@@ -351,7 +351,7 @@ func use(my_owner: Entity, target_entity: Entity) -> bool:
 
 	# New way to use skills
 	for skill_class in SkillBase.REGISTERED_SKILLS:
-		skill_class.try_to_use(my_owner, learned_skill, target_entity)
+		if not skill_class.try_to_use(my_owner, learned_skill, target_entity): return false
 		# Actions after cast
 		skill_class.actions_after_cast_skill(my_owner, learned_skill)
 
@@ -389,7 +389,7 @@ func _apply_earthshatter(_attacker: Entity) -> bool:
 	var learned_skill = get_learned_skill()
 	if not learned_skill: return false
 
-	var target_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, 20, _attacker.get_my_enemies(), learned_skill.range_in_tiles, [])
+	var target_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, 20, _attacker.get_my_enemies(), learned_skill.effect_radius_in_tiles, [])
 
 	var magic_damage: int = _attacker.cache_total_stats.strength * learned_skill.auxiliary_float
 	var total_magic_damage = _attacker.get_total_magic_damage(magic_damage)

@@ -5,8 +5,7 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Review bug of looping sounds
-- Limitar casteo de hechizos según la distancia determinada por el mismo
+- ✅ Fix bug where spellcasting was not limited by spell's distance itself
 - Agregar un efecto de cleave y modificar la manera que trabaja, solamente deberia hacer daño a los 3 enemigos mas cercanos
 - Implementar sistema de craft de items
 - Agregar item que brinda un 20% de lifesteal
@@ -14,6 +13,7 @@
 - Agregar un item que
 - Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)
 - Sonidos limitarlos a la vista en pantalla
+- Agregar barra de vida del moomoo y del pj fijas en algun lugar comodo
 
 - Agregar efecto de daño recibido
 - Ver sonidos que entran en loop indebidamente

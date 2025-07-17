@@ -86,6 +86,9 @@ func _on_entity_freed(entity_name: String) -> void:
 	verify_freed_target_view(entity_name)
 
 # region 	GETTERs
+func is_in_range(target_cell: Vector2i, distance_in_tiles: int) -> bool:
+	return (target_cell - movement_helper.current_cell).length() <= distance_in_tiles
+
 func is_my_player() -> bool: return false
 
 func get_my_enemies() -> Array[Entity]:

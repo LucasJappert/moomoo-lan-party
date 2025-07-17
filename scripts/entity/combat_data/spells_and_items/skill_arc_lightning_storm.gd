@@ -32,17 +32,13 @@ func process_skill(_owner: Entity, _delta: float) -> void:
 	seconds_elapsed_from_last_strike += _delta
 	if seconds_elapsed_from_last_strike < interval: return
 
-
 	seconds_elapsed_from_last_strike = 0
-	apply_strike(_owner)
-	_current_targets_count += 1
+	if not apply_strike(_owner): active = false # Stop if there is no next neartarget
 
-func apply_strike(_owner: Entity) -> void:
-	if _current_targets_count == 0: SoundsHelper.play_electric()
-
+func apply_strike(_owner: Entity) -> bool:
 	var closest_origin = _last_target_impacted.projectile_zone.global_position if not ObjectHelpers.is_null(_last_target_impacted) else _first_target_position
-	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(closest_origin, 1, _owner.get_my_enemies(), learned_skill.range_in_tiles, _excluded_targets)
-	if nearest_enemies.size() == 0: return
+	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(closest_origin, 1, _owner.get_my_enemies(), learned_skill.effect_radius_in_tiles, _excluded_targets)
+	if nearest_enemies.size() == 0: return false
 
 	var next_target: Entity = nearest_enemies[0]
 	_excluded_targets.append(next_target)
@@ -54,6 +50,11 @@ func apply_strike(_owner: Entity) -> void:
 	var _di := DamageInfo.new(total_magic_damage, learned_skill.damage_type, _owner.name)
 	next_target.server_receive_damage(_di, _owner)
 	next_target.apply_stun(learned_skill.float_dict["ministun_in_seconds"])
+	
+	if _current_targets_count == 0: SoundsHelper.play_electric()
+	_current_targets_count += 1
+	
+	return true
 
 func _set_last_target_impacted(_target: Entity) -> void:
 	_last_target_impacted = _target
@@ -70,7 +71,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	aux_array[1] = [12, 9, 6] # cooldown
 	for i in Skill.AVAILABLE_LEVELS:
 		_SKILLS[NAME].item_skill_base[i].instant_use = false
-		_SKILLS[NAME].item_skill_base[i].range_in_tiles = 20
+		_SKILLS[NAME].item_skill_base[i].effect_radius_in_tiles = 7
 		_SKILLS[NAME].item_skill_base[i].max_targets = aux_array[0][i]
 		_SKILLS[NAME].item_skill_base[i].float_dict["ministun_in_seconds"] = float_array1[i]
 		_SKILLS[NAME].item_skill_base[i].float_dict["damage_per_target"] = int_array[i]
@@ -82,6 +83,8 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return true
+
+	if not super.try_to_use(_caster, _learned_skill, _target): return false
 
 	var skill := SkillArcLightningStorm.new(_caster, _target, _learned_skill, true)
 	_caster.add_active_skill(skill)

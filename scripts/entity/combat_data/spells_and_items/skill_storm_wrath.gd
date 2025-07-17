@@ -26,7 +26,7 @@ func process_skill(_owner: Entity, _delta: float) -> void:
 	apply_strike(_owner)
 
 func apply_strike(_owner: Entity) -> void:
-	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(_owner.global_position, 30, _owner.get_my_enemies(), learned_skill.range_in_tiles)
+	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(_owner.global_position, 30, _owner.get_my_enemies(), learned_skill.effect_radius_in_tiles)
 	if nearest_enemies.size() == 0: return
 
 	var random_enemy_index := randi() % nearest_enemies.size()
@@ -45,7 +45,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	aux_array[4] = [30, 28, 26] # cooldown
 	for i in Skill.AVAILABLE_LEVELS:
 		_SKILLS[NAME].item_skill_base[i].instant_use = true
-		_SKILLS[NAME].item_skill_base[i].range_in_tiles = 7
+		_SKILLS[NAME].item_skill_base[i].effect_radius_in_tiles = 7
 		_SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[2][i]
 		_SKILLS[NAME].item_skill_base[i].float_dict["strike_interval_in_seconds"] = aux_array[1][i]
 		_SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
@@ -58,14 +58,16 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		)
 
 		
-static func try_to_use(_owner: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
+static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return true
 
-	var _skill_to_exceute := _owner.get_skill(SkillArcLightningStorm.NAME)
+	if not super.try_to_use(_caster, _learned_skill, _target): return false
+
+	var _skill_to_exceute := _caster.get_skill(SkillArcLightningStorm.NAME)
 	if not _skill_to_exceute: return false
 	if not _skill_to_exceute.get_learned_skill(): return false
 
 	var skill := SkillStormWrath.new(_learned_skill, _skill_to_exceute.get_learned_skill())
-	_owner.add_active_skill(skill)
+	_caster.add_active_skill(skill)
 
 	return true

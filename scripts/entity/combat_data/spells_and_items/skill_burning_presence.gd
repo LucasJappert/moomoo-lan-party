@@ -25,7 +25,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		_SKILLS[NAME].item_skill_base[i].instant_use = false
 		_SKILLS[NAME].item_skill_base[i].create_effect = true
 		_SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
-		_SKILLS[NAME].item_skill_base[i].range_in_tiles = 3
+		_SKILLS[NAME].item_skill_base[i].effect_radius_in_tiles = 3
 		_SKILLS[NAME].item_skill_base[i].float_dict["magic_damage_per_second"] = aux_array[0][i]
 		_SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
 		_SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]
@@ -33,10 +33,12 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		_SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[3][i]
 		_SKILLS[NAME].item_skill_base[i].description = "Unleashes a blazing aura that ignites the ground around the owner, burning nearby enemies for " + StringHelpers.format_float(aux_array[0][i]) + " magic damage per second over " + str(aux_array[3][i]) + " seconds."
 
-static func try_to_use(my_owner: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
+static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return true
 
-	_target.add_active_skill(SkillBurningPresence.new(my_owner, _learned_skill))
+	if not super.try_to_use(_caster, _learned_skill, _target): return false
+
+	_target.add_active_skill(SkillBurningPresence.new(_caster, _learned_skill))
 
 	return true
 
@@ -75,7 +77,7 @@ func _apply_damage_to_enemies(damage: int) -> void:
 	_di.attacker_name = _my_owner.name
 	_di.damage_type = learned_skill.damage_type
 
-	var radius = learned_skill.range_in_tiles
+	var radius = learned_skill.effect_radius_in_tiles
 	var targets = GlobalsEntityHelpers.get_closest_entities(_my_owner.global_position, 100, _my_owner.get_my_enemies(), radius)
 	for target in targets:
 		target.server_receive_damage(_di, _my_owner)
@@ -90,7 +92,7 @@ func _try_update_effects_to_new_cell(_owner: Entity) -> void:
 
 	_try_to_remove_all_effects()
 
-	var radius = learned_skill.range_in_tiles
+	var radius = learned_skill.effect_radius_in_tiles
 	var neighbors_cells = MapManager.get_cells_in_radius(_current_cell, radius, false)
 	for neighbor_cell in neighbors_cells:
 		var fixed_position := MapManager.cell_to_world(neighbor_cell) + Vector2(MapManager.TILE_SIZE_FLOAT / 4, MapManager.TILE_SIZE_FLOAT / 4)

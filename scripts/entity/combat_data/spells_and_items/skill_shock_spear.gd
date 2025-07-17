@@ -16,7 +16,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	aux_array[3] = [1, 1.5, 2] # stun_duration
 	for i in Skill.AVAILABLE_LEVELS:
 		_SKILLS[NAME].item_skill_base[i].instant_use = false
-		_SKILLS[NAME].item_skill_base[i].range_in_tiles = 7
+		_SKILLS[NAME].item_skill_base[i].effect_radius_in_tiles = 7
 		_SKILLS[NAME].item_skill_base[i].float_dict["stun_radius"] = 1
 		_SKILLS[NAME].item_skill_base[i].float_dict["magic_damage"] = aux_array[0][i]
 		_SKILLS[NAME].item_skill_base[i].float_dict["stun_duration"] = aux_array[3][i]
@@ -27,6 +27,8 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return true
+
+	if not super.try_to_use(_caster, _learned_skill, _target): return false
 
 	apply_strike(_caster, _target, _learned_skill)
 

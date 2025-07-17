@@ -29,6 +29,8 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return true
 
+	if not super.try_to_use(_caster, _learned_skill, _target): return false
+
 	var new_effect = CombatEffect.get_temporal_effect(NAME, _learned_skill.duration_in_seconds, _learned_skill.max_stacks, _learned_skill.stats)
 	new_effect.set_description(_learned_skill.description)
 	new_effect.set_region_rect(Skill._SKILLS[_learned_skill.my_name].region_rect)

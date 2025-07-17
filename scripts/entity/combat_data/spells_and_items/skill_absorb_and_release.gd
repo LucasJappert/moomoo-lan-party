@@ -50,21 +50,23 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	float_array = [0.1, 0.15, 0.2]
 	int_array = [12, 10, 8]
 	for i in Skill.AVAILABLE_LEVELS:
-		var seconds_to_release: float = 7.0; var range_in_tiles: int = 3
+		var seconds_to_release: float = 7.0; var effect_radius: int = 3
 		_SKILLS[_skill_name].item_skill_base[i].instant_use = true
-		_SKILLS[_skill_name].item_skill_base[i].range_in_tiles = range_in_tiles
+		_SKILLS[_skill_name].item_skill_base[i].effect_radius_in_tiles = effect_radius
 		_SKILLS[_skill_name].item_skill_base[i].float_dict["percent_to_release"] = float_array[i]
 		_SKILLS[_skill_name].item_skill_base[i].duration_in_seconds = seconds_to_release
 		_SKILLS[_skill_name].item_skill_base[i].damage_type = DamageType.PHYSICAL
 		_SKILLS[_skill_name].item_skill_base[i].mana_cost = int_array1[i]
 		_SKILLS[_skill_name].item_skill_base[i].cooldown = int_array[i]
-		_SKILLS[_skill_name].item_skill_base[i].description = "Accumulates all damage received over " + StringHelpers.format_float(seconds_to_release) + " seconds. Then releases " + StringHelpers.format_percent(float_array[i]) + " of the accumulated damage as physical damage to all enemies within " + str(range_in_tiles) + " tiles."
+		_SKILLS[_skill_name].item_skill_base[i].description = "Accumulates all damage received over " + StringHelpers.format_float(seconds_to_release) + " seconds. Then releases " + StringHelpers.format_percent(float_array[i]) + " of the accumulated damage as physical damage to all enemies within " + str(effect_radius) + " tiles."
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != Skill.Names.ABSORB_AND_RELEASE: return true
 
+	if not super.try_to_use(_caster, _learned_skill, _target): return false
+
 	var _percent_to_release: float = _learned_skill.float_dict["percent_to_release"]
-	var skill_base := SkillAbsorbAndRelease.new(_learned_skill, true, _percent_to_release, _learned_skill.range_in_tiles)
+	var skill_base := SkillAbsorbAndRelease.new(_learned_skill, true, _percent_to_release, _learned_skill.effect_radius_in_tiles)
 	_target.add_active_skill(skill_base)
 
 	return true
