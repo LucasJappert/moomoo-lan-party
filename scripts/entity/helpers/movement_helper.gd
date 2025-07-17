@@ -118,20 +118,20 @@ func _try_to_update_target_from_latest_attacker():
 
 func _try_to_move(_delta: float) -> void:
 	var old_distance = current_target_pos - my_owner.global_position
-	var direction = old_distance.normalized()
+	var direction: Vector2 = old_distance.normalized()
 	# TODO: get_total_stats en Entity
-	var speed = my_owner.cache_total_stats.get_total_move_speed() * MapManager.TILE_SIZE.x
-	var velocity = direction * speed
+	var speed := my_owner.cache_total_stats.get_total_move_speed() * MapManager.TILE_SIZE.x
+	var velocity := direction * speed
 
-	var move_delta = velocity * _delta
-	var new_pos = my_owner.global_position + move_delta
+	var move_delta := velocity * _delta
+	var new_pos := my_owner.global_position + move_delta
 
 	# Detect if you went past the target
 	var new_distance = current_target_pos - new_pos
 
 	# If the sign of the dot product changes, you overshot
 	if old_distance.dot(new_distance) <= 0.0:
-		my_owner.global_position = current_target_pos
+		my_owner.global_position = Vector2i(current_target_pos)
 		current_target_pos = null
 
 	my_owner.global_position = new_pos

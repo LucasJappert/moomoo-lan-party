@@ -37,7 +37,7 @@ func process_skill(_owner: Entity, _delta: float) -> void:
 
 func apply_strike(_owner: Entity) -> bool:
 	var closest_origin = _last_target_impacted.projectile_zone.global_position if not ObjectHelpers.is_null(_last_target_impacted) else _first_target_position
-	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(closest_origin, 1, _owner.get_my_enemies(), learned_skill.effect_radius_in_tiles, _excluded_targets)
+	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(closest_origin, _owner.get_my_enemies(), learned_skill.effect_radius_in_tiles, 1, _excluded_targets)
 	if nearest_enemies.size() == 0: return false
 
 	var next_target: Entity = nearest_enemies[0]

@@ -78,7 +78,7 @@ func _apply_damage_to_enemies(damage: int) -> void:
 	_di.damage_type = learned_skill.damage_type
 
 	var radius = learned_skill.effect_radius_in_tiles
-	var targets = GlobalsEntityHelpers.get_closest_entities(_my_owner.global_position, 100, _my_owner.get_my_enemies(), radius)
+	var targets = GlobalsEntityHelpers.get_closest_entities(_my_owner.global_position, _my_owner.get_my_enemies(), radius)
 	for target in targets:
 		target.server_receive_damage(_di, _my_owner)
 

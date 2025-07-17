@@ -50,6 +50,7 @@ static func _get_final_message() -> String:
 	return "Wave " + str(current_wave + 1) + " is coming!\nLet's fight!"
 
 static func _process(_delta: float) -> void:
+	return
 	if not GameManager.AM_I_HOST: return
 	if not process_running: return
 	if not GameManager.MY_PLAYER: return
@@ -97,9 +98,9 @@ static func create_next_wave() -> void:
 
 			var enemy = _get_enemy(enemy_type, wave_direction, is_boss)
 
-			# enemy.can_attack = false
+			enemy.can_attack = false
 			GameManager.spawn_enemy(enemy)
-		# return
+			# return
 
 static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: bool) -> Enemy:
 	var enemy: Enemy = EnemyBase.get_new_instance(enemy_type)

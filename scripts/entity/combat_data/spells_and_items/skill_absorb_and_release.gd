@@ -31,7 +31,7 @@ func on_damage_received(_attacker: Entity, _damage_received: int) -> void:
 	damage_accumulated += _damage_received
 
 func _apply_release(_attacker: Entity, _target: Entity) -> void:
-	var nearest_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, 30, _attacker.get_my_enemies(), radius_in_tiles)
+	var nearest_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, _attacker.get_my_enemies(), radius_in_tiles)
 	var total_damage_to_release := int(damage_accumulated * percent_to_release)
 	for enemy in nearest_enemies:
 		enemy.server_receive_damage(DamageInfo.new(total_damage_to_release, DamageType.PHYSICAL, _attacker.name), _attacker)

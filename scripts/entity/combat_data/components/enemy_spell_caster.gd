@@ -62,7 +62,7 @@ func _try_cast_spell_to_an_ally(skill_to_cast: Skill) -> bool:
 			return skill_to_cast.use(_enemy_owner, _enemy_owner)
 
 	var near_allies = _enemy_owner.get_allies(true)
-	var closest_allies := GlobalsEntityHelpers.get_closest_entities(_enemy_owner.global_position, 20, near_allies, 6, [])
+	var closest_allies := GlobalsEntityHelpers.get_closest_entities(_enemy_owner.global_position, near_allies, 6)
 	if closest_allies.is_empty(): return false
 
 	# Ordena los aliados por el más reciente daño recibido (valor más alto)

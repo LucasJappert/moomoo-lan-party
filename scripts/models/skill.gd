@@ -389,7 +389,7 @@ func _apply_earthshatter(_attacker: Entity) -> bool:
 	var learned_skill = get_learned_skill()
 	if not learned_skill: return false
 
-	var target_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, 20, _attacker.get_my_enemies(), learned_skill.effect_radius_in_tiles, [])
+	var target_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, _attacker.get_my_enemies(), learned_skill.effect_radius_in_tiles)
 
 	var magic_damage: int = _attacker.cache_total_stats.strength * learned_skill.auxiliary_float
 	var total_magic_damage = _attacker.get_total_magic_damage(magic_damage)
@@ -425,7 +425,7 @@ func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:
 
 	var targets = [_target]
 	var my_enemies = _attacker.get_my_enemies()
-	targets.append_array(GlobalsEntityHelpers.get_closest_entities(_target.global_position, get_max_targets() - 1, my_enemies, 6, [_target]))
+	targets.append_array(GlobalsEntityHelpers.get_closest_entities(_target.global_position, my_enemies, 6, get_max_targets() - 1, [_target]))
 
 	for target in targets:
 		var _di := DamageInfo.new(total_magic_damage, get_learned_skill().damage_type)
@@ -513,7 +513,7 @@ static func actions_after_execute_physical_attack(_attacker: Entity, _target: En
 		# TODO: get this logic to MultipleStrike class
 		if multiple_strike_skill.stats.multiple_strike.increment_hits():
 			var extra_targets = multiple_strike_skill.stats.multiple_strike.extra_targets
-			var nearest_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, extra_targets, _attacker.get_my_enemies(), _attacker.get_attack_range(), [_target])
+			var nearest_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, _attacker.get_my_enemies(), _attacker.get_attack_range(), extra_targets, [_target])
 			for extra_target in nearest_enemies:
 				_attacker.execute_physical_attack(false, extra_target)
 

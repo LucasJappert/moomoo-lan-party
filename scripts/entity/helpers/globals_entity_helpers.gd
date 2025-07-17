@@ -36,9 +36,9 @@ static func get_owner(node: Node, max_depth: int = 10) -> Entity:
 
 static func get_closest_entities(
 	origin: Vector2,
-	max_targets: int,
 	entities: Array[Entity],
 	max_distance_in_tiles: float = 5.0,
+	max_targets: int = 100,
 	excluded_entities: Array[Entity] = []
 ) -> Array[Entity]:
 	var sorted: Array[Entity] = []
@@ -65,6 +65,26 @@ static func get_closest_entities(
 	)
 
 	return sorted.slice(0, max_targets)
+
+static func filter_enemies_according_to_caster_direction(
+	attacker_pos: Vector2,
+	target_pos: Vector2,
+	enemies: Array[Entity],
+	angle_threshold_deg: float = 90.0
+) -> Array[Entity]:
+	var attack_dir := (target_pos - attacker_pos).normalized()
+	var result: Array[Entity] = []
+
+	for enemy in enemies:
+		if not is_instance_valid(enemy): continue
+		var to_enemy := (enemy.global_position - target_pos).normalized()
+		var angle: float = rad_to_deg(attack_dir.angle_to(to_enemy))
+
+		# Si está a más de 90°, es "por detrás o a los costados"
+		if abs(angle) >= angle_threshold_deg:
+			result.append(enemy)
+
+	return result
 
 
 static func print_description_skills(entity: Entity) -> void:

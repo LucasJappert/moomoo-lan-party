@@ -103,7 +103,6 @@ static func play_sfx(path: String, volume: float = 0.0, max_simultaneous: int = 
 	_internal_play(path, volume, false, max_simultaneous)
 
 static func play_looping_sfx(path: String, volume: float = 0.0):
-	print("🔁 Looping sound (manual): ", path)
 	_internal_play(path, volume, true)
 
 static func stop_all_loops():

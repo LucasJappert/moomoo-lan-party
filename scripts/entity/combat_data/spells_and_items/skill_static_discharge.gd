@@ -22,7 +22,7 @@ static func actions_after_cast_skill(_owner: Entity, _skill_used: ItemSkillBase)
 		_apply_strikes(_owner, _learned_skill)
 
 static func _apply_strikes(_owner: Entity, _learned_skill: ItemSkillBase) -> void:
-	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(_owner.global_position, 30, _owner.get_my_enemies(), _learned_skill.effect_radius_in_tiles)
+	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(_owner.global_position, _owner.get_my_enemies(), _learned_skill.effect_radius_in_tiles)
 	for enemy in nearest_enemies:
 		var magic_damage: int = enemy.get_total_hp() * _learned_skill.float_dict["percent_damage_from_max_hp"]
 

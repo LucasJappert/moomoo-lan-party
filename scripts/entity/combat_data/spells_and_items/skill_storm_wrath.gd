@@ -26,7 +26,7 @@ func process_skill(_owner: Entity, _delta: float) -> void:
 	apply_strike(_owner)
 
 func apply_strike(_owner: Entity) -> void:
-	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(_owner.global_position, 30, _owner.get_my_enemies(), learned_skill.effect_radius_in_tiles)
+	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(_owner.global_position, _owner.get_my_enemies(), learned_skill.effect_radius_in_tiles)
 	if nearest_enemies.size() == 0: return
 
 	var random_enemy_index := randi() % nearest_enemies.size()

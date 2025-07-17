@@ -22,6 +22,7 @@ offset_right = 430.0
 offset_bottom = 620.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="MainContainerItems" type="NinePatchRect" parent="MainContainer"]
 unique_name_in_owner = true

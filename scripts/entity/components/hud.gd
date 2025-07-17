@@ -66,7 +66,7 @@ func _try_update_label():
 	# _label.text = str(my_owner.effects_helper.get_effects().size())
 	_label_container.visible = _label.text != ""
 		
-	# _label.text = str(my_owner.name)
+	_label.text = str(my_owner.global_position)
 
 func update_health_bar():
 	_health_current_bar.size.x = my_owner.current_hp * BAR_SIZE / my_owner.get_total_hp()

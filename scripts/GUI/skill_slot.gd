@@ -172,6 +172,6 @@ func _on_child_exiting_tree(_child) -> void:
 
 func _gui_input(event) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		if not _owner: return
+		if not _owner or not GameManager.MY_PLAYER: return
 
 		GameManager.MY_PLAYER.rpc_handler.notify_key_pressed_to_server(KeyboardHelper.SKILL_HOTKEYS[slot_number - 1])

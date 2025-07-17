@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Fix bug where spellcasting was not limited by spell's distance itself
 - ✅ Create system to buy items
 - ✅ Create new Shuriken projectile
 - ✅ Create a wind effect on the Shuriken projectile

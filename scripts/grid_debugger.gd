@@ -4,7 +4,7 @@ extends Node2D
 @export var text_color: Color = Color(1, 1, 1)
 @export var font: Font
 @export var solid_cell_color: Color = Color(1, 0, 0, 0.5)
-const _DRAW_GRID := false
+const _DRAW_GRID := true
 const _DRAW_SOLID_CELLS := false
 const _PRINT_COORDINATES := false
 const _DRAW_PATHS := false
