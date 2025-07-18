@@ -537,6 +537,7 @@ func execute_physical_attack(apply_extra_actions: bool = true, _custom_target: E
 	EntityState.change_to_attack(my_owner())
 
 	var final_target := _custom_target if _custom_target else target_to_attack
+	my_owner().set_direction_according_to_target(final_target)
 
 	_execute_attack_or_launch_projectile(final_target)
 

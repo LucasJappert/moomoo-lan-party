@@ -8,7 +8,7 @@ static var SCREEN_SIZE: Vector2 = Vector2.ZERO
 @onready var projectiles_spawner = $ProjectilesSpawner
 @onready var enemies_spawner = $EnemiesSpawner
 @onready var moomoo_spawner = $MoomooSpawner
-@onready var general_container = $GeneralContainer
+@onready var general_container = %GeneralContainer
 @onready var over_terrain_layer: Node2D = %OverTerrainLayer
 var ambient_sounds_helper: AmbientSoundsHelper = AmbientSoundsHelper.new()
 

@@ -113,6 +113,11 @@ func get_allies(include_me: bool = false) -> Array[Entity]:
 # endregion GETTERs
 
 # region 	SETTERs
+func set_direction_according_to_target(target: Entity) -> void:
+	direction = get_direction_according_to_target(target)
+	
+func get_direction_according_to_target(target: Entity) -> Vector2: return ObjectHelpers.get_snapped_8_direction(target.global_position - global_position)
+
 func set_boss_level(_level: int) -> void:
 	_boss_level = _level
 

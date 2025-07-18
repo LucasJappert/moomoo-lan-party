@@ -72,16 +72,30 @@ static func filter_enemies_according_to_caster_direction(
 	enemies: Array[Entity],
 	angle_threshold_deg: float = 90.0
 ) -> Array[Entity]:
-	var attack_dir := (target_pos - attacker_pos).normalized()
+	var attacker_cell := MapManager.world_to_cell(attacker_pos)
+	var target_cell := MapManager.world_to_cell(target_pos)
+
+	# Dirección redondeada a una de las 8
+	var attack_dir := ObjectHelpers.get_snapped_8_direction(Vector2(target_cell - attacker_cell)).normalized()
+
 	var result: Array[Entity] = []
 
 	for enemy in enemies:
 		if not is_instance_valid(enemy): continue
-		var to_enemy := (enemy.global_position - target_pos).normalized()
-		var angle: float = rad_to_deg(attack_dir.angle_to(to_enemy))
 
-		# Si está a más de 90°, es "por detrás o a los costados"
-		if abs(angle) >= angle_threshold_deg:
+		var enemy_cell := MapManager.world_to_cell(enemy.global_position)
+		var to_enemy_vector := Vector2(enemy_cell - target_cell)
+
+		if to_enemy_vector == Vector2.ZERO:
+			continue
+
+		var to_enemy_dir := ObjectHelpers.get_snapped_8_direction(to_enemy_vector).normalized()
+
+		# Usamos dot product + acos para obtener el ángulo en grados
+		var dot = clamp(attack_dir.dot(to_enemy_dir), -1.0, 1.0)
+		var angle_deg := rad_to_deg(acos(dot))
+
+		if angle_deg <= angle_threshold_deg:
 			result.append(enemy)
 
 	return result

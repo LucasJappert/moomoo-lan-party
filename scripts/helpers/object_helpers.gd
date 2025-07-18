@@ -191,3 +191,25 @@ static func _deserialize_variant(value: Variant) -> Variant:
 static func valid_instance(object) -> bool:
 	if is_null(object): return false
 	return true
+
+static func get_snapped_8_direction(dir: Vector2) -> Vector2:
+	if dir == Vector2.ZERO:
+		return Vector2.ZERO
+
+	var angle_rad := atan2(dir.y, dir.x)
+	var angle_deg := rad_to_deg(angle_rad)
+	if angle_deg < 0:
+		angle_deg += 360.0
+
+	var octant := int(floor((angle_deg + 22.5) / 45.0)) % 8
+
+	match octant:
+		0: return Vector2(1, 0) # →
+		1: return Vector2(1, 1) # ↘
+		2: return Vector2(0, 1) # ↓
+		3: return Vector2(-1, 1) # ↙
+		4: return Vector2(-1, 0) # ←
+		5: return Vector2(-1, -1) # ↖
+		6: return Vector2(0, -1) # ↑
+		7: return Vector2(1, -1) # ↗
+		_: return Vector2.ZERO

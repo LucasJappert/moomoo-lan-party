@@ -8,14 +8,14 @@ const _ENEMIES_SCALE: float = 0.85
 static func set_entity_sprites(entity: Entity) -> void:
 	if entity is Player:
 		_set_sprites(entity, entity.extra_info.rects, _PLAYERS_SCALE)
-		entity.body_sprite.position.y = -38 * _PLAYERS_SCALE
+		entity.body_sprite.position.y = -30 * _PLAYERS_SCALE
 	elif entity is Enemy:
 		var scale_factor = 1.1 if entity._boss_level > 0 else _ENEMIES_SCALE
 		_set_sprites(entity, entity.extra_info.rects, scale_factor)
-		entity.body_sprite.position.y = -24 * scale_factor
+		entity.body_sprite.position.y = -20 * scale_factor
 	elif entity is Moomoo:
 		_set_sprites(entity, [Moomoo.RECT_REGION], Moomoo.BODY_SCALE)
-		entity.body_sprite.position.y -= 10
+		entity.body_sprite.position.y -= 5
 	
 	entity.sprite_height = entity.body_sprite.sprite_frames.get_frame_texture("idle", 0).get_height() * entity.body_sprite.scale.y
 

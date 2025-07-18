@@ -5,7 +5,7 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Ver giro del cleave, ver daño mele a enemigos en diagonal, ver enemigos afectados por cleave
+- Check cleave rotation, check melee damage to enemies in diagonal, check enemies affected by cleave
 - Agregar un efecto de cleave y modificar la manera que trabaja, solamente deberia hacer daño a los 3 enemigos mas cercanos
 - Dibujar un cono temporal para el efecto de cleave
 - Agregar un item que brinda daño splash a todo alreadedor del target (es diferente al cleave)

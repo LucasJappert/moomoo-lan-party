@@ -60,6 +60,7 @@ func set_target_entity(target: Entity) -> void:
 	update_path()
 
 func set_target_cell(target_cell: Vector2i) -> void:
+	if current_cell == target_cell: return
 	_clean_movements()
 	_target_cell = MapManager.get_safe_cell(target_cell)
 	update_path()
@@ -131,8 +132,10 @@ func _try_to_move(_delta: float) -> void:
 
 	# If the sign of the dot product changes, you overshot
 	if old_distance.dot(new_distance) <= 0.0:
-		my_owner.global_position = Vector2i(current_target_pos)
+		# my_owner.global_position = current_target_pos
+		my_owner.global_position = MapManager.cell_to_world(MapManager.world_to_cell(current_target_pos))
 		current_target_pos = null
+		return
 
 	my_owner.global_position = new_pos
 	my_owner.direction = direction
