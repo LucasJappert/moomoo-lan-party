@@ -36,6 +36,7 @@ static func initialize_items() -> void:
 	aux_item_name = Names.CLEAVE_EDGE
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.PASSIVE)
 	_item = _ITEMS[aux_item_name]
+	_item.cast_range_in_tiles = 0
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 4, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
 	_item.stats.cleave_effect = CleaveEffect.new(0.3, 2)
 	_item.buy_price = 3300
@@ -46,6 +47,7 @@ static func initialize_items() -> void:
 	aux_item_name = Names.STUNNING_EDGE
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.PASSIVE)
 	_item = _ITEMS[aux_item_name]
+	_item.cast_range_in_tiles = 0
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 3, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
 	_item.stats.stun_chance = 0.2
 	_item.stats.stun_duration = 1.5
@@ -57,6 +59,7 @@ static func initialize_items() -> void:
 	aux_item_name = Names.HEALTH_POTION_I
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.ACTIVE)
 	_item = _ITEMS[aux_item_name]
+	_item.cast_range_in_tiles = 0
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 0, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
 	_item.stats.hp = 500
 	_item.cooldown = 0.5
@@ -69,6 +72,7 @@ static func initialize_items() -> void:
 	aux_item_name = Names.HEALTH_POTION_II
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.ACTIVE)
 	_item = _ITEMS[aux_item_name]
+	_item.cast_range_in_tiles = 0
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 1, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
 	_item.stats.hp = 2000
 	_item.cooldown = 0.5
@@ -81,6 +85,7 @@ static func initialize_items() -> void:
 	aux_item_name = Names.HEALTH_POTION_III
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.ACTIVE)
 	_item = _ITEMS[aux_item_name]
+	_item.cast_range_in_tiles = 0
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 2, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
 	_item.stats.hp = 10000
 	_item.cooldown = 0.5
@@ -94,6 +99,7 @@ static func initialize_items() -> void:
 	aux_item_name = Names.MANA_POTION_I
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.ACTIVE)
 	_item = _ITEMS[aux_item_name]
+	_item.cast_range_in_tiles = 0
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 0, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
 	_item.stats.mana = 500
 	_item.cooldown = 0.5
@@ -106,6 +112,7 @@ static func initialize_items() -> void:
 	aux_item_name = Names.MANA_POTION_II
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.ACTIVE)
 	_item = _ITEMS[aux_item_name]
+	_item.cast_range_in_tiles = 0
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 1, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
 	_item.stats.mana = 2000
 	_item.cooldown = 0.5
@@ -118,6 +125,7 @@ static func initialize_items() -> void:
 	aux_item_name = Names.MANA_POTION_III
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.ACTIVE)
 	_item = _ITEMS[aux_item_name]
+	_item.cast_range_in_tiles = 0
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 2, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
 	_item.stats.mana = 10000
 	_item.cooldown = 0.5
@@ -207,8 +215,11 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 	# Cleave verification
 	var cleave_items := _attacker.get_items_by_name(Names.CLEAVE_EDGE)
 	if cleave_items.is_empty(): return
+	var total_stats := CombatStats.new()
 	for _item in cleave_items:
-		CleaveEffect.auxiliary_actions_after_hit(_item.stats, _attacker, _target, _di)
+		total_stats.accumulate_combat_stats(_item.stats)
+	if total_stats.cleave_effect:
+		CleaveEffect.auxiliary_actions_after_hit(total_stats, _attacker, _target, _di)
 	
 	# var cleave_stats := CombatStats.new()
 	# for _item in cleave_items:

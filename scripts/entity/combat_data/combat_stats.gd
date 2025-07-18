@@ -50,41 +50,41 @@ static func get_instance_from_dict(dict: Dictionary) -> CombatStats:
 	ObjectHelpers.from_dict(instance, dict)
 	return instance
 
-func accumulate_combat_stats(stats: CombatStats) -> CombatStats:
-	custom_damage_heal.accumulate_props(stats.custom_damage_heal)
-	ignore_enemy_evasion_chance += stats.ignore_enemy_evasion_chance
-	hp += stats.hp
-	mana += stats.mana
-	physical_defense_percent += stats.physical_defense_percent
-	magic_defense_percent += stats.magic_defense_percent
-	evasion += stats.evasion
-	crit_chance += stats.crit_chance
-	crit_multiplier += stats.crit_multiplier
-	stun_chance += stats.stun_chance
-	stun_duration += stats.stun_duration
-	attack_range += stats.attack_range
-	physical_attack_power += stats.physical_attack_power
-	magic_attack_power += stats.magic_attack_power
-	freeze_duration += stats.freeze_duration
-	attack_speed += stats.attack_speed
-	move_speed += stats.move_speed
-	attack_speed_percent += stats.attack_speed_percent
-	move_speed_percent += stats.move_speed_percent
-	magic_attack_power_percent += stats.magic_attack_power_percent
-	physical_attack_power_percent += stats.physical_attack_power_percent
-	life_steal_percent += stats.life_steal_percent
-	hp_regeneration_points += stats.hp_regeneration_points
-	hp_regeneration_points_percent += stats.hp_regeneration_points_percent
-	mana_regeneration_points += stats.mana_regeneration_points
-	mana_regeneration_points_percent += stats.mana_regeneration_points_percent
-	silence_duration = stats.silence_duration
+func accumulate_combat_stats(stats_to_accumulate: CombatStats) -> CombatStats:
+	custom_damage_heal.accumulate_props(stats_to_accumulate.custom_damage_heal)
+	ignore_enemy_evasion_chance += stats_to_accumulate.ignore_enemy_evasion_chance
+	hp += stats_to_accumulate.hp
+	mana += stats_to_accumulate.mana
+	physical_defense_percent += stats_to_accumulate.physical_defense_percent
+	magic_defense_percent += stats_to_accumulate.magic_defense_percent
+	evasion += stats_to_accumulate.evasion
+	crit_chance += stats_to_accumulate.crit_chance
+	crit_multiplier += stats_to_accumulate.crit_multiplier
+	stun_chance += stats_to_accumulate.stun_chance
+	stun_duration += stats_to_accumulate.stun_duration
+	attack_range += stats_to_accumulate.attack_range
+	physical_attack_power += stats_to_accumulate.physical_attack_power
+	magic_attack_power += stats_to_accumulate.magic_attack_power
+	freeze_duration += stats_to_accumulate.freeze_duration
+	attack_speed += stats_to_accumulate.attack_speed
+	move_speed += stats_to_accumulate.move_speed
+	attack_speed_percent += stats_to_accumulate.attack_speed_percent
+	move_speed_percent += stats_to_accumulate.move_speed_percent
+	magic_attack_power_percent += stats_to_accumulate.magic_attack_power_percent
+	physical_attack_power_percent += stats_to_accumulate.physical_attack_power_percent
+	life_steal_percent += stats_to_accumulate.life_steal_percent
+	hp_regeneration_points += stats_to_accumulate.hp_regeneration_points
+	hp_regeneration_points_percent += stats_to_accumulate.hp_regeneration_points_percent
+	mana_regeneration_points += stats_to_accumulate.mana_regeneration_points
+	mana_regeneration_points_percent += stats_to_accumulate.mana_regeneration_points_percent
+	silence_duration = stats_to_accumulate.silence_duration
 
-	if stats.cleave_effect != null:
-		cleave_effect = stats.cleave_effect
+	if cleave_effect: cleave_effect.accumulate(stats_to_accumulate.cleave_effect)
+	elif stats_to_accumulate.cleave_effect: cleave_effect = stats_to_accumulate.cleave_effect.get_new_instance()
 
-	agility += stats.agility
-	strength += stats.strength
-	intelligence += stats.intelligence
+	agility += stats_to_accumulate.agility
+	strength += stats_to_accumulate.strength
+	intelligence += stats_to_accumulate.intelligence
 
 	return self
 	

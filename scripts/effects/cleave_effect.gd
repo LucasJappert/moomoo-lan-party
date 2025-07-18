@@ -19,6 +19,13 @@ func get_cleave_damage(base_damage: int) -> int:
 func get_description() -> String:
 	return str("- Cleave percent: ", StringHelpers.format_percent(percent), " (radius: ", radius_in_tiles, ") \n")
 
+func accumulate(other: CleaveEffect) -> void:
+	if not other: return
+	percent += other.percent
+
+func get_new_instance() -> CleaveEffect:
+	return CleaveEffect.new(percent, radius_in_tiles, damage_type)
+
 static func auxiliary_actions_after_hit(stats: CombatStats, _attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
 	if not stats.cleave_effect: return
 
@@ -139,66 +146,3 @@ static func _create_single_cleave_effect(
 	tween.parallel().tween_property(sprite, "modulate:a", 0.0, duration).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_OUT)
 	tween.parallel().tween_property(sprite, "global_position", final_position, duration).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(Callable(sprite, "queue_free"))
-
-
-# static func show_cleave_effect_with_texture(
-# 	parent: Node,
-# 	global_origin: Vector2,
-# 	direction: Vector2,
-# 	p_radius_in_tiles: float,
-# 	duration: float = 0.5
-# ) -> void:
-# 	# Crear el nodo contenedor en el punto de impacto
-# 	var effect_root := Node2D.new()
-# 	effect_root.global_position = global_origin
-# 	parent.add_child(effect_root)
-
-# 	# Crear el sprite con la textura del cleave
-# 	var sprite := Sprite2D.new()
-# 	sprite.texture = SpritesHelper.get_texture_from_region(CLEAVE_RECT_REGION)
-# 	sprite.centered = true
-# 	sprite.modulate = Color(1, 1, 1, 0.5) # Color inicial visible
-
-# 	# Escalado final según radio del cleave
-# 	var base_width_in_tiles := CLEAVE_RECT_REGION.size.x / MapManager.TILE_SIZE.x
-# 	var base_height_in_tiles := CLEAVE_RECT_REGION.size.y / MapManager.TILE_SIZE.y
-# 	var final_scale := Vector2(
-# 		(1 + p_radius_in_tiles * 2) / base_width_in_tiles,
-# 		(p_radius_in_tiles + 1) / base_height_in_tiles
-# 	)
-
-# 	# Comenzar desde escala cero
-# 	sprite.scale = final_scale * 0.1
-
-# 	# Posicionar el sprite para que la base quede en el origen
-# 	var texture_half_height := CLEAVE_RECT_REGION.size.y * 0.5
-# 	sprite.position = Vector2(0, -texture_half_height * final_scale.y + MapManager.TILE_SIZE.y)
-
-# 	# Rotar el nodo hacia la dirección del cleave
-# 	effect_root.rotation = direction.angle() + PI / 2
-# 	effect_root.add_child(sprite)
-
-# 	# Desplazamiento hacia adelante (1 tile)
-# 	var move_offset := direction.normalized() * MapManager.TILE_SIZE.x * 1.0
-# 	var final_position := global_origin + move_offset
-
-# 	# Tween para escalar, mover y desvanecer
-# 	var tween := effect_root.create_tween()
-
-# 	# Escalado del sprite
-# 	tween.parallel().tween_property(sprite, "scale", final_scale, duration) \
-# 		.set_trans(Tween.TRANS_LINEAR) \
-# 		.set_ease(Tween.EASE_OUT)
-
-# 	# Desvanecer sprite
-# 	tween.parallel().tween_property(sprite, "modulate:a", 0.0, duration) \
-# 		.set_trans(Tween.TRANS_LINEAR) \
-# 		.set_ease(Tween.EASE_OUT)
-
-# 	# Mover el efecto hacia adelante
-# 	tween.parallel().tween_property(effect_root, "global_position", final_position, duration) \
-# 		.set_trans(Tween.TRANS_LINEAR) \
-# 		.set_ease(Tween.EASE_OUT)
-
-# 	# Liberar al terminar
-# 	tween.tween_callback(Callable(effect_root, "queue_free"))
