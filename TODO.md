@@ -5,8 +5,9 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Check casting defense spell on themselves in enemies
 - Aumentar nivel de habilidad aprendida en enemgios
-- ver casteo de hechizo de defensa sobre si mismo en enemigos
+- Autoatacar al enemigo mas cercano cuando se termina de atacar otro enemigo
 - Revisar sonidos en loop
 - Regular el oro obtenido tanto por matar enemigos como el ganado por ronda
 - Agregar un item que brinda daño splash a todo alreadedor del target (es diferente al cleave)

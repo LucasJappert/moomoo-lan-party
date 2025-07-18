@@ -65,7 +65,6 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 # Must be overriden
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if not _verify_range(_caster, _target, _learned_skill):
-		print("Out of range")
 		return false
 
 	return true

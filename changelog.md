@@ -9,7 +9,7 @@
 - ✅ Create new Shuriken projectile
 - ✅ Create a wind effect on the Shuriken projectile
 - ✅ Create skill that silences and causes damage over time for a certain period
-- ✅ Add fire sound
+- ✅ Add fire sound when some skill of fire is active
 - ✅ Create 2 new enemy types to later configure wave 6 (Dead Shield and Silent Shuriken)
 - ✅ New enemy Infernal Minotaur and Night Archer
 - ✅ Configure enemies for wave 5
