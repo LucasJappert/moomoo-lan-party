@@ -4,10 +4,6 @@ extends Node2D
 
 @onready var player: Player = get_parent()
 
-static var SHIFT_PRESSED = false
-static var ALT_PRESSED = false
-static var CONTROL_PRESSED = false
-
 func _ready():
 	if get_multiplayer_authority() != multiplayer.get_unique_id():
 		set_process(false)
@@ -15,9 +11,7 @@ func _ready():
 		set_process_unhandled_input(false)
 	
 func _process(_delta: float) -> void:
-	SHIFT_PRESSED = Input.is_key_pressed(KEY_SHIFT)
-	ALT_PRESSED = Input.is_key_pressed(KEY_ALT)
-	CONTROL_PRESSED = Input.is_key_pressed(KEY_CTRL)
+	pass
 
 func _get_hovered_entity_name() -> String:
 	return str(AreaHovered.hovered_entity.name) if AreaHovered.hovered_entity else ""
@@ -33,11 +27,11 @@ func _unhandled_input(event):
 		# var node := window.gui_get_hovered_control()
 		# print("Clicked at: ", pos, " - Hovered control: ", node)
 		if event.button_index == MOUSE_BUTTON_RIGHT:
-			if ObjectHelpers.is_enemy(AreaHovered.hovered_entity):
-				if not SHIFT_PRESSED: return rpc_id(1, "_on_right_click_on_entity", _get_hovered_entity_name())
-				
-			var mouse_position = player.get_global_mouse_position()
-			rpc_id(1, "_on_try_to_move", MapManager.world_to_cell(mouse_position))
+			# if ObjectHelpers.is_enemy(AreaHovered.hovered_entity):
+			# 	if not KeyboardController.SHIFT_PRESSED: return rpc_id(1, "_on_right_click_on_entity", _get_hovered_entity_name())
+			if AreaHovered.hovered_entity: return
+				# var mouse_position = player.get_global_mouse_position()
+			rpc_id(1, "_on_try_to_move", MapManager.world_to_cell(get_global_mouse_position()))
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			rpc_id(1, "_on_left_click", _get_hovered_entity_name())
 
@@ -59,16 +53,19 @@ func _on_right_click_on_entity(_target_entity_name: String):
 	
 @rpc("authority", "call_local")
 func _on_left_click(_target_entity_name: String):
-	if not GameManager.MY_PLAYER: return
+	# Always run in server
+	var target_entity = GameManager.get_entity(_target_entity_name)
+	
+	# EventBus.emit_new_target_view_selected(null, target_entity)
+
+	# if not GameManager.MY_PLAYER.charged_skill: player.set_target_view(target_entity)
 	
 	ShopInterface.static_close_shop()
 
-	# Always run in server
-	var target_entity = GameManager.get_entity(_target_entity_name)
+	if not GameManager.MY_PLAYER: return
+
 
 	# if target_entity: print("entity name: ", target_entity.name)
-
-	if not GameManager.MY_PLAYER.charged_skill: player.set_target_view(target_entity)
 	# if CONTROL_PRESSED: player.set_target_view(target_entity)
 
 	player.use_charged_skill(target_entity)

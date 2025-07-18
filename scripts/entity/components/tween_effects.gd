@@ -13,6 +13,7 @@ var _owner: Entity
 func _init(p_owner: Entity):
 	super._init()
 	_owner = p_owner
+	EventBus.connect_to_paused(func(_paused: bool): _on_paused(_paused))
 
 func start_idle_effect():
 	if tweens.has(TYPES.IDLE):
@@ -61,14 +62,24 @@ func apply_spawn_effect():
 
 func pause_effect(name: String):
 	if tweens.has(name):
-		tweens[name].pause()
+		var t = tweens[name]
+		if is_instance_valid(t) and t.is_inside_tree():
+			t.pause()
 
 func stop_effect(name: String):
 	if tweens.has(name):
-		tweens[name].kill()
+		var t = tweens[name]
+		if is_instance_valid(t):
+			t.kill()
 		tweens.erase(name)
 
 func stop_all_effects():
 	for t in tweens.values():
 		t.kill()
 	tweens.clear()
+
+func _on_paused(paused: bool):
+	for t in (tweens.values() as Array[Tween]):
+		if is_instance_valid(t) and t.is_running() and t.is_valid():
+			if paused: t.pause()
+			else: t.play()

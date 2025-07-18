@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Pause enemies and world when player dies (Game Over scene)
 - ✅ Add item that grants 40 points of agi, str and int (Power Core)
 - ✅ Add item that grants a 25% lifesteal (Blood Edge)
 - ✅ Fix bug where spellcasting was not limited by spell's distance itself

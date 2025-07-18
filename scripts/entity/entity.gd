@@ -13,7 +13,6 @@ var movement_helper: MovementHelper
 @onready var area_attack_shape = $AreaAttack/CollisionShape2D
 @onready var area_vision = $AreaVision
 @onready var area_vision_shape = $AreaVision/CollisionShape2D
-@onready var area_hovered_shape = $AreaHovered/CollisionShape2D
 @onready var projectile_zone = $ProjectileZone/CollisionShape2D
 @onready var body_sprite: AnimatedSprite2D = %BodySprite
 @onready var body_shadow: Sprite2D = %BodyShadow
@@ -62,6 +61,8 @@ func _ready():
 	ShadersHelper.set_dissolve_shader_material(self)
 
 	EventBus.connect_to_freed_entity(Callable(self, "_on_entity_freed"))
+	EventBus.connect_to_paused(func(_paused: bool): EntityState.paused_game(self))
+
 
 func _post_ready():
 	hud._post_ready(self)
@@ -131,15 +132,17 @@ func global_die(_killed_by: Entity) -> void:
 	if _killed_by: _killed_by.statistics.register_kill()
 
 	MapManager.set_cell_blocked(movement_helper.current_cell, false)
-	_apply_effects_after_die(_killed_by, func():
-		GameManager.remove_entity(self, _killed_by)
+
+	var killed_by_ref = weakref(_killed_by)
+	_apply_effects_after_die(func():
+		GameManager.remove_entity(self, killed_by_ref.get_ref())
 	)
 
 # endregion SETTERs
 
 
 # region 	INTERNAL AUXILIARY METHODS
-func _apply_effects_after_die(_killed_by: Entity, on_finished: Callable) -> void:
+func _apply_effects_after_die(on_finished: Callable) -> void:
 	const TWEEN_DURATION := 1.5
 	var tween := create_tween()
 
@@ -158,5 +161,6 @@ func _apply_effects_after_die(_killed_by: Entity, on_finished: Callable) -> void
 	TweenHelper.apply_tween_to_property(front_animations_node, tween, "modulate:a", 0.0, TWEEN_DURATION)
 
 	tween.tween_callback(on_finished)
+
 	
 # endregion INTERNAL AUXILIARY METHODS

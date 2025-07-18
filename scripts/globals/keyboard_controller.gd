@@ -1,4 +1,9 @@
+# KeyboardController (Autoload)
 extends Node
+
+static var SHIFT_PRESSED = false
+static var ALT_PRESSED = false
+static var CONTROL_PRESSED = false
 
 func _unhandled_input(event: InputEvent):
 	MyCamera.try_update_zoom(event)
@@ -12,3 +17,13 @@ func _unhandled_input(event: InputEvent):
 			GUIScene.SHOW_DEBUG_DATA = not GUIScene.SHOW_DEBUG_DATA
 		if event.keycode == KEY_SPACE:
 			MyCamera.update_camera_position_to_my_player()
+		if event.keycode == KEY_P:
+			AdminHelper.kill_all_enemies()
+
+			
+	_update_modifiers()
+
+static func _update_modifiers():
+	SHIFT_PRESSED = Input.is_key_pressed(KEY_SHIFT)
+	ALT_PRESSED = Input.is_key_pressed(KEY_ALT)
+	CONTROL_PRESSED = Input.is_key_pressed(KEY_CTRL)

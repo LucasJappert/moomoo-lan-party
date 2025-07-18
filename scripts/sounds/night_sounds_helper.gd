@@ -25,11 +25,10 @@ static func _load_night_sounds():
 		var path = "res://sounds/night/night%d.wav" % i
 		night_sounds.append(path)
 
-
 static func _loop(tree: SceneTree):
-	if not running:
-		return
-
+	if not running: return
+	if MainScene.PAUSED: return
+	
 	if current_playing < max_simultaneous and night_sounds.size() > 0:
 		var path = night_sounds[randi() % night_sounds.size()]
 		current_playing += 1

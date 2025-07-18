@@ -125,5 +125,5 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 
 static func _wave_finilized() -> void:
 	for player in GameManager.get_players():
-		var earned_gold = current_wave * Player.INITIAL_GOLD * 3
+		var earned_gold = current_wave * Player.INITIAL_GOLD
 		player.increment_current_gold(earned_gold)

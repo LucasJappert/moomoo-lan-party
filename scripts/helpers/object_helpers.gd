@@ -192,6 +192,10 @@ static func valid_instance(object) -> bool:
 	if is_null(object): return false
 	return true
 
+static func get_safe_instance(object) -> Object:
+	if is_null(object): return null
+	return object
+
 static func get_snapped_8_direction(dir: Vector2) -> Vector2:
 	if dir == Vector2.ZERO:
 		return Vector2.ZERO

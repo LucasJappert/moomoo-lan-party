@@ -1,5 +1,11 @@
 extends Node
 
+const PAUSED := "paused"
+signal paused(_paused: bool)
+func emit_paused(_paused: bool): emit_signal(PAUSED, _paused)
+func connect_to_paused(p_callback: Callable) -> void:
+	EventBus.connect(PAUSED, p_callback)
+
 const ENTITY_DIED := "entity_died"
 signal entity_died(entitiy_died: Entity, killed_by: Entity)
 func emit_entity_died(entitiy_died: Entity, killed_by: Entity): emit_signal(ENTITY_DIED, entitiy_died, killed_by)

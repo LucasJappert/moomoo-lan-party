@@ -25,15 +25,16 @@ func _ready():
 	pass
 
 func _show_me() -> void:
-	GameManager.main_scene.pause()
 	visible = true
 	apply_tween_when_appear()
 	_defeat_label.text = "YOU LOST"
 	_defeat_label.modulate = LOSE_COLOR
+	MainScene.set_paused(true, false)
 
 func _restart_game() -> void:
 	visible = false
 
+	MainScene.set_paused(false)
 	HeroPickerScene.load_scene()
 
 func apply_tween_when_appear():

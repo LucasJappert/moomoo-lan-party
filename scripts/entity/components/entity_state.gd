@@ -18,13 +18,6 @@ static func _is_playing_attack_animation(entity: Entity) -> bool:
 	if entity.body_sprite.animation != "attack": return false
 	return entity.body_sprite.is_playing()
 
-static func _update_state(entity: Entity, state: String) -> void:
-	if not entity.body_sprite: return
-	
-	if entity.current_state == state: return
-
-	entity.current_state = state
-
 static func _verify_state_and_animation(entity: Entity) -> void:
 	if not entity: return
 	if not entity.body_sprite: return
@@ -39,6 +32,13 @@ static func _verify_state_and_animation(entity: Entity) -> void:
 
 	_update_state(entity, States.IDLE)
 
+static func _update_state(entity: Entity, state: String) -> void:
+	if not entity.body_sprite: return
+	
+	if entity.current_state == state: return
+
+	entity.current_state = state
+
 static func change_to_attack(entity: Entity) -> void:
 	_update_state(entity, States.ATTACK)
 
@@ -49,3 +49,7 @@ static func server_and_client_on_state_changed(entity: Entity) -> void:
 
 	if entity.body_sprite.animation == entity.current_state and entity.body_sprite.is_playing(): return
 	entity.body_sprite.play(entity.current_state)
+
+static func paused_game(entity: Entity) -> void:
+	if MainScene.PAUSED: entity.body_sprite.pause()
+	else: entity.body_sprite.play()

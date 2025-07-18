@@ -11,7 +11,7 @@ const DESCRIPTION = "
 	• [b]Camera Focus:[/b] Press [i]Spacebar[/i] to center the camera on your hero.  
 	• [b]Zoom:[/b] Use the [i]mouse wheel[/i] to zoom in and out.  
 	• [b]Inspect Units:[/b] Hold [i]Ctrl[/i] and click on any unit to view its stats. Press [i]Spacebar[/i] again to quickly return to your hero.  
-	• [b]Pause/Resume:[/b] Press [i]Enter[/i] to pause or resume the game at any time.
+	• [b]Pause/Resume:[/b] Press [i]F11[/i] to pause or resume the game at any time.
 
 	[b]⚡ Skills and Leveling[/b]
 	• At the start, you can learn [b]one of four skills[/b] shown in the bottom-right corner.  

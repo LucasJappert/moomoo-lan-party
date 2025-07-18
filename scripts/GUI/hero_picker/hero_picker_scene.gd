@@ -49,7 +49,6 @@ func get_selected_hero_box() -> HeroBox:
 
 # region	SETTERS
 static func load_scene() -> void:
-	GameManager.main_scene.resume()
 	var scene = load("res://scenes/GUI/hero_picker_scene.tscn").instantiate()
 	GameManager.main_scene.load_scene(scene)
 

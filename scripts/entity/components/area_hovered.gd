@@ -14,6 +14,17 @@ func _ready() -> void:
 
 	connect("mouse_entered", func(): _on_mouse_entered())
 	connect("mouse_exited", func(): _on_mouse_exited())
+	connect("input_event", func(_view, event, _shape_idx): _on_input_event(_view, event, _shape_idx))
+
+func _on_input_event(_viewport, _event, _shape_idx):
+	if _event is InputEventMouseButton and _event.pressed:
+		if _event.button_index == MOUSE_BUTTON_LEFT:
+			EventBus.emit_new_target_view_selected(null, my_owner)
+		if _event.button_index == MOUSE_BUTTON_RIGHT:
+			if GameManager.MY_PLAYER and not KeyboardController.SHIFT_PRESSED:
+				if my_owner.is_my_player(): return
+				GameManager.MY_PLAYER.set_target_to_attack(my_owner)
+				GameManager.MY_PLAYER.movement_helper.set_target_entity(my_owner)
 
 func _process(_delta: float) -> void:
 	if not is_instance_valid(hovered_entity):
@@ -30,7 +41,7 @@ func _on_mouse_exited():
 	if my_owner is Enemy: my_owner.body_sprite.modulate = Color.WHITE
 
 static func _update_hovered_entity():
-	if ClientInputs.SHIFT_PRESSED:
+	if KeyboardController.SHIFT_PRESSED:
 		if not ObjectHelpers.is_null(hovered_entity):
 			hovered_entity.body_sprite.modulate = Color.WHITE
 			hovered_entity = null

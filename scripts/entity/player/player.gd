@@ -7,7 +7,7 @@ static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 const MAX_LEVEL: int = 30
 @export var player_id: int = 0
 @export var current_exp: int = 0
-const INITIAL_GOLD: int = 20000
+const INITIAL_GOLD: int = 500
 @export var current_gold: int:
 	set(_value):
 		current_gold = _value
@@ -47,6 +47,7 @@ func is_my_player() -> bool:
 
 # region 	SETTERs
 func increment_current_exp(value: int) -> void:
+	if current_hp <= 0: return
 	current_exp += value
 
 	while level < MAX_LEVEL:
@@ -84,6 +85,7 @@ func level_up() -> void:
 	# update_current_mana(get_total_mana())
 
 func increment_current_gold(value_to_increment: int) -> void:
+	if current_hp <= 0: return
 	current_gold += value_to_increment
 	statistics.add_gold(value_to_increment)
 	if is_my_player(): SoundsHelper.play_gold_sound()

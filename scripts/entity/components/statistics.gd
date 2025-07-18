@@ -36,8 +36,8 @@ func set_wave(wave_number: int) -> void: _wave_reached = wave_number
 
 # -- Safe read access --
 func _get_formatted_time() -> String:
-	var minutes := int(_time_elapsed / 60)
-	var seconds := int(_time_elapsed) % 60
+	var minutes := int((_time_elapsed - MainScene.total_paused_time) / 60)
+	var seconds := int(_time_elapsed - MainScene.total_paused_time) % 60
 	return "%02d:%02d" % [minutes, seconds]
 
 func get_summary() -> String:

@@ -126,7 +126,7 @@ animations = [{
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_os1up"]
 radius = 17.0
-height = 54.0
+height = 44.0
 
 [node name="Entity" type="CharacterBody2D"]
 script = ExtResource("1_0bgvt")
@@ -241,7 +241,7 @@ script = ExtResource("6_8707b")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AreaHovered"]
 light_mask = 4
 visibility_layer = 4
-position = Vector2(0, -19)
+position = Vector2(0, -11)
 shape = SubResource("CapsuleShape2D_os1up")
 debug_color = Color(1.92523e-07, 0.642713, 0.312982, 0.096)
 

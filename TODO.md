@@ -5,8 +5,7 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Check casting defense spell on themselves in enemies
-- Aumentar nivel de habilidad aprendida en enemgios
+- 🔵 Mejorar la pausa y agregar escena de pausa
 - Autoatacar al enemigo mas cercano cuando se termina de atacar otro enemigo
 - Revisar sonidos en loop
 - Regular el oro obtenido tanto por matar enemigos como el ganado por ronda
@@ -27,6 +26,7 @@
 - Refactorizar logica de skills antiguos, seguir la nueva metodologia creando un módulo para cada skill
 - Agregar skill, la cual puede activarse o desactivarse, que brindaría chances de matar al enemigo al instante (no aplica a bosses). Consume 20 de mana en cada ataque.
 - Agregar skill pasiva que luego de matar un enemigo lo transforma en 3 esqueletos que lucharán para él.
+- Aumentar nivel de habilidad aprendida en enemgios
 - Agregar skill que brinda chances de crear copias de sí mismo ante cada ataque físico.
 - Crear tooltip con descripcion del target
 - Agregar quinta skill al nivel 20

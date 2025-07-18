@@ -23,7 +23,7 @@ var target_view: Entity
 		if _target_view_name == value: return
 		_target_view_name = value
 		target_view = GameManager.get_entity(value)
-		EventBus.emit_new_target_view_selected(my_owner(), target_view)
+		# EventBus.emit_new_target_view_selected(my_owner(), target_view)
 	get:
 		return _target_view_name
 var _target_view_name: String = ""
@@ -222,14 +222,14 @@ func set_current_hp(value: int) -> void:
 func _actions_after_current_hp_change(value_to_increase: int = 0, _attacker: Entity = null) -> void:
 	Skill.verify_blood_fury(my_owner())
 	my_owner().hud.update_health_bar()
+	
+	_server_verify_death(_attacker)
 
 	if ObjectHelpers.is_null(_attacker): return
 
 	var percent_hp_lost = abs(value_to_increase) / float(get_total_hp())
 	var exp_by_damage = Enemy.get_enemy_exp_when_dead() * percent_hp_lost
 	if _attacker: _try_to_give_experience_to_players(exp_by_damage) # Give experience when an enemy takes damage
-	
-	_server_verify_death(_attacker)
 
 func _server_verify_death(_killed_by: Entity) -> void:
 	if current_hp > 0: return
@@ -280,6 +280,7 @@ func add_item(item: Item, index: int = -1) -> bool:
 	return false
 
 func use_item(_slot_number: int) -> void: # Called from _on_key_pressed
+	if MainScene.PAUSED: return
 	if _items[_slot_number - 1] == null: return print("No item in slot: ", _slot_number)
 
 	_items[_slot_number - 1].use_item(_slot_number, my_owner(), null)
@@ -315,6 +316,7 @@ func verify_freed_target_view(entity_name: String) -> void:
 		set_target_view(null)
 
 func charge_skill(index: int) -> void:
+	if MainScene.PAUSED: return
 	if index >= _skills.size(): return
 	if is_silenced: return
 	if not _skills[index].learned_level: return
@@ -339,6 +341,7 @@ func server_upgrade_skill(slot_number: int) -> void:
 	update_cache_total_stats()
 
 func use_charged_skill(_target: Entity) -> void:
+	if MainScene.PAUSED: return
 	if not charged_skill: return
 	if is_silenced: return uncharge_skill()
 	if ObjectHelpers.is_null(_target): return uncharge_skill()

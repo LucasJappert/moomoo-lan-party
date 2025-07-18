@@ -42,7 +42,7 @@ static func _commons_initialize(_enemy: Enemy) -> void:
 	_enemy.combat_stats.crit_multiplier = 1.5
 	_enemy.combat_stats.attack_speed = 0.5
 	_enemy.combat_stats.agility = 10
-	_enemy.combat_stats.strength = 6
+	_enemy.combat_stats.strength = 6000
 	_enemy.combat_stats.intelligence = 10
 
 static func get_rect_frames(pos: Vector2i) -> Array[Rect2]:

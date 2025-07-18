@@ -24,6 +24,7 @@ static func load_scene() -> void:
 	var scene = load("res://scenes/game_world_scene.tscn").instantiate()
 	GameManager.game_world = scene
 	GameManager.main_scene.load_scene(scene)
+	MainScene.total_paused_time = 0
 
 func _ready() -> void:
 	current_enemies_in_scene = 0

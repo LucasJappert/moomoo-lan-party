@@ -57,7 +57,9 @@ func _actions_for_server_side_after_entity_removed(entity_died: Entity, killed_b
 	
 	EventBus.emit_freed_entity(entity_died.name)
 	EventBus.emit_entity_died(entity_died, killed_by)
+	
 	entity_died.queue_free() # We shouldn't do this in the client side, server should do it and sync it
+
 
 func _on_enemy_exited_tree() -> void:
 	GameWorld.current_enemies_in_scene -= 1

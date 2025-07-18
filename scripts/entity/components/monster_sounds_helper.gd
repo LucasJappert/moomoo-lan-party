@@ -11,6 +11,7 @@ func _init():
 	_reset_next_interval()
 
 func try_to_play_boss_sound(_enemy: Enemy, _delta: float) -> void:
+	if MainScene.PAUSED: return
 	if _enemy._boss_level == 0: return
 
 	latest_sound_timer += _delta
