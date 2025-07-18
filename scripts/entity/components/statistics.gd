@@ -35,14 +35,11 @@ func add_gold(amount: int) -> void: _gold_earned += amount
 func set_wave(wave_number: int) -> void: _wave_reached = wave_number
 
 # -- Safe read access --
-func _get_formatted_time() -> String:
-	var minutes := int((_time_elapsed - MainScene.total_paused_time) / 60)
-	var seconds := int(_time_elapsed - MainScene.total_paused_time) % 60
-	return "%02d:%02d" % [minutes, seconds]
+
 
 func get_summary() -> String:
 	var summary := ""
-	summary += "⚡ Time: %s\n" % _get_formatted_time()
+	summary += "⚡ Time: %s\n" % StringHelpers.get_formatted_time(int(MainScene.get_elapsed_time()))
 	summary += "⚡ Enemies: %d\n" % _enemies_killed
 	summary += "⚡ Gold Earned: %s\n" % StringHelpers.format_float(_gold_earned)
 	summary += "⚡ Hero: %s\n" % _hero_name

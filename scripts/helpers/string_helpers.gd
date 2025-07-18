@@ -45,6 +45,14 @@ static func format_float_compact(value: float, max_decimals: int = 2) -> String:
 
 	return formatted + suffix
 
+static func get_formatted_time(total_seconds: int) -> String:
+	var hours := total_seconds / 3600.0
+	var minutes := (total_seconds % 3600) / 60.0
+	var seconds := total_seconds % 60
+
+	if hours > 0: return "%02d:%02d:%02d" % [hours, minutes, seconds]
+
+	return "%02d:%02d" % [minutes, seconds]
 
 static func format_percent(value: float, include_percent_sign: bool = true, decimals: int = 0) -> String:
 	if value == 0: return "-"

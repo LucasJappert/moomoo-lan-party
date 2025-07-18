@@ -14,6 +14,7 @@
 - Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)
 - Sonidos limitarlos a la vista en pantalla
 - Agregar barra de vida del moomoo y del pj fijas en algun lugar comodo
+- Agregar estadísticas in game, como el tiempo transcurrido, el daño causado, el daño recibido, etc.
 
 - Agregar efecto de daño recibido
 - Ver sonidos que entran en loop indebidamente
@@ -21,7 +22,6 @@
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
 - Crear habilidad que al morir explota provocando un daño del 10% de su vida total en un área de 3 tiles de radio
 - Agregar bordes rojos/animación cuando tenemos poca vida
-- Agregar estadísticas in game, como el tiempo transcurrido, el daño causado, el daño recibido, etc.
 - Sistema de particulas para poder aplicarlo como colas en proyectiles
 - Refactorizar logica de skills antiguos, seguir la nueva metodologia creando un módulo para cada skill
 - Agregar skill, la cual puede activarse o desactivarse, que brindaría chances de matar al enemigo al instante (no aplica a bosses). Consume 20 de mana en cada ataque.
