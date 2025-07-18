@@ -26,7 +26,7 @@ func process_skill(_owner: Entity, _delta: float) -> void:
 	apply_strike(_owner)
 
 func apply_strike(_owner: Entity) -> void:
-	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(_owner.global_position, _owner.get_my_enemies(), learned_skill.effect_radius_in_tiles)
+	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(_owner.global_position, _owner.get_my_enemies(), learned_skill.area_of_effect_in_tiles)
 	if nearest_enemies.size() == 0: return
 
 	var random_enemy_index := randi() % nearest_enemies.size()
@@ -45,7 +45,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	aux_array[4] = [30, 28, 26] # cooldown
 	for i in Skill.AVAILABLE_LEVELS:
 		_SKILLS[NAME].item_skill_base[i].instant_use = true
-		_SKILLS[NAME].item_skill_base[i].effect_radius_in_tiles = 7
+		_SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 7
 		_SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[2][i]
 		_SKILLS[NAME].item_skill_base[i].float_dict["strike_interval_in_seconds"] = aux_array[1][i]
 		_SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC

@@ -7,7 +7,6 @@
 
 - Agregar un item que brinda daño splash a todo alreadedor del target (es diferente al cleave)
 - Implementar sistema de craft de items
-- Agregar item que brinda un 20% de lifesteal
 - Agregar item que brinda 40 puntos de agi, fza e int
 - Agregar un item que
 - Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)

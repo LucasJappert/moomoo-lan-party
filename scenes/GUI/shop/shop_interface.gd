@@ -51,3 +51,6 @@ func open_shop():
 	_shop_button.text = "Hide"
 	var tween := _main_container_items.create_tween()
 	tween.tween_property(_main_container_items, "position:x", 0, TWEEN_DURATION)
+
+static func static_close_shop() -> bool:
+	return GameManager.game_world.gui_scene.shop_interface.close_shop()

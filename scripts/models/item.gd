@@ -1,6 +1,9 @@
 class_name Item
 
 extends ItemSkillBase
+static var REGISTERED_ITEMS: Array = [
+	ItemBloodEdge,
+]
 
 const Names = {
 	HEALTH_POTION_I = "Health Potion I",
@@ -15,6 +18,7 @@ const Names = {
 
 static var _ITEMS: Dictionary[String, Item]
 const _ATLAS_START_POS = Vector2(0, 1504)
+static var aux_array: Array = [[], [], [], [], [], [], [], [], [], [], [], []]
 
 var quantity: int = 1
 var is_consumable: bool = false
@@ -32,6 +36,8 @@ static func initialize_items() -> void:
 	var aux_item_name = ""
 	var _item: Item
 
+	for item_class in REGISTERED_ITEMS: item_class.create_and_add_instance()
+	
 	# region ITEM CLEAVE_EDGE
 	aux_item_name = Names.CLEAVE_EDGE
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.PASSIVE)

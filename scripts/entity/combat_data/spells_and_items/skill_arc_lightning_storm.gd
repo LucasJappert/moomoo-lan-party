@@ -37,7 +37,7 @@ func process_skill(_owner: Entity, _delta: float) -> void:
 
 func apply_strike(_owner: Entity) -> bool:
 	var closest_origin = _last_target_impacted.projectile_zone.global_position if not ObjectHelpers.is_null(_last_target_impacted) else _first_target_position
-	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(closest_origin, _owner.get_my_enemies(), learned_skill.effect_radius_in_tiles, 1, _excluded_targets)
+	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(closest_origin, _owner.get_my_enemies(), learned_skill.area_of_effect_in_tiles, 1, _excluded_targets)
 	if nearest_enemies.size() == 0: return false
 
 	var next_target: Entity = nearest_enemies[0]
@@ -71,7 +71,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	aux_array[1] = [12, 9, 6] # cooldown
 	for i in Skill.AVAILABLE_LEVELS:
 		_SKILLS[NAME].item_skill_base[i].instant_use = false
-		_SKILLS[NAME].item_skill_base[i].effect_radius_in_tiles = 7
+		_SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 7
 		_SKILLS[NAME].item_skill_base[i].max_targets = aux_array[0][i]
 		_SKILLS[NAME].item_skill_base[i].float_dict["ministun_in_seconds"] = float_array1[i]
 		_SKILLS[NAME].item_skill_base[i].float_dict["damage_per_target"] = int_array[i]

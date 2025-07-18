@@ -97,7 +97,7 @@ static func create_next_wave() -> void:
 
 			var enemy = _get_enemy(enemy_type, wave_direction, is_boss)
 
-			enemy.can_attack = false
+			# enemy.can_attack = false
 			GameManager.spawn_enemy(enemy)
 			# return
 

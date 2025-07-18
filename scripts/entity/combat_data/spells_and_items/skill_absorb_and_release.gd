@@ -52,7 +52,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	for i in Skill.AVAILABLE_LEVELS:
 		var seconds_to_release: float = 7.0; var effect_radius: int = 3
 		_SKILLS[_skill_name].item_skill_base[i].instant_use = true
-		_SKILLS[_skill_name].item_skill_base[i].effect_radius_in_tiles = effect_radius
+		_SKILLS[_skill_name].item_skill_base[i].area_of_effect_in_tiles = effect_radius
 		_SKILLS[_skill_name].item_skill_base[i].float_dict["percent_to_release"] = float_array[i]
 		_SKILLS[_skill_name].item_skill_base[i].duration_in_seconds = seconds_to_release
 		_SKILLS[_skill_name].item_skill_base[i].damage_type = DamageType.PHYSICAL
@@ -66,7 +66,7 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 	if not super.try_to_use(_caster, _learned_skill, _target): return false
 
 	var _percent_to_release: float = _learned_skill.float_dict["percent_to_release"]
-	var skill_base := SkillAbsorbAndRelease.new(_learned_skill, true, _percent_to_release, _learned_skill.effect_radius_in_tiles)
+	var skill_base := SkillAbsorbAndRelease.new(_learned_skill, true, _percent_to_release, _learned_skill.area_of_effect_in_tiles)
 	_target.add_active_skill(skill_base)
 
 	return true

@@ -60,6 +60,9 @@ func _on_right_click_on_entity(_target_entity_name: String):
 @rpc("authority", "call_local")
 func _on_left_click(_target_entity_name: String):
 	if not GameManager.MY_PLAYER: return
+	
+	ShopInterface.static_close_shop()
+
 	# Always run in server
 	var target_entity = GameManager.get_entity(_target_entity_name)
 

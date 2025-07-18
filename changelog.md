@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Add item that grants a 25% lifesteal (Blood Edge)
 - ✅ Fix bug where spellcasting was not limited by spell's distance itself
 - ✅ Create system to buy items
 - ✅ Create new Shuriken projectile
