@@ -69,10 +69,17 @@ func _try_update_label():
 	# _label.text = str(my_owner.global_position)
 
 func update_health_bar():
+	if my_owner.get_total_hp() <= 0:
+		_health_current_bar.size.x = 0
+		return
 	_health_current_bar.size.x = my_owner.current_hp * BAR_SIZE / my_owner.get_total_hp()
 
 func update_mana_bar():
-	_mana_current_bar.size.x = my_owner.current_mana * BAR_SIZE / my_owner.get_total_mana()
+	if my_owner.get_total_mana() <= 0:
+		_mana_current_bar.size.x = 0
+		return
+		
+	_mana_current_bar.size.x = (my_owner.current_mana * BAR_SIZE) / my_owner.get_total_mana()
 
 func show_message_popup(text: String, color: Color = Color.RED, speed_scale: float = 1.0):
 	if not SHOW_DAMAGES_HEALS: return

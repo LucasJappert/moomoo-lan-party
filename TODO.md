@@ -5,10 +5,12 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Aumentar nivel de habilidad aprendida en enemgios
+- ver casteo de hechizo de defensa sobre si mismo en enemigos
+- Revisar sonidos en loop
+- Regular el oro obtenido tanto por matar enemigos como el ganado por ronda
 - Agregar un item que brinda daño splash a todo alreadedor del target (es diferente al cleave)
 - Implementar sistema de craft de items
-- Agregar item que brinda 40 puntos de agi, fza e int
-- Agregar un item que
 - Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)
 - Sonidos limitarlos a la vista en pantalla
 - Agregar barra de vida del moomoo y del pj fijas en algun lugar comodo

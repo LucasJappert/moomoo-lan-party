@@ -3,6 +3,7 @@ class_name Item
 extends ItemSkillBase
 static var REGISTERED_ITEMS: Array = [
 	ItemBloodEdge,
+	ItemPowerCore
 ]
 
 const Names = {

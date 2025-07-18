@@ -86,6 +86,7 @@ static func _setup_player(player: AudioStreamPlayer, stream: AudioStream, volume
 	if is_looping:
 		_looping_players.append(player)
 		# Conectar directamente al método 'play' del propio player
+		print("🎵 Looping sound: %s" % path)
 		player.finished.connect(Callable(player, "play"))
 	else:
 		player.finished.connect(func():
