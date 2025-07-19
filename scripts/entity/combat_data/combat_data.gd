@@ -238,7 +238,7 @@ func _server_verify_death(_killed_by: Entity) -> void:
 	current_hp = 0
 	_try_to_give_experience_to_players(Enemy.get_enemy_exp_when_dead()) # Give experience when an enemy dies
 	my_owner().global_die(_killed_by)
-	_try_to_add_gold_to_players(_killed_by)
+	_try_to_add_gold_to_players_on_enemy_die(_killed_by)
 
 func _try_to_give_experience_to_players(_exp: int) -> void:
 	_exp *= EXP_MULTIPLIER
@@ -247,10 +247,10 @@ func _try_to_give_experience_to_players(_exp: int) -> void:
 	for player in GameManager.get_players():
 		player.increment_current_exp(max(1, _exp))
 
-func _try_to_add_gold_to_players(_attacker: Entity) -> void:
+func _try_to_add_gold_to_players_on_enemy_die(_attacker: Entity) -> void:
 	if _attacker is Player == false: return
 	
-	var base_earned := Player.INITIAL_GOLD * 0.05 * (my_owner()._boss_level + 1)
+	var base_earned := EnemiesWavesController.get_gold_earned_by_enemy() * (my_owner()._boss_level + 1)
 	var earned_gold := randi_range(int(base_earned * 0.8), int(base_earned * 1.2))
 	for player in GameManager.get_players():
 		player.increment_current_gold(earned_gold)
