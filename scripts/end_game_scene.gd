@@ -2,7 +2,7 @@ extends CanvasLayer
 class_name EndGameScene
 
 @onready var _main_container: Control = %MainContainer
-@onready var _retry_button: NinePatchRect = %RetryButton
+@onready var _retry_button: MyButton = %RetryButton
 @onready var _statistic_label: Label = %StatisticLabel
 @onready var _defeat_label: Label = %DefeatLabel
 
@@ -17,11 +17,7 @@ func _ready():
 			_show_me()
 	)
 
-	# TODO: Create a helper to simplify this connection
-	_retry_button.connect("gui_input", func(event: InputEvent):
-		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			_restart_game()
-	)
+	_retry_button.on_pressed = _restart_game
 	pass
 
 func _show_me() -> void:

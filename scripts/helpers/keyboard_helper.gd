@@ -3,7 +3,6 @@ class_name KeyboardHelper
 const INVENTORY_HOTKEYS := [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6]
 const SKILL_HOTKEYS := [KEY_A, KEY_S, KEY_D, KEY_F]
 
-static var tiles = 1
 static func key_pressed_server_side(_keycode: int, player: Entity) -> void:
 	if not player: return
 	
@@ -19,14 +18,6 @@ static func key_pressed_server_side(_keycode: int, player: Entity) -> void:
 
 	# OTHER HOTKEYs
 	if _keycode == KEY_T:
-		tiles += 1
-		if tiles > 3: tiles = 1
-		CleaveEffect.show_cleave_effect_with_texture(
-			GameManager.game_world.over_terrain_layer,
-			GameManager.MY_PLAYER.global_position,
-			GameManager.MY_PLAYER.direction,
-			2
-		)
 		# ParticleTrail.spawn_explosion(GameManager.MY_PLAYER.global_position, GameManager.game_world.general_container)
 		# Aplicar efecto de escudo por 5 segundos
 		# var _effect = ShieldEffect.attach_to(GameManager.MY_PLAYER.front_animations_node, 225.0)

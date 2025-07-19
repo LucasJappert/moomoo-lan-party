@@ -4,7 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="2_cofyh"]
 
 [node name="MyButton" type="NinePatchRect"]
-offset_right = 135.0
+custom_minimum_size = Vector2(0, 64)
+offset_right = 160.0
 offset_bottom = 65.0
 mouse_filter = 0
 mouse_default_cursor_shape = 2
@@ -16,6 +17,7 @@ patch_margin_right = 20
 patch_margin_bottom = 20
 script = ExtResource("1_gjqo6")
 text = "asdss"
+force_width = 100
 
 [node name="TextLabel" type="Label" parent="."]
 unique_name_in_owner = true
@@ -37,3 +39,16 @@ theme_override_font_sizes/font_size = 29
 text = "asdss"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Border" type="NinePatchRect" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 0
+offset_right = 160.0
+offset_bottom = 65.0
+texture = ExtResource("2_cofyh")
+region_rect = Rect2(1056, 1888, 64, 64)
+patch_margin_left = 20
+patch_margin_top = 20
+patch_margin_right = 20
+patch_margin_bottom = 20
