@@ -240,6 +240,9 @@ func _server_verify_death(_killed_by: Entity) -> void:
 	my_owner().global_die(_killed_by)
 	_try_to_add_gold_to_players_on_enemy_die(_killed_by)
 
+	if ObjectHelpers.valid_instance(_killed_by):
+		_killed_by.reset_target_to_attack_from_nearest_enemy()
+
 func _try_to_give_experience_to_players(_exp: int) -> void:
 	_exp *= EXP_MULTIPLIER
 	if not my_owner() is Enemy: return
@@ -299,6 +302,9 @@ func set_target_to_attack(_target: Entity) -> void: # Used only by the server
 
 	target_to_attack = _target
 	target_to_attack_name = str(_target.name) if _target else ""
+
+func reset_target_to_attack_from_nearest_enemy() -> void:
+	set_target_to_attack(_get_nearest_target_in_range_attack())
 
 func verify_freed_target_to_attack(entity_name: String) -> void:
 	if target_to_attack_name == entity_name:

@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Auto-attack the nearest enemy when done attacking another enemy
 - ✅ Improve pause and add pause scene
 - ✅ Pause enemies and world when player dies (Game Over scene)
 - ✅ Add item that grants 40 points of agi, str and int (Power Core)

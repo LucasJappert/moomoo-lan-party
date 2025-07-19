@@ -5,7 +5,7 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Autoatacar al enemigo mas cercano cuando se termina de atacar otro enemigo
+- ✅ Auto-attack the nearest enemy when done attacking another enemy
 - Revisar sonidos en loop
 - Agregar un item que brinda daño splash a todo alreadedor del target (es diferente al cleave)
 - Implementar sistema de craft de items

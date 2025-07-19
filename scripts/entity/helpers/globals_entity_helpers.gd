@@ -13,6 +13,7 @@ static func get_nearest_entity(start_pos: Vector2, entities: Array[Entity], max_
 	var closest_distance := INF
 
 	for entity in entities:
+		if entity.current_hp <= 0: continue
 		var dist = entity.global_position.distance_to(start_pos)
 		if dist > max_range: continue
 
@@ -46,6 +47,7 @@ static func get_closest_entities(
 	var origin_tile := MapManager.world_to_cell(origin)
 
 	for entity in entities:
+		if entity.current_hp <= 0: continue
 		if entity in excluded_entities:
 			continue
 
