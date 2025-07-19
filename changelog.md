@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Create skill Pain Echo that reflects a percentage of received damage to the attacker (type of reflected damage is pure)
 - ✅ Auto-attack the nearest enemy when done attacking another enemy
 - ✅ Improve pause and add pause scene
 - ✅ Pause enemies and world when player dies (Game Over scene)

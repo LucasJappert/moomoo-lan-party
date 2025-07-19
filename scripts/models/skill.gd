@@ -22,6 +22,7 @@ const Names = {
 	ARC_LIGHTNING_STORM = "Arc Lightning Storm", # ✅
 	SHOCK_SPEAR = "Shock Spear", # ✅
 	STATIC_DISCHARGE = "Static Discharge", # ✅
+	# PAIN_ECHO = "Pain Echo", # ✅
 	DIVINE_SHIELD = "Divine Shield",
 	ENERGY_ABSORPTION = "Energy Absorption",
 	VOID_STEP = "Void Step",

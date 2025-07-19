@@ -3,6 +3,7 @@ extends MyInitAuxiliary
 
 # Array of skill classes (each must have .create_and_add_instance)
 static var REGISTERED_SKILLS: Array = [
+	SkillPainEcho,
 	SkillSilentAgony,
 	SkillBlessingOfPower,
 	SkillLifesteal,
@@ -77,4 +78,8 @@ static func _verify_range(_caster: Entity, _target: Entity, _learned_skill: Item
 
 # Must be overriden
 static func try_add_effect_from_skill(_owner: Entity, _skill: Skill) -> bool:
+	return false
+
+# Must be overriden
+static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
 	return false
