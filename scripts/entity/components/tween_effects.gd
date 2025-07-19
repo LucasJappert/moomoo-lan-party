@@ -13,7 +13,7 @@ var _owner: Entity
 func _init(p_owner: Entity):
 	super._init()
 	_owner = p_owner
-	EventBus.connect_to_paused(func(_paused: bool): _on_paused(_paused))
+	EventBus.connect_to_paused(func(_paused: bool, _show_menu: bool): _on_paused(_paused))
 
 func start_idle_effect():
 	if tweens.has(TYPES.IDLE):

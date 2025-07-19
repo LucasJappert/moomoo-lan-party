@@ -36,4 +36,4 @@ static func key_pressed_server_side(_keycode: int, player: Entity) -> void:
 		GameManager.MY_PLAYER.set_target_view(GameManager.MY_PLAYER)
 
 	if _keycode == KEY_F11 and GameManager.MY_PLAYER:
-		MainScene.set_paused(not MainScene.PAUSED)
+		MainScene.set_paused(not MainScene.PAUSED, true, true)

@@ -16,7 +16,10 @@ var selected_hero: Player
 static var hero_picked_type: String
 
 func _ready() -> void:
-	EventBusHeroPicker.connect_to_hero_selected(func(player: Player): _on_hero_selected(player))
+	EventBusHeroPicker.connect_to_hero_selected(func(player: Player, p_start_game: bool):
+		_on_hero_selected(player)
+		if p_start_game: _start_game()
+	)
 	choose_and_play_button.connect("gui_input", func(event: InputEvent):
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			if selected_hero: _start_game()

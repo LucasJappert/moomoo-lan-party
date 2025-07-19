@@ -28,17 +28,16 @@ static func get_elapsed_time() -> float:
 # endregion GETTERs
 
 # region 	SETTERs
-static func set_paused(_paused: bool, stop_time_scale := true) -> void:
+static func set_paused(_paused: bool, stop_time_scale := true, show_menu: bool = false) -> void:
+	if PAUSED == _paused: return
 	PAUSED = _paused
 	if PAUSED:
 		pause_start_time = Time.get_ticks_msec()
 		if stop_time_scale: Engine.time_scale = 0
-		print("World paused in get_ticks_msec: ", Time.get_ticks_msec(), " get_elapsed_time: ", get_elapsed_time())
 	else:
 		total_paused_time += Time.get_ticks_msec() - pause_start_time
-		print("World unpaused in get_ticks_msec: ", Time.get_ticks_msec(), " get_elapsed_time: ", get_elapsed_time())
 		Engine.time_scale = 1
-	EventBus.emit_paused(_paused)
+	EventBus.emit_paused(_paused, show_menu)
 # endregion SETTERs
 
 func clear_scenes():

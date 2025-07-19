@@ -3,22 +3,30 @@
 [ext_resource type="Script" uid="uid://bpgoaabru12rc" path="res://scripts/general_objects/countdown_scene.gd" id="1_pr4r0"]
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="2_lfkjy"]
 
-[node name="CountdownScene" type="Node2D"]
+[node name="CountdownScene" type="Control"]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
 script = ExtResource("1_pr4r0")
 
 [node name="StartNowButton" type="NinePatchRect" parent="."]
 unique_name_in_owner = true
-anchors_preset = 8
+layout_mode = 1
+anchors_preset = 7
 anchor_left = 0.5
-anchor_top = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
-anchor_bottom = 0.5
+anchor_bottom = 1.0
 offset_left = -103.5
-offset_top = -60.0
+offset_top = -61.0
 offset_right = 103.5
-offset_bottom = 1.0
 grow_horizontal = 2
-grow_vertical = 2
+grow_vertical = 0
 mouse_filter = 0
 mouse_default_cursor_shape = 2
 texture = ExtResource("2_lfkjy")
@@ -43,12 +51,15 @@ vertical_alignment = 1
 
 [node name="LabelNumberModel" type="Label" parent="."]
 unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
 offset_left = -21.5
-offset_top = -160.5
+offset_top = -174.0
 offset_right = 21.5
-offset_bottom = -57.5
+offset_bottom = -71.0
 grow_horizontal = 2
-grow_vertical = 2
 theme_override_colors/font_color = Color(0.65625, 0.632652, 0.244434, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 0
@@ -58,11 +69,21 @@ text = "2"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="NumbersContainer1" type="Node2D" parent="."]
-position = Vector2(0, -109)
+[node name="NumbersContainer1" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_top = -124.0
+offset_bottom = -124.0
+grow_horizontal = 2
+grow_vertical = 0
 
 [node name="NumbersContainer" type="CenterContainer" parent="NumbersContainer1"]
 unique_name_in_owner = true
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5

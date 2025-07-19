@@ -1,4 +1,4 @@
-extends CanvasLayer
+extends Control
 class_name EndGameScene
 
 @onready var _main_container: Control = %MainContainer
@@ -29,12 +29,11 @@ func _show_me() -> void:
 
 func _restart_game() -> void:
 	visible = false
-
 	MainScene.set_paused(false)
 	HeroPickerScene.load_scene()
 
 func apply_tween_when_appear():
-	_main_container.scale = Vector2.ZERO
+	# _main_container.scale = Vector2.ZERO
 	_main_container.rotation = 0
 	_main_container.modulate.a = 0
 
@@ -43,8 +42,8 @@ func apply_tween_when_appear():
 	tween.set_ease(Tween.EASE_OUT)
 
 	# Escalado
-	tween.tween_property(_main_container, "scale", Vector2.ONE, 0.8)
+	# tween.tween_property(_main_container, "scale", Vector2.ONE, 0.8)
 
 	# Rotación en paralelo
-	tween.parallel().tween_property(_main_container, "rotation", 3 * TAU, 0.8)
-	tween.parallel().tween_property(_main_container, "modulate:a", 1, 0.8)
+	# tween.parallel().tween_property(_main_container, "rotation", 3 * TAU, 0.8)
+	tween.parallel().tween_property(_main_container, "modulate:a", 1, 0.4)

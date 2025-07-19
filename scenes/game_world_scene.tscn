@@ -1,10 +1,9 @@
-[gd_scene load_steps=12 format=4 uid="uid://cwrqk21prcrn7"]
+[gd_scene load_steps=11 format=4 uid="uid://cwrqk21prcrn7"]
 
 [ext_resource type="Script" uid="uid://r1glf7sx1a8j" path="res://scripts/game_world.gd" id="1_tscv4"]
 [ext_resource type="Texture2D" uid="uid://b6jnkm7kk6mgc" path="res://assets/grass-earth-64.png" id="2_qnq4f"]
 [ext_resource type="Script" uid="uid://q7hedgd8mftv" path="res://scripts/grid_debugger.gd" id="3_pddmg"]
 [ext_resource type="PackedScene" uid="uid://dywrecu6pml77" path="res://scenes/GUI/gui_scene.tscn" id="4_w7c17"]
-[ext_resource type="PackedScene" uid="uid://dnask4newbncn" path="res://scenes/menu_scene.tscn" id="5_27acd"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_lnu2h"]
 vertices = PackedVector2Array(32, 32, -32, 32, -32, -32, 32, -32)
@@ -136,5 +135,3 @@ unique_name_in_owner = true
 z_index = 3
 z_as_relative = false
 y_sort_enabled = true
-
-[node name="MenuScene" parent="." instance=ExtResource("5_27acd")]

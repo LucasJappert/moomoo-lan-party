@@ -4,12 +4,20 @@
 [ext_resource type="Script" uid="uid://h4g5nus0qgji" path="res://scripts/end_game_scene.gd" id="1_n1x8e"]
 [ext_resource type="PackedScene" uid="uid://3ndqkrmv60an" path="res://scenes/general_objects/my_button.tscn" id="3_n4w7i"]
 
-[node name="EndGameScene" type="CanvasLayer"]
+[node name="EndGameScene" type="Control"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_n1x8e")
 
 [node name="MainContainer" type="Control" parent="."]
 unique_name_in_owner = true
-layout_mode = 3
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -98,11 +106,18 @@ vertical_alignment = 1
 
 [node name="RetryButton" parent="MainContainer/GridContainer" instance=ExtResource("3_n4w7i")]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 242.5
-offset_top = 481.0
-offset_right = 502.5
-offset_bottom = 546.0
-text = "RETRY"
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -130.0
+offset_top = -139.0
+offset_right = 130.0
+offset_bottom = -74.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Restart"
 force_width = 200
 color = Color(1, 1, 0, 1)

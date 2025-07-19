@@ -40,6 +40,7 @@ static func start_wave_process() -> void:
 	EventBus.connect_to_wave_finilized(func(): _wave_finilized())
 
 static func _reset_wave_process() -> void:
+	countdown_time_in_secs = COUNTDOWN_START
 	process_running = false
 	current_wave = 0
 	countdown_time_to_show = COUNTDOWN_START

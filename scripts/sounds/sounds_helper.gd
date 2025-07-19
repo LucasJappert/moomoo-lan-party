@@ -190,7 +190,7 @@ static func play_electric_1(volume: float = -10.0):
 static func play_level_up(volume: float = -5.0):
 	play_sfx("res://sounds/generals/level-up.wav", volume, 1)
 
-static func play_beep(volume: float = -5.0):
+static func play_beep(volume: float = -10.0):
 	play_sfx("res://sounds/generals/beep.wav", volume, 1)
 
 static func play_monster_sound(audio_id: int, max_simultaneous: int = 1, volume: float = -15.0):

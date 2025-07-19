@@ -1,49 +1,46 @@
-extends CanvasLayer
+extends Control
 class_name MenuScene
 
 @onready var _main_container: Control = %MainContainer
+@onready var _resume_button: MyButton = %ResumeButton
+@onready var _restart_button: MyButton = %RestartButton
+@onready var _exit_button: MyButton = %ExitButton
+@onready var _menu_button: MyButton = %MenuButton
+const HIDDEN_POSITION := Vector2(0, -250)
+const VISIBLE_POSITION := Vector2(0, 216)
+const CHAIN_VOLUME := -10
 
 func _ready():
-	visible = false
-	EventBus.connect_to_paused(func(_paused: bool):
-		print("Paused: ", _paused)
-		if _paused: _show_me()
-		else: _hide_me()
+	_menu_button.on_pressed = func(): MainScene.set_paused(true, true, true)
+	_main_container.position = HIDDEN_POSITION
+	EventBus.connect_to_paused(func(_paused: bool, _show_menu: bool):
+		if _paused and _show_menu: _show_me()
+		if not _paused: _hide_me()
 	)
+	_resume_button.on_pressed = func(): MainScene.set_paused(false)
+	_restart_button.on_pressed = _restart_game
+	_exit_button.on_pressed = func(): get_tree().quit()
 
 func _show_me() -> void:
-	visible = true
-	apply_tween_when_appear()
+	SoundsHelper.play_sfx("res://sounds/generals/chains.wav", CHAIN_VOLUME, 2)
+	_apply_tween_when_appear()
 
 func _hide_me() -> void:
-	visible = false
-	aplly_tween_when_disappear()
+	MainScene.set_paused(false)
+	SoundsHelper.play_sfx("res://sounds/generals/chains.wav", CHAIN_VOLUME, 2)
+	_aplly_tween_when_disappear()
 
-func apply_tween_when_appear():
-	const DURATION := 0.2
-	_main_container.scale = Vector2.ZERO
-	_main_container.modulate.a = 0
+func _restart_game():
+	MainScene.set_paused(false)
+	HeroPickerScene.load_scene()
 
-	var custom_tween := CustomTween.new(_main_container)
-	custom_tween.tween_property(_main_container, "scale", Vector2.ONE, DURATION)
-	custom_tween.parallel().tween_property(_main_container, "modulate:a", 1, DURATION)
+const _TWEEN_DURATION := 0.5
+func _apply_tween_when_appear():
+	var custom_tween := MyCustomTween.new(_main_container)
+	custom_tween.tween_property(_main_container, "position", VISIBLE_POSITION, _TWEEN_DURATION, Tween.TRANS_SINE, Tween.EASE_OUT)
 	custom_tween.start()
 
-	# var tween := _main_container.create_tween()
-	# tween.set_trans(Tween.TRANS_SINE)
-	# tween.set_ease(Tween.EASE_OUT)
-
-	# tween.tween_property(_main_container, "scale", Vector2.ONE, DURATION)
-	# tween.parallel().tween_property(_main_container, "modulate:a", 1, DURATION)
-
-func aplly_tween_when_disappear():
-	const DURATION := 0.8
-	_main_container.scale = Vector2.ONE
-	_main_container.modulate.a = 1
-
-	var tween := _main_container.create_tween()
-	tween.set_trans(Tween.TRANS_SINE)
-	tween.set_ease(Tween.EASE_IN)
-
-	tween.tween_property(_main_container, "scale", Vector2.ZERO, DURATION)
-	tween.parallel().tween_property(_main_container, "modulate:a", 0, DURATION)
+func _aplly_tween_when_disappear():
+	var custom_tween := MyCustomTween.new(_main_container)
+	custom_tween.tween_property(_main_container, "position", HIDDEN_POSITION, _TWEEN_DURATION, Tween.TRANS_SINE, Tween.EASE_IN)
+	custom_tween.start()

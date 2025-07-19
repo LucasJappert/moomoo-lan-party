@@ -4,19 +4,37 @@
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="1_o71fo"]
 [ext_resource type="PackedScene" uid="uid://3ndqkrmv60an" path="res://scenes/general_objects/my_button.tscn" id="2_6wmco"]
 
-[node name="MenuScene" type="CanvasLayer"]
+[node name="MenuScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("1_6wmco")
+
+[node name="MenuButton" parent="." instance=ExtResource("2_6wmco")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -80.0
+offset_right = 80.0
+grow_horizontal = 2
+text = "MENU"
 
 [node name="MainContainer" type="Control" parent="."]
 unique_name_in_owner = true
-layout_mode = 3
-anchors_preset = 8
+layout_mode = 1
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.5
+offset_top = -216.0
+offset_bottom = -216.0
 grow_horizontal = 2
-grow_vertical = 2
+mouse_filter = 2
 
 [node name="GridContainer" type="NinePatchRect" parent="MainContainer"]
 layout_mode = 1
@@ -25,12 +43,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -370.5
-offset_top = -306.0
-offset_right = 370.5
-offset_bottom = 306.0
+offset_left = -215.0
+offset_top = -216.0
+offset_right = 215.0
+offset_bottom = 216.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 0
 texture = ExtResource("1_o71fo")
 region_rect = Rect2(1056, 1952, 64, 64)
 patch_margin_left = 20
@@ -46,10 +65,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -370.5
-offset_top = -306.0
-offset_right = 370.5
-offset_bottom = -209.0
+offset_left = -215.0
+offset_top = -216.0
+offset_right = 215.0
+offset_bottom = -119.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
@@ -66,7 +85,7 @@ unique_name_in_owner = true
 layout_mode = 2
 offset_left = 9.0
 offset_top = 8.0
-offset_right = 734.0
+offset_right = 421.0
 offset_bottom = 93.0
 theme_override_colors/font_color = Color(0.443192, 0.432662, 0.451055, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -90,29 +109,32 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -138.5
-offset_top = -208.0
-offset_right = 140.5
-offset_bottom = 293.0
+offset_left = -138.0
+offset_top = -119.0
+offset_right = 141.0
+offset_bottom = 204.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 20
 alignment = 1
 
 [node name="ResumeButton" parent="MainContainer/GridContainer/VBoxContainer" instance=ExtResource("2_6wmco")]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Resume"
 force_width = 200
-color = Color(0, 1, 0.352941, 1)
+color = Color(0, 0.364447, 0.107189, 1)
 
 [node name="RestartButton" parent="MainContainer/GridContainer/VBoxContainer" instance=ExtResource("2_6wmco")]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Restart"
 force_width = 200
-color = Color(1, 1, 0, 1)
+color = Color(0.376259, 0.376259, 0, 1)
 
 [node name="ExitButton" parent="MainContainer/GridContainer/VBoxContainer" instance=ExtResource("2_6wmco")]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Exit game"
 force_width = 200
-color = Color(0.898039, 0, 0.227451, 1)
+color = Color(0.431782, 0, 0.0892535, 1)

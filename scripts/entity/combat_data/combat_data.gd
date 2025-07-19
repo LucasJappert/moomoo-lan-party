@@ -280,7 +280,7 @@ func add_item(item: Item, index: int = -1) -> bool:
 	return false
 
 func use_item(_slot_number: int) -> void: # Called from _on_key_pressed
-	if MainScene.PAUSED: return
+	if MainScene.PAUSED or current_hp == 0: return
 	if _items[_slot_number - 1] == null: return print("No item in slot: ", _slot_number)
 
 	_items[_slot_number - 1].use_item(_slot_number, my_owner(), null)
@@ -316,7 +316,7 @@ func verify_freed_target_view(entity_name: String) -> void:
 		set_target_view(null)
 
 func charge_skill(index: int) -> void:
-	if MainScene.PAUSED: return
+	if MainScene.PAUSED or current_hp == 0: return
 	if index >= _skills.size(): return
 	if is_silenced: return
 	if not _skills[index].learned_level: return
@@ -341,7 +341,7 @@ func server_upgrade_skill(slot_number: int) -> void:
 	update_cache_total_stats()
 
 func use_charged_skill(_target: Entity) -> void:
-	if MainScene.PAUSED: return
+	if MainScene.PAUSED or current_hp == 0: return
 	if not charged_skill: return
 	if is_silenced: return uncharge_skill()
 	if ObjectHelpers.is_null(_target): return uncharge_skill()

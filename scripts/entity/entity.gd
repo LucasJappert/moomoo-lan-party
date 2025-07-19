@@ -61,7 +61,7 @@ func _ready():
 	ShadersHelper.set_dissolve_shader_material(self)
 
 	EventBus.connect_to_freed_entity(Callable(self, "_on_entity_freed"))
-	EventBus.connect_to_paused(func(_paused: bool): EntityState.paused_game(self))
+	EventBus.connect_to_paused(func(_paused: bool, _show_menu: bool): EntityState.paused_game(self))
 
 
 func _post_ready():

@@ -2,7 +2,7 @@ extends Node
 
 const PAUSED := "paused"
 signal paused(_paused: bool)
-func emit_paused(_paused: bool): emit_signal(PAUSED, _paused)
+func emit_paused(_paused: bool, _show_menu: bool = false): emit_signal(PAUSED, _paused, _show_menu)
 func connect_to_paused(p_callback: Callable) -> void:
 	EventBus.connect(PAUSED, p_callback)
 

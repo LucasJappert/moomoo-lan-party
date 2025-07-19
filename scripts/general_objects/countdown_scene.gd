@@ -1,6 +1,6 @@
 class_name CountdownScene
 
-extends Node2D
+extends Control
 
 @onready var label_number_model: Label = %LabelNumberModel
 @onready var start_now_button: NinePatchRect = %StartNowButton
@@ -9,7 +9,7 @@ extends Node2D
 
 var text_to_show: String
 var duration := 1
-var speed := MapManager.TILE_SIZE_INT * 5
+var speed := MapManager.TILE_SIZE_INT * 8
 var fade_out := true
 var SCALE_FROM = Vector2(1, 1)
 var SCALE_TO = Vector2(0.5, 0.5)
@@ -18,8 +18,6 @@ var final_message = false
 func _ready():
 	label_number_model.visible = false
 	_clean_numbers_container()
-	var screen_center := get_viewport().get_visible_rect().size / 2
-	global_position = screen_center - Vector2(0, MapManager.TILE_SIZE_INT * 7)
 	start_now_button.connect("gui_input", func(event: InputEvent): _on_start_now_button_click(event))
 
 func _clean_numbers_container():

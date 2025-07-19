@@ -1,12 +1,11 @@
 extends Node
-class_name CustomTween
+class_name MyCustomTween
 
 signal tween_completed
 
 # Constantes de transición y easing
 const TRANS_LINEAR := 0
 const TRANS_SINE := 1
-
 const EASE_IN := 0
 const EASE_OUT := 1
 const EASE_IN_OUT := 2
@@ -92,7 +91,7 @@ func _process(_delta):
 		var relative_time := float(elapsed - int(action.delay * 1000)) / (action.duration * 1000)
 		relative_time = clamp(relative_time, 0.0, 1.0)
 		var value = action.interpolate(relative_time)
-		apply_value(action.node, action.property, value)
+		_apply_value(action.node, action.property, value)
 		if relative_time < 1.0:
 			all_finished = false
 
@@ -101,7 +100,7 @@ func _process(_delta):
 		emit_signal("tween_completed")
 
 # API estilo Tween
-func tween_property(node: Node, property: String, to: Variant, duration: float) -> TweenAction:
+func tween_property(node: Node, property: String, to: Variant, duration: float, transition := TRANS_LINEAR, p_ease := EASE_IN_OUT) -> TweenAction:
 	var from = _get_initial_value(node, property)
 	var action := TweenAction.new()
 	action.node = node
@@ -109,6 +108,8 @@ func tween_property(node: Node, property: String, to: Variant, duration: float) 
 	action.from = from
 	action.to = to
 	action.duration = duration
+	action.transition = transition
+	action._ease = p_ease
 	_actions.append(action)
 	return action
 
@@ -141,7 +142,7 @@ func _get_initial_value(node: Node, property: String) -> Variant:
 			push_error("Propiedad desconocida: %s" % property)
 			return null
 
-func apply_value(node: Node, property: String, value: Variant) -> void:
+func _apply_value(node: Node, property: String, value: Variant) -> void:
 	if not property.contains(":"):
 		node.set(property, value)
 		return

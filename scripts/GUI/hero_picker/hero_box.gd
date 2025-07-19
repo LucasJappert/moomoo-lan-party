@@ -11,6 +11,9 @@ var hero_type: String
 var player: Player
 var is_selected := false
 
+var _last_click_time: float = 0
+const DOUBLE_CLICK_THRESHOLD := 0.3 # segundos
+
 func set_hero_type(type: String):
 	hero_type = type
 
@@ -39,7 +42,21 @@ func set_texture(rect: Rect2 = Rect2(0, 0, 1, 1)):
 
 func _on_texture_rect_input(event: InputEvent):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		EventBusHeroPicker.emit_hero_selected(player)
+		var now := Time.get_ticks_msec() / 1000.0 # segundos
+
+		if now - _last_click_time < DOUBLE_CLICK_THRESHOLD:
+			_on_double_click()
+			_last_click_time = 0 # resetea para evitar triple click
+		else:
+			_last_click_time = now
+			_on_single_click()
+
+func _on_single_click():
+	EventBusHeroPicker.emit_hero_selected(player)
+
+func _on_double_click():
+	EventBusHeroPicker.emit_hero_selected(player, true)
+	# Podés emitir otro evento o hacer alguna acción especial
 
 func set_disabled_effect():
 	# Subtle black tint (slightly darkens)

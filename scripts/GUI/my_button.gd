@@ -26,6 +26,7 @@ const MARGINS = 30
 func _ready():
 	_update_label()
 	_update_color()
+	_update_border_size()
 	connect("gui_input", _on_button_click)
 
 func _on_button_click(event: InputEvent):
