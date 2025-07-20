@@ -17,6 +17,7 @@ var movement_helper: MovementHelper
 @onready var body_sprite: AnimatedSprite2D = %BodySprite
 @onready var body_shadow: Sprite2D = %BodyShadow
 @onready var front_animations_node: Node2D = $FrontAnimationsNode
+@onready var back_animations_node: Node2D = %BackAnimationsNode
 
 var sprite_height: float = 0
 var can_attack: bool = true
@@ -159,6 +160,7 @@ func _apply_effects_after_die(on_finished: Callable) -> void:
 	TweenHelper.apply_tween_to_property(body_shadow, tween, "modulate:a", 0.0, TWEEN_DURATION)
 	
 	TweenHelper.apply_tween_to_property(front_animations_node, tween, "modulate:a", 0.0, TWEEN_DURATION)
+	TweenHelper.apply_tween_to_property(back_animations_node, tween, "modulate:a", 0.0, TWEEN_DURATION)
 
 	tween.tween_callback(on_finished)
 

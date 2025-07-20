@@ -13,14 +13,6 @@ func initialize() -> void:
 func notify_key_pressed_to_server(keycode: int): rpc_id(1, "_on_key_pressed", keycode)
 @rpc("authority", "call_local")
 func _on_key_pressed(keycode: int): KeyboardHelper.key_pressed_server_side(keycode, _my_owner)
-
-func send_skill_uppgrade_button_pressed_to_server(slot_number: int):
-	if not multiplayer.is_server(): return rpc_id(1, "_on_skill_uppgrade_button_pressed", slot_number)
-
-	_on_skill_uppgrade_button_pressed(slot_number)
-@rpc("any_peer", "reliable")
-func _on_skill_uppgrade_button_pressed(slot_number: int):
-	_my_owner.server_upgrade_skill(slot_number)
 # endregion MESSAGES RECEIVED FROM CLIENT
 
 

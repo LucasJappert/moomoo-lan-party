@@ -63,13 +63,23 @@ func ready_combat_data() -> void:
 
 func post_ready_combat_data() -> void:
 	effects_helper.set_my_owner(my_owner())
+	
+	# Intentamos agregar skills aprendidos y que son pasivos
+	for skill in _skills:
+		if not skill.learned_level: continue
+		if skill.get_learned_skill().type != SkillType.PASSIVE: continue
+
+		add_active_skill(SkillBase.get_permanent_active_skill(skill.get_learned_skill()))
 
 	if not GameManager.AM_I_HOST: return
 
-	for index in range(_skills.size()): effects_helper.on_skill_updated(my_owner(), _skills[index], index + 1)
+	# for index in range(_skills.size()): effects_helper.on_skill_updated(my_owner(), _skills[index], index + 1)
 
 	if current_hp == 0: current_hp = get_total_hp()
 	if current_mana == 0: current_mana = get_total_mana()
+
+	# for skill_base in SkillBase.REGISTERED_SKILLS:
+	# 	skill_base.actions_on_load_skills(my_owner(), _skills)
 
 	if my_owner() is Enemy:
 		enemy_spell_caster = EnemySpellCaster.new(my_owner())
@@ -96,8 +106,6 @@ func _process_on_server(_delta: float):
 func server_execute_physical_damage(_target: Entity) -> void:
 	if my_owner().multiplayer.is_server() == false: return
 	if _target == null: return
-	
-	# if not _target.target_view: _target.set_target_view(my_owner()) # Util when we want autoset target view
 
 	var base_damage = get_physical_attack_power()
 	
@@ -133,8 +141,9 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 		CombatEffect.actions_after_effective_hit(_attacker, my_owner(), _di)
 		Skill.actions_after_effective_hit(_attacker, my_owner(), _di)
 		Item.actions_after_effective_hit(_attacker, my_owner(), _di)
-		for registered_skill in SkillBase.REGISTERED_SKILLS:
-			registered_skill.actions_after_effective_hit(_attacker, my_owner(), _di)
+
+	for registered_skill in SkillBase.REGISTERED_SKILLS:
+		registered_skill.actions_after_effective_hit(_attacker, my_owner(), _di)
 
 	my_owner().rpc_handler.receive_damage_or_heal(ObjectHelpers.to_dict(_di, true))
 
@@ -162,7 +171,18 @@ func update_active_skills(_delta: float) -> void:
 	for i in range(_active_skills.size() - 1, -1, -1):
 		_active_skills[i].process_skill(my_owner(), _delta)
 		if not _active_skills[i].active:
-			_active_skills.remove_at(i)
+			_remove_active_skill(_active_skills[i], i)
+
+func _remove_active_skill(_skill: SkillBase, index: int) -> void:
+	for registered_skill in SkillBase.REGISTERED_SKILLS:
+		registered_skill.on_active_skill_removed(my_owner(), _skill)
+
+	_active_skills.remove_at(index)
+
+func remove_active_skill_by_name(_skill_name: String) -> void:
+	for i in range(_active_skills.size() - 1, -1, -1):
+		if _active_skills[i].learned_skill.my_name == _skill_name:
+			_remove_active_skill(_active_skills[i], i)
 
 func add_active_skill(_skill: SkillBase) -> bool:
 	if _stacks_reached(_skill): return false
@@ -172,6 +192,9 @@ func add_active_skill(_skill: SkillBase) -> bool:
 
 	if _skill.learned_skill.stats.silence_duration > 0:
 		SilenceEffect.attach_to(my_owner().front_animations_node, _skill.learned_skill.duration_in_seconds)
+
+	for registered_skill in SkillBase.REGISTERED_SKILLS:
+		registered_skill.on_active_skill_added(my_owner(), _skill)
 	
 	return true
 
@@ -187,10 +210,9 @@ func _stacks_reached(_skill: SkillBase) -> bool:
 func _try_to_apply_effect(_skill: SkillBase):
 	if not _skill.learned_skill.create_effect: return
 
-	var skill = _skill.learned_skill
-	var new_effect = CombatEffect.get_temporal_effect(skill.my_name, skill.duration_in_seconds, skill.max_stacks, skill.stats)
-	new_effect.set_description(skill.description)
-	new_effect.set_region_rect(Skill._SKILLS[skill.my_name].region_rect)
+	# print("Agregamos _skill: ", _skill.my_name, " a unidad: ", my_owner().name)
+
+	var new_effect := CombatEffect.get_effect_from_skill_base(_skill)
 	effects_helper.add_effect(new_effect)
 
 func apply_stun(_seconds: float) -> void:
@@ -314,6 +336,7 @@ func verify_freed_target_to_attack(entity_name: String) -> void:
 		set_target_to_attack(null)
 
 func set_target_view(_target: Entity) -> void:
+	# Not used at the moment
 	if _target == target_view: return
 
 	target_view = _target
@@ -344,8 +367,12 @@ func uncharge_skill() -> bool:
 	charged_skill = null
 	return true
 
-func server_upgrade_skill(slot_number: int) -> void:
+func upgrade_skill(slot_number: int) -> void:
 	_skills[slot_number - 1].try_to_upgrade(my_owner(), slot_number)
+	
+	var learned_skill := _skills[slot_number - 1].get_learned_skill()
+	if learned_skill.type == SkillType.PASSIVE: add_active_skill(SkillBase.get_permanent_active_skill(learned_skill))
+
 	update_cache_total_stats()
 
 func use_charged_skill(_target: Entity) -> void:

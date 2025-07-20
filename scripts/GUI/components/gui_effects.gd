@@ -30,7 +30,7 @@ func _on_new_target_to_attack_selected(_owner: Entity, _target: Entity) -> void:
 	
 	# _add_current_effects()
 func _on_new_target_view_selected(_owner: Entity, _target: Entity) -> void:
-	if not ObjectHelpers.is_my_player(_owner): return
+	# if not ObjectHelpers.is_my_player(_owner): return
 	_entity_info = _target
 	if _entity_info == null: _entity_info = GameManager.MY_PLAYER
 
@@ -46,12 +46,14 @@ func _process(_delta: float) -> void:
 	
 
 func _try_add_effect(_owner: Entity, effect: CombatEffect) -> void:
+	if TYPE != Type.MY_EFFECTS: return
 	if _entity_info.name != _owner.name: return
 
 	add_child(GuiEffect.get_instance(effect), true)
 	_sort_children_by_effect_name()
 
 func _try_remove_effects_by_ids(_owner: Entity, ids_to_remove: Array[int]) -> void:
+	if ObjectHelpers.is_null(_entity_info): return
 	if _entity_info.name != _owner.name: return
 
 	for gui_effect in get_children():

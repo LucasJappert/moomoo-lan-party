@@ -47,8 +47,8 @@ func _ready():
 	upgrade_button.gui_input.connect(func(event):
 		if not GameManager.MY_PLAYER: return
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			GameManager.MY_PLAYER.rpc_handler.send_skill_uppgrade_button_pressed_to_server(slot_number)
-		)
+			GameManager.MY_PLAYER.upgrade_skill(slot_number)
+	)
 
 	EventBus.connect_to_skill_upgraded(func(_p_owner: Entity, _upgraded_skill: Skill, _slot_number: int): _skill_updated(_upgraded_skill, _p_owner, _slot_number))
 	EventBus.connect_to_skill_points_to_assign_changed(func(_p_owner: Entity): _update_controls())

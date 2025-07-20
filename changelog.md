@@ -2,6 +2,8 @@
 
 📆 xx/07/2025
 
+- ✅ Create wave 7 with EnemyReflector and EnemyCrimsonWarlock enemies
+- ✅ Add reflection effect for Pain Echo skill
 - ✅ Create skill Pain Echo that reflects a percentage of received damage to the attacker (type of reflected damage is pure)
 - ✅ Auto-attack the nearest enemy when done attacking another enemy
 - ✅ Improve pause and add pause scene

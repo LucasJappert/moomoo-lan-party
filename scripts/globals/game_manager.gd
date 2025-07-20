@@ -57,6 +57,8 @@ func _actions_for_server_side_after_entity_removed(entity_died: Entity, killed_b
 	
 	EventBus.emit_freed_entity(entity_died.name)
 	EventBus.emit_entity_died(entity_died, killed_by)
+
+	SkillBase.remove_effects_running_by_owner_name(entity_died.name)
 	
 	entity_died.queue_free() # We shouldn't do this in the client side, server should do it and sync it
 

@@ -12,6 +12,7 @@ var area_of_effect_in_tiles: int = 0
 var instant_use: bool = false
 var auxiliary_float: float # Used for general purposes, like calculate percentage of damage respect to the strength
 var float_dict: Dictionary = {} # Used for general purposes, like apply damage after xx seconds
+var string_dict: Dictionary = {} # Used for general purposes
 var my_name: String
 var duration_in_seconds: float
 var type: String = SkillType.ACTIVE
@@ -23,6 +24,7 @@ var stats: CombatStats = CombatStats.new()
 var damage_type: String = DamageType.NONE
 var max_targets: int = 1
 var create_effect: bool = false
+var create_effect_to_enemy: bool = false
 var _last_used_time: float = - INF
 
 func _init():

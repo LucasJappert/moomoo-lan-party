@@ -7,6 +7,7 @@ var damage_type: String = DamageType.PHYSICAL
 var attacker_name: String
 var can_be_evaded: bool = true
 var was_reflected: bool = false
+var temporal_damage: bool = false
 var was_a_cleave_damage: bool = false
 
 func _init(p_total_damage: int = 0, _damage_type: String = DamageType.PHYSICAL, _attacker_name: String = ""):
@@ -18,9 +19,11 @@ func get_attacker() -> Entity:
 	return GameManager.get_entity(attacker_name)
 
 func is_arrow_attack() -> bool:
+	if was_a_cleave_damage or was_reflected or temporal_damage: return false
 	return projectile_type == ProjectileArrow.NAME and damage_type == DamageType.PHYSICAL
 
 func is_melee_attack() -> bool:
+	if was_a_cleave_damage or was_reflected or temporal_damage: return false
 	return projectile_type == ProjectileBase.NONE and damage_type == DamageType.PHYSICAL
 
 static func get_instance() -> DamageInfo:

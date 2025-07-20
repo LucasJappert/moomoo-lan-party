@@ -74,6 +74,20 @@ static func get_permanent_effect(p_name: String, p_region_rect: Rect2, _max_stac
 	var result = _get_instance(p_name, 0.0, true, _max_stacks, _stats)
 	result.set_region_rect(p_region_rect)
 	return result
+
+static func get_effect_from_skill_base(skill: SkillBase) -> CombatEffect:
+	var learned_skill := skill.learned_skill
+	var result = _get_instance(learned_skill.my_name, learned_skill.duration_in_seconds, skill.permanent_effect, learned_skill.max_stacks, learned_skill.stats)
+	result.set_description(learned_skill.description)
+	result.set_region_rect(Skill._SKILLS[learned_skill.my_name].region_rect)
+	return result
+
+static func get_effect_from_item_skill_base(skill: ItemSkillBase) -> CombatEffect:
+	var _is_permanent = skill.duration_in_seconds <= 0
+	var result = _get_instance(skill.my_name, skill.duration_in_seconds, _is_permanent, skill.max_stacks, skill.stats)
+	result.set_description(skill.description)
+	result.set_region_rect(Skill._SKILLS[skill.my_name].region_rect)
+	return result
 	
 static func get_permanent_effect_from_skill(skill: Skill) -> CombatEffect:
 	var learned_skill = skill.get_learned_skill()

@@ -15,8 +15,6 @@ func _unhandled_input(event: InputEvent):
 
 		if event.keycode == KEY_I:
 			GUIScene.SHOW_DEBUG_DATA = not GUIScene.SHOW_DEBUG_DATA
-		if event.keycode == KEY_SPACE:
-			MyCamera.update_camera_position_to_my_player()
 		if event.keycode == KEY_P:
 			AdminHelper.kill_all_enemies()
 

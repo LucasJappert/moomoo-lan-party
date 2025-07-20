@@ -31,6 +31,7 @@ static var WAVES_INFO = [
 	WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME]),
 	WaveInfo.new([EnemyInfernalMinotaur.LONG_NAME], [EnemyNightArcher.LONG_NAME]),
 	WaveInfo.new([EnemyDeadShield.LONG_NAME], [EnemySilentShuriken.LONG_NAME]),
+	WaveInfo.new([EnemyReflector.LONG_NAME], [EnemyCrimsonWarlock.LONG_NAME]),
 ]
 
 static func start_wave_process() -> void:

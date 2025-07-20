@@ -18,6 +18,7 @@ static func key_pressed_server_side(_keycode: int, player: Entity) -> void:
 
 	# OTHER HOTKEYs
 	if _keycode == KEY_T:
+		DamageReflectorEffect.attach_to(GameManager.MY_PLAYER.back_animations_node, 6.0)
 		# ParticleTrail.spawn_explosion(GameManager.MY_PLAYER.global_position, GameManager.game_world.general_container)
 		# Aplicar efecto de escudo por 5 segundos
 		# var _effect = ShieldEffect.attach_to(GameManager.MY_PLAYER.front_animations_node, 225.0)
@@ -33,7 +34,8 @@ static func key_pressed_server_side(_keycode: int, player: Entity) -> void:
 		player.toogle_keep_ground()
 
 	if _keycode == KEY_SPACE and GameManager.MY_PLAYER:
-		GameManager.MY_PLAYER.set_target_view(GameManager.MY_PLAYER)
+		EventBus.emit_new_target_view_selected(null, GameManager.MY_PLAYER)
+		MyCamera.update_camera_position_to_my_player()
 
 	if _keycode == KEY_F11 and GameManager.MY_PLAYER:
 		MainScene.set_paused(not MainScene.PAUSED, true, true)

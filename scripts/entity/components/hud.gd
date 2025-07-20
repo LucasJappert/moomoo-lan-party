@@ -66,7 +66,7 @@ func _try_update_label():
 	# _label.text = str(my_owner.effects_helper.get_effects().size())
 	_label_container.visible = _label.text != ""
 		
-	# _label.text = str(my_owner.global_position)
+	# _label.text = str(SkillPainEcho.effects_running_by_owner_name.size())
 
 func update_health_bar():
 	if my_owner.get_total_hp() <= 0:

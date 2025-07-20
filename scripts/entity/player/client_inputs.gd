@@ -55,18 +55,10 @@ func _on_right_click_on_entity(_target_entity_name: String):
 func _on_left_click(_target_entity_name: String):
 	# Always run in server
 	var target_entity = GameManager.get_entity(_target_entity_name)
-	
-	# EventBus.emit_new_target_view_selected(null, target_entity)
-
-	# if not GameManager.MY_PLAYER.charged_skill: player.set_target_view(target_entity)
-	
+		
 	ShopInterface.static_close_shop()
 
 	if not GameManager.MY_PLAYER: return
-
-
-	# if target_entity: print("entity name: ", target_entity.name)
-	# if CONTROL_PRESSED: player.set_target_view(target_entity)
 
 	player.use_charged_skill(target_entity)
 

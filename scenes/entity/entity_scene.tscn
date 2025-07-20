@@ -134,6 +134,9 @@ script = ExtResource("1_0bgvt")
 [node name="EntitySynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_odnte")
 
+[node name="BackAnimationsNode" type="Node2D" parent="."]
+unique_name_in_owner = true
+
 [node name="AreaVision" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AreaVision"]
@@ -150,15 +153,15 @@ debug_color = Color(0, 0.6, 0.7, 0.052)
 shape = SubResource("CircleShape2D_idfl5")
 debug_color = Color(0.98, 0, 0.408, 0)
 
-[node name="Node2D" type="Node2D" parent="."]
+[node name="BodySpriteContainer" type="Node2D" parent="."]
 
-[node name="BodyShadow" type="Sprite2D" parent="Node2D"]
+[node name="BodyShadow" type="Sprite2D" parent="BodySpriteContainer"]
 unique_name_in_owner = true
 texture = ExtResource("3_8707b")
 region_enabled = true
 region_rect = Rect2(128, 256, 32, 32)
 
-[node name="BodySprite" type="AnimatedSprite2D" parent="Node2D"]
+[node name="BodySprite" type="AnimatedSprite2D" parent="BodySpriteContainer"]
 unique_name_in_owner = true
 position = Vector2(0, -24)
 sprite_frames = SubResource("SpriteFrames_os1up")

@@ -3,6 +3,7 @@ extends MyInitAuxiliary
 
 # Array of skill classes (each must have .create_and_add_instance)
 static var REGISTERED_SKILLS: Array = [
+	SkillInfernalTouch,
 	SkillPainEcho,
 	SkillSilentAgony,
 	SkillBlessingOfPower,
@@ -18,6 +19,7 @@ static var REGISTERED_SKILLS: Array = [
 ]
 
 static var FIRE_SKILLS: Array = [SkillBurningPresence.NAME]
+static var effects_running_by_owner_name: Dictionary = {}
 
 const _ATLAS_START_POS = Skill._ATLAS_START_POS
 const FRAME_SIZE = Skill.FRAME_SIZE
@@ -30,6 +32,11 @@ var learned_skill: ItemSkillBase
 
 static var int_array: Array[int]; static var int_array1: Array[int]; static var float_array: Array[float]; static var float_array1: Array[float]
 static var aux_array: Array = [[], [], [], [], [], [], [], [], [], [], [], []]
+
+static func get_permanent_active_skill(_learned_skill: ItemSkillBase) -> SkillBase:
+	var skill = SkillBase.new(_learned_skill, true)
+	skill.permanent_effect = true
+	return skill
 
 func _init(_learned_skill: ItemSkillBase, _active: bool = false) -> void:
 	super._init()
@@ -54,6 +61,9 @@ func has_fire() -> bool: return my_name in FIRE_SKILLS
 static func actions_after_cast_skill(_owner: Entity, _skill_used: ItemSkillBase) -> void:
 	# At the moment, Implemented in Static Discharge skill
 	pass
+
+static func remove_effects_running_by_owner_name(_owner_name: String) -> void:
+	effects_running_by_owner_name.erase(_owner_name)
 
 # Must be overriden
 func on_damage_received(_attacker: Entity, _damage_received: int) -> void:
@@ -83,3 +93,11 @@ static func try_add_effect_from_skill(_owner: Entity, _skill: Skill) -> bool:
 # Must be overriden
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
 	return false
+	
+# Must be overriden
+static func on_active_skill_added(_owner: Entity, _skill: SkillBase) -> void:
+	pass
+
+# Must be overriden
+static func on_active_skill_removed(_owner: Entity, _skill: SkillBase) -> void:
+	pass
