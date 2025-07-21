@@ -14,7 +14,7 @@ static func try_to_init_from_name(_name: String, _enemy: Enemy) -> void:
 	_enemy.combat_stats.attack_speed = 1.2
 	_enemy.combat_stats.evasion = 0.2
 	_enemy.combat_stats.attack_range = 260
-	_enemy.projectile_type = ProjectileArrow.NAME
+	_enemy.projectile_type = ProjectileDemonBolt.NAME
 	
 	_enemy._skills.append_array([
 		Skill.get_new_learned_skill(SkillPainEcho.NAME),

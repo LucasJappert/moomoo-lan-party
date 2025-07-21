@@ -31,7 +31,7 @@ static func actions_while_flying(_projectile: Projectile):
 		ParticleTrail.spawn(
 			_projectile.global_position + spawn_position,
 			GameManager.game_world.general_container,
-			0.1, Color(1, 1, 1, 0.5), 0.4
+			0.1, Color(0, 0, 0, 0.5), 0.4
 		)
 	pass
 

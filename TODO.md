@@ -5,6 +5,7 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Add DemonBolt projectile
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
 - Crear habilidad que al morir explota provocando un daño del 10% de su vida total en un área de 3 tiles de radio
 - Agregar estadísticas in game, como el tiempo transcurrido, el daño causado, el daño recibido, etc.

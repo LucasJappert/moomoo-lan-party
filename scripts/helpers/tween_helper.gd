@@ -73,3 +73,21 @@ static func apply_tween_to_property(
 ) -> Tween:
 	p_tween.parallel().tween_property(p_node, p_property, p_to_value, p_duration).set_trans(p_trans).set_ease(p_ease)
 	return p_tween
+
+static func apply_looping_tween_to_property(
+	p_node: Node,
+	p_property: String,
+	p_from_value: Variant,
+	p_to_value: Variant,
+	p_duration: float,
+	p_trans := Tween.TRANS_SINE,
+	p_ease := Tween.EASE_IN_OUT
+) -> void:
+	var tween = p_node.create_tween()
+	tween.set_loops() # Loop indefinido
+	tween.tween_property(p_node, p_property, p_to_value, p_duration) \
+		.set_trans(p_trans).set_ease(p_ease) \
+		.from(p_from_value)
+	tween.tween_property(p_node, p_property, p_from_value, p_duration) \
+		.set_trans(p_trans).set_ease(p_ease) \
+		.from(p_to_value)

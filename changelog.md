@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Add DemonBolt projectile
 - ✅ Create wave 7 with EnemyReflector and EnemyCrimsonWarlock enemies
 - ✅ Add reflection effect for Pain Echo skill
 - ✅ Create skill Pain Echo that reflects a percentage of received damage to the attacker (type of reflected damage is pure)
