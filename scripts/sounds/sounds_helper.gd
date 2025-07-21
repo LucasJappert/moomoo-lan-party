@@ -3,7 +3,7 @@ class_name SoundsHelper
 
 const FORCE_MUTED := false
 static var _MUTED := false
-const MAX_PLAYERS := 10
+const MAX_PLAYERS := 15
 static var _players: Array[AudioStreamPlayer] = []
 static var _initialized := false
 static var _playing_counts: Dictionary = {} # ← sonido_path : cantidad
@@ -182,7 +182,7 @@ static func play_lightning_spell(volume: float = -20.0):
 	play_sfx("res://sounds/spells/lightning.wav", volume, 4)
 
 static func play_electric(volume: float = -5.0):
-	play_sfx("res://sounds/spells/electric.wav", volume, 4)
+	play_sfx("res://sounds/spells/electric.wav", volume, 3)
 
 static func play_electric_1(volume: float = -10.0):
 	play_sfx("res://sounds/spells/shock_spear.wav", volume, 4)

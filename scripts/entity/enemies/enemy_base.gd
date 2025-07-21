@@ -1,6 +1,7 @@
 class_name EnemyBase
 
 static var REGISTERED_CLASSES = [
+	EnemyBlowDigger,
 	EnemyCrimsonWarlock,
 	EnemyReflector,
 	EnemyDeadShield,

@@ -25,7 +25,7 @@ static func initialize_from_name(_name: String, player: Player) -> void:
 static func _commons_initialize(player: Player, stats: CombatStats) -> void:
 	stats.crit_chance = 0.05
 	stats.crit_multiplier = 1.5
-	stats.attack_speed = 0.5
+	stats.attack_speed = 8.5
 	stats.move_speed = 5
 	stats.agility = 50
 	stats.strength = 50

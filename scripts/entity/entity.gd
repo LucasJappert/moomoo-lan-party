@@ -134,6 +134,9 @@ func global_die(_killed_by: Entity) -> void:
 
 	MapManager.set_cell_blocked(movement_helper.current_cell, false)
 
+	for registered_skill in SkillBase.REGISTERED_SKILLS:
+		registered_skill.actions_after_die(self, _killed_by)
+
 	var killed_by_ref = weakref(_killed_by)
 	_apply_effects_after_die(func():
 		GameManager.remove_entity(self, killed_by_ref.get_ref())

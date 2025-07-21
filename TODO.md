@@ -5,7 +5,8 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Add DemonBolt projectile
+- ✅ Create new enemy Blow Digger, its special skill is to explode after dying, causing huge damage to nearby enemies
+- Agregar efecto de sangrado en el piso, también quizas cuando muere una entidad
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
 - Crear habilidad que al morir explota provocando un daño del 10% de su vida total en un área de 3 tiles de radio
 - Agregar estadísticas in game, como el tiempo transcurrido, el daño causado, el daño recibido, etc.
