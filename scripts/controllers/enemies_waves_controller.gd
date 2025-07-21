@@ -25,7 +25,7 @@ class WaveInfo:
 		boss_enemies = p_boss_enemies
 
 static var WAVES_INFO = [
-	WaveInfo.new([EnemyBlowDigger.LONG_NAME], [EnemyBlowDigger.LONG_NAME]),
+	WaveInfo.new([EnemyBlowDigger.LONG_NAME], [EnemyRotbull.LONG_NAME]),
 	WaveInfo.new([EnemyReflector.LONG_NAME], [EnemyCrimsonWarlock.LONG_NAME]),
 	WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME]),
 	WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME]),

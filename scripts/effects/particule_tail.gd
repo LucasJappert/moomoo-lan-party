@@ -11,9 +11,9 @@ static func spawn_sprite_with_tween(parent: Node, position: Vector2, sprite: Spr
 	tween.tween_property(sprite, "modulate:a", 0.0, lifetime).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_callback(sprite.queue_free)
 
-static func spawn(position: Vector2, parent: Node, lifetime: float = 1.0, color: Color = Color.WHITE, scale: float = 1) -> void:
+static func spawn(position: Vector2, parent: Node, lifetime: float = 1.0, color: Color = Color.WHITE, scale: float = 1) -> Sprite2D:
 	var sprite := SpritesHelper.get_sprite_2d(RECT_REGION)
-	sprite.position = position
+	sprite.global_position = position # en vez de sprite.position
 	sprite.modulate = color
 	sprite.scale = Vector2.ONE * scale
 	parent.add_child(sprite)
@@ -21,7 +21,9 @@ static func spawn(position: Vector2, parent: Node, lifetime: float = 1.0, color:
 	# Crear tween para desvanecerse y eliminarse
 	var tween := sprite.create_tween()
 	tween.tween_property(sprite, "modulate:a", 0.0, lifetime).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
+	tween.parallel().tween_property(sprite, "scale", Vector2.ZERO, lifetime).set_trans(Tween.TRANS_LINEAR)
 	tween.tween_callback(sprite.queue_free)
+	return sprite
 
 static func spawn_explosion(position: Vector2, parent: Node2D, amount: int = 50, color: Color = Color(1, 1, 1), lifetime: float = 0.5, speed_range: Vector2 = Vector2(4, 32), scale: float = 0.2) -> void:
 	# var texture := SpritesHelper.get_texture_from_region(RECT_REGION)

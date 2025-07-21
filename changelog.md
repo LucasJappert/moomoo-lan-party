@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Create new enemy Blow Digger, its special skill is to explode after dying, causing huge damage to nearby enemies
 - ✅ Add DemonBolt projectile
 - ✅ Create wave 7 with EnemyReflector and EnemyCrimsonWarlock enemies
 - ✅ Add reflection effect for Pain Echo skill

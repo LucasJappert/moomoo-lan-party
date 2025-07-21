@@ -17,6 +17,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	aux_array[1] = [5, 6, 7] # stacks
 	aux_array[3] = [3, 4, 5] # duration
 	for i in Skill.AVAILABLE_LEVELS:
+		_SKILLS[NAME].item_skill_base[i].type = SkillType.PASSIVE
 		_SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 0
 		_SKILLS[NAME].item_skill_base[i].create_effect = false
 		_SKILLS[NAME].item_skill_base[i].apply_to_enemy = true
@@ -56,7 +57,7 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 	if not infernal_touch: return false
 
 	var damage_per_second = roundi(_di.total_damage * infernal_touch.float_dict["precentage_damage_per_second"])
-	if damage_per_second == 0: return false
+	if damage_per_second == 0: damage_per_second = 1
 
 	infernal_touch.float_dict["damage_per_second"] = damage_per_second
 	_target.add_active_skill(SkillInfernalTouch.new(_target, _attacker, infernal_touch))
