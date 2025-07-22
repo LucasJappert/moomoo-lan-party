@@ -10,6 +10,7 @@ var _elapsed: float = 0.0
 var _region_rect: Rect2
 var max_stacks: int = 1
 var stats: CombatStats = CombatStats.new()
+var float_dict: Dictionary[String, float] = {}
 var unique_id: int = UniqueIdGenerator.get_id()
 var is_cooldown_finished: bool = false
 var _description: String = ""
@@ -120,3 +121,13 @@ static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _d
 		if GlobalsEntityHelpers.roll_chance(_attacker_stats.stun_chance):
 			_receiver.apply_stun(_attacker_stats.stun_duration)
 	return
+
+
+func has_silence() -> bool:
+	return float_dict.has(CombatStats.Names.SilenceDuration)
+
+func has_stun() -> bool:
+	return float_dict.has(CombatStats.Names.StunDuration)
+
+func has_freeze() -> bool:
+	return float_dict.has(CombatStats.Names.FreezeDuration)

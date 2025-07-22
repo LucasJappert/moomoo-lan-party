@@ -73,8 +73,6 @@ func post_ready_combat_data() -> void:
 
 	if not GameManager.AM_I_HOST: return
 
-	# for index in range(_skills.size()): effects_helper.on_skill_updated(my_owner(), _skills[index], index + 1)
-
 	if current_hp == 0: current_hp = get_total_hp()
 	if current_mana == 0: current_mana = get_total_mana()
 
@@ -118,6 +116,9 @@ func server_execute_physical_damage(_target: Entity) -> void:
 	_di.projectile_type = projectile_type
 	_di.damage_type = DamageType.PHYSICAL
 	_di.attacker_name = my_owner().name
+	
+	for active_skill in _active_skills:
+		active_skill.actions_after_execute_physical_attack(my_owner(), _target, _di)
 
 	_target.server_receive_damage(_di, my_owner())
 
@@ -258,7 +259,6 @@ func _actions_after_current_hp_change(value_to_increase: int = 0, _attacker: Ent
 func _server_verify_death(_killed_by: Entity) -> void:
 	if current_hp > 0: return
 
-	Skill.actions_before_entity_death(my_owner(), _killed_by)
 	current_hp = 0
 	_try_to_give_experience_to_players(Enemy.get_enemy_exp_when_dead()) # Give experience when an enemy dies
 	my_owner().global_die(_killed_by)
@@ -370,7 +370,8 @@ func upgrade_skill(slot_number: int) -> void:
 	_skills[slot_number - 1].try_to_upgrade(my_owner(), slot_number)
 	
 	var learned_skill := _skills[slot_number - 1].get_learned_skill()
-	if learned_skill.type == SkillType.PASSIVE: add_active_skill(SkillBase.get_permanent_active_skill(learned_skill))
+	if learned_skill.type == SkillType.PASSIVE:
+		add_active_skill(SkillBase.get_permanent_active_skill(learned_skill))
 
 	update_cache_total_stats()
 
@@ -579,8 +580,6 @@ func execute_physical_attack(apply_extra_actions: bool = true, _custom_target: E
 	_execute_attack_or_launch_projectile(final_target)
 
 	if not apply_extra_actions: return
-
-	Skill.actions_after_execute_physical_attack(my_owner(), target_to_attack)
 
 func _execute_attack_or_launch_projectile(final_target: Entity) -> void:
 	if projectile_type == ProjectileBase.NONE:

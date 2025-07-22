@@ -3,6 +3,10 @@ extends MyInitAuxiliary
 
 # Array of skill classes (each must have .create_and_add_instance)
 static var REGISTERED_SKILLS: Array = [
+	SkillMirrorDemise,
+	SkillMultipleStrike,
+	SkillFrenziedSilence,
+	SkillEarthshatter,
 	SkillDeathBurst,
 	SkillInfernalTouch,
 	SkillPainEcho,
@@ -72,6 +76,10 @@ func on_damage_received(_attacker: Entity, _damage_received: int) -> void:
 	pass
 
 # Must be overriden
+func actions_after_execute_physical_attack(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
+	pass
+
+# Must be overriden
 static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	pass
 
@@ -89,7 +97,7 @@ static func _verify_range(_caster: Entity, _target: Entity, _learned_skill: Item
 	return _caster.is_in_range(_target.movement_helper.current_cell, _learned_skill.cast_range_in_tiles)
 
 # Must be overriden
-static func try_add_effect_from_skill(_owner: Entity, _skill: Skill) -> bool:
+static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
 	return false
 
 # Must be overriden

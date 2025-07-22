@@ -38,9 +38,9 @@ func add_effect(p_effect: CombatEffect) -> void:
 	_effects.append(p_effect)
 	notify_changes_to_subscribers()
 
-	if p_effect.stats.freeze_duration > 0:
+	if p_effect.has_freeze():
 		AnimationsHelper.apply_frost_hit_animation(_my_owner)
-	if p_effect.stats.has_hostil_stun_effect():
+	if p_effect.has_stun():
 		StunEffect.attach_to(_my_owner.front_animations_node, p_effect.duration_in_seconds)
 	
 	_try_to_add_effect_to_my_gui(p_effect)
@@ -86,8 +86,7 @@ func _server_verifications_before_adding_effect(p_effect: CombatEffect) -> void:
 
 	var ids_to_remove: Array[int] = []
 	if current_stacks >= p_effect.max_stacks:
-		if not p_effect.stats.keep_latest_stacks: return
-
+		# if not p_effect.stats.keep_latest_stacks: return
 		matching_effects.sort_custom(func(a, b): return a._elapsed > b._elapsed)
 
 		var effects_to_remove = current_stacks - p_effect.max_stacks + 1
@@ -105,9 +104,6 @@ func _try_to_add_effect_to_my_gui(p_effect: CombatEffect) -> void:
 func on_skill_updated(_p_owner: Entity, skill: Skill, _slot_number: int) -> void:
 	if not _my_owner or _p_owner.name != _my_owner.name: return
 	if not skill.learned_level: return
-	var skill_base := skill.get_learned_skill()
-	if skill_base.type != SkillType.PASSIVE: return
-	if not skill_base.create_effect: return
 
 	for registered_class in SkillBase.REGISTERED_SKILLS:
-		registered_class.try_add_effect_from_skill(_p_owner, skill)
+		registered_class.actions_after_skill_updated(_p_owner, skill)

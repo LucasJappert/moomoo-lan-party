@@ -2,7 +2,6 @@ class_name SkillShieldedCore
 
 extends SkillBase
 
-
 const ANIMATION_RECT_REGION := Rect2(0, 992, 64, 96)
 const NAME = "Shielded Core"
 const ICON_SLOT = Vector2(0, 0)

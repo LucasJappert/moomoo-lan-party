@@ -15,7 +15,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		_SKILLS[NAME].item_skill_base[i].stats.life_steal_percent = float_array[i]
 		_SKILLS[NAME].item_skill_base[i].description = "Steals " + StringHelpers.format_percent(float_array[i]) + " of dealt damage as life."
 	
-static func try_add_effect_from_skill(_owner: Entity, _skill: Skill) -> bool:
+static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
 	if _skill.get_name() != NAME: return false
 	if not _skill.get_learned_skill(): return false
 

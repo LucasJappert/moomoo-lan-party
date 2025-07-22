@@ -4,7 +4,6 @@ extends MyInitAuxiliary
 
 const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapManager.TILE_SIZE.y, 2))) + 1
 
-var multiple_strike: MultipleStrike
 var mana_burn: ManaBurn
 var ignore_enemy_evasion_chance: float = 0.0
 var cleave_effect: CleaveEffect
@@ -43,7 +42,36 @@ var silence_duration: float = 0.0 # In seconds
 
 var custom_damage_heal: CustomDamageHeal = CustomDamageHeal.new()
 
-var keep_latest_stacks: bool = true
+const Names = {
+	Hp = "hp",
+	Mana = "mana",
+	PhysicalDefensePercent = "physical_defense_percent",
+	MagicDefensePercent = "magic_defense_percent",
+	Evasion = "evasion",
+	CritChance = "crit_chance",
+	CritMultiplier = "crit_multiplier",
+	StunChance = "stun_chance",
+	StunDuration = "stun_duration",
+	SilenceDuration = "silence_duration",
+	AttackRange = "attack_range",
+	PhysicalAttackPower = "physical_attack_power",
+	PhysicalAttackPowerPercent = "physical_attack_power_percent",
+	MagicAttackPower = "magic_attack_power",
+	MagicAttackPowerPercent = "magic_attack_power_percent",
+	AttackSpeed = "attack_speed",
+	AttackSpeedPercent = "attack_speed_percent",
+	MoveSpeed = "move_speed",
+	MoveSpeedPercent = "move_speed_percent",
+	FreezeDuration = "freeze_duration",
+	LifeStealPercent = "life_steal_percent",
+	HpRegenerationPoints = "hp_regeneration_points",
+	HpRegenerationPointsPercent = "hp_regeneration_points_percent",
+	ManaRegenerationPoints = "mana_regeneration_points",
+	ManaRegenerationPointsPercent = "mana_regeneration_points_percent",
+	Agility = "agility",
+	Strength = "strength",
+	Intelligence = "intelligence"
+}
 
 static func get_instance_from_dict(dict: Dictionary) -> CombatStats:
 	var instance = CombatStats.new()
@@ -165,7 +193,6 @@ func grants_attack_bonuses() -> bool:
 	if stun_chance > 0: return true
 	if life_steal_percent > 0: return true
 	if cleave_effect: return true
-	if multiple_strike: return true
 	if mana_burn: return true
 	return false
 
@@ -259,8 +286,6 @@ func get_description() -> String:
 		description += str("- Hostile silence duration: ", StringHelpers.format_float_compact(silence_duration), "\n")
 
 	if cleave_effect: description += cleave_effect.get_description()
-
-	if multiple_strike: description += multiple_strike.description
 
 	return description
 
