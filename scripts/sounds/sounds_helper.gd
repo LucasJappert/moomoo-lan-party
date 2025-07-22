@@ -205,7 +205,7 @@ static func play_random_ice_hit():
 	play_sfx("res://sounds/hits/ice/%d.wav" % random_ice_hit, -10.0, 1)
 
 static func play_dying():
-	var available_types := ["dying1", "dying2", "dying3", "dying4", "dying5", "dying6"]
+	var available_types := ["dying1", "dying2", "dying3", "dying4", "dying5"]
 	var random_dying := randi() % available_types.size()
 	play_sfx("res://sounds/generals/dying/%s.wav" % available_types[random_dying], -10.0, 3)
 # endregion AUXILIARIES FOR EXTERNALS

@@ -4,8 +4,8 @@ class_name BloodStainEffect
 const BLOOD_REGION := Rect2(512, 256, 64, 64) # regi n de la imagen que representa una mancha de sangre
 const APPEAR_TIME := 0.1 # tiempo que tarda en aparecer la mancha, en segundos
 const FADE_TIME := 1 # tiempo que tarda en desaparecer la mancha, en segundos
-const SMALL_SCALE_RANGE := Vector2(0.02, 0.2) # rango de escala para las manchas de sangre
-const BIG_SCALE_RANGE := Vector2(0.3, 0.4)
+const SMALL_SCALE_RANGE := Vector2(0.01, 0.05) # rango de escala para las manchas de sangre
+const BIG_SCALE_RANGE := Vector2(0.1, 0.3)
 const STAIN_COUNT := 8 # cantidad de manchas que se generan al mismo tiempo
 const SMALL_SPREAD_RADIUS := 16.0 # radio de dispersion para las manchas de sangre
 const BIG_SPREAD_RADIUS := 8.0 # radio de dispersion para las manchas de sangre

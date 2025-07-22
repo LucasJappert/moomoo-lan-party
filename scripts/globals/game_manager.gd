@@ -99,9 +99,11 @@ func spawn_player(hero_type: String) -> void:
 	var new_player = game_world.player_spawner.spawn(spawn_data)
 	add_entity(new_player)
 
-func spawn_enemy(enemy: Enemy) -> void:
-	var new_enemy = game_world.enemies_spawner.spawn(ObjectHelpers.to_dict(enemy))
+func spawn_enemy(_enemy: Enemy) -> void:
+	var current_time = Time.get_ticks_msec()
+	var new_enemy: Enemy = game_world.enemies_spawner.spawn(ObjectHelpers.to_dict(_enemy))
 	add_entity(new_enemy)
+	print("Spawned enemy in " + str(Time.get_ticks_msec() - current_time) + "ms")
 
 # region 	SETTERs
 func set_my_player(player: Player) -> void:

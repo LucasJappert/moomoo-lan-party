@@ -5,12 +5,12 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Mejorar spawn de criaturas, está pegando un salto cuando creamos varias de golpee
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
-- Crear habilidad que al morir explota provocando un daño del 10% de su vida total en un área de 3 tiles de radio
 - Agregar estadísticas in game, como el tiempo transcurrido, el daño causado, el daño recibido, etc.
 - Mejorar animacion de spawn de enemigos
 - Revisar los Names en la clase Skill, quizas podamos evitarlo y sacarlos de cada clase Skill
-- Mejorar spawn de criaturas, está pegando un salto cuando creamos varias de golpee
+- Mejorar los niveles de skill de enemigos avanzados
 
 - Revisar sonidos en loop
 - Agregar un item que brinda daño splash a todo alreadedor del target (es diferente al cleave)
@@ -20,6 +20,7 @@
 - Agregar barra de vida del moomoo y del pj fijas en algun lugar comodo
 - Modificar particulas en la explosión de proyectil natura ball
 - Agregar sonido cuando impacta una flecha
+- Agregar habilidad que consume 15 del hp por un proyectil que quema al enemigo durante 5 segundos, causando 15 de daño cada segundo
 
 - Agregar efecto de daño recibido
 - Ver sonidos que entran en loop indebidamente
