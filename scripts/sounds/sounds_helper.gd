@@ -30,20 +30,16 @@ static func initialize(audio_node: Node):
 static var _audio_cache: Dictionary = {}
 static func _internal_play(path: String, volume: float, is_looping: bool, max_simultaneous: int = 1) -> void:
 	if FORCE_MUTED or _MUTED or not _initialized:
-		if not _initialized:
-			push_error("⚠️ SoundsHelper not initialized.")
+		if not _initialized: push_error("⚠️ SoundsHelper not initialized.")
 		return
 
-	if not _can_play(path, is_looping, max_simultaneous):
-		return
+	if not _can_play(path, is_looping, max_simultaneous): return
 
 	var stream := _get_or_load_stream(path)
-	if stream == null:
-		return
+	if stream == null: return
 
 	var player := _get_available_player()
-	if not player:
-		return
+	if not player: return
 
 	_setup_player(player, stream, volume, is_looping, path)
 	player.play()
@@ -163,7 +159,9 @@ static func _get_available_player() -> AudioStreamPlayer:
 	for player in _players:
 		if not player.playing:
 			return player
-	return _players[0]
+
+	print("🎵 No available players")
+	return null
 
 static func play_projectile_hit(type: String, volume: float = -10.0):
 	play_sfx("res://sounds/hits/" + type + ".wav", volume, 1)
@@ -206,4 +204,8 @@ static func play_random_ice_hit():
 	var random_ice_hit := randi() % 4 + 1
 	play_sfx("res://sounds/hits/ice/%d.wav" % random_ice_hit, -10.0, 1)
 
+static func play_dying():
+	var available_types := ["dying1", "dying2", "dying3", "dying4", "dying5", "dying6"]
+	var random_dying := randi() % available_types.size()
+	play_sfx("res://sounds/generals/dying/%s.wav" % available_types[random_dying], -10.0, 3)
 # endregion AUXILIARIES FOR EXTERNALS

@@ -39,8 +39,9 @@ static func get_permanent_active_skill(_learned_skill: ItemSkillBase) -> SkillBa
 	skill.permanent_effect = true
 	return skill
 
-func _init(_learned_skill: ItemSkillBase, _active: bool = false) -> void:
+func _init(_learned_skill: ItemSkillBase = null, _active: bool = false) -> void:
 	super._init()
+	if not _learned_skill: return
 	learned_skill = _learned_skill
 	my_name = learned_skill.my_name
 	duration_in_seconds = _learned_skill.duration_in_seconds

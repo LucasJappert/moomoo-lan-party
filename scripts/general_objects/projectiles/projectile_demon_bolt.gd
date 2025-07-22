@@ -91,7 +91,7 @@ static func actions_on_reaching_target(_projectile: Projectile) -> void:
 
 	if target: return _spawn_explosion(Vector2.ZERO, target.projectile_zone)
 
-	_spawn_explosion(_projectile.global_position, GameManager.game_world.over_terrain_layer)
+	_spawn_explosion(_projectile.global_position, GameManager.game_world.over_terrain_layer_layer_2)
 
 static func _get_random_color() -> Color:
 	return Color.from_hsv(randf_range(0.5, 0.7), randf_range(0.6, 1), randf_range(0.3, 0.6), randf_range(0.6, 1))

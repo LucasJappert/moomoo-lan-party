@@ -1,6 +1,6 @@
 class_name TweenEffects
 
-extends MyInitAuxiliary
+# extends MyInitAuxiliary
 
 const TYPES = {
 	IDLE = "idle"
@@ -10,8 +10,8 @@ const IDLE_DURATION := 0.5
 var tweens := {}
 var _owner: Entity
 
-func _init(p_owner: Entity):
-	super._init()
+func _init(p_owner: Entity = null):
+	# super._init()
 	_owner = p_owner
 	EventBus.connect_to_paused(func(_paused: bool, _show_menu: bool): _on_paused(_paused))
 

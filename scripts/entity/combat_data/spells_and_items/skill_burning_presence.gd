@@ -97,7 +97,7 @@ func _try_update_effects_to_new_cell(_owner: Entity) -> void:
 	for neighbor_cell in neighbors_cells:
 		var fixed_position := MapManager.cell_to_world(neighbor_cell) + Vector2(MapManager.TILE_SIZE_FLOAT / 4, MapManager.TILE_SIZE_FLOAT / 4)
 		var fire_effect = FireEffect.spawn_fire_effect(
-			GameManager.game_world.over_terrain_layer,
+			GameManager.game_world.over_terrain_layer_layer_2,
 			fixed_position,
 			learned_skill.duration_in_seconds
 		)

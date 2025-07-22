@@ -5,13 +5,12 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- ✅ Create new enemy Blow Digger, its special skill is to explode after dying, causing huge damage to nearby enemies
-- Agregar efecto de sangrado en el piso, también quizas cuando muere una entidad
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
 - Crear habilidad que al morir explota provocando un daño del 10% de su vida total en un área de 3 tiles de radio
 - Agregar estadísticas in game, como el tiempo transcurrido, el daño causado, el daño recibido, etc.
 - Mejorar animacion de spawn de enemigos
 - Revisar los Names en la clase Skill, quizas podamos evitarlo y sacarlos de cada clase Skill
+- Mejorar spawn de criaturas, está pegando un salto cuando creamos varias de golpee
 
 - Revisar sonidos en loop
 - Agregar un item que brinda daño splash a todo alreadedor del target (es diferente al cleave)
@@ -19,6 +18,8 @@
 - Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)
 - Sonidos limitarlos a la vista en pantalla
 - Agregar barra de vida del moomoo y del pj fijas en algun lugar comodo
+- Modificar particulas en la explosión de proyectil natura ball
+- Agregar sonido cuando impacta una flecha
 
 - Agregar efecto de daño recibido
 - Ver sonidos que entran en loop indebidamente

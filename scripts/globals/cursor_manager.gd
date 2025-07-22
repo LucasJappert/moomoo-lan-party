@@ -69,7 +69,7 @@ static func show_move_effect():
 	var effect := Sprite2D.new()
 	effect.texture = SpritesHelper.get_texture_from_region(MOUSE_MOVE_RECT)
 	effect.global_position = MapManager.HOVERED_CELL_IN_GLOBAL_POSITION
-	GameManager.game_world.over_terrain_layer.add_child(effect)
+	GameManager.game_world.over_terrain_layer_layer_2.add_child(effect)
 
 	const DURATION := 1
 	var tween := effect.create_tween()

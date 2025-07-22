@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Add bleeding effect on the ground, also perhaps when an entity dies
 - ✅ Create new enemy Blow Digger, its special skill is to explode after dying, causing huge damage to nearby enemies
 - ✅ Add DemonBolt projectile
 - ✅ Create wave 7 with EnemyReflector and EnemyCrimsonWarlock enemies

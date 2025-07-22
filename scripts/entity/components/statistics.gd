@@ -11,9 +11,10 @@ var _wave_reached := 0
 
 var _owner: Entity
 
-func _init(p_owner: Entity):
+func _init(p_owner: Entity = null):
 	_reset()
 	super._init()
+	if not p_owner: return
 	_owner = p_owner
 	_hero_name = _owner.extra_info.get_name_and_alias()
 

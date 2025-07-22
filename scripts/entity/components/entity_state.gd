@@ -43,6 +43,7 @@ static func change_to_attack(entity: Entity) -> void:
 	_update_state(entity, States.ATTACK)
 
 static func server_and_client_on_state_changed(entity: Entity) -> void:
+	if not entity.is_inside_tree(): return
 	match entity.current_state:
 		States.IDLE:
 			entity.tween_effects.start_idle_effect()

@@ -2,7 +2,7 @@ class_name Entity
 
 extends CombatData
 
-var tween_effects: TweenEffects
+var tween_effects := TweenEffects.new()
 var statistics: Statistics
 var extra_info := ExtraInfo.new()
 var movement_helper: MovementHelper
@@ -59,7 +59,7 @@ func _ready():
 	rpc_handler.initialize()
 	call_deferred("_post_ready")
 	ready_combat_data()
-	ShadersHelper.set_dissolve_shader_material(self)
+	ShadersHelper.set_dissolve_shader_material(body_sprite)
 
 	EventBus.connect_to_freed_entity(Callable(self, "_on_entity_freed"))
 	EventBus.connect_to_paused(func(_paused: bool, _show_menu: bool): EntityState.paused_game(self))
@@ -137,6 +137,8 @@ func global_die(_killed_by: Entity) -> void:
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
 		registered_skill.actions_after_die(self, _killed_by)
 
+	SoundsHelper.play_dying()
+
 	var killed_by_ref = weakref(_killed_by)
 	_apply_effects_after_die(func():
 		GameManager.remove_entity(self, killed_by_ref.get_ref())
@@ -147,14 +149,13 @@ func global_die(_killed_by: Entity) -> void:
 
 # region 	INTERNAL AUXILIARY METHODS
 func _apply_effects_after_die(on_finished: Callable) -> void:
+	BloodStainEffect.spawn_on_death(global_position, 2)
+
 	const TWEEN_DURATION := 1.5
 	var tween := create_tween()
 
-	var dissolve_updater := func(value: float):
-		if is_instance_valid(body_sprite.material):
-			body_sprite.material.set_shader_parameter("dissolve_amount", value)
 
-	tween.parallel().tween_method(dissolve_updater, 0.0, 1.0, TWEEN_DURATION).set_trans(Tween.TRANS_LINEAR)
+	TweenHelper.apply_tween_to_dissolve(tween, body_sprite, TWEEN_DURATION)
 
 	TweenHelper.apply_tween_to_property(body_sprite, tween, "position", body_sprite.position + Vector2(0, -64), TWEEN_DURATION)
 	TweenHelper.apply_tween_to_property(body_sprite, tween, "scale", Vector2(1.5, 1.5), TWEEN_DURATION)

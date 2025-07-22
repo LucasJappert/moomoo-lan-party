@@ -68,10 +68,10 @@ func _on_enemy_exited_tree() -> void:
 
 func get_players() -> Array[Entity]:
 	# TODO: Improve with cache by frame
-	return entities.values().filter(func(e): return e is Player)
+	return entities.values().filter(func(e): return ObjectHelpers.get_safe_instance(e) is Player)
 
 func get_enemies() -> Array[Entity]:
-	return entities.values().filter(func(e): return e is Enemy)
+	return entities.values().filter(func(e): return ObjectHelpers.get_safe_instance(e) is Enemy)
 
 func get_moomoo() -> Entity: return moomoo
 

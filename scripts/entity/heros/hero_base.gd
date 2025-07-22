@@ -23,9 +23,10 @@ static func initialize_from_name(_name: String, player: Player) -> void:
 	player.update_base_stats(stats)
 
 static func _commons_initialize(player: Player, stats: CombatStats) -> void:
+	# stats.physical_attack_power = 2000
 	stats.crit_chance = 0.05
 	stats.crit_multiplier = 1.5
-	stats.attack_speed = 8.5
+	stats.attack_speed = 0.5
 	stats.move_speed = 5
 	stats.agility = 50
 	stats.strength = 50
@@ -34,10 +35,6 @@ static func _commons_initialize(player: Player, stats: CombatStats) -> void:
 	# region Add some potions 
 	player.add_item(Item.get_item(Item.Names.HEALTH_POTION_I, 20, true))
 	player.add_item(Item.get_item(Item.Names.MANA_POTION_I, 20, true))
-	# player.add_item(Item.get_item(Item.Names.HEALTH_POTION_III, 100, true))
-	# player.add_item(Item.get_item(Item.Names.MANA_POTION_III, 100, true))
-	# player.add_item(Item.get_item(Item.Names.CLEAVE_EDGE, 1, true))
-	# player.add_item(Item.get_item(Item.Names.STUNNING_EDGE, 1, true))
 
 static func get_rect_frames(pos: Vector2i) -> Array[Rect2]:
 	var result: Array[Rect2] = []

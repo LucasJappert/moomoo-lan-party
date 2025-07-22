@@ -41,5 +41,5 @@ static func actions_on_reaching_target(_projectile: Projectile) -> void:
 	var target = _projectile.get_target_entity()
 	if target: return ParticleTrail.spawn_explosion(Vector2.ZERO, target.projectile_zone)
 
-	ParticleTrail.spawn_explosion(_projectile.global_position, GameManager.game_world.over_terrain_layer)
+	ParticleTrail.spawn_explosion(_projectile.global_position, GameManager.game_world.over_terrain_layer_layer_2)
 	pass

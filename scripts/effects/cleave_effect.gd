@@ -30,7 +30,7 @@ static func auxiliary_actions_after_hit(stats: CombatStats, _attacker: Entity, _
 	if not stats.cleave_effect: return
 
 	show_cleave_effect_with_texture(
-		GameManager.game_world.over_terrain_layer,
+		GameManager.game_world.over_terrain_layer_layer_2,
 		# GameManager.game_world.general_container,
 		# _target.front_animations_node,
 		_target.global_position,

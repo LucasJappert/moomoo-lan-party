@@ -159,7 +159,8 @@ static func array_to_dict_array(array: Array, just_my_vars: bool = false) -> Arr
 			TYPE_NIL:
 				result.append({})
 			_:
-				push_warning("array_to_dict_array: unsupported type: %s" % typeof(item))
+				continue
+				# push_warning("array_to_dict_array: unsupported type: %s" % typeof(item))
 	return result
 
 static func _serialize_variant(value: Variant) -> Variant:

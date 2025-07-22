@@ -91,3 +91,16 @@ static func apply_looping_tween_to_property(
 	tween.tween_property(p_node, p_property, p_from_value, p_duration) \
 		.set_trans(p_trans).set_ease(p_ease) \
 		.from(p_to_value)
+
+static func apply_tween_to_dissolve(tween: Tween, _node: Node, TWEEN_DURATION: float) -> void:
+	if not is_instance_valid(_node):
+		return
+
+	var dissolve_updater = func(value: float) -> void:
+		var mat := _node.material as ShaderMaterial
+		if mat:
+			mat.set_shader_parameter("dissolve_amount", value)
+
+	var track := tween.parallel().tween_method(dissolve_updater, 0.0, 1.0, TWEEN_DURATION)
+	if track != null:
+		track.set_trans(Tween.TRANS_LINEAR)

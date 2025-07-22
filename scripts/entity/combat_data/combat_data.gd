@@ -318,7 +318,6 @@ func remove_effect_by_name(effect_name: String) -> void:
 func register_attacker(attacker: Entity) -> void:
 	latest_attacker = attacker
 	last_damage_received_time = Time.get_ticks_msec()
-	# print("Latest attacker: ", latest_attacker.name, " Time: ", last_damage_received_time)
 	if attacker and ObjectHelpers.is_my_player(self): attacker.hud.set_last_damage_to_my_player()
 
 func set_target_to_attack(_target: Entity) -> void: # Used only by the server
@@ -608,6 +607,7 @@ func can_physical_attack() -> bool:
 
 # region 	SERVER METHODS
 func global_receive_damage_or_heal(_di: DamageInfo):
+	BloodStainEffect.spawn_on_bleeding(my_owner().global_position, 2.0)
 	if _di.critical > 0:
 		my_owner().hud.show_message_popup(str(- (_di.total_damage - _di.critical)), Color(1, 0, 0))
 		my_owner().hud.show_message_popup(str(-_di.critical), Color(1, 1, 0))

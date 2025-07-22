@@ -77,7 +77,13 @@ z_index = 1
 z_as_relative = false
 y_sort_enabled = true
 
-[node name="OverTerrainLayer" type="Node2D" parent="."]
+[node name="OverTerrainLayerLayer1" type="Node2D" parent="."]
+unique_name_in_owner = true
+z_index = 1
+z_as_relative = false
+y_sort_enabled = true
+
+[node name="OverTerrainLayerLayer2" type="Node2D" parent="."]
 unique_name_in_owner = true
 z_index = 2
 z_as_relative = false
