@@ -1,55 +1,6 @@
 class_name CleaveEffect
 
-extends MyInitAuxiliary
-
-var damage_type: String
-var percent: float
-var radius_in_tiles: int = 1
 const CLEAVE_RECT_REGION = Rect2(320, 256, 96, 64)
-
-func _init(_percent: float = 0, _radius: int = 1, _damage_type: String = DamageType.PHYSICAL):
-	super._init()
-	percent = _percent
-	radius_in_tiles = _radius
-	damage_type = _damage_type
-
-func get_cleave_damage(base_damage: int) -> int:
-	return int(base_damage * percent)
-
-func get_description() -> String:
-	return str("- Cleave percent: ", StringHelpers.format_percent(percent), " (radius: ", radius_in_tiles, ") \n")
-
-func accumulate(other: CleaveEffect) -> void:
-	if not other: return
-	percent += other.percent
-
-func get_new_instance() -> CleaveEffect:
-	return CleaveEffect.new(percent, radius_in_tiles, damage_type)
-
-static func auxiliary_actions_after_hit(stats: CombatStats, _attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
-	if not stats.cleave_effect: return
-
-	show_cleave_effect_with_texture(
-		GameManager.game_world.over_terrain_layer_layer_2,
-		# GameManager.game_world.general_container,
-		# _target.front_animations_node,
-		_target.global_position,
-		_attacker.get_direction_according_to_target(_target),
-		stats.cleave_effect.radius_in_tiles
-	)
-
-	var nearest_enemies = GlobalsEntityHelpers.get_closest_entities(_target.global_position, _attacker.get_my_enemies(), stats.cleave_effect.radius_in_tiles, 100, [_target])
-	var filtered_enemies := GlobalsEntityHelpers.filter_enemies_according_to_caster_direction(_attacker.position, _target.position, nearest_enemies)
-
-	if filtered_enemies.size() == 0: return
-
-	var _cdi := DamageInfo.new(stats.cleave_effect.get_cleave_damage(_di.total_damage), _di.damage_type)
-	_cdi.projectile_type = ProjectileBase.NONE
-	_cdi.attacker_name = _attacker.name
-	_cdi.can_be_evaded = false
-	_cdi.was_a_cleave_damage = true
-
-	for enemy in filtered_enemies: enemy.server_receive_damage(_cdi, _attacker)
 
 static func show_cleave_effect(
 	parent: Node,

@@ -3,7 +3,6 @@ class_name Skill
 extends MyInitAuxiliary
 
 const Names = {
-	CLEAVE_STRIKE = "Cleave Strike", # ✅
 	ABSORB_AND_RELEASE = "Absorb and Release", # ✅
 	UNBREAKABLE = "Unbreakable", # ✅
 	ARC_LIGHTNING_STORM = "Arc Lightning Storm", # ✅
@@ -117,23 +116,6 @@ func get_remaining_cooldown() -> float:
 static func initialize_skills() -> void:
 	for skill_class in SkillBase.REGISTERED_SKILLS: skill_class.create_and_add_instance(_SKILLS)
 
-	# region CLEAVE STRIKE
-	var aux_skill_name = ""
-	var _skill: Skill
-	var int_array: Array[int]; var float_array: Array[float];
-	aux_skill_name = Names.CLEAVE_STRIKE
-	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
-	_skill = _SKILLS[aux_skill_name]
-	_skill.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 2, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
-
-	float_array = [0.4, 0.5, 0.5]
-	int_array = [1, 1, 2]
-	for i in AVAILABLE_LEVELS:
-		_skill.item_skill_base[i].apply_to_enemy = false
-		_skill.item_skill_base[i].stats.cleave_effect = CleaveEffect.new(float_array[i], int_array[i])
-		_skill.item_skill_base[i].description = "Deals " + StringHelpers.format_percent(float_array[i]) + " of the damage as a cleave effect to enemies around " + str(int_array[i]) + " tiles."
-	# endregion
-
 func use(my_owner: Entity, target_entity: Entity) -> bool:
 	var learned_skill := get_learned_skill()
 	if not learned_skill: return false
@@ -173,18 +155,10 @@ func try_to_upgrade(my_owner: Entity, p_slot_number: int) -> void:
 
 # region :::::::::::::::::::: SKILLS LOGICS
 
-static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
-	if not ObjectHelpers.valid_instance(_attacker): return
-
-	# Cleave verification
-	var cleave_skill = _attacker.get_learned_skill(Names.CLEAVE_STRIKE)
-	if cleave_skill: CleaveEffect.auxiliary_actions_after_hit(cleave_skill.stats, _attacker, _target, _di)
-
 static func actions_before_receive_damage(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
 	for active_skill in _target._active_skills:
 		if active_skill.my_name == Names.UNBREAKABLE: return false
 	return true
-
 # endregion .................... SKILLS LOGICS
 
 

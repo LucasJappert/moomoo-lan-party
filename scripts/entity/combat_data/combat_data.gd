@@ -138,8 +138,6 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 
 	if not _di.was_a_cleave_damage and not _di.was_reflected:
 		CombatEffect.actions_after_effective_hit(_attacker, my_owner(), _di)
-		Skill.actions_after_effective_hit(_attacker, my_owner(), _di)
-		Item.actions_after_effective_hit(_attacker, my_owner(), _di)
 
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
 		registered_skill.actions_after_effective_hit(_attacker, my_owner(), _di)

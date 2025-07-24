@@ -3,6 +3,7 @@ extends MyInitAuxiliary
 
 # Array of skill classes (each must have .create_and_add_instance)
 static var REGISTERED_SKILLS: Array = [
+	SkillCleaveStrike,
 	SkillBloodFury,
 	SkillStormStrike,
 	SkillStunningStrike,

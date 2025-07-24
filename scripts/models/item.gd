@@ -40,14 +40,14 @@ static func initialize_items() -> void:
 	for item_class in REGISTERED_ITEMS: item_class.create_and_add_instance()
 	
 	# region ITEM CLEAVE_EDGE
-	aux_item_name = Names.CLEAVE_EDGE
-	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.PASSIVE)
-	_item = _ITEMS[aux_item_name]
-	_item.cast_range_in_tiles = 0
-	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 4, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
-	_item.stats.cleave_effect = CleaveEffect.new(0.3, 2)
-	_item.buy_price = 3300
-	_item.description = "Grants a " + StringHelpers.format_percent(_item.stats.cleave_effect.percent) + " extra damage to enemies around " + str(_item.stats.cleave_effect.radius_in_tiles) + " tiles."
+	# aux_item_name = Names.CLEAVE_EDGE
+	# _ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.PASSIVE)
+	# _item = _ITEMS[aux_item_name]
+	# _item.cast_range_in_tiles = 0
+	# _item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 4, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
+	# _item.stats.cleave_effect = CleaveEffect.new(0.3, 2)
+	# _item.buy_price = 3300
+	# _item.description = "Grants a " + StringHelpers.format_percent(_item.stats.cleave_effect.percent) + " extra damage to enemies around " + str(_item.stats.cleave_effect.radius_in_tiles) + " tiles."
 	# endregion
 
 	# region ITEM STUNNING_EDGE
@@ -212,25 +212,3 @@ func can_use(my_owner: Entity) -> bool:
 	return super.can_use(my_owner)
 
 # endregion ................. GETTERs
-
-
-# region :::::::::::::::::::: ITEMs LOGICS
-
-static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
-	if not ObjectHelpers.valid_instance(_attacker): return
-	
-	# Cleave verification
-	var cleave_items := _attacker.get_items_by_name(Names.CLEAVE_EDGE)
-	if cleave_items.is_empty(): return
-	var total_stats := CombatStats.new()
-	for _item in cleave_items:
-		total_stats.accumulate_combat_stats(_item.stats)
-	if total_stats.cleave_effect:
-		CleaveEffect.auxiliary_actions_after_hit(total_stats, _attacker, _target, _di)
-	
-	# var cleave_stats := CombatStats.new()
-	# for _item in cleave_items:
-	# 	cleave_stats.accumulate_combat_stats(_item.stats)
-	# CleaveEffect.auxiliary_actions_after_hit(_item.stats, _attacker, _target, _di)
-
-# endregion ................. SKILLS LOGICS

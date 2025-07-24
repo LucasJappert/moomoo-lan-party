@@ -4,7 +4,6 @@ extends MyInitAuxiliary
 
 const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapManager.TILE_SIZE.y, 2))) + 1
 
-var cleave_effect: CleaveEffect
 var level: int
 static var EMPTY_STATS: CombatStats = CombatStats.new()
 
@@ -38,7 +37,8 @@ var silence_duration: float = 0.0 # In seconds
 @export var strength: int = 0
 @export var intelligence: int = 0
 
-var custom_damage_heal: CustomDamageHeal = CustomDamageHeal.new()
+const CLEAVE_PERCENT = "cleave_percent"
+const CLEAVE_RANGE = "cleave_range" # In tiles
 const HP = "hp"
 const MANA = "mana"
 const PHYSICAL_DEFENSE_PERCENT = "physical_defense_percent"
@@ -80,7 +80,6 @@ static func get_instance_from_dict(dict: Dictionary) -> CombatStats:
 	return instance
 
 func accumulate_combat_stats(stats_to_accumulate: CombatStats) -> CombatStats:
-	custom_damage_heal.accumulate_props(stats_to_accumulate.custom_damage_heal)
 	hp += stats_to_accumulate.hp
 	mana += stats_to_accumulate.mana
 	physical_defense_percent += stats_to_accumulate.physical_defense_percent
@@ -106,9 +105,6 @@ func accumulate_combat_stats(stats_to_accumulate: CombatStats) -> CombatStats:
 	mana_regeneration_points += stats_to_accumulate.mana_regeneration_points
 	mana_regeneration_points_percent += stats_to_accumulate.mana_regeneration_points_percent
 	silence_duration = stats_to_accumulate.silence_duration
-
-	if cleave_effect: cleave_effect.accumulate(stats_to_accumulate.cleave_effect)
-	elif stats_to_accumulate.cleave_effect: cleave_effect = stats_to_accumulate.cleave_effect.get_new_instance()
 
 	agility += stats_to_accumulate.agility
 	strength += stats_to_accumulate.strength
@@ -191,7 +187,6 @@ func grants_attack_bonuses() -> bool:
 	if crit_chance > 0: return true
 	if stun_chance > 0: return true
 	if life_steal_percent > 0: return true
-	if cleave_effect: return true
 	return false
 
 
@@ -279,8 +274,6 @@ func get_description() -> String:
 
 	if silence_duration != 0:
 		description += str("- Hostile silence duration: ", StringHelpers.format_float_compact(silence_duration), "\n")
-
-	if cleave_effect: description += cleave_effect.get_description()
 
 	return description
 
