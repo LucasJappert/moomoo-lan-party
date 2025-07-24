@@ -4,7 +4,6 @@ extends MyInitAuxiliary
 
 const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapManager.TILE_SIZE.y, 2))) + 1
 
-var mana_burn: ManaBurn
 var ignore_enemy_evasion_chance: float = 0.0
 var cleave_effect: CleaveEffect
 var level: int
@@ -193,7 +192,6 @@ func grants_attack_bonuses() -> bool:
 	if stun_chance > 0: return true
 	if life_steal_percent > 0: return true
 	if cleave_effect: return true
-	if mana_burn: return true
 	return false
 
 

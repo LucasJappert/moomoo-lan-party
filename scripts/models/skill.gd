@@ -9,7 +9,6 @@ const Names = {
 	BLOOD_FURY = "Blood Fury", # ✅
 	CLEAVE_STRIKE = "Cleave Strike", # ✅
 	TRUE_STRIKE = "True Strike", # ✅
-	MANA_SCORCHER = "Mana Scorcher", # ✅
 	ABSORB_AND_RELEASE = "Absorb and Release", # ✅
 	UNBREAKABLE = "Unbreakable", # ✅
 	ARC_LIGHTNING_STORM = "Arc Lightning Storm", # ✅
@@ -127,24 +126,9 @@ static func initialize_skills() -> void:
 	var aux_skill_name = ""
 	var aux_text: String; var aux_text1: String; var aux_text2: String
 	var _skill: Skill
-	var int_array: Array[int]; var float_array: Array[float]; var float_array1: Array[float]
+	var int_array: Array[int]; var float_array: Array[float];
 
 	for skill_class in SkillBase.REGISTERED_SKILLS: skill_class.create_and_add_instance(_SKILLS)
-
-	# region SKILL MANA_SCORCHER
-	aux_skill_name = Names.MANA_SCORCHER
-	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
-	_skill = _SKILLS[aux_skill_name]
-	_skill.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 4, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
-	
-	float_array = [0.5, 0.75, 1] # Percentage of mana to burn regarding physical damage dealt
-	float_array1 = [0.5, 0.75, 1] # Percentage of physical damage dealt
-	for i in float_array.size():
-		_skill.item_skill_base[i].stats.mana_burn = ManaBurn.new(float_array[i], float_array1[i], true)
-		_skill.item_skill_base[i].description = "Burns mana from the target equal to " + StringHelpers.format_percent(float_array[i]) + " of the physical damage dealt, then deals additional physical damage equal to " + StringHelpers.format_percent(float_array1[i]) + " of the mana burned."
-
-
-	# endregion
 
 	# region SKILL TRUE_STRIKE
 	aux_skill_name = Names.TRUE_STRIKE
@@ -363,10 +347,6 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 	# Cleave verification
 	var cleave_skill = _attacker.get_learned_skill(Names.CLEAVE_STRIKE)
 	if cleave_skill: CleaveEffect.auxiliary_actions_after_hit(cleave_skill.stats, _attacker, _target, _di)
-
-	# MANA_SCORCHER verification
-	var mana_scorcher_skill = _attacker.get_learned_skill(Names.MANA_SCORCHER)
-	if mana_scorcher_skill: ManaBurn.auxiliary_actions_after_hit(mana_scorcher_skill.stats, _attacker, _target, _di)
 
 static func actions_before_receive_damage(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
 	for active_skill in _target._active_skills:

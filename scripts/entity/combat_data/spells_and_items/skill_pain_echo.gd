@@ -19,7 +19,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 
 		
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
-	if _di.was_reflected: return false
+	if _di.was_reflected or _di.was_a_cleave_damage or _di.temporal_damage: return false
 	
 	var _learned_skill = _target.get_learned_skill(NAME)
 	if not _learned_skill: return false
