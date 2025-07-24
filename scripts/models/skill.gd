@@ -3,7 +3,6 @@ class_name Skill
 extends MyInitAuxiliary
 
 const Names = {
-	STUNNING_STRIKE = "Stunning Strike", # ✅
 	STORM_STRIKE = "Storm Strike", # ✅
 	BLOOD_FURY = "Blood Fury", # ✅
 	CLEAVE_STRIKE = "Cleave Strike", # ✅
@@ -127,24 +126,6 @@ static func initialize_skills() -> void:
 	var int_array: Array[int]; var float_array: Array[float];
 
 	for skill_class in SkillBase.REGISTERED_SKILLS: skill_class.create_and_add_instance(_SKILLS)
-
-	# region SKILL STUNNING_STRIKE
-	aux_skill_name = Names.STUNNING_STRIKE
-	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
-	_skill = _SKILLS[aux_skill_name]
-	_skill.region_rect = Rect2(4 * FRAME_SIZE + _ATLAS_START_POS.x, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
-
-	float_array = [0.1, 0.15, 0.2]
-	for i in float_array.size():
-		_skill.item_skill_base[i].stats.stun_chance = float_array[i]
-		_skill.item_skill_base[i].stats.stun_duration = 2
-		_skill.item_skill_base[i].apply_to_enemy = false
-		_skill.item_skill_base[i].max_stacks = 1
-		aux_text = StringHelpers.format_percent(_skill.item_skill_base[i].stats.stun_chance)
-		aux_text1 = StringHelpers.format_float_compact(_skill.item_skill_base[i].stats.stun_duration)
-		_skill.item_skill_base[i].description = "Has a " + aux_text + " chance to stun the target for " + aux_text1 + " seconds."
-	
-	# endregion
 
 	# region SKILL STORM_STRIKE
 	aux_skill_name = Names.STORM_STRIKE

@@ -4,6 +4,10 @@ extends SkillBase
 const NAME = "Frozen Touch"
 const ICON_SLOT = Vector2(3, 0)
 
+func _init(p_learned_skill: ItemSkillBase) -> void:
+	super._init(p_learned_skill, true)
+	permanent_effect = true
+
 static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	_SKILLS[NAME] = Skill.new(NAME, SkillType.PASSIVE)
 	_SKILLS[NAME].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, _ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
@@ -29,5 +33,13 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 	var effect = CombatEffect.get_effect_from_item_skill_base(_learned_skill)
 	_target.effects_helper.add_effect(effect)
 	SoundsHelper.play_random_ice_hit()
+
+	return true
+	
+static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
+	if _skill.get_name() != NAME: return false
+	if not _skill.get_learned_skill(): return false
+
+	_owner.add_active_skill(SkillMultipleStrike.new(_skill.get_learned_skill()))
 
 	return true

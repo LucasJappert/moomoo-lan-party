@@ -6,6 +6,7 @@
 📝 [Go to Changelog](./changelog.md)
 
 - Revisar attack/move reduction
+- Obtener stats como SkillStunningStrike, SkillFrozenTouch, desde las active skills. Debemos editar las CombatStats, eliminando props y usando solo float_dict
 
 - Mejorar spawn de criaturas, está pegando un salto cuando creamos varias de golpee
 - Agregar True Strike a algun enemigo
