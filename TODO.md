@@ -5,6 +5,7 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Retomar blood fury
 - Revisar attack/move reduction
 - Obtener stats como SkillStunningStrike, SkillFrozenTouch, desde las active skills. Debemos editar las CombatStats, eliminando props y usando solo float_dict
 

@@ -159,7 +159,7 @@ func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void
 	current_hp += value_to_increase
 	current_hp = clamp(current_hp, 0, get_total_hp())
 
-	_actions_after_current_hp_change(value_to_increase, _attacker)
+	_actions_after_current_hp_updated(value_to_increase, _attacker)
 
 func update_current_mana(value_to_increase: int) -> void:
 	if value_to_increase == 0: return
@@ -240,10 +240,12 @@ func _verify_combat_states_after_stats_change() -> void:
 
 func set_current_hp(value: int) -> void:
 	current_hp = value
-	_actions_after_current_hp_change()
+	_actions_after_current_hp_updated()
 
-func _actions_after_current_hp_change(value_to_increase: int = 0, _attacker: Entity = null) -> void:
-	Skill.verify_blood_fury(my_owner())
+func _actions_after_current_hp_updated(value_to_increase: int = 0, _attacker: Entity = null) -> void:
+	for registered_skill in SkillBase.REGISTERED_SKILLS:
+		registered_skill.actions_after_current_hp_updated(value_to_increase, my_owner())
+
 	my_owner().hud.update_health_bar()
 	
 	_server_verify_death(_attacker)

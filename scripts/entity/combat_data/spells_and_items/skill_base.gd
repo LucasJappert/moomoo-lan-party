@@ -3,6 +3,7 @@ extends MyInitAuxiliary
 
 # Array of skill classes (each must have .create_and_add_instance)
 static var REGISTERED_SKILLS: Array = [
+	SkillBloodFury,
 	SkillStormStrike,
 	SkillStunningStrike,
 	SkillFrozenTouch,
@@ -116,4 +117,8 @@ static func on_active_skill_removed(_owner: Entity, _skill: SkillBase) -> void:
 
 # Must be overriden
 static func actions_after_die(_owner: Entity, _killed_by: Entity) -> void:
+	pass
+
+# Must be overriden
+static func actions_after_current_hp_updated(_increased_value: int, _attacker: Entity) -> void:
 	pass

@@ -3,7 +3,6 @@ class_name Skill
 extends MyInitAuxiliary
 
 const Names = {
-	BLOOD_FURY = "Blood Fury", # ✅
 	CLEAVE_STRIKE = "Cleave Strike", # ✅
 	ABSORB_AND_RELEASE = "Absorb and Release", # ✅
 	UNBREAKABLE = "Unbreakable", # ✅
@@ -116,33 +115,12 @@ func get_remaining_cooldown() -> float:
 # region :::::::::::::::::::: SETTERs
 
 static func initialize_skills() -> void:
-	var aux_skill_name = ""
-	var aux_text: String; var aux_text1: String; var aux_text2: String
-	var _skill: Skill
-	var int_array: Array[int]; var float_array: Array[float];
-
 	for skill_class in SkillBase.REGISTERED_SKILLS: skill_class.create_and_add_instance(_SKILLS)
 
-	# region BLOOD FURY
-	aux_skill_name = Names.BLOOD_FURY
-	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
-	_skill = _SKILLS[aux_skill_name]
-	_skill.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 1, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
-
-	float_array = [0.1, 0.15, 0.2]
-	for i in AVAILABLE_LEVELS:
-		_skill.item_skill_base[i].apply_to_enemy = false
-		_skill.item_skill_base[i].stats.physical_attack_power_percent = float_array[i]
-		_skill.item_skill_base[i].stats.attack_speed_percent = float_array[i]
-		_skill.item_skill_base[i].stats.hp_regeneration_points_percent = float_array[i]
-
-		aux_text = StringHelpers.format_percent(_skill.item_skill_base[i].stats.physical_attack_power_percent)
-		aux_text1 = StringHelpers.format_percent(_skill.item_skill_base[i].stats.attack_speed_percent)
-		aux_text2 = StringHelpers.format_percent(_skill.item_skill_base[i].stats.hp_regeneration_points_percent)
-		_skill.item_skill_base[i].description = "Gives " + aux_text + " extra physical attack power, " + aux_text1 + " extra attack speed and " + aux_text2 + " extra hp regeneration per each 10% of lost hp."
-	# endregion
-
 	# region CLEAVE STRIKE
+	var aux_skill_name = ""
+	var _skill: Skill
+	var int_array: Array[int]; var float_array: Array[float];
 	aux_skill_name = Names.CLEAVE_STRIKE
 	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
 	_skill = _SKILLS[aux_skill_name]
@@ -194,29 +172,6 @@ func try_to_upgrade(my_owner: Entity, p_slot_number: int) -> void:
 # endregion ................. SETTERs
 
 # region :::::::::::::::::::: SKILLS LOGICS
-
-static func verify_blood_fury(my_owner: Entity) -> void:
-	var learned_skill = my_owner.get_learned_skill(Names.BLOOD_FURY)
-	if not learned_skill: return
-
-	var current_hp = my_owner.current_hp
-	var total_hp: float = my_owner.get_total_hp()
-	var percent_lost_hp: float = floor((1 - current_hp / total_hp) * 10.0) / 10.0
-	if percent_lost_hp <= 0: return
-
-	var effect_stats = CombatStats.new()
-	effect_stats.physical_attack_power = my_owner.cache_total_stats_no_effects.physical_attack_power * percent_lost_hp
-	effect_stats.attack_speed = my_owner.cache_total_stats_no_effects.attack_speed * percent_lost_hp
-	effect_stats.level = percent_lost_hp * 10 # Should be 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
-
-	var existing_effect = my_owner.effects_helper.get_effect_by_name(Names.BLOOD_FURY)
-	if existing_effect:
-		if existing_effect.stats.level == effect_stats.level: return
-
-	my_owner.remove_effect_by_name(Names.BLOOD_FURY)
-
-	var new_effect = CombatEffect.get_permanent_effect(Names.BLOOD_FURY, _SKILLS[Names.BLOOD_FURY].region_rect, learned_skill.max_stacks, effect_stats)
-	my_owner.effects_helper.add_effect(new_effect)
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
 	if not ObjectHelpers.valid_instance(_attacker): return
