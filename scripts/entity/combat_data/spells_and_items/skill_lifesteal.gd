@@ -4,16 +4,16 @@ extends SkillBase
 const NAME = "Lifesteal"
 const ICON_SLOT = Vector2(5, 0)
 
-static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
-	_SKILLS[NAME] = Skill.new(NAME, SkillType.PASSIVE)
-	_SKILLS[NAME].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, _ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
+static func create_and_add_instance() -> void:
+	SKILLS[NAME] = Skill.new(NAME, SkillType.PASSIVE)
+	SKILLS[NAME].region_rect = Rect2(ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
 
 	float_array = [0.15, 0.2, 0.25]
-	for i in Skill.AVAILABLE_LEVELS:
-		_SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
-		_SKILLS[NAME].item_skill_base[i].create_effect = true
-		_SKILLS[NAME].item_skill_base[i].stats.life_steal_percent = float_array[i]
-		_SKILLS[NAME].item_skill_base[i].description = "Steals " + StringHelpers.format_percent(float_array[i]) + " of dealt damage as life."
+	for i in AVAILABLE_LEVELS:
+		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
+		SKILLS[NAME].item_skill_base[i].create_effect = true
+		SKILLS[NAME].item_skill_base[i].stats.life_steal_percent = float_array[i]
+		SKILLS[NAME].item_skill_base[i].description = "Steals " + StringHelpers.format_percent(float_array[i]) + " of dealt damage as life."
 	
 static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
 	if _skill.get_name() != NAME: return false

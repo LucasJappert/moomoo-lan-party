@@ -4,25 +4,25 @@ extends SkillBase
 const NAME = "Earthshatter"
 const ICON_SLOT = Vector2(6, 1)
 
-static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
-	_SKILLS[NAME] = Skill.new(NAME, SkillType.ACTIVE)
-	_SKILLS[NAME].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, _ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
+static func create_and_add_instance() -> void:
+	SKILLS[NAME] = Skill.new(NAME, SkillType.ACTIVE)
+	SKILLS[NAME].region_rect = Rect2(ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
 
 	aux_array[0] = [2, 3, 4]
 	aux_array[1] = [100, 150, 200]
 	aux_array[2] = [0.5, 1, 1.5]
-	for i in Skill.AVAILABLE_LEVELS:
-		_SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 0
-		_SKILLS[NAME].item_skill_base[i].apply_to_enemy = true
-		_SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 2
-		_SKILLS[NAME].item_skill_base[i].instant_use = true
-		_SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
-		_SKILLS[NAME].item_skill_base[i].float_dict["stun_duration"] = aux_array[0][i]
-		_SKILLS[NAME].item_skill_base[i].float_dict["strength_percent_damage"] = aux_array[2][i]
-		_SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]
-		_SKILLS[NAME].item_skill_base[i].cooldown = 12
-		_SKILLS[NAME].item_skill_base[i].description = (
-			"Stuns all enemies within " + str(_SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles) + " tiles for " + str(aux_array[0][i]) +
+	for i in AVAILABLE_LEVELS:
+		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 0
+		SKILLS[NAME].item_skill_base[i].apply_to_enemy = true
+		SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 2
+		SKILLS[NAME].item_skill_base[i].instant_use = true
+		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
+		SKILLS[NAME].item_skill_base[i].float_dict["stun_duration"] = aux_array[0][i]
+		SKILLS[NAME].item_skill_base[i].float_dict["strength_percent_damage"] = aux_array[2][i]
+		SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]
+		SKILLS[NAME].item_skill_base[i].cooldown = 12
+		SKILLS[NAME].item_skill_base[i].description = (
+			"Stuns all enemies within " + str(SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles) + " tiles for " + str(aux_array[0][i]) +
 			" seconds and deals " + StringHelpers.format_percent(aux_array[2][i]) +
 			" of the hero's total strength as damage."
 		)

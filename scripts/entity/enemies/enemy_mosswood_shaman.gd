@@ -15,5 +15,5 @@ static func try_to_init_from_name(_name: String, _enemy: Enemy) -> void:
 	_enemy.projectile_type = ProjectileNatureBall.NAME
 
 	_enemy._skills.append_array([
-		Skill.get_new_learned_skill(SkillShieldedCore.NAME),
+		SkillBase.get_new_learned_skill(SkillShieldedCore.NAME),
 	])

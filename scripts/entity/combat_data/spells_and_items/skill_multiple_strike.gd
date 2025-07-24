@@ -23,19 +23,19 @@ func actions_after_execute_physical_attack(_attacker: Entity, _target: Entity, _
 		_attacker.execute_physical_attack(false, extra_target)
 
 	
-static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
-	_SKILLS[NAME] = Skill.new(NAME, SkillType.PASSIVE)
-	_SKILLS[NAME].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, _ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
+static func create_and_add_instance() -> void:
+	SKILLS[NAME] = Skill.new(NAME, SkillType.PASSIVE)
+	SKILLS[NAME].region_rect = Rect2(ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
 
 	aux_array[0] = [5, 4, 3]
 	aux_array[1] = [2, 3, 4]
-	for i in Skill.AVAILABLE_LEVELS:
-		_SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 0
-		_SKILLS[NAME].item_skill_base[i].float_dict["hits_to_trigger"] = aux_array[0][i]
-		_SKILLS[NAME].item_skill_base[i].float_dict["targets"] = aux_array[1][i]
-		_SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
+	for i in AVAILABLE_LEVELS:
+		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 0
+		SKILLS[NAME].item_skill_base[i].float_dict["hits_to_trigger"] = aux_array[0][i]
+		SKILLS[NAME].item_skill_base[i].float_dict["targets"] = aux_array[1][i]
+		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
 
-		_SKILLS[NAME].item_skill_base[i].description = "Every " + str(aux_array[0][i]) + " attacks executes a multiple attack to " + str(aux_array[1][i]) + " extra enemies"
+		SKILLS[NAME].item_skill_base[i].description = "Every " + str(aux_array[0][i]) + " attacks executes a multiple attack to " + str(aux_array[1][i]) + " extra enemies"
 
 static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
 	if _skill.get_name() != NAME: return false

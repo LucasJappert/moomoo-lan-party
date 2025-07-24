@@ -18,8 +18,8 @@ static func try_to_init_from_name(_name: String, _enemy: Enemy) -> void:
 	_enemy.combat_stats.attack_range = 160
 
 	_enemy._skills.append_array([
-		Skill.get_new_learned_skill(SkillLifesteal.NAME),
-		Skill.get_new_learned_skill(SkillFrenziedSilence.NAME),
+		SkillBase.get_new_learned_skill(SkillLifesteal.NAME),
+		SkillBase.get_new_learned_skill(SkillFrenziedSilence.NAME),
 		null,
-		Skill.get_new_learned_skill(SkillUnbreakable.NAME),
+		SkillBase.get_new_learned_skill(SkillUnbreakable.NAME),
 	])

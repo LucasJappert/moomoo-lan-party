@@ -3,11 +3,6 @@ class_name Skill
 extends MyInitAuxiliary
 
 const Names = {
-	ABSORB_AND_RELEASE = "Absorb and Release", # ✅
-	UNBREAKABLE = "Unbreakable", # ✅
-	ARC_LIGHTNING_STORM = "Arc Lightning Storm", # ✅
-	SHOCK_SPEAR = "Shock Spear", # ✅
-	STATIC_DISCHARGE = "Static Discharge", # ✅
 	DIVINE_SHIELD = "Divine Shield",
 	ENERGY_ABSORPTION = "Energy Absorption",
 	VOID_STEP = "Void Step",
@@ -35,12 +30,7 @@ const Names = {
 	PHANTOM_REPRISAL = "Phantom Reprisal",
 }
 
-static var _SKILLS: Dictionary[String, Skill]
-const FRAME_SIZE = 64
-const _ATLAS_START_POS = Vector2(0, 1632)
-
 var item_skill_base: Array[ItemSkillBase] = []
-static var AVAILABLE_LEVELS: int = 3
 var learned_level: int = 0
 
 var region_rect: Rect2 = Rect2()
@@ -49,7 +39,7 @@ var skill_name: String = ""
 func _init(_name: String = "", _type: String = SkillType.ACTIVE):
 	super._init()
 	item_skill_base = []
-	for i in range(AVAILABLE_LEVELS):
+	for i in range(SkillBase.AVAILABLE_LEVELS):
 		item_skill_base.append(ItemSkillBase.new())
 		item_skill_base[i].my_name = _name
 		item_skill_base[i].type = _type
@@ -57,20 +47,6 @@ func _init(_name: String = "", _type: String = SkillType.ACTIVE):
 
 
 # region :::::::::::::::::::: GETTERs
-
-static func get_skill(_skill_name: String, new_copy: bool = true) -> Skill:
-	if _SKILLS.is_empty(): initialize_skills()
-	
-	if new_copy: return ObjectHelpers.deep_clone(_SKILLS[_skill_name])
-	
-	return _SKILLS[_skill_name]
-	
-static func get_new_learned_skill(_skill_name: String, skill_level: int = 1) -> Skill:
-	if _SKILLS.is_empty(): initialize_skills()
-	
-	var result = ObjectHelpers.deep_clone(_SKILLS[_skill_name])
-	result.learned_level = skill_level
-	return result
 	
 func get_name() -> String:
 	if item_skill_base.size() == 0: return ""
@@ -113,9 +89,6 @@ func get_remaining_cooldown() -> float:
 
 # region :::::::::::::::::::: SETTERs
 
-static func initialize_skills() -> void:
-	for skill_class in SkillBase.REGISTERED_SKILLS: skill_class.create_and_add_instance(_SKILLS)
-
 func use(my_owner: Entity, target_entity: Entity) -> bool:
 	var learned_skill := get_learned_skill()
 	if not learned_skill: return false
@@ -141,7 +114,7 @@ func use(my_owner: Entity, target_entity: Entity) -> bool:
 	return my_owner.uncharge_skill()
 
 func try_to_upgrade(my_owner: Entity, p_slot_number: int) -> void:
-	if learned_level >= AVAILABLE_LEVELS: return
+	if learned_level >= SkillBase.AVAILABLE_LEVELS: return
 
 	# Keep the last used time
 	item_skill_base[learned_level].set_last_used_time(item_skill_base[learned_level - 1].get_last_used_time())
@@ -152,14 +125,6 @@ func try_to_upgrade(my_owner: Entity, p_slot_number: int) -> void:
 	EventBus.emit_skill_upgraded(my_owner, self, p_slot_number)
 
 # endregion ................. SETTERs
-
-# region :::::::::::::::::::: SKILLS LOGICS
-
-static func actions_before_receive_damage(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
-	for active_skill in _target._active_skills:
-		if active_skill.my_name == Names.UNBREAKABLE: return false
-	return true
-# endregion .................... SKILLS LOGICS
 
 
 # Skill("Mana Scorcher", "Active", 40, 8, "Burns 50% of the target's mana, dealing 25% of that as physical damage."),

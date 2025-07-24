@@ -31,10 +31,12 @@ static var REGISTERED_SKILLS: Array = [
 ]
 
 static var FIRE_SKILLS: Array = [SkillBurningPresence.NAME]
+static var SKILLS: Dictionary[String, Skill] = {}
 static var effects_running_by_owner_name: Dictionary = {}
 
-const _ATLAS_START_POS = Skill._ATLAS_START_POS
-const FRAME_SIZE = Skill.FRAME_SIZE
+const ATLAS_START_POS = Vector2(0, 1632)
+const FRAME_SIZE = 64
+const AVAILABLE_LEVELS: int = 3
 var my_name: String
 var active: bool = false
 var seconds_elapsed: float
@@ -44,11 +46,6 @@ var learned_skill: ItemSkillBase
 
 static var int_array: Array[int]; static var int_array1: Array[int]; static var float_array: Array[float]; static var float_array1: Array[float]
 static var aux_array: Array = [[], [], [], [], [], [], [], [], [], [], [], []]
-
-static func get_permanent_active_skill(_learned_skill: ItemSkillBase) -> SkillBase:
-	var skill = SkillBase.new(_learned_skill, true)
-	skill.permanent_effect = true
-	return skill
 
 func _init(_learned_skill: ItemSkillBase = null, _active: bool = false) -> void:
 	super._init()
@@ -71,12 +68,34 @@ func process_skill(_owner: Entity, _delta: float) -> void:
 
 func has_fire() -> bool: return my_name in FIRE_SKILLS
 
+static func _initialize_skills() -> void:
+	for skill_class in REGISTERED_SKILLS: skill_class.create_and_add_instance()
+
+static func get_skill(_skill_name: String, new_copy: bool = true) -> Skill:
+	if SKILLS.is_empty(): _initialize_skills()
+	
+	if new_copy: return ObjectHelpers.deep_clone(SKILLS[_skill_name])
+	
+	return SKILLS[_skill_name]
+	
+static func get_new_learned_skill(_skill_name: String, skill_level: int = 1) -> Skill:
+	if SKILLS.is_empty(): _initialize_skills()
+	
+	var result = ObjectHelpers.deep_clone(SkillBase.SKILLS[_skill_name])
+	result.learned_level = skill_level
+	return result
+
 static func actions_after_cast_skill(_owner: Entity, _skill_used: ItemSkillBase) -> void:
 	# At the moment, Implemented in Static Discharge skill
 	pass
 
 static func remove_effects_running_by_owner_name(_owner_name: String) -> void:
 	effects_running_by_owner_name.erase(_owner_name)
+
+static func get_permanent_active_skill(_learned_skill: ItemSkillBase) -> SkillBase:
+	var skill = SkillBase.new(_learned_skill, true)
+	skill.permanent_effect = true
+	return skill
 
 # Must be overriden
 func on_damage_received(_attacker: Entity, _damage_received: int) -> void:
@@ -87,7 +106,7 @@ func actions_after_execute_physical_attack(_attacker: Entity, _target: Entity, _
 	pass
 
 # Must be overriden
-static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
+static func create_and_add_instance() -> void:
 	pass
 
 # Must be overriden
@@ -123,3 +142,7 @@ static func actions_after_die(_owner: Entity, _killed_by: Entity) -> void:
 # Must be overriden
 static func actions_after_current_hp_updated(_increased_value: int, _attacker: Entity) -> void:
 	pass
+
+# Must be overriden
+static func actions_before_receive_damage(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
+	return false

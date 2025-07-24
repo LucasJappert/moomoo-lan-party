@@ -14,8 +14,8 @@ static func try_to_init_from_name(_name: String, player: Player, stats: CombatSt
 	stats.strength = 50
 	stats.intelligence = 30
 	player._skills = [
-		Skill.get_skill(SkillBlessingOfPower.NAME),
-		Skill.get_skill(SkillEarthshatter.NAME),
-		Skill.get_skill(Skill.Names.ABSORB_AND_RELEASE),
-		Skill.get_skill(Skill.Names.UNBREAKABLE),
+		SkillBase.get_skill(SkillBlessingOfPower.NAME),
+		SkillBase.get_skill(SkillEarthshatter.NAME),
+		SkillBase.get_skill(SkillAbsorbAndRelease.NAME),
+		SkillBase.get_skill(SkillUnbreakable.NAME),
 	]

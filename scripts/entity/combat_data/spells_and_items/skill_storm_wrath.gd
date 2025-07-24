@@ -35,23 +35,23 @@ func apply_strike(_owner: Entity) -> void:
 	SkillArcLightningStorm.try_to_use(_owner, skill_chain_to_exceute, random_enemy)
 
 
-static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
-	_SKILLS[NAME] = Skill.new(NAME, SkillType.ACTIVE)
-	_SKILLS[NAME].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, _ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
+static func create_and_add_instance() -> void:
+	SKILLS[NAME] = Skill.new(NAME, SkillType.ACTIVE)
+	SKILLS[NAME].region_rect = Rect2(ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
 	
 	aux_array[1] = [1, 1, 1] # strike interval
 	aux_array[2] = [4, 5, 6] # duration
 	aux_array[3] = [250, 400, 550] # mana cost
 	aux_array[4] = [30, 28, 26] # cooldown
-	for i in Skill.AVAILABLE_LEVELS:
-		_SKILLS[NAME].item_skill_base[i].instant_use = true
-		_SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 7
-		_SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[2][i]
-		_SKILLS[NAME].item_skill_base[i].float_dict["strike_interval_in_seconds"] = aux_array[1][i]
-		_SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
-		_SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[3][i]
-		_SKILLS[NAME].item_skill_base[i].cooldown = aux_array[4][i]
-		_SKILLS[NAME].item_skill_base[i].description = (
+	for i in AVAILABLE_LEVELS:
+		SKILLS[NAME].item_skill_base[i].instant_use = true
+		SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 7
+		SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[2][i]
+		SKILLS[NAME].item_skill_base[i].float_dict["strike_interval_in_seconds"] = aux_array[1][i]
+		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
+		SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[3][i]
+		SKILLS[NAME].item_skill_base[i].cooldown = aux_array[4][i]
+		SKILLS[NAME].item_skill_base[i].description = (
 			"Summons a fierce thunderstorm for "
 			+ str(aux_array[2][i]) + " seconds, automatically casting " + SkillArcLightningStorm.NAME + " on random enemies every "
 			+ str(aux_array[1][i]) + " second(s). Each cast replicates the full effects of the " + SkillArcLightningStorm.NAME + " skill."

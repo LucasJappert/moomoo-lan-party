@@ -2,6 +2,9 @@ class_name SkillAbsorbAndRelease
 
 extends SkillBase
 
+const NAME := "Absorb And Release"
+const ICON_SLOT := Vector2(7, 0)
+
 var percent_to_release: float = 0
 var radius_in_tiles: float
 var damage_accumulated: float
@@ -41,27 +44,26 @@ func _apply_release(_attacker: Entity, _target: Entity) -> void:
 	SoundsHelper.play_scream_hero_1()
 
 
-static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
-	const _skill_name = Skill.Names.ABSORB_AND_RELEASE
-	_SKILLS[_skill_name] = Skill.new(_skill_name, SkillType.ACTIVE)
-	_SKILLS[_skill_name].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 7, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
+static func create_and_add_instance() -> void:
+	SKILLS[NAME] = Skill.new(NAME, SkillType.ACTIVE)
+	SKILLS[NAME].region_rect = Rect2(ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
 
 	int_array1 = [60, 120, 180]
 	float_array = [0.1, 0.15, 0.2]
 	int_array = [12, 10, 8]
-	for i in Skill.AVAILABLE_LEVELS:
+	for i in AVAILABLE_LEVELS:
 		var seconds_to_release: float = 7.0; var effect_radius: int = 3
-		_SKILLS[_skill_name].item_skill_base[i].instant_use = true
-		_SKILLS[_skill_name].item_skill_base[i].area_of_effect_in_tiles = effect_radius
-		_SKILLS[_skill_name].item_skill_base[i].float_dict["percent_to_release"] = float_array[i]
-		_SKILLS[_skill_name].item_skill_base[i].duration_in_seconds = seconds_to_release
-		_SKILLS[_skill_name].item_skill_base[i].damage_type = DamageType.PHYSICAL
-		_SKILLS[_skill_name].item_skill_base[i].mana_cost = int_array1[i]
-		_SKILLS[_skill_name].item_skill_base[i].cooldown = int_array[i]
-		_SKILLS[_skill_name].item_skill_base[i].description = "Accumulates all damage received over " + StringHelpers.format_float(seconds_to_release) + " seconds. Then releases " + StringHelpers.format_percent(float_array[i]) + " of the accumulated damage as physical damage to all enemies within " + str(effect_radius) + " tiles."
+		SKILLS[NAME].item_skill_base[i].instant_use = true
+		SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = effect_radius
+		SKILLS[NAME].item_skill_base[i].float_dict["percent_to_release"] = float_array[i]
+		SKILLS[NAME].item_skill_base[i].duration_in_seconds = seconds_to_release
+		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.PHYSICAL
+		SKILLS[NAME].item_skill_base[i].mana_cost = int_array1[i]
+		SKILLS[NAME].item_skill_base[i].cooldown = int_array[i]
+		SKILLS[NAME].item_skill_base[i].description = "Accumulates all damage received over " + StringHelpers.format_float(seconds_to_release) + " seconds. Then releases " + StringHelpers.format_percent(float_array[i]) + " of the accumulated damage as physical damage to all enemies within " + str(effect_radius) + " tiles."
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
-	if _learned_skill.my_name != Skill.Names.ABSORB_AND_RELEASE: return false
+	if _learned_skill.my_name != NAME: return false
 
 	if not verify_range(_caster, _target, _learned_skill): return false
 

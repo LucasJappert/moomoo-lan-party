@@ -126,7 +126,9 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	if _di.total_damage == 0: return
 	if my_owner().multiplayer.is_server() == false: return
 
-	if not Skill.actions_before_receive_damage(_attacker, my_owner(), _di): return
+	for registered_skill in SkillBase.REGISTERED_SKILLS:
+		# Cancel the damage if the skill cancels damage
+		if registered_skill.actions_before_receive_damage(_attacker, my_owner(), _di): return
 
 	var my_stats = cache_total_stats
 	

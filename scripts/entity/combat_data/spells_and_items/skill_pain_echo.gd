@@ -4,18 +4,18 @@ extends SkillBase
 const NAME = "Pain Echo"
 const ICON_SLOT = Vector2(10, 1)
 
-static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
-	_SKILLS[NAME] = Skill.new(NAME, SkillType.PASSIVE)
-	_SKILLS[NAME].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, _ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
+static func create_and_add_instance() -> void:
+	SKILLS[NAME] = Skill.new(NAME, SkillType.PASSIVE)
+	SKILLS[NAME].region_rect = Rect2(ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
 	
 	aux_array[0] = [0.1, 0.15, 0.2] # precent reflected
-	for i in Skill.AVAILABLE_LEVELS:
-		_SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 0
-		_SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
-		_SKILLS[NAME].item_skill_base[i].create_effect = true
-		_SKILLS[NAME].item_skill_base[i].damage_type = DamageType.PURE
-		_SKILLS[NAME].item_skill_base[i].float_dict["percent_reflected"] = aux_array[0][i]
-		_SKILLS[NAME].item_skill_base[i].description = "Reflects " + StringHelpers.format_percent(aux_array[0][i]) + " of damage back to the attacker."
+	for i in AVAILABLE_LEVELS:
+		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 0
+		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
+		SKILLS[NAME].item_skill_base[i].create_effect = true
+		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.PURE
+		SKILLS[NAME].item_skill_base[i].float_dict["percent_reflected"] = aux_array[0][i]
+		SKILLS[NAME].item_skill_base[i].description = "Reflects " + StringHelpers.format_percent(aux_array[0][i]) + " of damage back to the attacker."
 
 		
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:

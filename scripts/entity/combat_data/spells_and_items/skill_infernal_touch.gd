@@ -9,23 +9,23 @@ var caster: Entity
 var time_accumulator := 0.0
 var time_interval := 1
 
-static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
-	_SKILLS[NAME] = Skill.new(NAME, SkillType.PASSIVE)
-	_SKILLS[NAME].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, _ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
+static func create_and_add_instance() -> void:
+	SKILLS[NAME] = Skill.new(NAME, SkillType.PASSIVE)
+	SKILLS[NAME].region_rect = Rect2(ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
 
 	aux_array[0] = [0.1, 0.1, 0.1] # % damage interval
 	aux_array[1] = [5, 6, 7] # stacks
 	aux_array[3] = [3, 4, 5] # duration
-	for i in Skill.AVAILABLE_LEVELS:
-		_SKILLS[NAME].item_skill_base[i].type = SkillType.PASSIVE
-		_SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 0
-		_SKILLS[NAME].item_skill_base[i].create_effect = false
-		_SKILLS[NAME].item_skill_base[i].apply_to_enemy = true
-		_SKILLS[NAME].item_skill_base[i].max_stacks = aux_array[1][i]
-		_SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[3][i]
-		_SKILLS[NAME].item_skill_base[i].damage_type = DamageType.PHYSICAL
-		_SKILLS[NAME].item_skill_base[i].float_dict["precentage_damage_per_second"] = aux_array[0][i]
-		_SKILLS[NAME].item_skill_base[i].description = "After each physical attack, inflicts an additional " + StringHelpers.format_percent(aux_array[0][i]) + " of the physical damage inflicted as physical damage per second for " + str(aux_array[3][i]) + " seconds."
+	for i in AVAILABLE_LEVELS:
+		SKILLS[NAME].item_skill_base[i].type = SkillType.PASSIVE
+		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 0
+		SKILLS[NAME].item_skill_base[i].create_effect = false
+		SKILLS[NAME].item_skill_base[i].apply_to_enemy = true
+		SKILLS[NAME].item_skill_base[i].max_stacks = aux_array[1][i]
+		SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[3][i]
+		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.PHYSICAL
+		SKILLS[NAME].item_skill_base[i].float_dict["precentage_damage_per_second"] = aux_array[0][i]
+		SKILLS[NAME].item_skill_base[i].description = "After each physical attack, inflicts an additional " + StringHelpers.format_percent(aux_array[0][i]) + " of the physical damage inflicted as physical damage per second for " + str(aux_array[3][i]) + " seconds."
 
 func _init(_owner: Entity, _caster: Entity, p_learned_skill: ItemSkillBase) -> void:
 	super._init(p_learned_skill, true)

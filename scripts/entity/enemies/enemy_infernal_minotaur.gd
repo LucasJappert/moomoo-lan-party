@@ -19,6 +19,6 @@ static func try_to_init_from_name(_name: String, _enemy: Enemy) -> void:
 	_enemy.combat_stats.crit_multiplier = 1.5
 
 	_enemy._skills.append_array([
-		Skill.get_new_learned_skill(SkillBloodFury.NAME),
-		Skill.get_new_learned_skill(SkillLifesteal.NAME),
+		SkillBase.get_new_learned_skill(SkillBloodFury.NAME),
+		SkillBase.get_new_learned_skill(SkillLifesteal.NAME),
 	])

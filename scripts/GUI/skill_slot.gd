@@ -113,7 +113,7 @@ func _update_controls():
 	_refresh_upgrade_button()
 
 	var panels_of_skill_level: Array[Panel] = [panel1, panel2, panel3]
-	for i in range(Skill.AVAILABLE_LEVELS):
+	for i in range(SkillBase.AVAILABLE_LEVELS):
 		panels_of_skill_level[i].visible = skill != null
 		if skill and skill.learned_level > i:
 			panels_of_skill_level[i].add_theme_stylebox_override("panel", _STYLE_BEIGE)
@@ -132,7 +132,7 @@ func _refresh_upgrade_button():
 		
 	upgrade_button.visible = (
 		GameManager.MY_PLAYER.skill_points_to_assign > 0
-		&& skill.learned_level < Skill.AVAILABLE_LEVELS
+		&& skill.learned_level < SkillBase.AVAILABLE_LEVELS
 		&& GameManager.MY_PLAYER.level >= level_requirement
 	)
 

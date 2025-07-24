@@ -13,25 +13,25 @@ var _damage_residue := 0.0
 var _total_damage: int = 0
 
 
-static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
-	_SKILLS[NAME] = Skill.new(NAME, SkillType.ACTIVE)
-	_SKILLS[NAME].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 8, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
+static func create_and_add_instance() -> void:
+	SKILLS[NAME] = Skill.new(NAME, SkillType.ACTIVE)
+	SKILLS[NAME].region_rect = Rect2(ATLAS_START_POS.x + FRAME_SIZE * 8, ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
 
 	aux_array[0] = [10, 20, 40] # magic_damage_per_second
 	aux_array[1] = [120, 200, 320] # mana cost
 	aux_array[2] = [14, 10, 6] # cooldown
 	aux_array[3] = [14, 20, 26] # duration
-	for i in Skill.AVAILABLE_LEVELS:
-		_SKILLS[NAME].item_skill_base[i].instant_use = false
-		_SKILLS[NAME].item_skill_base[i].create_effect = true
-		_SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
-		_SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 3
-		_SKILLS[NAME].item_skill_base[i].float_dict["magic_damage_per_second"] = aux_array[0][i]
-		_SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
-		_SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]
-		_SKILLS[NAME].item_skill_base[i].cooldown = aux_array[2][i]
-		_SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[3][i]
-		_SKILLS[NAME].item_skill_base[i].description = "Unleashes a blazing aura that ignites the ground around the owner, burning nearby enemies for " + StringHelpers.format_float(aux_array[0][i]) + " magic damage per second over " + str(aux_array[3][i]) + " seconds."
+	for i in AVAILABLE_LEVELS:
+		SKILLS[NAME].item_skill_base[i].instant_use = false
+		SKILLS[NAME].item_skill_base[i].create_effect = true
+		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
+		SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 3
+		SKILLS[NAME].item_skill_base[i].float_dict["magic_damage_per_second"] = aux_array[0][i]
+		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
+		SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]
+		SKILLS[NAME].item_skill_base[i].cooldown = aux_array[2][i]
+		SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[3][i]
+		SKILLS[NAME].item_skill_base[i].description = "Unleashes a blazing aura that ignites the ground around the owner, burning nearby enemies for " + StringHelpers.format_float(aux_array[0][i]) + " magic damage per second over " + str(aux_array[3][i]) + " seconds."
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return true

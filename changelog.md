@@ -58,7 +58,7 @@
 📆 02/07/2025
 
 - ✅ Configure new hero 🧙 Kael Dravok 🧙
-- ✅ Add animation for UNBREAKABLE skill
+- ✅ Add animation for Unbreakable skill
 - ✅ Add a skill that makes you immune to all damage for a certain time when activated
 - ✅ Add a skill that, when activated, accumulates all damage received by the hero. After 7 seconds, 10/20/30% of that accumulated damage will be released as damage to all enemies within a radius of 3 tiles
 - ✅ Add a skill that stuns all enemies within 2 tiles for 2/3/4 seconds. It also deals damage of 30/40/50% of the total strength

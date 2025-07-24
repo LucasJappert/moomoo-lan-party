@@ -6,24 +6,24 @@ const ANIMATION_RECT_REGION := Rect2(0, 992, 64, 96)
 const FRAMES = 14
 const NAME = "Shock Spear"
 
-static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
-	_SKILLS[NAME] = Skill.new(NAME, SkillType.ACTIVE)
-	_SKILLS[NAME].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 8, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
+static func create_and_add_instance() -> void:
+	SKILLS[NAME] = Skill.new(NAME, SkillType.ACTIVE)
+	SKILLS[NAME].region_rect = Rect2(ATLAS_START_POS.x + FRAME_SIZE * 8, ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
 
 	aux_array[0] = [60, 100, 140] # magic_damage
 	aux_array[1] = [120, 200, 320] # mana cost
 	aux_array[2] = [8, 6, 4] # cooldown
 	aux_array[3] = [1, 1.5, 2] # stun_duration
-	for i in Skill.AVAILABLE_LEVELS:
-		_SKILLS[NAME].item_skill_base[i].instant_use = false
-		_SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 7
-		_SKILLS[NAME].item_skill_base[i].float_dict["stun_radius"] = 1
-		_SKILLS[NAME].item_skill_base[i].float_dict["magic_damage"] = aux_array[0][i]
-		_SKILLS[NAME].item_skill_base[i].float_dict["stun_duration"] = aux_array[3][i]
-		_SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
-		_SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]
-		_SKILLS[NAME].item_skill_base[i].cooldown = aux_array[2][i]
-		_SKILLS[NAME].item_skill_base[i].description = "Calls down a lightning strike on a target enemy, dealing " + StringHelpers.format_float(aux_array[0][i]) + " magic damage and stunning them and nearby enemies for " + StringHelpers.format_float(aux_array[3][i]) + " seconds."
+	for i in AVAILABLE_LEVELS:
+		SKILLS[NAME].item_skill_base[i].instant_use = false
+		SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 7
+		SKILLS[NAME].item_skill_base[i].float_dict["stun_radius"] = 1
+		SKILLS[NAME].item_skill_base[i].float_dict["magic_damage"] = aux_array[0][i]
+		SKILLS[NAME].item_skill_base[i].float_dict["stun_duration"] = aux_array[3][i]
+		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
+		SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]
+		SKILLS[NAME].item_skill_base[i].cooldown = aux_array[2][i]
+		SKILLS[NAME].item_skill_base[i].description = "Calls down a lightning strike on a target enemy, dealing " + StringHelpers.format_float(aux_array[0][i]) + " magic damage and stunning them and nearby enemies for " + StringHelpers.format_float(aux_array[3][i]) + " seconds."
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return false
