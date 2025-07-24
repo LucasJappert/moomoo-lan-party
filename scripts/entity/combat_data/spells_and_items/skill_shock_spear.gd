@@ -26,9 +26,9 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		_SKILLS[NAME].item_skill_base[i].description = "Calls down a lightning strike on a target enemy, dealing " + StringHelpers.format_float(aux_array[0][i]) + " magic damage and stunning them and nearby enemies for " + StringHelpers.format_float(aux_array[3][i]) + " seconds."
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
-	if _learned_skill.my_name != NAME: return true
+	if _learned_skill.my_name != NAME: return false
 
-	if not super.try_to_use(_caster, _learned_skill, _target): return false
+	if not verify_range(_caster, _target, _learned_skill): return false
 
 	apply_strike(_caster, _target, _learned_skill)
 

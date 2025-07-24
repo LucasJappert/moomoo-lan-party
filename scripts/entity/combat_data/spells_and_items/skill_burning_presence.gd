@@ -36,7 +36,7 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return true
 
-	if not super.try_to_use(_caster, _learned_skill, _target): return false
+	if not verify_range(_caster, _target, _learned_skill): return false
 
 	_target.add_active_skill(SkillBurningPresence.new(_caster, _learned_skill))
 

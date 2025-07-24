@@ -23,9 +23,9 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		_SKILLS[_skill_name].item_skill_base[i].description = "Grants complete immunity to all damage for " + StringHelpers.format_float(float_array1[i]) + " seconds."
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
-	if _learned_skill.my_name != Skill.Names.UNBREAKABLE: return true
+	if _learned_skill.my_name != Skill.Names.UNBREAKABLE: return false
 
-	if not super.try_to_use(_caster, _learned_skill, _target): return false
+	if not verify_range(_caster, _target, _learned_skill): return false
 
 	var skill := SkillUnbreakable.new(_learned_skill, true)
 	_caster.add_active_skill(skill)

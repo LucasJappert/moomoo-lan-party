@@ -61,9 +61,9 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		_SKILLS[_skill_name].item_skill_base[i].description = "Accumulates all damage received over " + StringHelpers.format_float(seconds_to_release) + " seconds. Then releases " + StringHelpers.format_percent(float_array[i]) + " of the accumulated damage as physical damage to all enemies within " + str(effect_radius) + " tiles."
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
-	if _learned_skill.my_name != Skill.Names.ABSORB_AND_RELEASE: return true
+	if _learned_skill.my_name != Skill.Names.ABSORB_AND_RELEASE: return false
 
-	if not super.try_to_use(_caster, _learned_skill, _target): return false
+	if not verify_range(_caster, _target, _learned_skill): return false
 
 	var _percent_to_release: float = _learned_skill.float_dict["percent_to_release"]
 	var skill_base := SkillAbsorbAndRelease.new(_learned_skill, true, _percent_to_release, _learned_skill.area_of_effect_in_tiles)

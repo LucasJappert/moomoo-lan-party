@@ -3,6 +3,7 @@ extends MyInitAuxiliary
 
 # Array of skill classes (each must have .create_and_add_instance)
 static var REGISTERED_SKILLS: Array = [
+	SkillStormStrike,
 	SkillStunningStrike,
 	SkillFrozenTouch,
 	SkillTrueStrike,
@@ -89,12 +90,9 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 
 # Must be overriden
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
-	if not _verify_range(_caster, _target, _learned_skill):
-		return false
+	return false
 
-	return true
-
-static func _verify_range(_caster: Entity, _target: Entity, _learned_skill: ItemSkillBase) -> bool:
+static func verify_range(_caster: Entity, _target: Entity, _learned_skill: ItemSkillBase) -> bool:
 	if _learned_skill.cast_range_in_tiles == 0: return true
 	if not _caster or not _target: return true
 

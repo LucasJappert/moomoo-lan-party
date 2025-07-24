@@ -25,9 +25,9 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		_SKILLS[NAME].item_skill_base[i].description = "Grants " + StringHelpers.format_percent(aux_array[0][i]) + " physical and magic defense for " + StringHelpers.format_float(aux_array[3][i]) + " seconds."
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
-	if _learned_skill.my_name != NAME: return true
+	if _learned_skill.my_name != NAME: return false
 
-	if not super.try_to_use(_caster, _learned_skill, _target): return false
+	if not verify_range(_caster, _target, _learned_skill): return false
 
 	var new_effect = CombatEffect.get_temporal_effect(NAME, _learned_skill.duration_in_seconds, _learned_skill.max_stacks, _learned_skill.stats)
 	new_effect.set_description(_learned_skill.description)

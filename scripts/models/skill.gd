@@ -3,7 +3,6 @@ class_name Skill
 extends MyInitAuxiliary
 
 const Names = {
-	STORM_STRIKE = "Storm Strike", # ✅
 	BLOOD_FURY = "Blood Fury", # ✅
 	CLEAVE_STRIKE = "Cleave Strike", # ✅
 	ABSORB_AND_RELEASE = "Absorb and Release", # ✅
@@ -91,9 +90,6 @@ func get_safe_learned_skill() -> ItemSkillBase:
 func get_stats() -> CombatStats:
 	return get_learned_skill().stats
 
-func get_max_targets() -> int:
-	return get_learned_skill().max_targets
-
 func get_description(include_stats_description: bool = true) -> String:
 	var result = ""
 
@@ -126,37 +122,6 @@ static func initialize_skills() -> void:
 	var int_array: Array[int]; var float_array: Array[float];
 
 	for skill_class in SkillBase.REGISTERED_SKILLS: skill_class.create_and_add_instance(_SKILLS)
-
-	# region SKILL STORM_STRIKE
-	aux_skill_name = Names.STORM_STRIKE
-	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.ACTIVE)
-	_skill = _SKILLS[aux_skill_name]
-	_skill.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 0, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
-
-	int_array = [80, 130, 200]
-	for i in AVAILABLE_LEVELS:
-		_skill.item_skill_base[i].mana_cost = int_array[i]
-	int_array = [8, 5, 2]
-	for i in AVAILABLE_LEVELS:
-		_skill.item_skill_base[i].cooldown = int_array[i]
-	int_array = [5, 6, 7]
-	for i in AVAILABLE_LEVELS:
-		_skill.item_skill_base[i].max_targets = int_array[i]
-	int_array = [20, 50, 100]
-	for i in AVAILABLE_LEVELS:
-		_skill.item_skill_base[i].stats.custom_damage_heal.base_damage_heal = int_array[i]
-	float_array = [0.2, 0.3, 0.4]
-	for i in float_array.size():
-		_skill.item_skill_base[i].stats.custom_damage_heal.extra_value_by_intelligence = float_array[i]
-	for i in range(AVAILABLE_LEVELS):
-		_skill.item_skill_base[i].apply_to_enemy = true
-		_skill.item_skill_base[i].damage_type = DamageType.MAGIC
-
-		aux_text = StringHelpers.format_float_compact(_skill.item_skill_base[i].stats.custom_damage_heal.base_damage_heal)
-		aux_text1 = StringHelpers.format_percent(_skill.item_skill_base[i].stats.custom_damage_heal.extra_value_by_intelligence)
-		_skill.item_skill_base[i].description = "Calls down a bolt of arcane lightning, dealing " + aux_text + " base magic damage, plus an additional " + aux_text1 + " of the caster's total Intelligence to multiple targets."
-	
-	# endregion
 
 	# region BLOOD FURY
 	aux_skill_name = Names.BLOOD_FURY
@@ -200,14 +165,14 @@ func use(my_owner: Entity, target_entity: Entity) -> bool:
 		return false
 
 	# New way to use skills
+	var was_used := false
 	for skill_class in SkillBase.REGISTERED_SKILLS:
-		if not skill_class.try_to_use(my_owner, learned_skill, target_entity): return false
-		# Actions after cast
-		skill_class.actions_after_cast_skill(my_owner, learned_skill)
+		was_used = skill_class.try_to_use(my_owner, learned_skill, target_entity)
 
-	# TODO: Old way to use skills
-	if learned_skill.my_name == Names.STORM_STRIKE:
-		if not _apply_storm_strike(my_owner, target_entity): return false
+	if not was_used: return false
+
+	for skill_class in SkillBase.REGISTERED_SKILLS:
+		skill_class.actions_before_cast_skill(my_owner, learned_skill)
 
 	learned_skill.reset_last_used_time()
 
@@ -229,33 +194,6 @@ func try_to_upgrade(my_owner: Entity, p_slot_number: int) -> void:
 # endregion ................. SETTERs
 
 # region :::::::::::::::::::: SKILLS LOGICS
-
-func _apply_storm_strike(_attacker: Entity, _target: Entity) -> bool:
-	if not _target: return false
-
-	var attacker_stats = _attacker.cache_total_stats
-	var total_damage = get_stats().custom_damage_heal.get_total_damage_heal(attacker_stats.agility, attacker_stats.strength, attacker_stats.intelligence)
-	var total_magic_damage = _attacker.get_total_magic_damage(total_damage)
-
-	var targets = [_target]
-	var my_enemies = _attacker.get_my_enemies()
-	targets.append_array(GlobalsEntityHelpers.get_closest_entities(_target.global_position, my_enemies, 6, get_max_targets() - 1, [_target]))
-
-	for target in targets:
-		var _di := DamageInfo.new(total_magic_damage, get_learned_skill().damage_type)
-		var critical_damage = _attacker.try_critical_hit(total_magic_damage)
-		var total_damage_and_crit = total_magic_damage + critical_damage
-
-		_di.total_damage = total_damage_and_crit
-		_di.critical = critical_damage
-		_di.projectile_type = ProjectileBase.NONE
-		_di.damage_type = DamageType.MAGIC
-		_di.attacker_name = _attacker.name
-
-		target.server_receive_damage(_di, _attacker)
-		target.rpc_handler.add_animation(AnimationsHelper.ANIMATION_NAMES.LIGHTNING)
-	
-	return true
 
 static func verify_blood_fury(my_owner: Entity) -> void:
 	var learned_skill = my_owner.get_learned_skill(Names.BLOOD_FURY)

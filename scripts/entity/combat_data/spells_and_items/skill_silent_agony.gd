@@ -55,9 +55,9 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		_SKILLS[NAME].item_skill_base[i].description = "Silences the target for " + StringHelpers.format_float(aux_array[3][i]) + " seconds, dealing " + StringHelpers.format_float(aux_array[0][i]) + " magic damage every second."
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
-	if _learned_skill.my_name != NAME: return true
+	if _learned_skill.my_name != NAME: return false
 
-	if not super.try_to_use(_caster, _learned_skill, _target): return false
+	if not verify_range(_caster, _target, _learned_skill): return false
 
 	_target.add_active_skill(SkillSilentAgony.new(_target, _caster, _learned_skill))
 
