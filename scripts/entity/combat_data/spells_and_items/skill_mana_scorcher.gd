@@ -10,7 +10,6 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 
 	aux_array[0] = [0.5, 0.75, 1] # Percentage of mana to burn regarding physical damage dealt
 	for i in Skill.AVAILABLE_LEVELS:
-		_SKILLS[NAME].item_skill_base[i].type = SkillType.PASSIVE
 		_SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 0
 		_SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
 		_SKILLS[NAME].item_skill_base[i].float_dict["percentage_of_mana_to_burn"] = aux_array[0][i]
@@ -28,8 +27,6 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 
 	_target.update_current_mana(-burned_mana)
 
-	print("_di.total_damage: ", _di.total_damage)
 	_di.total_damage += burned_mana
-	print("_di.total_damage: ", _di.total_damage)
 
 	return true

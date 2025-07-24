@@ -8,7 +8,6 @@ const Names = {
 	STORM_STRIKE = "Storm Strike", # ✅
 	BLOOD_FURY = "Blood Fury", # ✅
 	CLEAVE_STRIKE = "Cleave Strike", # ✅
-	TRUE_STRIKE = "True Strike", # ✅
 	ABSORB_AND_RELEASE = "Absorb and Release", # ✅
 	UNBREAKABLE = "Unbreakable", # ✅
 	ARC_LIGHTNING_STORM = "Arc Lightning Storm", # ✅
@@ -129,19 +128,6 @@ static func initialize_skills() -> void:
 	var int_array: Array[int]; var float_array: Array[float];
 
 	for skill_class in SkillBase.REGISTERED_SKILLS: skill_class.create_and_add_instance(_SKILLS)
-
-	# region SKILL TRUE_STRIKE
-	aux_skill_name = Names.TRUE_STRIKE
-	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
-	_skill = _SKILLS[aux_skill_name]
-	_skill.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 3, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
-	
-	float_array = [0.4, 0.7, 1]
-	for i in float_array.size():
-		_skill.item_skill_base[i].stats.ignore_enemy_evasion_chance = float_array[i]
-		_skill.item_skill_base[i].description = "Grants " + StringHelpers.format_percent(_skill.item_skill_base[i].stats.ignore_enemy_evasion_chance) + " chance to ignore the target's evasion."
-
-	# endregion
 
 	# region SKILL FROZEN_TOUCH
 	aux_skill_name = Names.FROZEN_TOUCH

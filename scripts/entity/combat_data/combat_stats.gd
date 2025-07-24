@@ -4,7 +4,6 @@ extends MyInitAuxiliary
 
 const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapManager.TILE_SIZE.y, 2))) + 1
 
-var ignore_enemy_evasion_chance: float = 0.0
 var cleave_effect: CleaveEffect
 var level: int
 static var EMPTY_STATS: CombatStats = CombatStats.new()
@@ -79,7 +78,6 @@ static func get_instance_from_dict(dict: Dictionary) -> CombatStats:
 
 func accumulate_combat_stats(stats_to_accumulate: CombatStats) -> CombatStats:
 	custom_damage_heal.accumulate_props(stats_to_accumulate.custom_damage_heal)
-	ignore_enemy_evasion_chance += stats_to_accumulate.ignore_enemy_evasion_chance
 	hp += stats_to_accumulate.hp
 	mana += stats_to_accumulate.mana
 	physical_defense_percent += stats_to_accumulate.physical_defense_percent
@@ -181,7 +179,6 @@ func grants_defenses() -> bool:
 	if evasion > 0: return true
 	if hp_regeneration_points > 0 or hp_regeneration_points_percent > 0: return true
 	if mana_regeneration_points > 0 or mana_regeneration_points_percent > 0: return true
-	if ignore_enemy_evasion_chance > 0: return true
 	return false
 
 func grants_attack_bonuses() -> bool:
@@ -276,9 +273,6 @@ func get_description() -> String:
 
 	if mana_regeneration_points != 0:
 		description += str("- Mana regeneration points: ", mana_regeneration_points, "\n")
-
-	if ignore_enemy_evasion_chance != 0:
-		description += str("- Ignore enemy evasion chance: ", StringHelpers.format_percent(ignore_enemy_evasion_chance), "\n")
 
 	if silence_duration != 0:
 		description += str("- Hostile silence duration: ", StringHelpers.format_float_compact(silence_duration), "\n")

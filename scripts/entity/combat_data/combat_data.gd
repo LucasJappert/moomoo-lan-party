@@ -129,10 +129,8 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	if not Skill.actions_before_receive_damage(_attacker, my_owner(), _di): return
 
 	var my_stats = cache_total_stats
-	var attacker_stats = _attacker.cache_total_stats if _attacker else CombatStats.EMPTY_STATS
 	
-	var attacker_can_miss := _check_ignore_enemy_evasion(_di, attacker_stats)
-	if attacker_can_miss: _di.can_be_evaded = false
+	_di.can_be_evaded = not _roll_ignore_evasion(_di, _attacker)
 
 	if _check_evade(_di, my_stats): return # Evasion verification (only for physical damage)
 
@@ -438,10 +436,12 @@ func _get_extra_stats_by_items() -> CombatStats:
 		extra_stats.accumulate_combat_stats(_item.stats)
 	return extra_stats
 
-func _check_ignore_enemy_evasion(_di: DamageInfo, total_stats: CombatStats) -> bool:
+func _roll_ignore_evasion(_di: DamageInfo, _attacker: Entity) -> bool:
 	if _di.damage_type != DamageType.PHYSICAL: return false # Ignore enemy evasion only for physical damage
 
-	return GlobalsEntityHelpers.roll_chance(total_stats.ignore_enemy_evasion_chance)
+	var attacker_accuracy := SkillTrueStrike.get_accuracy(_attacker)
+
+	return GlobalsEntityHelpers.roll_chance(attacker_accuracy)
 
 func _check_evade(_di: DamageInfo, total_stats: CombatStats) -> bool:
 	if not _di.can_be_evaded: return false
