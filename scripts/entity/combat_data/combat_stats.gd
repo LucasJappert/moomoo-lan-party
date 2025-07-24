@@ -39,37 +39,40 @@ var silence_duration: float = 0.0 # In seconds
 @export var intelligence: int = 0
 
 var custom_damage_heal: CustomDamageHeal = CustomDamageHeal.new()
+const HP = "hp"
+const MANA = "mana"
+const PHYSICAL_DEFENSE_PERCENT = "physical_defense_percent"
+const MAGIC_DEFENSE_PERCENT = "magic_defense_percent"
+const EVASION = "evasion"
+const CRIT_CHANCE = "crit_chance"
+const CRIT_MULTIPLIER = "crit_multiplier"
+const STUN_CHANCE = "stun_chance"
+const STUN_DURATION = "stun_duration" # In seconds
+const SILENCE_DURATION = "silence_duration" # In seconds
+const ATTACK_RANGE = "attack_range"
+const PHYSICAL_ATTACK_POWER = "physical_attack_power"
+const PHYSICAL_ATTACK_POWER_PERCENT = "physical_attack_power_percent"
+const MAGIC_ATTACK_POWER = "magic_attack_power"
+const MAGIC_ATTACK_POWER_PERCENT = "magic_attack_power_percent"
+const ATTACK_SPEED = "attack_speed" # Attacks per second
+const ATTACK_SPEED_PERCENT = "attack_speed_percent"
+const MOVE_SPEED = "move_speed" # Tiles per second
+const MOVE_SPEED_PERCENT = "move_speed_percent"
+const FREEZE_DURATION = "freeze_duration" # In seconds
+const LIFE_STEAL_PERCENT = "life_steal_percent"
+const HP_REGENERATION_POINTS = "hp_regeneration_points" # Points per second
+const HP_REGENERATION_POINTS_PERCENT = "hp_regeneration_points_percent"
+const MANA_REGENERATION_POINTS = "mana_regeneration_points" # Points per second
+const MANA_REGENERATION_POINTS_PERCENT = "mana_regeneration_points_percent"
+const PERCENT_MANA_TO_BURN = "percent_mana_to_burn"
+const CHANCE_TO_IGNORE_EVASION = "chance_to_ignore_evasion"
+const AGILITY = "agility"
+const STRENGTH = "strength"
+const INTELLIGENCE = "intelligence"
+# ---------------------------------
 
-const Names = {
-	Hp = "hp",
-	Mana = "mana",
-	PhysicalDefensePercent = "physical_defense_percent",
-	MagicDefensePercent = "magic_defense_percent",
-	Evasion = "evasion",
-	CritChance = "crit_chance",
-	CritMultiplier = "crit_multiplier",
-	StunChance = "stun_chance",
-	StunDuration = "stun_duration",
-	SilenceDuration = "silence_duration",
-	AttackRange = "attack_range",
-	PhysicalAttackPower = "physical_attack_power",
-	PhysicalAttackPowerPercent = "physical_attack_power_percent",
-	MagicAttackPower = "magic_attack_power",
-	MagicAttackPowerPercent = "magic_attack_power_percent",
-	AttackSpeed = "attack_speed",
-	AttackSpeedPercent = "attack_speed_percent",
-	MoveSpeed = "move_speed",
-	MoveSpeedPercent = "move_speed_percent",
-	FreezeDuration = "freeze_duration",
-	LifeStealPercent = "life_steal_percent",
-	HpRegenerationPoints = "hp_regeneration_points",
-	HpRegenerationPointsPercent = "hp_regeneration_points_percent",
-	ManaRegenerationPoints = "mana_regeneration_points",
-	ManaRegenerationPointsPercent = "mana_regeneration_points_percent",
-	Agility = "agility",
-	Strength = "strength",
-	Intelligence = "intelligence"
-}
+
+# ---------------------------------
 
 static func get_instance_from_dict(dict: Dictionary) -> CombatStats:
 	var instance = CombatStats.new()

@@ -3,7 +3,6 @@ class_name Skill
 extends MyInitAuxiliary
 
 const Names = {
-	FROZEN_TOUCH = "Frozen Touch", # ✅
 	STUNNING_STRIKE = "Stunning Strike", # ✅
 	STORM_STRIKE = "Storm Strike", # ✅
 	BLOOD_FURY = "Blood Fury", # ✅
@@ -128,24 +127,6 @@ static func initialize_skills() -> void:
 	var int_array: Array[int]; var float_array: Array[float];
 
 	for skill_class in SkillBase.REGISTERED_SKILLS: skill_class.create_and_add_instance(_SKILLS)
-
-	# region SKILL FROZEN_TOUCH
-	aux_skill_name = Names.FROZEN_TOUCH
-	_SKILLS[aux_skill_name] = Skill.new(aux_skill_name, SkillType.PASSIVE)
-	_skill = _SKILLS[aux_skill_name]
-	_skill.region_rect = Rect2(3 * FRAME_SIZE + _ATLAS_START_POS.x, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
-
-	int_array = [3, 4, 5]
-	for i in AVAILABLE_LEVELS:
-		_skill.item_skill_base[i].apply_to_enemy = true
-		_skill.item_skill_base[i].stats.attack_speed_percent = -0.1
-		_skill.item_skill_base[i].stats.move_speed_percent = -0.1
-		_skill.item_skill_base[i].stats.freeze_duration = 4
-		_skill.item_skill_base[i].max_stacks = int_array[i]
-		aux_text = StringHelpers.format_percent(_skill.item_skill_base[i].stats.attack_speed_percent)
-		aux_text1 = StringHelpers.format_float_compact(_skill.item_skill_base[i].stats.freeze_duration)
-		_skill.item_skill_base[i].description = "The attacker's icy touch partially freezes the target, reducing their movement and attack speed by " + aux_text + " for " + aux_text1 + " seconds."
-	# endregion
 
 	# region SKILL STUNNING_STRIKE
 	aux_skill_name = Names.STUNNING_STRIKE
@@ -320,15 +301,6 @@ static func verify_blood_fury(my_owner: Entity) -> void:
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
 	if not ObjectHelpers.valid_instance(_attacker): return
-	
-	# Freeze verification
-	var frozen_skill = _attacker.get_learned_skill(Names.FROZEN_TOUCH)
-	if frozen_skill:
-		var skill_stats = frozen_skill.stats.get_combat_stats_instance()
-		var effect = CombatEffect.get_temporal_effect(Names.FROZEN_TOUCH, skill_stats.freeze_duration, frozen_skill.max_stacks, skill_stats)
-		effect.set_region_rect(Skill.get_skill(Names.FROZEN_TOUCH, false).region_rect)
-		_target.effects_helper.add_effect(effect)
-		SoundsHelper.play_random_ice_hit()
 
 	# Cleave verification
 	var cleave_skill = _attacker.get_learned_skill(Names.CLEAVE_STRIKE)

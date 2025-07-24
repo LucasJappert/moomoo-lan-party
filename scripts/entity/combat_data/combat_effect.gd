@@ -124,10 +124,10 @@ static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _d
 
 
 func has_silence() -> bool:
-	return float_dict.has(CombatStats.Names.SilenceDuration)
+	return float_dict.has(CombatStats.SILENCE_DURATION)
 
 func has_stun() -> bool:
-	return float_dict.has(CombatStats.Names.StunDuration)
+	return float_dict.has(CombatStats.STUN_DURATION)
 
 func has_freeze() -> bool:
-	return float_dict.has(CombatStats.Names.FreezeDuration)
+	return float_dict.has(CombatStats.FREEZE_DURATION)

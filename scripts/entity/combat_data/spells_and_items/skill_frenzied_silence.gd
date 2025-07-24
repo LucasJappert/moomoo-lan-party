@@ -18,8 +18,6 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 		_SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
 		_SKILLS[NAME].item_skill_base[i].stats.attack_speed_percent = aux_array[0][i]
 		_SKILLS[NAME].item_skill_base[i].stats.silence_duration = aux_array[3][i]
-		# _SKILLS[NAME].item_skill_base[i].float_dict[CombatStats.Names.AttackSpeedPercent] = aux_array[0][i]
-		# _SKILLS[NAME].item_skill_base[i].float_dict[CombatStats.Names.SilenceDuration] = aux_array[3][i]
 		_SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]
 		_SKILLS[NAME].item_skill_base[i].cooldown = aux_array[2][i]
 		_SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[3][i]

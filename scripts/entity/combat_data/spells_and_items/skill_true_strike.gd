@@ -12,11 +12,15 @@ static func create_and_add_instance(_SKILLS: Dictionary[String, Skill]) -> void:
 	for i in Skill.AVAILABLE_LEVELS:
 		_SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 0
 		_SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
-		_SKILLS[NAME].item_skill_base[i].float_dict["chance_to_ignore_evasion"] = aux_array[0][i]
+		_SKILLS[NAME].item_skill_base[i].float_dict[CombatStats.CHANCE_TO_IGNORE_EVASION] = aux_array[0][i]
 		_SKILLS[NAME].item_skill_base[i].description = "Grants " + StringHelpers.format_percent(aux_array[0][i]) + " chance to ignore the target's evasion."
 
-static func get_accuracy(_attacker: Entity) -> float:
+static func roll_true_strike(_di: DamageInfo, _attacker: Entity) -> float:
+	if _di.damage_type != DamageType.PHYSICAL: return false # Ignore enemy evasion only for physical damage
+
 	var _learned_skill := _attacker.get_learned_skill(NAME)
 	if not _learned_skill: return 0
 
-	return _learned_skill.float_dict["chance_to_ignore_evasion"]
+	var attacker_accuracy: float = _learned_skill.float_dict[CombatStats.CHANCE_TO_IGNORE_EVASION]
+
+	return GlobalsEntityHelpers.roll_chance(attacker_accuracy)

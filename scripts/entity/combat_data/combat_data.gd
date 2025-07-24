@@ -130,7 +130,7 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 
 	var my_stats = cache_total_stats
 	
-	_di.can_be_evaded = not _roll_ignore_evasion(_di, _attacker)
+	_di.can_be_evaded = not SkillTrueStrike.roll_true_strike(_di, _attacker)
 
 	if _check_evade(_di, my_stats): return # Evasion verification (only for physical damage)
 
@@ -435,13 +435,6 @@ func _get_extra_stats_by_items() -> CombatStats:
 		if _item.stats.has_hostil_stun_effect(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
 		extra_stats.accumulate_combat_stats(_item.stats)
 	return extra_stats
-
-func _roll_ignore_evasion(_di: DamageInfo, _attacker: Entity) -> bool:
-	if _di.damage_type != DamageType.PHYSICAL: return false # Ignore enemy evasion only for physical damage
-
-	var attacker_accuracy := SkillTrueStrike.get_accuracy(_attacker)
-
-	return GlobalsEntityHelpers.roll_chance(attacker_accuracy)
 
 func _check_evade(_di: DamageInfo, total_stats: CombatStats) -> bool:
 	if not _di.can_be_evaded: return false

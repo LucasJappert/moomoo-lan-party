@@ -5,7 +5,10 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Revisar attack/move reduction
+
 - Mejorar spawn de criaturas, está pegando un salto cuando creamos varias de golpee
+- Agregar True Strike a algun enemigo
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
 - Agregar estadísticas in game, como el tiempo transcurrido, el daño causado, el daño recibido, etc.
 - Mejorar animacion de spawn de enemigos
