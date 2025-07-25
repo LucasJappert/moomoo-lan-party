@@ -174,4 +174,4 @@ func _gui_input(event) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		if not _owner or not GameManager.MY_PLAYER: return
 
-		GameManager.MY_PLAYER.rpc_handler.notify_key_pressed_to_server(KeyboardHelper.SKILL_HOTKEYS[slot_number - 1])
+		KeyboardHelper.key_pressed_server_side(KeyboardHelper.SKILL_HOTKEYS[slot_number - 1], GameManager.MY_PLAYER)

@@ -7,10 +7,10 @@ const ANIMATION_NAMES = {
 	LEVEL_UP = "level_up"
 }
 
-static func apply_animation(animation_msg: AddAnimationMessage, target: Entity) -> void:
-	if animation_msg.animation_name == ANIMATION_NAMES.LIGHTNING:
+static func apply_animation(target: Entity, anim_name: String) -> void:
+	if anim_name == ANIMATION_NAMES.LIGHTNING:
 		_apply_lightning_animation(target)
-	if animation_msg.animation_name == ANIMATION_NAMES.LEVEL_UP:
+	if anim_name == ANIMATION_NAMES.LEVEL_UP:
 		_apply_level_up_animation(target)
 
 static func apply_frost_hit_animation(target: Entity):

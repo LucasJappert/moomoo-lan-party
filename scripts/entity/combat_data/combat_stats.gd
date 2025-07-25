@@ -7,38 +7,11 @@ const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapM
 var level: int
 static var EMPTY_STATS: CombatStats = CombatStats.new()
 
-@export var hp: int = 0
-@export var mana: int = 0
-@export var physical_defense_percent: float = 0
-@export var magic_defense_percent: float = 0
-@export var evasion: float = 0.0
-@export var crit_chance: float = 0.0
-@export var crit_multiplier: float = 0
-@export var stun_chance: float = 0.0
-@export var stun_duration: float = 0.0 # In seconds
-var silence_duration: float = 0.0 # In seconds
-@export var attack_range: int = 0
-@export var physical_attack_power: int = 0
-@export var physical_attack_power_percent: float = 0
-@export var magic_attack_power: int = 0
-@export var magic_attack_power_percent: float = 0
-@export var attack_speed: float = 0 # Attacks per second
-@export var attack_speed_percent: float = 0
-@export var move_speed: float = 0 # Tiles per second
-@export var move_speed_percent: float = 0
-@export var freeze_duration: float = 0 # In seconds
-@export var life_steal_percent: float = 0
-@export var hp_regeneration_points: int = 0 # Points per second
-@export var hp_regeneration_points_percent: float = 0
-@export var mana_regeneration_points: int = 0 # Points per second
-@export var mana_regeneration_points_percent: float = 0
-
-@export var agility: int = 0
-@export var strength: int = 0
-@export var intelligence: int = 0
+var _info: Dictionary[String, float] = {}
 
 const CLEAVE_PERCENT = "cleave_percent"
 const CLEAVE_RANGE = "cleave_range" # In tiles
+
 const HP = "hp"
 const MANA = "mana"
 const PHYSICAL_DEFENSE_PERCENT = "physical_defense_percent"
@@ -70,7 +43,31 @@ const AGILITY = "agility"
 const STRENGTH = "strength"
 const INTELLIGENCE = "intelligence"
 # ---------------------------------
+func _init() -> void:
+	super._init()
 
+func accumulate_info(info_to_add: Dictionary[String, float]) -> Dictionary[String, float]:
+	for key in info_to_add:
+		if _info.has(key):
+			_info[key] += info_to_add[key]
+		else:
+			_info[key] = info_to_add[key]
+	return _info
+
+static func aux_accumulate(current: Dictionary[String, float], info_to_add: Dictionary[String, float]) -> Dictionary[String, float]:
+	for key in info_to_add:
+		if current.has(key):
+			current[key] += info_to_add[key]
+		else:
+			current[key] = info_to_add[key]
+	return current
+
+static func get_extra_info_by_attributes(info: Dictionary[String, float]) -> Dictionary[String, float]:
+	var result: Dictionary[String, float] = {}
+	aux_accumulate(result, get_extra_stats_by_strength(info.get(STRENGTH, 0)))
+	aux_accumulate(result, get_extra_stats_by_agility(info.get(AGILITY, 0)))
+	aux_accumulate(result, get_extra_stats_by_intelligence(info.get(INTELLIGENCE, 0)))
+	return result
 
 # ---------------------------------
 
@@ -79,68 +76,16 @@ static func get_instance_from_dict(dict: Dictionary) -> CombatStats:
 	ObjectHelpers.from_dict(instance, dict)
 	return instance
 
-func accumulate_combat_stats(stats_to_accumulate: CombatStats) -> CombatStats:
-	hp += stats_to_accumulate.hp
-	mana += stats_to_accumulate.mana
-	physical_defense_percent += stats_to_accumulate.physical_defense_percent
-	magic_defense_percent += stats_to_accumulate.magic_defense_percent
-	evasion += stats_to_accumulate.evasion
-	crit_chance += stats_to_accumulate.crit_chance
-	crit_multiplier += stats_to_accumulate.crit_multiplier
-	stun_chance += stats_to_accumulate.stun_chance
-	stun_duration += stats_to_accumulate.stun_duration
-	attack_range += stats_to_accumulate.attack_range
-	physical_attack_power += stats_to_accumulate.physical_attack_power
-	magic_attack_power += stats_to_accumulate.magic_attack_power
-	freeze_duration += stats_to_accumulate.freeze_duration
-	attack_speed += stats_to_accumulate.attack_speed
-	move_speed += stats_to_accumulate.move_speed
-	attack_speed_percent += stats_to_accumulate.attack_speed_percent
-	move_speed_percent += stats_to_accumulate.move_speed_percent
-	magic_attack_power_percent += stats_to_accumulate.magic_attack_power_percent
-	physical_attack_power_percent += stats_to_accumulate.physical_attack_power_percent
-	life_steal_percent += stats_to_accumulate.life_steal_percent
-	hp_regeneration_points += stats_to_accumulate.hp_regeneration_points
-	hp_regeneration_points_percent += stats_to_accumulate.hp_regeneration_points_percent
-	mana_regeneration_points += stats_to_accumulate.mana_regeneration_points
-	mana_regeneration_points_percent += stats_to_accumulate.mana_regeneration_points_percent
-	silence_duration = stats_to_accumulate.silence_duration
-
-	agility += stats_to_accumulate.agility
-	strength += stats_to_accumulate.strength
-	intelligence += stats_to_accumulate.intelligence
-
-	return self
-	
-func get_combat_stats_instance() -> CombatStats:
-	var result = CombatStats.new()
-	result.accumulate_combat_stats(self)
-	return result
-
-func get_total_stats_including_extras_by_attributes() -> CombatStats:
-	# This function adds certain values according to the attributes strength, agility, and intelligence, such as hp, mana, damage, etc.
-	var result = CombatStats.new()
-	result.accumulate_combat_stats(self)
-	result.accumulate_combat_stats(_get_extra_stats_by_attributes())
-	return result
-
-func _get_extra_stats_by_attributes() -> CombatStats:
-	var attr = CombatStats.new()
-	attr.accumulate_combat_stats(get_extra_stats_by_strength(strength))
-	attr.accumulate_combat_stats(get_extra_stats_by_agility(agility))
-	attr.accumulate_combat_stats(get_extra_stats_by_intelligence(intelligence))
-	return attr
-
 const _HP_BY_STRENGTH = 20; const _HP_REGEN_BY_STRENGTH = 0.1; const _PHYSICAL_ATTACK_POWER_BY_STRENGTH = 0.5
 static var STRENGTH_PROPERTIES = "Gives " + StringHelpers.format_float(_HP_BY_STRENGTH) + " hp, " + \
 	StringHelpers.format_float(_HP_REGEN_BY_STRENGTH) + " hp regen and " + \
 	StringHelpers.format_float(_PHYSICAL_ATTACK_POWER_BY_STRENGTH) + " physical attack power per point of strength"
-static func get_extra_stats_by_strength(_str: int) -> CombatStats:
-	var attr = CombatStats.new()
-	attr.hp = _str * _HP_BY_STRENGTH
-	attr.hp_regeneration_points = _str * _HP_REGEN_BY_STRENGTH
-	attr.physical_attack_power = _str * _PHYSICAL_ATTACK_POWER_BY_STRENGTH
-	return attr
+static func get_extra_stats_by_strength(_str: int) -> Dictionary[String, float]:
+	var result: Dictionary[String, float] = {}
+	result[HP] = _str * _HP_BY_STRENGTH
+	result[HP_REGENERATION_POINTS] = _str * _HP_REGEN_BY_STRENGTH
+	result[PHYSICAL_ATTACK_POWER] = _str * _PHYSICAL_ATTACK_POWER_BY_STRENGTH
+	return result
 
 const _MANA_BY_INTELLIGENCE = 10; const _MANA_REGEN_BY_INTELLIGENCE = 0.05; const _MAGIC_ATTACK_POWER_BY_INTELLIGENCE = 0.25
 const _MAGIC_DEFENSE_BY_INTELLIGENCE = 1 / _AUX
@@ -148,13 +93,13 @@ static var INTELLIGENCE_PROPERTIES = "Gives " + StringHelpers.format_float(_MANA
 	StringHelpers.format_float(_MANA_REGEN_BY_INTELLIGENCE) + " mana regen, " + \
 	StringHelpers.format_float(_MAGIC_ATTACK_POWER_BY_INTELLIGENCE) + " magic attack power and " + \
 	StringHelpers.format_percent(_MAGIC_DEFENSE_BY_INTELLIGENCE, true, 1) + " magic defense per point of intelligence"
-static func get_extra_stats_by_intelligence(_int: int) -> CombatStats:
-	var attr = CombatStats.new()
-	attr.mana = _int * _MANA_BY_INTELLIGENCE
-	attr.mana_regeneration_points = _int * _MANA_REGEN_BY_INTELLIGENCE
-	attr.magic_attack_power = _int * _MAGIC_ATTACK_POWER_BY_INTELLIGENCE
-	attr.magic_defense_percent = _int * _MAGIC_DEFENSE_BY_INTELLIGENCE
-	return attr
+static func get_extra_stats_by_intelligence(_int: int) -> Dictionary[String, float]:
+	var result: Dictionary[String, float] = {}
+	result[MANA] = _int * _MANA_BY_INTELLIGENCE
+	result[MANA_REGENERATION_POINTS] = _int * _MANA_REGEN_BY_INTELLIGENCE
+	result[MAGIC_ATTACK_POWER] = _int * _MAGIC_ATTACK_POWER_BY_INTELLIGENCE
+	result[MAGIC_DEFENSE_PERCENT] = _int * _MAGIC_DEFENSE_BY_INTELLIGENCE
+	return result
 
 const _AUX: float = 1000
 const _ATTACK_SPEED_BY_AGILITY: float = 1 / _AUX
@@ -163,127 +108,270 @@ const _DEFENSE_BY_AGILITY: float = 1 / _AUX
 static var AGILITY_PROPERTIES = "Gives " + StringHelpers.format_percent(_ATTACK_SPEED_BY_AGILITY, true, 1) + " attack speed, " + \
 	StringHelpers.format_percent(_EVASION_BY_AGILITY, true, 1) + " evasion and " + \
 	StringHelpers.format_percent(_DEFENSE_BY_AGILITY, true, 1) + " defense per point of agility"
-static func get_extra_stats_by_agility(_agi: int) -> CombatStats:
-	var attr = CombatStats.new()
-	attr.attack_speed = _agi * _ATTACK_SPEED_BY_AGILITY # 1000 of agility = 1 = Cada segundo 1 ataque
-	attr.evasion = _agi * _EVASION_BY_AGILITY # 1000 of agility = 1 = 100% evasion
-	attr.physical_defense_percent = _agi * _DEFENSE_BY_AGILITY # 1000 of agility = 1 = 100% defense
-	return attr
+static func get_extra_stats_by_agility(_agi: int) -> Dictionary[String, float]:
+	var result: Dictionary[String, float] = {}
+	result[ATTACK_SPEED] = _agi * _ATTACK_SPEED_BY_AGILITY # 1000 of agility = 1 = Cada segundo 1 ataque
+	result[EVASION] = _agi * _EVASION_BY_AGILITY # 1000 of agility = 1 = 100% evasion
+	result[PHYSICAL_DEFENSE_PERCENT] = _agi * _DEFENSE_BY_AGILITY # 1000 of agility = 1 = 100% defense
+	return result
+
+
+# region 	SETTERs
+func set_info(info: Dictionary[String, float]) -> void:
+	_info = info
+func set_value(prop: String, value: float) -> void:
+	_info[prop] = value
+func set_value_i(prop: String, value: int) -> void:
+	_info[prop] = value
+
+func set_hp(value: int) -> void:
+	set_value_i(HP, value)
+func set_mana(value: int) -> void:
+	set_value_i(MANA, value)
+func set_physical_defense_percent(value: float) -> void:
+	set_value(PHYSICAL_DEFENSE_PERCENT, value)
+func set_magic_defense_percent(value: float) -> void:
+	set_value(MAGIC_DEFENSE_PERCENT, value)
+func set_evasion(value: float) -> void:
+	set_value(EVASION, value)
+func set_crit_chance(value: float) -> void:
+	set_value(CRIT_CHANCE, value)
+func set_crit_multiplier(value: float) -> void:
+	set_value(CRIT_MULTIPLIER, value)
+func set_stun_chance(value: float) -> void:
+	set_value(STUN_CHANCE, value)
+func set_stun_duration(value: float) -> void:
+	set_value(STUN_DURATION, value)
+func set_silence_duration(value: float) -> void:
+	set_value(SILENCE_DURATION, value)
+func set_attack_range(value: int) -> void:
+	set_value_i(ATTACK_RANGE, value)
+func set_physical_attack_power(value: int) -> void:
+	set_value_i(PHYSICAL_ATTACK_POWER, value)
+func set_physical_attack_power_percent(value: float) -> void:
+	set_value(PHYSICAL_ATTACK_POWER_PERCENT, value)
+func set_magic_attack_power(value: int) -> void:
+	set_value_i(MAGIC_ATTACK_POWER, value)
+func set_magic_attack_power_percent(value: float) -> void:
+	set_value(MAGIC_ATTACK_POWER_PERCENT, value)
+func set_attack_speed(value: float) -> void:
+	set_value(ATTACK_SPEED, value)
+func set_attack_speed_percent(value: float) -> void:
+	set_value(ATTACK_SPEED_PERCENT, value)
+func set_move_speed(value: float) -> void:
+	set_value(MOVE_SPEED, value)
+func set_move_speed_percent(value: float) -> void:
+	set_value(MOVE_SPEED_PERCENT, value)
+func set_freeze_duration(value: float) -> void:
+	set_value(FREEZE_DURATION, value)
+func set_life_steal_percent(value: float) -> void:
+	set_value(LIFE_STEAL_PERCENT, value)
+func set_hp_regeneration_points(value: int) -> void:
+	set_value_i(HP_REGENERATION_POINTS, value)
+func set_hp_regeneration_points_percent(value: float) -> void:
+	set_value(HP_REGENERATION_POINTS_PERCENT, value)
+func set_mana_regeneration_points(value: int) -> void:
+	set_value_i(MANA_REGENERATION_POINTS, value)
+func set_mana_regeneration_points_percent(value: float) -> void:
+	set_value(MANA_REGENERATION_POINTS_PERCENT, value)
+func set_percent_mana_to_burn(value: float) -> void:
+	set_value(PERCENT_MANA_TO_BURN, value)
+func set_chance_to_ignore_evasion(value: float) -> void:
+	set_value(CHANCE_TO_IGNORE_EVASION, value)
+func set_agility(value: int) -> void:
+	set_value_i(AGILITY, value)
+func set_strength(value: int) -> void:
+	set_value_i(STRENGTH, value)
+func set_intelligence(value: int) -> void:
+	set_value_i(INTELLIGENCE, value)
+
+# endregion SETTERs
 
 # region 	GETTERs
+func _get_value(key: String) -> float:
+	return _info.get(key, 0)
+func _get_value_i(key: String) -> int:
+	return _info.get(key, 0)
+
+func get_info() -> Dictionary[String, float]:
+	return _info
+	
+func get_total_info_including_extras_by_attributes() -> Dictionary[String, float]:
+	var result: Dictionary[String, float] = {}
+	aux_accumulate(result, _info)
+	aux_accumulate(result, get_extra_info_by_attributes(result))
+	return result
 
 func grants_defenses() -> bool:
-	if physical_defense_percent > 0: return true
-	if magic_defense_percent > 0: return true
-	if evasion > 0: return true
-	if hp_regeneration_points > 0 or hp_regeneration_points_percent > 0: return true
-	if mana_regeneration_points > 0 or mana_regeneration_points_percent > 0: return true
+	if get_physical_defense_percent() > 0: return true
+	if get_magic_defense_percent() > 0: return true
+	if get_evasion() > 0: return true
+	if get_hp_regeneration_points() > 0 or get_hp_regeneration_points_percent() > 0: return true
+	if get_mana_regeneration_points() > 0 or get_mana_regeneration_points_percent() > 0: return true
 	return false
 
 func grants_attack_bonuses() -> bool:
-	if physical_attack_power > 0 or physical_attack_power_percent > 0: return true
-	if magic_attack_power > 0 or magic_attack_power_percent > 0: return true
-	if attack_speed > 0 or attack_speed_percent > 0: return true
-	if crit_chance > 0: return true
-	if stun_chance > 0: return true
-	if life_steal_percent > 0: return true
+	if get_physical_attack_power() > 0 or get_physical_attack_power_percent() > 0: return true
+	if get_magic_attack_power() > 0 or get_magic_attack_power_percent() > 0: return true
+	if get_attack_speed() > 0 or get_attack_speed_percent() > 0: return true
+	if get_crit_chance() > 0: return true
+	if get_stun_chance() > 0: return true
+	if get_life_steal_percent() > 0: return true
 	return false
 
-
-func has_hostil_stun_effect() -> bool:
-	if stun_duration > 0 && stun_chance == 0: return true
-
-	return false
-
-func has_hostil_silence_effect() -> bool:
-	if silence_duration > 0: return true
-
-	return false
+func hostile_stun() -> bool:
+	return get_stun_duration() > 0 && get_stun_chance() == 0
+func hostile_silence() -> bool:
+	return get_silence_duration() > 0
+func hostile_freeze() -> bool:
+	return get_freeze_duration() > 0
 
 func get_description() -> String:
 	var description = ""
 
-	if hp != 0:
-		description += str("- HP: ", hp, "\n")
+	if get_hp() != 0:
+		description += str("- HP: ", get_hp(), "\n")
 	
-	if mana != 0:
-		description += str("- Mana: ", mana, "\n")
+	if get_mana() != 0:
+		description += str("- Mana: ", get_mana(), "\n")
 
-	if physical_defense_percent != 0:
-		description += str("- Physical defense percent: ", StringHelpers.format_percent(physical_defense_percent), "\n")
+	if get_physical_defense_percent() != 0:
+		description += str("- Physical defense percent: ", StringHelpers.format_percent(get_physical_defense_percent()), "\n")
 
-	if magic_defense_percent != 0:
-		description += str("- Magic defense percent: ", StringHelpers.format_percent(magic_defense_percent), "\n")
+	if get_magic_defense_percent() != 0:
+		description += str("- Magic defense percent: ", StringHelpers.format_percent(get_magic_defense_percent()), "\n")
 
-	if evasion != 0:
-		description += str("- Evasion: ", StringHelpers.format_percent(evasion), "\n")
+	if get_evasion() != 0:
+		description += str("- Evasion: ", StringHelpers.format_percent(get_evasion()), "\n")
 
-	if crit_chance != 0:
-		description += str("- Crit chance: ", StringHelpers.format_percent(crit_chance), "\n")
+	if get_crit_chance() != 0:
+		description += str("- Crit chance: ", StringHelpers.format_percent(get_crit_chance()), "\n")
 
-	if crit_multiplier != 0:
-		description += str("- Crit multiplier: ", StringHelpers.format_float_compact(crit_multiplier), "\n")
+	if get_crit_multiplier() != 0:
+		description += str("- Crit multiplier: ", StringHelpers.format_float_compact(get_crit_multiplier()), "\n")
 
-	if stun_chance != 0:
-		description += str("- Stun chance: ", StringHelpers.format_percent(stun_chance), "\n")
+	if get_stun_chance() != 0:
+		description += str("- Stun chance: ", StringHelpers.format_percent(get_stun_chance()), "\n")
 
-	if stun_duration != 0:
-		description += str("- Stun duration: ", StringHelpers.format_float_compact(stun_duration), "s\n")
+	if get_stun_duration() != 0:
+		description += str("- Stun duration: ", StringHelpers.format_float_compact(get_stun_duration()), "s\n")
 
-	if attack_range != 0:
-		description += str("- Attack range: ", attack_range, "\n")
+	if get_attack_range() != 0:
+		description += str("- Attack range: ", get_attack_range(), "\n")
 
-	if physical_attack_power != 0:
-		description += str("- Physical attack power: ", physical_attack_power, "\n")
+	if get_physical_attack_power() != 0:
+		description += str("- Physical attack power: ", get_physical_attack_power(), "\n")
 
-	if physical_attack_power_percent != 0:
-		description += str("- Physical attack power percent: ", StringHelpers.format_percent(physical_attack_power_percent), "\n")
+	if get_physical_attack_power_percent() != 0:
+		description += str("- Physical attack power percent: ", StringHelpers.format_percent(get_physical_attack_power_percent()), "\n")
 
-	if magic_attack_power != 0:
-		description += str("- Magic attack power: ", magic_attack_power, "\n")
+	if get_magic_attack_power() != 0:
+		description += str("- Magic attack power: ", get_magic_attack_power(), "\n")
 
-	if magic_attack_power_percent != 0:
-		description += str("- Magic attack power percent: ", StringHelpers.format_percent(magic_attack_power_percent), "\n")
+	if get_magic_attack_power_percent() != 0:
+		description += str("- Magic attack power percent: ", StringHelpers.format_percent(get_magic_attack_power_percent()), "\n")
 
-	if attack_speed != 0:
-		description += str("- Attack speed: ", StringHelpers.format_float_compact(attack_speed), "\n")
+	if get_attack_speed() != 0:
+		description += str("- Attack speed: ", StringHelpers.format_float_compact(get_attack_speed()), "\n")
 
-	if attack_speed_percent != 0:
-		description += str("- Attack speed percent: ", StringHelpers.format_percent(attack_speed_percent), "\n")
+	if get_attack_speed_percent() != 0:
+		description += str("- Attack speed percent: ", StringHelpers.format_percent(get_attack_speed_percent()), "\n")
 
-	if move_speed != 0:
-		description += str("- Move speed: ", StringHelpers.format_float_compact(move_speed), "\n")
+	if get_move_speed() != 0:
+		description += str("- Move speed: ", StringHelpers.format_float_compact(get_move_speed()), "\n")
 
-	if move_speed_percent != 0:
-		description += str("- Move speed percent: ", StringHelpers.format_percent(move_speed_percent), "\n")
+	if get_move_speed_percent() != 0:
+		description += str("- Move speed percent: ", StringHelpers.format_percent(get_move_speed_percent()), "\n")
 
-	if freeze_duration != 0:
-		description += str("- Freeze duration: ", StringHelpers.format_float_compact(freeze_duration), "\n")
+	if get_freeze_duration() != 0:
+		description += str("- Freeze duration: ", StringHelpers.format_float_compact(get_freeze_duration()), "\n")
 
-	if life_steal_percent != 0:
-		description += str("- Life steal percent: ", StringHelpers.format_percent(life_steal_percent), "\n")
+	if get_life_steal_percent() != 0:
+		description += str("- Life steal percent: ", StringHelpers.format_percent(get_life_steal_percent()), "\n")
 
-	if hp_regeneration_points != 0:
-		description += str("- HP regeneration points: ", hp_regeneration_points, "\n")
+	if get_hp_regeneration_points() != 0:
+		description += str("- HP regeneration points: ", get_hp_regeneration_points(), "\n")
 
-	if hp_regeneration_points_percent != 0:
-		description += str("- HP regeneration points percent: ", StringHelpers.format_percent(hp_regeneration_points_percent, true, 1), "\n")
+	if get_hp_regeneration_points_percent() != 0:
+		description += str("- HP regeneration points percent: ", StringHelpers.format_percent(get_hp_regeneration_points_percent(), true, 1), "\n")
 
-	if mana_regeneration_points != 0:
-		description += str("- Mana regeneration points: ", mana_regeneration_points, "\n")
-
-	if silence_duration != 0:
-		description += str("- Hostile silence duration: ", StringHelpers.format_float_compact(silence_duration), "\n")
+	if get_mana_regeneration_points() != 0:
+		description += str("- Mana regeneration points: ", get_mana_regeneration_points(), "\n")
 
 	return description
 
-func get_total_move_speed() -> float:
-	return clamp(move_speed + (move_speed * move_speed_percent), 1, 20)
+func get_hp() -> int:
+	return _get_value_i(HP)
+func get_mana() -> int:
+	return _get_value_i(MANA)
+func get_physical_defense_percent() -> float:
+	return _get_value(PHYSICAL_DEFENSE_PERCENT)
+func get_magic_defense_percent() -> float:
+	return _get_value(MAGIC_DEFENSE_PERCENT)
+func get_evasion() -> float:
+	return _get_value(EVASION)
+func get_crit_chance() -> float:
+	return _get_value(CRIT_CHANCE)
+func get_crit_multiplier() -> float:
+	return _get_value(CRIT_MULTIPLIER)
+func get_stun_chance() -> float:
+	return _get_value(STUN_CHANCE)
+func get_stun_duration() -> float:
+	return _get_value(STUN_DURATION)
+func get_silence_duration() -> float:
+	return _get_value(SILENCE_DURATION)
+func get_attack_range() -> int:
+	return _get_value_i(ATTACK_RANGE)
+func get_physical_attack_power() -> int:
+	return int(_get_value_i(PHYSICAL_ATTACK_POWER) * (1 + _get_value(PHYSICAL_ATTACK_POWER_PERCENT)))
+func get_physical_attack_power_percent() -> float:
+	return _get_value(PHYSICAL_ATTACK_POWER_PERCENT)
+func get_magic_attack_power() -> int:
+	return int(_get_value_i(MAGIC_ATTACK_POWER) * (1 + _get_value(MAGIC_ATTACK_POWER_PERCENT)))
+func get_magic_attack_power_percent() -> float:
+	return _get_value(MAGIC_ATTACK_POWER_PERCENT)
+func get_attack_speed() -> float:
+	return _get_value(ATTACK_SPEED)
+func get_attack_speed_percent() -> float:
+	return _get_value(ATTACK_SPEED_PERCENT)
+func get_move_speed() -> float:
+	return _get_value(MOVE_SPEED)
+func get_move_speed_percent() -> float:
+	return _get_value(MOVE_SPEED_PERCENT)
+func get_freeze_duration() -> float:
+	return _get_value(FREEZE_DURATION)
+func get_life_steal_percent() -> float:
+	return _get_value(LIFE_STEAL_PERCENT)
+func get_hp_regeneration_points() -> int:
+	return _get_value_i(HP_REGENERATION_POINTS)
+func get_hp_regeneration_points_percent() -> float:
+	return _get_value(HP_REGENERATION_POINTS_PERCENT)
+func get_mana_regeneration_points() -> int:
+	return _get_value_i(MANA_REGENERATION_POINTS)
+func get_mana_regeneration_points_percent() -> float:
+	return _get_value(MANA_REGENERATION_POINTS_PERCENT)
+func get_percent_mana_to_burn() -> float:
+	return _get_value(PERCENT_MANA_TO_BURN)
+func get_chance_to_ignore_evasion() -> float:
+	return _get_value(CHANCE_TO_IGNORE_EVASION)
+func get_agility() -> int:
+	return _get_value_i(AGILITY)
+func get_strength() -> int:
+	return _get_value_i(STRENGTH)
+func get_intelligence() -> int:
+	return _get_value_i(INTELLIGENCE)
 
+func get_total_move_speed() -> float:
+	return clamp(get_move_speed() + (get_move_speed() * get_move_speed_percent()), 1, 20)
 func get_total_attack_speed() -> float:
-	return clamp(attack_speed + (attack_speed * attack_speed_percent), 0.1, 20)
+	return clamp(get_attack_speed() + (get_attack_speed() * get_attack_speed_percent()), 0.1, 20)
+
+func get_total_magic_damage(base_damage: int) -> int:
+	return int(base_damage * get_magic_power_multiplier())
+func get_magic_power_multiplier() -> float:
+	return 1.0 + get_magic_attack_power() / 100.0
 
 func get_critic_description() -> String:
-	if crit_chance == 0: return ""
-	return StringHelpers.format_percent(crit_chance) + " (*" + StringHelpers.format_float_compact(crit_multiplier) + ")"
+	if get_crit_chance() == 0: return ""
+	return StringHelpers.format_percent(get_crit_chance()) + " (*" + StringHelpers.format_float_compact(get_crit_multiplier()) + ")"
 # endregion GETTERs

@@ -19,12 +19,19 @@ static func deep_clone(original: Object) -> Object:
 	if original == null or original.get_script() == null:
 		push_error("❗ deep_clone: Invalid object or missing script.")
 		return null
-
+	var start_time := Time.get_ticks_usec()
 	var new_instance = original.get_script().new()
+	print("script name: " + original.get_script().resource_path)
+	print("get_script().new() took " + str(Time.get_ticks_usec() - start_time) + " microseconds")
+	start_time = Time.get_ticks_usec()
 	var data := to_dict(original)
-	return from_dict(new_instance, data)
+	print("to_dict took " + str(Time.get_ticks_usec() - start_time) + " microseconds")
+	start_time = Time.get_ticks_usec()
+	var result = from_dict(new_instance, data)
+	print("from_dict took " + str(Time.get_ticks_usec() - start_time) + " microseconds")
+	return result
 
-static func to_dict(obj: Object, just_my_vars: bool = false) -> Dictionary:
+static func to_dict(obj: Object) -> Dictionary:
 	if obj == null:
 		return {}
 
@@ -36,7 +43,7 @@ static func to_dict(obj: Object, just_my_vars: bool = false) -> Dictionary:
 
 		var usage = prop.usage
 		var is_valid = (usage & PROPERTY_USAGE_SCRIPT_VARIABLE) != 0 or FUNDAMENTAL_PROPERTIES.has(name)
-		if just_my_vars and (usage & PROPERTY_USAGE_SCRIPT_VARIABLE) == 0:
+		if (usage & PROPERTY_USAGE_SCRIPT_VARIABLE) == 0:
 			continue
 		if not is_valid:
 			continue
@@ -45,11 +52,11 @@ static func to_dict(obj: Object, just_my_vars: bool = false) -> Dictionary:
 		match typeof(value):
 			TYPE_OBJECT:
 				if value != null and not (value is Entity): # evitamos recursividad infinita
-					dict[name] = to_dict(value, just_my_vars)
+					dict[name] = to_dict(value)
 				else:
 					dict[name] = value
 			TYPE_ARRAY:
-				dict[name] = array_to_dict_array(value, just_my_vars)
+				dict[name] = array_to_dict_array(value)
 			_:
 				dict[name] = _serialize_variant(value)
 	return dict
@@ -146,14 +153,14 @@ static func _get_expected_script(data: Dictionary) -> Script:
 			return load(data[key])
 	return null
 
-static func array_to_dict_array(array: Array, just_my_vars: bool = false) -> Array[Dictionary]:
+static func array_to_dict_array(array: Array) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	for item in array:
 		match typeof(item):
 			TYPE_DICTIONARY:
 				result.append(item)
 			TYPE_OBJECT:
-				result.append(to_dict(item, just_my_vars))
+				result.append(to_dict(item))
 			TYPE_RECT2, TYPE_VECTOR2:
 				result.append(_serialize_variant(item))
 			TYPE_NIL:

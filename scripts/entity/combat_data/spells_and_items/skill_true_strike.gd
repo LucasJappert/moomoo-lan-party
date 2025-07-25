@@ -10,7 +10,6 @@ static func create_and_add_instance() -> void:
 
 	aux_array[0] = [0.4, 0.7, 1]
 	for i in AVAILABLE_LEVELS:
-		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 0
 		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
 		SKILLS[NAME].item_skill_base[i].float_dict[CombatStats.CHANCE_TO_IGNORE_EVASION] = aux_array[0][i]
 		SKILLS[NAME].item_skill_base[i].description = "Grants " + StringHelpers.format_percent(aux_array[0][i]) + " chance to ignore the target's evasion."

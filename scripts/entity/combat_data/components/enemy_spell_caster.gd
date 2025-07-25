@@ -63,7 +63,7 @@ func _try_cast_spell_to_an_ally(skill_to_cast: Skill) -> bool:
 	return false
 
 func _try_cast_offensive_spell_to_an_ally(skill_to_cast: Skill) -> bool:
-	if skill_to_cast.get_learned_skill().stats.grants_attack_bonuses():
+	if skill_to_cast.get_learned_skill().grants_attack_bonuses():
 		if not _enemy_owner.effects_helper.get_effect_by_name(skill_to_cast.get_learned_skill().my_name):
 			return skill_to_cast.use(_enemy_owner, _enemy_owner)
 

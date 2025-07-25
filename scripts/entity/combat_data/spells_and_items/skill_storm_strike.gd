@@ -14,6 +14,7 @@ static func create_and_add_instance() -> void:
 	aux_array[3] = [20, 50, 100] # base damage
 	aux_array[4] = [0.2, 0.3, 0.4] # extra damage by intelligence
 	for i in AVAILABLE_LEVELS:
+		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 7
 		SKILLS[NAME].item_skill_base[i].apply_to_enemy = true
 		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
 		SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[0][i]
@@ -45,6 +46,6 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 		_di.attacker_name = _caster.name
 
 		target.server_receive_damage(_di, _caster)
-		target.rpc_handler.add_animation(AnimationsHelper.ANIMATION_NAMES.LIGHTNING)
+		AnimationsHelper.apply_animation(target, AnimationsHelper.ANIMATION_NAMES.LIGHTNING)
 
 	return true

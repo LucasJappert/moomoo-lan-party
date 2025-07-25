@@ -73,8 +73,8 @@ func post_ready_combat_data() -> void:
 
 	if not GameManager.AM_I_HOST: return
 
-	if current_hp == 0: current_hp = get_total_hp()
-	if current_mana == 0: current_mana = get_total_mana()
+	if current_hp == 0: current_hp = get_full_health()
+	if current_mana == 0: current_mana = get_full_mana()
 
 	# for skill_base in SkillBase.REGISTERED_SKILLS:
 	# 	skill_base.actions_on_load_skills(my_owner(), _skills)
@@ -105,7 +105,7 @@ func server_execute_physical_damage(_target: Entity) -> void:
 	if my_owner().multiplayer.is_server() == false: return
 	if _target == null: return
 
-	var base_damage = get_physical_attack_power()
+	var base_damage := my_owner().cache_total_stats.get_physical_attack_power()
 	
 	var critical_damage = try_critical_hit(base_damage)
 	var total_damage = base_damage + critical_damage
@@ -144,7 +144,7 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
 		registered_skill.actions_after_effective_hit(_attacker, my_owner(), _di)
 
-	my_owner().rpc_handler.receive_damage_or_heal(ObjectHelpers.to_dict(_di, true))
+	global_receive_damage_or_heal(_di)
 
 	update_current_hp(-_di.total_damage, _attacker)
 
@@ -157,13 +157,13 @@ func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void
 	if current_hp <= 0: return
 
 	current_hp += value_to_increase
-	current_hp = clamp(current_hp, 0, get_total_hp())
+	current_hp = clamp(current_hp, 0, get_full_health())
 
 	_actions_after_current_hp_updated(value_to_increase, _attacker)
 
 func update_current_mana(value_to_increase: int) -> void:
 	if value_to_increase == 0: return
-	current_mana = clamp(current_mana + value_to_increase, 0, get_total_mana())
+	current_mana = clamp(current_mana + value_to_increase, 0, cache_total_stats.get_mana())
 	my_owner().hud.update_mana_bar()
 
 func update_active_skills(_delta: float) -> void:
@@ -189,7 +189,7 @@ func add_active_skill(_skill: SkillBase) -> bool:
 	_active_skills.append(_skill)
 	_try_to_apply_effect(_skill)
 
-	if _skill.learned_skill.stats.silence_duration > 0:
+	if _skill.learned_skill.get_silence_duration() > 0:
 		SilenceEffect.attach_to(my_owner().front_animations_node, _skill.learned_skill.duration_in_seconds)
 
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
@@ -216,23 +216,23 @@ func _try_to_apply_effect(_skill: SkillBase):
 
 func apply_stun(_seconds: float) -> void:
 	var _stats = CombatStats.new()
-	_stats.stun_duration = _seconds
-	var effect = CombatEffect.get_temporal_effect(CombatEffect.STUN_NAME, _seconds, 1, _stats)
+	_stats.set_stun_duration(_seconds)
+	var effect = CombatEffect.get_temporal_effect(CombatEffect.STUN_NAME, _seconds, 1, _stats.get_info())
 	effects_helper.add_effect(effect)
 
 func set_current_hp_and_mana() -> void:
 	update_cache_total_stats()
-	current_hp = get_total_hp()
-	current_mana = get_total_mana()
+	current_hp = cache_total_stats.get_hp()
+	current_mana = cache_total_stats.get_mana()
 
 func _verify_combat_states_after_stats_change() -> void:
 	is_stunned = false
 	is_silenced = false
 
 	for effect in effects_helper.get_effects():
-		if effect.stats.has_hostil_stun_effect():
+		if effect.hostile_stun():
 			is_stunned = true
-		if effect.stats.has_hostil_silence_effect():
+		if effect.hostile_silence():
 			is_silenced = true
 
 	if not is_stunned:
@@ -252,7 +252,7 @@ func _actions_after_current_hp_updated(value_to_increase: int = 0, _attacker: En
 
 	if ObjectHelpers.is_null(_attacker): return
 
-	var percent_hp_lost = abs(value_to_increase) / float(get_total_hp())
+	var percent_hp_lost = abs(value_to_increase) / float(get_full_health())
 	var exp_by_damage = Enemy.get_enemy_exp_when_dead() * percent_hp_lost
 	if _attacker: _try_to_give_experience_to_players(exp_by_damage) # Give experience when an enemy takes damage
 
@@ -282,8 +282,10 @@ func _try_to_add_gold_to_players_on_enemy_die(_attacker: Entity) -> void:
 	for player in GameManager.get_players():
 		player.increment_current_gold(earned_gold)
 
-func update_base_stats(new_stats: CombatStats) -> void:
-	my_owner().combat_stats = new_stats
+func update_base_stats(new_info: Dictionary[String, float]) -> void:
+	if self is Player:
+		print("Updating base stats for player: ", my_owner().name)
+	my_owner().combat_stats.set_info(new_info)
 	update_cache_total_stats()
 
 func update_item(item: Item, index: int) -> bool:
@@ -387,7 +389,7 @@ func use_charged_skill(_target: Entity) -> void:
 	if learned_skill.apply_to_enemy and _target.name == my_owner().name: return uncharge_skill()
 
 	# Update the target to attack if the skill is not friendly
-	# if not learned_skill.stats.is_owner_friendly1: set_target_to_attack(_target)
+	# if not learned_skill.is_owner_friendly1: set_target_to_attack(_target)
 
 	charged_skill.use(my_owner(), _target)
 
@@ -398,56 +400,58 @@ func toogle_keep_ground() -> void:
 # endregion SETTERs
 
 # region 	PRIVATE GETTERs
-func _get_total_stats(include_effects := true) -> CombatStats:
-	if not my_owner(): return null
+func _get_total_stats(include_effects := true) -> Dictionary[String, float]:
+	if not my_owner(): return {}
 	# This function returns the total of all combat_stats, including extras from effects and extras from attributes
-	var _total_stats := CombatStats.new()
-	_total_stats.accumulate_combat_stats(my_owner().combat_stats.get_total_stats_including_extras_by_attributes())
+	var _result: Dictionary[String, float] = my_owner().combat_stats.get_total_info_including_extras_by_attributes()
+	# CombatStats.aux_accumulate(_result, my_owner().combat_stats.get_total_info_including_extras_by_attributes())
 
-	if include_effects: _total_stats.accumulate_combat_stats(_get_extra_stats_by_effects().get_total_stats_including_extras_by_attributes())
-	_total_stats.accumulate_combat_stats(_get_extra_stats_by_skills().get_total_stats_including_extras_by_attributes())
-	_total_stats.accumulate_combat_stats(_get_extra_stats_by_items().get_total_stats_including_extras_by_attributes())
+	if include_effects: CombatStats.aux_accumulate(_result, _get_combat_info_by_effects())
+	CombatStats.aux_accumulate(_result, _get_combat_info_by_skills())
+	CombatStats.aux_accumulate(_result, _get_combat_info_by_items())
 
-	return _total_stats
+	return _result
 
-func _get_extra_stats_by_effects() -> CombatStats:
-	var extra_stats = CombatStats.new()
+func _get_combat_info_by_effects() -> Dictionary[String, float]:
+	var result: Dictionary[String, float] = {}
 	for effect in effects_helper.get_effects():
-		if effect.stats.has_hostil_stun_effect(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
-		extra_stats.accumulate_combat_stats(effect.stats)
-	return extra_stats
+		if effect.hostile_stun(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
+		CombatStats.aux_accumulate(result, effect.get_info())
+	CombatStats.aux_accumulate(result, CombatStats.get_extra_info_by_attributes(result))
+	return result
 
-func _get_extra_stats_by_skills() -> CombatStats:
-	var extra_stats = CombatStats.new()
+func _get_combat_info_by_skills() -> Dictionary[String, float]:
+	var result: Dictionary[String, float] = {}
 	for skill in _skills:
 		if not skill: continue
-		var learned_skill = skill.get_learned_skill()
+		var learned_skill := skill.get_learned_skill()
 		if not learned_skill: continue
 		if learned_skill.create_effect: continue
-		if learned_skill.stats.has_hostil_stun_effect(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
-		extra_stats.accumulate_combat_stats(learned_skill.stats)
-	return extra_stats
+		if learned_skill.hostile_stun(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
+		CombatStats.aux_accumulate(result, learned_skill.float_dict)
+	CombatStats.aux_accumulate(result, CombatStats.get_extra_info_by_attributes(result))
+	return result
 
-func _get_extra_stats_by_items() -> CombatStats:
-	var extra_stats = CombatStats.new()
+func _get_combat_info_by_items() -> Dictionary[String, float]:
+	var result: Dictionary[String, float] = {}
 	for _item in _items:
 		if not _item: continue
 		if _item.is_consumable: continue
 		if _item.type == SkillType.ACTIVE: continue
-		if _item.stats.has_hostil_stun_effect(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
-		extra_stats.accumulate_combat_stats(_item.stats)
-	return extra_stats
+		if _item.hostile_stun(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
+		CombatStats.aux_accumulate(result, _item.float_dict)
+	return result
 
 func _check_evade(_di: DamageInfo, total_stats: CombatStats) -> bool:
 	if not _di.can_be_evaded: return false
 
 	if _di.damage_type != DamageType.PHYSICAL: return false # Evasion verification (only for physical damage)
 
-	if not GlobalsEntityHelpers.roll_chance(total_stats.evasion): return false
+	if not GlobalsEntityHelpers.roll_chance(total_stats.get_evasion()): return false
 
 	# TODO: Crear un helper para enviar mensajes
 	var sm = ServerMessage.new("Dodge", Vector3(0, 0.5, 1))
-	my_owner().rpc_handler.server_message(ObjectHelpers.to_dict(sm, true))
+	self._hud.show_popup(sm.message, sm.get_color())
 
 	return true
 
@@ -455,15 +459,15 @@ func _apply_defenses(_di: DamageInfo, total_stats: CombatStats) -> void:
 	var damage_before_defense := _di.total_damage
 
 	if _di.damage_type == DamageType.PHYSICAL:
-		var reduced_damage := int(total_stats.physical_defense_percent * damage_before_defense)
-		_di.critical = _di.critical - int(total_stats.physical_defense_percent * _di.critical)
+		var reduced_damage := int(total_stats.get_physical_defense_percent() * damage_before_defense)
+		_di.critical = _di.critical - int(total_stats.get_physical_defense_percent() * _di.critical)
 		var total_damage: int = _di.total_damage - reduced_damage
 		if total_damage < 0: total_damage = 0
 		_di.total_damage = total_damage
 
 	if _di.damage_type == DamageType.MAGIC:
-		var reduced_damage := int(total_stats.magic_defense_percent * damage_before_defense)
-		_di.critical = _di.critical - int(total_stats.magic_defense_percent * _di.critical)
+		var reduced_damage := int(total_stats.get_magic_defense_percent() * damage_before_defense)
+		_di.critical = _di.critical - int(total_stats.get_magic_defense_percent() * _di.critical)
 		var total_damage: int = _di.total_damage - reduced_damage
 		if total_damage < 0: total_damage = 0
 		_di.total_damage = total_damage
@@ -471,29 +475,19 @@ func _apply_defenses(_di: DamageInfo, total_stats: CombatStats) -> void:
 
 # region GETTERs
 func is_dead() -> bool: return current_hp <= 0
-func get_total_magic_damage(base_damage: int) -> int:
-	return int(base_damage * get_magic_power_multiplier())
-func get_magic_power_multiplier() -> float:
-	return 1.0 + get_magic_attack_power() / 100.0
-func get_physical_attack_power() -> int:
-	return int(cache_total_stats.physical_attack_power * (1 + cache_total_stats.physical_attack_power_percent))
-func get_magic_attack_power() -> int:
-	return int(cache_total_stats.magic_attack_power * (1 + cache_total_stats.magic_attack_power_percent))
 func try_critical_hit(base_value: int) -> int:
-	if GlobalsEntityHelpers.roll_chance(cache_total_stats.crit_chance):
-		return int(base_value * cache_total_stats.crit_multiplier)
+	if GlobalsEntityHelpers.roll_chance(cache_total_stats.get_crit_chance()):
+		return int(base_value * cache_total_stats.get_crit_multiplier())
 	return 0
 
-var cache_total_stats: CombatStats = CombatStats.new()
-var cache_total_stats_no_effects: CombatStats = CombatStats.new()
+var cache_total_stats := CombatStats.new()
+var cache_total_stats_no_effects := CombatStats.new()
 func update_cache_total_stats() -> void:
-	cache_total_stats = _get_total_stats()
-	cache_total_stats_no_effects = _get_total_stats(false)
+	cache_total_stats.set_info(_get_total_stats())
+	cache_total_stats_no_effects.set_info(_get_total_stats(false))
 
 	_verify_combat_states_after_stats_change()
 
-func get_attack_range() -> int:
-	return cache_total_stats.attack_range
 
 func my_owner() -> Entity:
 	return self
@@ -514,11 +508,11 @@ func get_learned_skill(p_name: String) -> ItemSkillBase:
 		if skill.get_learned_skill().my_name == p_name: return skill.get_learned_skill()
 	return null
 
-func get_total_hp() -> int:
-	return cache_total_stats.hp
+func get_full_health() -> int:
+	return cache_total_stats.get_hp()
 
-func get_total_mana() -> int:
-	return cache_total_stats.mana
+func get_full_mana() -> int:
+	return cache_total_stats.get_mana()
 
 func get_target_entity() -> Entity:
 	return GameManager.get_entity(target_to_attack_name)
@@ -552,7 +546,7 @@ func try_physical_attack(_delta: float) -> bool:
 	return true
 
 func _get_nearest_target_in_range_attack():
-	var max_range = cache_total_stats.attack_range
+	var max_range = cache_total_stats.get_attack_range()
 	var start_pos = my_owner().global_position
 	if my_owner() is Player:
 		return GlobalsEntityHelpers.get_nearest_entity(start_pos, GameManager.get_enemies(), max_range)
@@ -580,8 +574,9 @@ func _execute_attack_or_launch_projectile(final_target: Entity) -> void:
 	if projectile_type == ProjectileBase.NONE:
 		return server_execute_physical_damage(final_target)
 
+	var physical_attack_power := my_owner().cache_total_stats.get_physical_attack_power()
 	for registered_projectile in ProjectileBase.REGISTERED_CLASSES:
-		if registered_projectile.try_launch(projectile_type, my_owner(), final_target, get_physical_attack_power()): return
+		if registered_projectile.try_launch(projectile_type, my_owner(), final_target, physical_attack_power): return
 
 	printerr("ERROR: Projectile type not found: " + projectile_type + " 🚀") # Should never happen
 
@@ -626,18 +621,18 @@ func _actions_after_1_second(_delta: float) -> void:
 	_apply_hp_regen(my_owner_stats)
 	_apply_mana_regen(my_owner_stats)
 
-	# if current_mana < get_total_mana():
-	# 	update_current_mana_for_damage(-my_owner_stats.mana_regeneration_points)
+	# if current_mana < get_mana():
+	# 	update_current_mana_for_damage(-my_owner_stats.get_mana_regeneration_points())
 
 func _apply_hp_regen(_stats: CombatStats) -> void:
-	if _stats.hp_regeneration_points == 0: return
-	if current_hp >= get_total_hp(): return
+	if _stats.get_hp_regeneration_points() == 0: return
+	if current_hp >= get_full_health(): return
 	
-	update_current_hp(_stats.hp_regeneration_points)
+	update_current_hp(_stats.get_hp_regeneration_points())
 
 func _apply_mana_regen(_stats: CombatStats) -> void:
-	if _stats.mana_regeneration_points == 0: return
-	if current_mana >= get_total_mana(): return
+	if _stats.get_mana_regeneration_points() == 0: return
+	if current_mana >= get_full_mana(): return
 
-	update_current_mana(_stats.mana_regeneration_points)
+	update_current_mana(_stats.get_mana_regeneration_points())
 # endregion SERVER METHODS

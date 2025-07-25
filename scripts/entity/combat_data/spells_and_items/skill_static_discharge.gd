@@ -24,7 +24,7 @@ static func actions_after_cast_skill(_owner: Entity, _skill_used: ItemSkillBase)
 static func _apply_strikes(_owner: Entity, _learned_skill: ItemSkillBase) -> void:
 	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(_owner.global_position, _owner.get_my_enemies(), _learned_skill.area_of_effect_in_tiles)
 	for enemy in nearest_enemies:
-		var magic_damage: int = enemy.get_total_hp() * _learned_skill.float_dict["percent_damage_from_max_hp"]
+		var magic_damage := int(enemy.get_full_health() * _learned_skill.float_dict["percent_damage_from_max_hp"])
 
 		var total_magic_damage = _owner.get_total_magic_damage(magic_damage)
 		var _di := DamageInfo.new(total_magic_damage, _learned_skill.damage_type, _owner.name)

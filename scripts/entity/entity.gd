@@ -8,12 +8,12 @@ var extra_info := ExtraInfo.new()
 var movement_helper: MovementHelper
 
 @onready var hud: HUD = $HUD
-@onready var collision_shape = $CollisionShape2D
-@onready var area_attack = $AreaAttack
-@onready var area_attack_shape = $AreaAttack/CollisionShape2D
-@onready var area_vision = $AreaVision
-@onready var area_vision_shape = $AreaVision/CollisionShape2D
-@onready var projectile_zone = $ProjectileZone/CollisionShape2D
+@onready var collision_shape: CollisionShape2D = $CollisionShape2D
+@onready var area_attack: Area2D = $AreaAttack
+@onready var area_attack_shape: CollisionShape2D = $AreaAttack/CollisionShape2D
+@onready var area_vision: Area2D = $AreaVision
+@onready var area_vision_shape: CollisionShape2D = $AreaVision/CollisionShape2D
+@onready var projectile_zone: CollisionShape2D = $ProjectileZone/CollisionShape2D
 @onready var body_sprite: AnimatedSprite2D = %BodySprite
 @onready var body_shadow: Sprite2D = %BodyShadow
 @onready var front_animations_node: Node2D = $FrontAnimationsNode
@@ -40,8 +40,6 @@ var _current_state: String = ""
 @export var _boss_level: int = 0
 @export var level: int = 1
 
-@onready var rpc_handler: RpcHandler = $RpcHandler
-
 func _init() -> void:
 	super._init()
 
@@ -56,7 +54,6 @@ func _ready():
 	for child in front_animations_node.get_children():
 		child.queue_free()
 	_client_init()
-	rpc_handler.initialize()
 	call_deferred("_post_ready")
 	ready_combat_data()
 	ShadersHelper.set_dissolve_shader_material(body_sprite)
@@ -124,7 +121,7 @@ func set_boss_level(_level: int) -> void:
 	_boss_level = _level
 
 func _set_area_attack_shape_radius() -> void:
-	area_attack_shape.shape.radius = cache_total_stats.attack_range
+	area_attack_shape.shape.radius = cache_total_stats.get_attack_range()
 
 func _client_init() -> void:
 	SpritesHelper.set_entity_sprites(self)

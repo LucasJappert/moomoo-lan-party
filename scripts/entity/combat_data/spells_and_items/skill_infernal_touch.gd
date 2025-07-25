@@ -17,8 +17,6 @@ static func create_and_add_instance() -> void:
 	aux_array[1] = [5, 6, 7] # stacks
 	aux_array[3] = [3, 4, 5] # duration
 	for i in AVAILABLE_LEVELS:
-		SKILLS[NAME].item_skill_base[i].type = SkillType.PASSIVE
-		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 0
 		SKILLS[NAME].item_skill_base[i].create_effect = false
 		SKILLS[NAME].item_skill_base[i].apply_to_enemy = true
 		SKILLS[NAME].item_skill_base[i].max_stacks = aux_array[1][i]

@@ -94,9 +94,9 @@ func _on_hero_selected(player: Player) -> void:
 	_set_effects_for_selected_hero_box()
 	hero_box_preview.set_texture(player.extra_info.rects[0])
 	name_and_alias.text = player.extra_info.key_type + "\n (" + player.extra_info.alias + ")"
-	total_int_label.text = str(player.cache_total_stats.intelligence)
-	total_str_label.text = str(player.cache_total_stats.strength)
-	total_agi_label.text = str(player.cache_total_stats.agility)
+	total_int_label.text = str(player.cache_total_stats.get_intelligence())
+	total_str_label.text = str(player.cache_total_stats.get_strength())
+	total_agi_label.text = str(player.cache_total_stats.get_agility())
 
 func _set_skills(_hero: Entity = null) -> void:
 	var _slots := get_skill_slots()

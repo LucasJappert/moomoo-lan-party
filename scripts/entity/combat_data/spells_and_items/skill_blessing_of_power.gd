@@ -11,13 +11,12 @@ static func create_and_add_instance() -> void:
 	
 	aux_array[0] = [0.3, 0.4, 0.5]
 	for i in AVAILABLE_LEVELS:
-		SKILLS[NAME].item_skill_base[i].stats.physical_attack_power_percent = aux_array[0][i]
-		SKILLS[NAME].item_skill_base[i].stats.magic_attack_power_percent = aux_array[0][i]
+		SKILLS[NAME].item_skill_base[i].set_physical_attack_power_percent(aux_array[0][i])
+		SKILLS[NAME].item_skill_base[i].set_magic_attack_power_percent(aux_array[0][i])
 		SKILLS[NAME].item_skill_base[i].max_stacks = 1
 		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
 		SKILLS[NAME].item_skill_base[i].create_effect = true
-		aux_array[1] = StringHelpers.format_percent(SKILLS[NAME].item_skill_base[i].stats.physical_attack_power_percent)
-		SKILLS[NAME].item_skill_base[i].description = "Increases physical and magic attack power by " + aux_array[1]
+		SKILLS[NAME].item_skill_base[i].description = "Increases physical and magic attack power by " + StringHelpers.format_percent(aux_array[0][i])
 
 static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
 	if _skill.get_name() != NAME: return false

@@ -12,7 +12,6 @@ static func create_and_add_instance() -> void:
 	aux_array[1] = [1, 1, 2]
 	for i in AVAILABLE_LEVELS:
 		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
-		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 0
 		SKILLS[NAME].item_skill_base[i].float_dict[CombatStats.CLEAVE_PERCENT] = aux_array[0][i]
 		SKILLS[NAME].item_skill_base[i].float_dict[CombatStats.CLEAVE_RANGE] = aux_array[1][i]
 		SKILLS[NAME].item_skill_base[i].description = "Deals " + StringHelpers.format_percent(aux_array[0][i]) + " of the damage as a cleave effect to enemies behind the target for " + str(aux_array[1][i]) + " tiles."
@@ -23,7 +22,7 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 	var _learned_skill := _attacker.get_learned_skill(NAME)
 	if not _learned_skill: return false
 	
-	var radius_in_tiles: int = _learned_skill.float_dict[CombatStats.CLEAVE_RANGE]
+	var radius_in_tiles := _learned_skill.float_dict[CombatStats.CLEAVE_RANGE]
 	CleaveEffect.show_cleave_effect_with_texture(
 		GameManager.game_world.over_terrain_layer_layer_2,
 		_target.global_position,

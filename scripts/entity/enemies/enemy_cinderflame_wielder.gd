@@ -11,9 +11,9 @@ static func try_to_init_from_name(_name: String, _enemy: Enemy) -> void:
 	
 	_enemy.extra_info = ExtraInfo.new(LONG_NAME, get_rect_frames(SPRITES_POS_VECTOR), ALIAS)
 
-	_enemy.combat_stats.agility = 5
-	_enemy.combat_stats.strength = 10
-	_enemy.combat_stats.intelligence = 15
+	_enemy.combat_stats.set_agility(5)
+	_enemy.combat_stats.set_strength(10)
+	_enemy.combat_stats.set_intelligence(15)
 
 	_enemy._skills.append_array([
 		SkillBase.get_new_learned_skill(SkillSilentAgony.NAME),

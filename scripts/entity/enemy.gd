@@ -43,9 +43,9 @@ func _on_every_timer_500ms() -> void:
 
 # region 	GETTERs
 func get_physical_attack_power() -> int:
-	return int(cache_total_stats.physical_attack_power * DAMAGE_MODIFIER)
+	return int(cache_total_stats.get_physical_attack_power() * DAMAGE_MODIFIER)
 func get_magic_attack_power() -> int:
-	return int(cache_total_stats.magic_attack_power * DAMAGE_MODIFIER)
+	return int(cache_total_stats.get_magic_attack_power() * DAMAGE_MODIFIER)
 
 static func get_instance_from_dict(dict: Dictionary) -> Enemy:
 	var instance = EnemyBase.get_new_instance()

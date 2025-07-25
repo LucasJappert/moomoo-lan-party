@@ -38,15 +38,12 @@ func add_effect(p_effect: CombatEffect) -> void:
 	_effects.append(p_effect)
 	notify_changes_to_subscribers()
 
-	if p_effect.has_freeze():
+	if p_effect.hostile_freeze():
 		AnimationsHelper.apply_frost_hit_animation(_my_owner)
-	if p_effect.has_stun():
+	if p_effect.hostile_stun():
 		StunEffect.attach_to(_my_owner.front_animations_node, p_effect.duration_in_seconds)
 	
 	_try_to_add_effect_to_my_gui(p_effect)
-
-	if GameManager.AM_I_HOST: # Notify if we are host
-		_my_owner.rpc_handler.notify_effect_added_to_clients(p_effect)
 
 func remove_effects() -> void:
 	_remove_effects_by_predicate(func(): return true)
@@ -70,9 +67,6 @@ func _remove_effects_by_predicate(predicate: Callable) -> void:
 
 	EventBus.emit_effects_removed(_my_owner, removed_ids)
 
-	if GameManager.AM_I_HOST and removed_ids:
-		_my_owner.rpc_handler.notify_effects_removed_to_clients(removed_ids)
-
 func _server_verifications_before_adding_effect(p_effect: CombatEffect) -> void:
 	if not GameManager.AM_I_HOST: return
 
@@ -86,7 +80,7 @@ func _server_verifications_before_adding_effect(p_effect: CombatEffect) -> void:
 
 	var ids_to_remove: Array[int] = []
 	if current_stacks >= p_effect.max_stacks:
-		# if not p_effect.stats.keep_latest_stacks: return
+		# if not p_effect.keep_latest_stacks: return
 		matching_effects.sort_custom(func(a, b): return a._elapsed > b._elapsed)
 
 		var effects_to_remove = current_stacks - p_effect.max_stacks + 1

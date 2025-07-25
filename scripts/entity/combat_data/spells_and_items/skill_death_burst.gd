@@ -13,7 +13,6 @@ static func create_and_add_instance() -> void:
 
 	aux_array[0] = [0.1, 0.2, 0.3] # % Total percentage of life to deal based on their total life
 	for i in AVAILABLE_LEVELS:
-		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 0
 		SKILLS[NAME].item_skill_base[i].type = SkillType.PASSIVE
 		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
 		SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 3
@@ -26,7 +25,7 @@ static func actions_after_die(_owner: Entity, _killed_by: Entity) -> void:
 	var _learned_skill = _owner.get_learned_skill(NAME)
 	if not _learned_skill: return
 
-	var total_damage: int = int(_owner.get_total_hp() * _learned_skill.float_dict["percentage_of_life_to_deal"])
+	var total_damage: int = int(_owner.get_full_health() * _learned_skill.float_dict["percentage_of_life_to_deal"])
 	if total_damage < 0: return
 
 	var _di := DamageInfo.new(total_damage, DamageType.MAGIC, _owner.name)

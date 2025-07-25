@@ -12,7 +12,6 @@ static func create_and_add_instance() -> void:
 	aux_array[1] = [100, 150, 200]
 	aux_array[2] = [0.5, 1, 1.5]
 	for i in AVAILABLE_LEVELS:
-		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 0
 		SKILLS[NAME].item_skill_base[i].apply_to_enemy = true
 		SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 2
 		SKILLS[NAME].item_skill_base[i].instant_use = true
@@ -34,7 +33,7 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 
 	var target_enemies = GlobalsEntityHelpers.get_closest_entities(_caster.global_position, _caster.get_my_enemies(), _learned_skill.area_of_effect_in_tiles)
 
-	var magic_damage: int = _caster.cache_total_stats.strength * _learned_skill.float_dict["strength_percent_damage"]
+	var magic_damage := int(_caster.cache_total_stats.get_strength() * _learned_skill.float_dict["strength_percent_damage"])
 	var total_magic_damage = _caster.get_total_magic_damage(magic_damage)
 
 	for _enemy in target_enemies:

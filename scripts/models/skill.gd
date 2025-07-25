@@ -61,9 +61,6 @@ func get_safe_learned_skill() -> ItemSkillBase:
 
 	return get_learned_skill()
 
-func get_stats() -> CombatStats:
-	return get_learned_skill().stats
-
 func get_description(include_stats_description: bool = true) -> String:
 	var result = ""
 

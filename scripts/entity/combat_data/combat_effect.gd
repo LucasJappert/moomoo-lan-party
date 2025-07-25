@@ -1,6 +1,6 @@
 class_name CombatEffect
 
-extends MyInitAuxiliary
+extends CombatStats
 
 var effect_name: String
 var id: int
@@ -9,8 +9,6 @@ var duration_in_seconds: float # In seconds
 var _elapsed: float = 0.0
 var _region_rect: Rect2
 var max_stacks: int = 1
-var stats: CombatStats = CombatStats.new()
-var float_dict: Dictionary[String, float] = {}
 var unique_id: int = UniqueIdGenerator.get_id()
 var is_cooldown_finished: bool = false
 var _description: String = ""
@@ -36,7 +34,7 @@ func get_description() -> String:
 	if duration_in_seconds > 0.0:
 		description += str("- Duration: ", StringHelpers.format_float_compact(duration_in_seconds), "s\n")
 
-	description += stats.get_description()
+	description += super.get_description()
 
 	if max_stacks > 1: description += str("- Max stacks: ", max_stacks, "\n")
 
@@ -61,41 +59,41 @@ static func get_instance_from_dict(dict: Dictionary) -> CombatEffect:
 	ObjectHelpers.from_dict(combat_effect, dict)
 	return combat_effect
 
-static func _get_instance(p_name: String, _duration_in_seconds: float, p_is_permanent: bool, _max_stacks: int, _stats: CombatStats) -> CombatEffect:
+static func _get_instance(p_name: String, _duration_in_seconds: float, p_is_permanent: bool, _max_stacks: int, p_info: Dictionary[String, float]) -> CombatEffect:
 	var combat_effect = CombatEffect.new()
 	combat_effect.max_stacks = _max_stacks
-	if _stats: combat_effect.stats = _stats
+	combat_effect.accumulate_info(p_info)
 	combat_effect.duration_in_seconds = _duration_in_seconds
 	combat_effect.is_permanent = p_is_permanent
 	combat_effect.id = UniqueIdGenerator.get_id()
 	combat_effect.effect_name = p_name
 	return combat_effect
 
-static func get_permanent_effect(p_name: String, p_region_rect: Rect2, _max_stacks: int, _stats: CombatStats) -> CombatEffect:
-	var result = _get_instance(p_name, 0.0, true, _max_stacks, _stats)
+static func get_permanent_effect(p_name: String, p_region_rect: Rect2, _max_stacks: int, p_info: Dictionary[String, float]) -> CombatEffect:
+	var result = _get_instance(p_name, 0.0, true, _max_stacks, p_info)
 	result.set_region_rect(p_region_rect)
 	return result
 
 static func get_effect_from_skill_base(skill: SkillBase) -> CombatEffect:
 	var learned_skill := skill.learned_skill
-	var result = _get_instance(learned_skill.my_name, learned_skill.duration_in_seconds, skill.permanent_effect, learned_skill.max_stacks, learned_skill.stats)
+	var result = _get_instance(learned_skill.my_name, learned_skill.duration_in_seconds, skill.permanent_effect, learned_skill.max_stacks, learned_skill.get_info())
 	result.set_description(learned_skill.description)
 	result.set_region_rect(SkillBase.SKILLS[learned_skill.my_name].region_rect)
 	return result
 
 static func get_effect_from_item_skill_base(skill: ItemSkillBase) -> CombatEffect:
 	var _is_permanent = skill.duration_in_seconds <= 0
-	var result = _get_instance(skill.my_name, skill.duration_in_seconds, _is_permanent, skill.max_stacks, skill.stats)
+	var result = _get_instance(skill.my_name, skill.duration_in_seconds, _is_permanent, skill.max_stacks, skill.get_info())
 	result.set_description(skill.description)
 	result.set_region_rect(SkillBase.SKILLS[skill.my_name].region_rect)
 	return result
 	
 static func get_permanent_effect_from_skill(skill: Skill) -> CombatEffect:
 	var learned_skill = skill.get_learned_skill()
-	return get_permanent_effect(learned_skill.my_name, skill.region_rect, learned_skill.max_stacks, learned_skill.stats)
+	return get_permanent_effect(learned_skill.my_name, skill.region_rect, learned_skill.max_stacks, learned_skill.get_info())
 
-static func get_temporal_effect(p_name: String, _duration_in_seconds: float, _max_stacks: int, _stats: CombatStats) -> CombatEffect:
-	var result = _get_instance(p_name, _duration_in_seconds, false, _max_stacks, _stats)
+static func get_temporal_effect(p_name: String, _duration_in_seconds: float, _max_stacks: int, p_info: Dictionary[String, float]) -> CombatEffect:
+	var result = _get_instance(p_name, _duration_in_seconds, false, _max_stacks, p_info)
 	if p_name == STUN_NAME: result.set_region_rect(CombatEffect.STUN_RECT_REGION)
 	return result
 
@@ -107,27 +105,17 @@ static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _d
 
 	# Lifesteal verification
 	if not _di.was_a_cleave_damage:
-		if _attacker.current_hp < _attacker.get_total_hp() && _di.total_damage > 0:
-			if _attacker_stats.life_steal_percent > 0:
-				var total_heal = int(max(1, _di.total_damage * _attacker_stats.life_steal_percent))
+		if _attacker.current_hp < _attacker.get_full_health() && _di.total_damage > 0:
+			if _attacker_stats.get_life_steal_percent() > 0:
+				var total_heal = int(max(1, _di.total_damage * _attacker_stats.get_life_steal_percent()))
 				if total_heal > 0:
 					var new_di = DamageInfo.get_instance()
 					new_di.total_damage = - total_heal
-					_attacker.rpc_handler.receive_damage_or_heal(ObjectHelpers.to_dict(new_di, true))
+					_attacker.global_receive_damage_or_heal(new_di)
 					_attacker.update_current_hp(total_heal)
 
 	# Stun verification, we need it after the evasion check
 	if _di.damage_type == DamageType.PHYSICAL:
-		if GlobalsEntityHelpers.roll_chance(_attacker_stats.stun_chance):
-			_receiver.apply_stun(_attacker_stats.stun_duration)
+		if GlobalsEntityHelpers.roll_chance(_attacker_stats.get_stun_chance()):
+			_receiver.apply_stun(_attacker_stats.get_stun_duration())
 	return
-
-
-func has_silence() -> bool:
-	return float_dict.has(CombatStats.SILENCE_DURATION)
-
-func has_stun() -> bool:
-	return float_dict.has(CombatStats.STUN_DURATION)
-
-func has_freeze() -> bool:
-	return float_dict.has(CombatStats.FREEZE_DURATION)

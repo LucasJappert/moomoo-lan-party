@@ -43,10 +43,11 @@ static func create_and_add_instance() -> void:
 	aux_array[2] = [20, 18, 16] # cooldown
 	aux_array[3] = [5, 6, 7] # duration
 	for i in AVAILABLE_LEVELS:
+		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 7
 		SKILLS[NAME].item_skill_base[i].create_effect = true
 		SKILLS[NAME].item_skill_base[i].apply_to_enemy = true
 		SKILLS[NAME].item_skill_base[i].max_stacks = 3
-		SKILLS[NAME].item_skill_base[i].stats.silence_duration = aux_array[3][i]
+		SKILLS[NAME].item_skill_base[i].set_silence_duration(aux_array[3][i])
 		SKILLS[NAME].item_skill_base[i].float_dict["damage_per_interval"] = aux_array[0][i]
 		SKILLS[NAME].item_skill_base[i].float_dict["interval_in_seconds"] = 1
 		SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]

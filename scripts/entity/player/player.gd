@@ -69,20 +69,19 @@ func level_up() -> void:
 	increment_skill_points_to_assign(1)
 	if is_my_player(): SoundsHelper.play_level_up()
 	
-	var current_percent_hp := current_hp / float(get_total_hp())
+	var current_percent_hp := current_hp / float(get_full_health())
 
 	var stats_to_add = CombatStats.new()
-	stats_to_add.strength += EXTRA_ATTRIBUTES_STATS_BY_LEVEL
-	stats_to_add.agility += EXTRA_ATTRIBUTES_STATS_BY_LEVEL
-	stats_to_add.intelligence += EXTRA_ATTRIBUTES_STATS_BY_LEVEL
-	var new_stats = combat_stats.accumulate_combat_stats(stats_to_add)
+	stats_to_add.set_strength(EXTRA_ATTRIBUTES_STATS_BY_LEVEL)
+	stats_to_add.set_agility(EXTRA_ATTRIBUTES_STATS_BY_LEVEL)
+	stats_to_add.set_intelligence(EXTRA_ATTRIBUTES_STATS_BY_LEVEL)
+	combat_stats.accumulate_info(stats_to_add.get_info())
 
-	rpc_handler.update_base_stats(ObjectHelpers.to_dict(new_stats))
-	
-	rpc_handler.add_animation(AnimationsHelper.ANIMATION_NAMES.LEVEL_UP)
+	update_base_stats(combat_stats.get_info())
+	AnimationsHelper.apply_animation(self, AnimationsHelper.ANIMATION_NAMES.LEVEL_UP)
 
-	set_current_hp(int(get_total_hp() * current_percent_hp))
-	# update_current_mana(get_total_mana())
+	set_current_hp(int(get_full_health() * current_percent_hp))
+	# update_current_mana(get_mana())
 
 func increment_current_gold(value_to_increment: int) -> void:
 	if current_hp <= 0: return

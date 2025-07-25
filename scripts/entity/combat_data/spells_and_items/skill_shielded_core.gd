@@ -15,10 +15,11 @@ static func create_and_add_instance() -> void:
 	aux_array[2] = [8, 6, 4] # cooldown
 	aux_array[3] = [12, 15, 18] # duration
 	for i in AVAILABLE_LEVELS:
+		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 7
 		SKILLS[NAME].item_skill_base[i].create_effect = true
 		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
-		SKILLS[NAME].item_skill_base[i].stats.physical_defense_percent = aux_array[0][i]
-		SKILLS[NAME].item_skill_base[i].stats.magic_defense_percent = aux_array[0][i]
+		SKILLS[NAME].item_skill_base[i].set_physical_defense_percent(aux_array[0][i])
+		SKILLS[NAME].item_skill_base[i].set_magic_defense_percent(aux_array[0][i])
 		SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]
 		SKILLS[NAME].item_skill_base[i].cooldown = aux_array[2][i]
 		SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[3][i]
@@ -29,7 +30,7 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 
 	if not verify_range(_caster, _target, _learned_skill): return false
 
-	var new_effect = CombatEffect.get_temporal_effect(NAME, _learned_skill.duration_in_seconds, _learned_skill.max_stacks, _learned_skill.stats)
+	var new_effect = CombatEffect.get_effect_from_item_skill_base(_learned_skill)
 	new_effect.set_description(_learned_skill.description)
 	new_effect.set_region_rect(SkillBase.SKILLS[_learned_skill.my_name].region_rect)
 	_target.effects_helper.add_effect(new_effect)

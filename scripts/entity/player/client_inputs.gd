@@ -36,7 +36,7 @@ func _unhandled_input(event):
 			rpc_id(1, "_on_left_click", _get_hovered_entity_name())
 
 	if event is InputEventKey and event.pressed:
-		GameManager.MY_PLAYER.rpc_handler.notify_key_pressed_to_server(event.keycode)
+		KeyboardHelper.key_pressed_server_side(event.keycode, GameManager.MY_PLAYER)
 			
 
 # region 	SERVER MESSAGES RECEIVED FROM CLIENT

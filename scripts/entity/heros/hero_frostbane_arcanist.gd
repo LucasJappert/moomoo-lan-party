@@ -10,10 +10,10 @@ static func try_to_init_from_name(_name: String, player: Player, stats: CombatSt
 	
 	player.extra_info = ExtraInfo.new(LONG_NAME, get_rect_frames(Vector2i(2, 0)), ALIAS)
 	player.projectile_type = ProjectileArrow.NAME
-	stats.attack_range = 200
-	stats.agility = 45
-	stats.strength = 38
-	stats.intelligence = 40
+	stats.set_attack_range(200)
+	stats.set_agility(45)
+	stats.set_strength(38)
+	stats.set_intelligence(40)
 	player._skills = [
 		SkillBase.get_skill(SkillManaScorcher.NAME),
 		SkillBase.get_skill(SkillFrenziedSilence.NAME),

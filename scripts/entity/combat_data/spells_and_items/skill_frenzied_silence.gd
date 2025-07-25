@@ -16,8 +16,9 @@ static func create_and_add_instance() -> void:
 	for i in AVAILABLE_LEVELS:
 		SKILLS[NAME].item_skill_base[i].create_effect = true
 		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
-		SKILLS[NAME].item_skill_base[i].stats.attack_speed_percent = aux_array[0][i]
-		SKILLS[NAME].item_skill_base[i].stats.silence_duration = aux_array[3][i]
+		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 7
+		SKILLS[NAME].item_skill_base[i].set_attack_speed_percent(aux_array[0][i])
+		SKILLS[NAME].item_skill_base[i].set_silence_duration(aux_array[3][i])
 		SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]
 		SKILLS[NAME].item_skill_base[i].cooldown = aux_array[2][i]
 		SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[3][i]

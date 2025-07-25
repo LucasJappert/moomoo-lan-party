@@ -20,18 +20,17 @@ static func initialize_from_name(_name: String, player: Player) -> void:
 	for hero_class in REGISTERED_CLASSES: hero_class.try_to_init_from_name(_name, player, stats)
 	
 	# GlobalsEntityHelpers.print_description_skills(player)
-	player.update_base_stats(stats)
+	player.update_base_stats(stats.get_info())
 
 static func _commons_initialize(player: Player, stats: CombatStats) -> void:
-	# stats.physical_attack_power = 2000
-	stats.crit_chance = 0.05
-	stats.crit_multiplier = 1.5
-	stats.attack_speed = 0.5
-	stats.move_speed = 5
-	stats.agility = 50
-	stats.strength = 50
-	stats.intelligence = 50
-	stats.attack_range = CombatStats.MIN_ATTACK_RANGE
+	stats.set_crit_chance(0.05)
+	stats.set_crit_multiplier(1.5)
+	stats.set_attack_speed(0.5)
+	stats.set_move_speed(5)
+	stats.set_agility(50)
+	stats.set_strength(50)
+	stats.set_intelligence(50)
+	stats.set_attack_range(CombatStats.MIN_ATTACK_RANGE)
 	# region Add some potions 
 	player.add_item(Item.get_item(Item.Names.HEALTH_POTION_I, 20, true))
 	player.add_item(Item.get_item(Item.Names.MANA_POTION_I, 20, true))

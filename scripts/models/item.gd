@@ -43,62 +43,57 @@ static func initialize_items() -> void:
 	# aux_item_name = Names.CLEAVE_EDGE
 	# _ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.PASSIVE)
 	# _item = _ITEMS[aux_item_name]
-	# _item.cast_range_in_tiles = 0
 	# _item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 4, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
-	# _item.stats.cleave_effect = CleaveEffect.new(0.3, 2)
+	# _item.cleave_effect = CleaveEffect.new(0.3, 2)
 	# _item.buy_price = 3300
-	# _item.description = "Grants a " + StringHelpers.format_percent(_item.stats.cleave_effect.percent) + " extra damage to enemies around " + str(_item.stats.cleave_effect.radius_in_tiles) + " tiles."
+	# _item.description = "Grants a " + StringHelpers.format_percent(_item.cleave_effect.percent) + " extra damage to enemies around " + str(_item.cleave_effect.radius_in_tiles) + " tiles."
 	# endregion
 
 	# region ITEM STUNNING_EDGE
 	aux_item_name = Names.STUNNING_EDGE
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.PASSIVE)
 	_item = _ITEMS[aux_item_name]
-	_item.cast_range_in_tiles = 0
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 3, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
-	_item.stats.stun_chance = 0.2
-	_item.stats.stun_duration = 1.5
+	_item.set_stun_chance(0.2)
+	_item.set_stun_duration(1.5)
 	_item.buy_price = 2400
-	_item.description = "Grants a " + StringHelpers.format_percent(_item.stats.stun_chance) + " chance to stun the target for " + StringHelpers.format_float_compact(_item.stats.stun_duration) + " seconds."
+	_item.description = "Grants a " + StringHelpers.format_percent(_item.get_stun_chance()) + " chance to stun the target for " + StringHelpers.format_float_compact(_item.get_stun_duration()) + " seconds."
 	# endregion
 
 	# region ITEM HEALTH_POTION_I
 	aux_item_name = Names.HEALTH_POTION_I
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.ACTIVE)
 	_item = _ITEMS[aux_item_name]
-	_item.cast_range_in_tiles = 0
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 0, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
-	_item.stats.hp = 500
+	_item.set_hp(500)
 	_item.cooldown = 0.5
 	_item.buy_price = 10
 	_item.is_consumable = true
-	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.hp) + " HP."
+	_item.description = "Restores " + StringHelpers.format_float_compact(500) + " HP."
 	# endregion
 	
 	# region ITEM HEALTH_POTION_II
 	aux_item_name = Names.HEALTH_POTION_II
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.ACTIVE)
 	_item = _ITEMS[aux_item_name]
-	_item.cast_range_in_tiles = 0
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 1, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
-	_item.stats.hp = 2000
+	_item.set_hp(2000)
 	_item.cooldown = 0.5
 	_item.buy_price = 20
 	_item.is_consumable = true
-	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.hp) + " HP."
+	_item.description = "Restores " + StringHelpers.format_float_compact(2000) + " HP."
 	# endregion
 
 	# region ITEM HEALTH_POTION_III
 	aux_item_name = Names.HEALTH_POTION_III
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.ACTIVE)
 	_item = _ITEMS[aux_item_name]
-	_item.cast_range_in_tiles = 0
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 2, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
-	_item.stats.hp = 10000
+	_item.set_hp(10000)
 	_item.cooldown = 0.5
 	_item.buy_price = 50
 	_item.is_consumable = true
-	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.hp) + " HP."
+	_item.description = "Restores " + StringHelpers.format_float_compact(10000) + " HP."
 	# endregion
 
 	
@@ -106,39 +101,36 @@ static func initialize_items() -> void:
 	aux_item_name = Names.MANA_POTION_I
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.ACTIVE)
 	_item = _ITEMS[aux_item_name]
-	_item.cast_range_in_tiles = 0
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 0, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
-	_item.stats.mana = 500
+	_item.set_mana(500)
 	_item.cooldown = 0.5
 	_item.buy_price = 10
 	_item.is_consumable = true
-	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.mana) + " mana."
+	_item.description = "Restores " + StringHelpers.format_float_compact(500) + " mana."
 	# endregion
 
 	# region ITEM MANA_POTION_II
 	aux_item_name = Names.MANA_POTION_II
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.ACTIVE)
 	_item = _ITEMS[aux_item_name]
-	_item.cast_range_in_tiles = 0
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 1, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
-	_item.stats.mana = 2000
+	_item.set_mana(2000)
 	_item.cooldown = 0.5
 	_item.buy_price = 20
 	_item.is_consumable = true
-	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.mana) + " mana."
+	_item.description = "Restores " + StringHelpers.format_float_compact(2000) + " mana."
 	# endregion
 
 	# region ITEM MANA_POTION_III
 	aux_item_name = Names.MANA_POTION_III
 	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.ACTIVE)
 	_item = _ITEMS[aux_item_name]
-	_item.cast_range_in_tiles = 0
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 2, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
-	_item.stats.mana = 10000
+	_item.set_mana(10000)
 	_item.cooldown = 0.5
 	_item.buy_price = 50
 	_item.is_consumable = true
-	_item.description = "Restores " + StringHelpers.format_float_compact(_item.stats.mana) + " mana."
+	_item.description = "Restores " + StringHelpers.format_float_compact(10000) + " mana."
 	# endregion
 
 func use_item(_slot_number: int, _my_owner: Entity, _target: Entity = null) -> void:
@@ -146,13 +138,13 @@ func use_item(_slot_number: int, _my_owner: Entity, _target: Entity = null) -> v
 
 	var health_names = [Item.Names.HEALTH_POTION_I, Item.Names.HEALTH_POTION_II, Item.Names.HEALTH_POTION_III]
 	if health_names.has(my_name):
-		if not _my_owner.current_hp < _my_owner.get_total_hp(): return
-		_my_owner.update_current_hp(stats.get_total_stats_including_extras_by_attributes().hp)
+		if not _my_owner.current_hp < _my_owner.get_full_health(): return
+		_my_owner.update_current_hp(get_hp())
 
 	var mana_names = [Item.Names.MANA_POTION_I, Item.Names.MANA_POTION_II, Item.Names.MANA_POTION_III]
 	if mana_names.has(my_name):
-		if not _my_owner.current_mana < _my_owner.get_total_mana(): return
-		_my_owner.update_current_mana(stats.get_total_stats_including_extras_by_attributes().mana)
+		if not _my_owner.current_mana < _my_owner.get_full_mana(): return
+		_my_owner.update_current_mana(get_mana())
 
 
 	_aux_after_use(_slot_number, _my_owner, _target)

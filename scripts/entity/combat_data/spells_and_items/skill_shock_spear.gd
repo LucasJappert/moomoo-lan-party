@@ -16,6 +16,7 @@ static func create_and_add_instance() -> void:
 	aux_array[3] = [1, 1.5, 2] # stun_duration
 	for i in AVAILABLE_LEVELS:
 		SKILLS[NAME].item_skill_base[i].instant_use = false
+		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 7
 		SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 7
 		SKILLS[NAME].item_skill_base[i].float_dict["stun_radius"] = 1
 		SKILLS[NAME].item_skill_base[i].float_dict["magic_damage"] = aux_array[0][i]

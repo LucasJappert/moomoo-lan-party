@@ -84,14 +84,14 @@ func _ready() -> void:
 
 	%HpBallCircle.connect("mouse_entered", func():
 		if not _bottom_target: return
-		var regen_points = _bottom_target.cache_total_stats.hp_regeneration_points
+		var regen_points = _bottom_target.cache_total_stats.get_hp_regeneration_points()
 		MyTooltip.show_tooltip("HP regen", str(regen_points) + " points per second", 7)
 	)
 	%HpBallCircle.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
 
 	%ManaBallCircle.connect("mouse_entered", func():
 		if not _bottom_target: return
-		var regen_points = _bottom_target.cache_total_stats.mana_regeneration_points
+		var regen_points = _bottom_target.cache_total_stats.get_mana_regeneration_points()
 		MyTooltip.show_tooltip("Mana regen", str(regen_points) + " points per second", 7)
 	)
 	%ManaBallCircle.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
@@ -199,12 +199,12 @@ func _update_panel_top_left(use_lerp: bool = true) -> void:
 	_label_target_level.text = str(_top_left_target.level)
 
 	var current_hp = _top_left_target.current_hp
-	var max_hp = _top_left_target.get_total_hp()
+	var max_hp = _top_left_target.get_full_health()
 	_target_rect_current_hp.size.x = _new_lerped_size(max_hp, current_hp, int(_RECT_TARGET_MAX_HP.size.x), _target_rect_current_hp.size.x, use_lerp)
 	_label_target_current_hp.text = "%s / %s" % [StringHelpers.format_float_compact(current_hp), StringHelpers.format_float_compact(max_hp)]
 
 	var current_mana = _top_left_target.current_mana
-	var max_mana = _top_left_target.get_total_mana()
+	var max_mana = _top_left_target.get_full_mana()
 	_target_rect_current_mana.size.x = _new_lerped_size(max_mana, current_mana, int(_RECT_TARGET_MAX_MANA.size.x), _target_rect_current_mana.size.x, use_lerp)
 	_label_target_current_mana.text = "%s / %s" % [StringHelpers.format_float_compact(current_mana), StringHelpers.format_float_compact(max_mana)]
 
@@ -222,7 +222,7 @@ func _new_lerped_size(max_value: int, current_value: int, full_size: int, curren
 func _update_panel_bottom_left() -> void:
 	if not GameManager.MY_PLAYER: return
 	var current_hp = StringHelpers.format_float_compact(_bottom_target.current_hp)
-	var max_hp = StringHelpers.format_float_compact(_bottom_target.get_total_hp())
+	var max_hp = StringHelpers.format_float_compact(_bottom_target.get_full_health())
 	_hp_label.text = "%s / %s" % [current_hp, max_hp]
 
 	var current_exp = StringHelpers.format_float_compact(GameManager.MY_PLAYER.current_exp)
@@ -237,24 +237,24 @@ func _update_panel_bottom_left() -> void:
 	_level.text = str(_bottom_target.level)
 
 	var total_stats = _bottom_target.cache_total_stats
-	_str_value.text = StringHelpers.format_float_compact(total_stats.strength)
-	_agi_value.text = StringHelpers.format_float_compact(total_stats.agility)
-	_int_value.text = StringHelpers.format_float_compact(total_stats.intelligence)
+	_str_value.text = StringHelpers.format_float_compact(total_stats.get_strength())
+	_agi_value.text = StringHelpers.format_float_compact(total_stats.get_agility())
+	_int_value.text = StringHelpers.format_float_compact(total_stats.get_intelligence())
 	_move_speed_value.text = StringHelpers.format_float_compact(total_stats.get_total_move_speed())
 	_attack_speed_value.text = StringHelpers.format_float_compact(total_stats.get_total_attack_speed())
-	_lifesteal_value.text = StringHelpers.format_percent(total_stats.life_steal_percent)
+	_lifesteal_value.text = StringHelpers.format_percent(total_stats.get_life_steal_percent())
 
-	_damage_value.text = StringHelpers.format_float_compact(_bottom_target.get_physical_attack_power())
-	_magic_power_multiplier_value.text = "+" + StringHelpers.format_percent(_bottom_target.get_magic_power_multiplier() - 1)
-	_defense_value.text = StringHelpers.format_percent(total_stats.physical_defense_percent, false) + "-" + StringHelpers.format_percent(total_stats.magic_defense_percent, false) + " %"
-	_evasion_value.text = StringHelpers.format_percent(total_stats.evasion)
-	_stun_value.text = StringHelpers.format_percent(total_stats.stun_chance)
+	_damage_value.text = StringHelpers.format_float_compact(total_stats.get_physical_attack_power())
+	_magic_power_multiplier_value.text = "+" + StringHelpers.format_percent(total_stats.get_magic_power_multiplier() - 1)
+	_defense_value.text = StringHelpers.format_percent(total_stats.get_physical_defense_percent(), false) + "-" + StringHelpers.format_percent(total_stats.get_magic_defense_percent(), false) + " %"
+	_evasion_value.text = StringHelpers.format_percent(total_stats.get_evasion())
+	_stun_value.text = StringHelpers.format_percent(total_stats.get_stun_chance())
 	_critic_value.text = total_stats.get_critic_description()
 
 func _update_panel_bottom_right() -> void:
 	if _bottom_target is Player: _current_gold.text = _bottom_target.current_gold_string
 	var current_mana = StringHelpers.format_float_compact(_bottom_target.current_mana)
-	var max_mana = StringHelpers.format_float_compact(_bottom_target.get_total_mana())
+	var max_mana = StringHelpers.format_float_compact(_bottom_target.get_full_mana())
 	_mana_label.text = "%s / %s" % [current_mana, max_mana]
 	_update_mana_ball_sprite()
 
@@ -270,13 +270,13 @@ func _update_hp_ball_sprite():
 	_update_ball_sprite(
 		_hp_ball,
 		_bottom_target.current_hp,
-		_bottom_target.get_total_hp()
+		_bottom_target.get_full_health()
 	)
 func _update_mana_ball_sprite():
 	_update_ball_sprite(
 		_mana_ball,
 		_bottom_target.current_mana,
-		_bottom_target.get_total_mana()
+		_bottom_target.get_full_mana()
 	)
 func _update_ball_sprite(ball_sprite: Sprite2D, current_value: int, max_value: int) -> void:
 	var current_size = int(ball_sprite.region_rect.size.y)

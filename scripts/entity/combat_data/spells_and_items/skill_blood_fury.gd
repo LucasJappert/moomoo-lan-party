@@ -20,18 +20,18 @@ static func actions_after_current_hp_updated(_increased_value: int, _attacker: E
 	if not _learned_skill: return
 
 	# var current_hp = _attacker.current_hp
-	# var total_hp: float = my_owner.get_total_hp()
+	# var total_hp: float = my_combat_stats.get_hp()
 	# var percent_lost_hp: float = floor((1 - current_hp / total_hp) * 10.0) / 10.0
 	# if percent_lost_hp <= 0: return
 
 	# var effect_stats = CombatStats.new()
-	# effect_stats.physical_attack_power = _attacker.cache_total_stats_no_effects.physical_attack_power * percent_lost_hp
+	# effect_stats.get_physical_attack_power() = _attacker.cache_total_stats_no_effects.get_physical_attack_power() * percent_lost_hp
 	# effect_stats.attack_speed = _attacker.cache_total_stats_no_effects.attack_speed * percent_lost_hp
 	# effect_stats.level = percent_lost_hp * 10 # Should be 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
 
 	# var existing_effect = _attacker.effects_helper.get_effect_by_name(NAME)
 	# if existing_effect:
-	# 	if existing_effect.stats.level == effect_stats.level: return
+	# 	if existing_effect.level == effect_stats.level: return
 
 	# _attacker.remove_effect_by_name(NAME)
 

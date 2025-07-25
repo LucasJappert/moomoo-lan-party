@@ -84,9 +84,9 @@ static func create_next_wave() -> void:
 	GameManager.MY_PLAYER.statistics.set_wave(current_wave)
 	print("Wave " + str(current_wave) + " started!")
 
-	extra_stats_by_wave.agility = 5 * current_wave
-	extra_stats_by_wave.strength = 5 * current_wave
-	extra_stats_by_wave.intelligence = 5 * current_wave
+	extra_stats_by_wave.set_agility(5 * current_wave)
+	extra_stats_by_wave.set_strength(5 * current_wave)
+	extra_stats_by_wave.set_intelligence(5 * current_wave)
 
 	_current_wave_info = WAVES_INFO[current_wave % WAVES_INFO.size() - 1]
 
@@ -116,10 +116,10 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 	enemy.level = current_wave
 	enemy._boss_level = current_wave if is_boss else 0
 
-	enemy.combat_stats.accumulate_combat_stats(extra_stats_by_wave)
-	if enemy._boss_level: enemy.combat_stats.accumulate_combat_stats(extra_stats_by_wave)
+	enemy.combat_stats.accumulate_info(extra_stats_by_wave.get_info())
+	if enemy._boss_level: enemy.combat_stats.accumulate_info(extra_stats_by_wave.get_info())
 
-	enemy.combat_stats.attack_speed = round(enemy.combat_stats.attack_speed * (1.0 + randf_range(-0.05, 0.05)) * 100.0) / 100.0
+	enemy.combat_stats.set_attack_speed(round(enemy.combat_stats.get_attack_speed() * (1.0 + randf_range(-0.05, 0.05)) * 100.0) / 100.0)
 
 	enemy.set_current_hp_and_mana()
 	enemy.update_cache_total_stats()

@@ -1,17 +1,17 @@
 class_name ItemSkillBase
 
-extends MyInitAuxiliary
+extends CombatStats
 
 const FRAME_SIZE = 64
 const CAN_USE_COLOR = Color.WHITE
 const CANT_USE_COLOR = Color(0.5, 0.5, 0.5)
 
 var apply_to_enemy: bool = true
-var cast_range_in_tiles: int = 7
+var cast_range_in_tiles: int = 0
 var area_of_effect_in_tiles: int = 0
 var instant_use: bool = false
 var auxiliary_float: float # Used for general purposes, like calculate percentage of damage respect to the strength
-var float_dict: Dictionary = {} # Used for general purposes, like apply damage after xx seconds
+var float_dict: Dictionary[String, float] = {} # Used for general purposes, like apply damage after xx seconds
 var string_dict: Dictionary = {} # Used for general purposes
 var my_name: String
 var duration_in_seconds: float
@@ -20,7 +20,6 @@ var cooldown: float = 0 # In seconds
 var mana_cost: int = 0
 var description: String = ""
 var max_stacks: int = 1
-var stats: CombatStats = CombatStats.new()
 var damage_type: String = DamageType.NONE
 var max_targets: int = 1
 var create_effect: bool = false
@@ -44,7 +43,7 @@ func get_description(include_stats_description: bool = true) -> String:
 
 	if description: result += description + "\n"
 	
-	if include_stats_description: result += stats.get_description()
+	if include_stats_description: result += super.get_description()
 	
 	if duration_in_seconds > 0:
 		result += str("- Duration: ", StringHelpers.format_float_compact(duration_in_seconds), "s\n")
