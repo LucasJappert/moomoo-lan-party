@@ -4,9 +4,9 @@ extends CharacterBody2D
 
 const EXP_MULTIPLIER: int = 1
 
-var shopping_helper: ShoppingHelper = ShoppingHelper.new(self)
+var shopping_helper := ShoppingHelper.new(self)
 var _active_skills: Array[SkillBase] = []
-var effects_helper: EffectsHelper = EffectsHelper.new()
+var effects_helper := EffectsHelper.new()
 @export var current_hp: int = 0
 @export var current_mana: int = 0
 @export var projectile_type: String = ProjectileBase.NONE
@@ -128,18 +128,22 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
 		# Cancel the damage if the skill cancels damage
-		if registered_skill.actions_before_receive_damage(_attacker, my_owner(), _di): return
+		var cancel_damage = registered_skill.actions_before_receive_damage(_attacker, my_owner(), _di)
+		if cancel_damage: return
+
+	for active_skill in _active_skills:
+		var cancel_damage = active_skill.instance_actions_before_receive_damage(_attacker, _di)
+		if cancel_damage: return
 
 	var my_stats = cache_total_stats
 	
-	_di.can_be_evaded = not SkillTrueStrike.roll_true_strike(_di, _attacker)
+	ItemSkillBase.roll_true_strike(_attacker, _di)
 
 	if _check_evade(_di, my_stats): return # Evasion verification (only for physical damage)
+	
+	ItemSkillBase.actions_after_effective_hit(_attacker, my_owner(), _di)
 
 	_apply_defenses(_di, my_stats)
-
-	if not _di.was_a_cleave_damage and not _di.was_reflected:
-		CombatEffect.actions_after_effective_hit(_attacker, my_owner(), _di)
 
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
 		registered_skill.actions_after_effective_hit(_attacker, my_owner(), _di)
@@ -184,6 +188,7 @@ func remove_active_skill_by_name(_skill_name: String) -> void:
 			_remove_active_skill(_active_skills[i], i)
 
 func add_active_skill(_skill: SkillBase) -> bool:
+	print("Adding active skill: ", _skill.my_name)
 	if _stacks_reached(_skill): return false
 
 	_active_skills.append(_skill)
@@ -245,6 +250,8 @@ func set_current_hp(value: int) -> void:
 func _actions_after_current_hp_updated(value_to_increase: int = 0, _attacker: Entity = null) -> void:
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
 		registered_skill.actions_after_current_hp_updated(value_to_increase, my_owner())
+	for active_skill in _active_skills:
+		active_skill.instance_actions_after_current_hp_updated(value_to_increase, my_owner())
 
 	my_owner().hud.update_health_bar()
 	
@@ -283,8 +290,6 @@ func _try_to_add_gold_to_players_on_enemy_die(_attacker: Entity) -> void:
 		player.increment_current_gold(earned_gold)
 
 func update_base_stats(new_info: Dictionary[String, float]) -> void:
-	if self is Player:
-		print("Updating base stats for player: ", my_owner().name)
 	my_owner().combat_stats.set_info(new_info)
 	update_cache_total_stats()
 
@@ -428,7 +433,7 @@ func _get_combat_info_by_skills() -> Dictionary[String, float]:
 		if not learned_skill: continue
 		if learned_skill.create_effect: continue
 		if learned_skill.hostile_stun(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
-		CombatStats.aux_accumulate(result, learned_skill.float_dict)
+		CombatStats.aux_accumulate(result, learned_skill.get_info())
 	CombatStats.aux_accumulate(result, CombatStats.get_extra_info_by_attributes(result))
 	return result
 
@@ -439,7 +444,7 @@ func _get_combat_info_by_items() -> Dictionary[String, float]:
 		if _item.is_consumable: continue
 		if _item.type == SkillType.ACTIVE: continue
 		if _item.hostile_stun(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
-		CombatStats.aux_accumulate(result, _item.float_dict)
+		CombatStats.aux_accumulate(result, _item.get_info())
 	return result
 
 func _check_evade(_di: DamageInfo, total_stats: CombatStats) -> bool:
@@ -451,7 +456,7 @@ func _check_evade(_di: DamageInfo, total_stats: CombatStats) -> bool:
 
 	# TODO: Crear un helper para enviar mensajes
 	var sm = ServerMessage.new("Dodge", Vector3(0, 0.5, 1))
-	self._hud.show_popup(sm.message, sm.get_color())
+	self.hud.show_popup(sm.message, sm.get_color())
 
 	return true
 

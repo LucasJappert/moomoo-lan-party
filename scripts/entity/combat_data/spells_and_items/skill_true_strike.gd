@@ -11,15 +11,15 @@ static func create_and_add_instance() -> void:
 	aux_array[0] = [0.4, 0.7, 1]
 	for i in AVAILABLE_LEVELS:
 		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
-		SKILLS[NAME].item_skill_base[i].float_dict[CombatStats.CHANCE_TO_IGNORE_EVASION] = aux_array[0][i]
+		SKILLS[NAME].item_skill_base[i].set_chance_to_ignore_evasion(aux_array[0][i])
 		SKILLS[NAME].item_skill_base[i].description = "Grants " + StringHelpers.format_percent(aux_array[0][i]) + " chance to ignore the target's evasion."
 
-static func roll_true_strike(_di: DamageInfo, _attacker: Entity) -> float:
-	if _di.damage_type != DamageType.PHYSICAL: return false # Ignore enemy evasion only for physical damage
+static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
+	if _skill.get_name() != NAME: return false
+	if not _skill.get_learned_skill(): return false
 
-	var _learned_skill := _attacker.get_learned_skill(NAME)
-	if not _learned_skill: return 0
+	var skill = SkillTrueStrike.new(_skill.get_learned_skill())
+	skill.permanent_effect = true
+	_owner.add_active_skill(skill)
 
-	var attacker_accuracy: float = _learned_skill.float_dict[CombatStats.CHANCE_TO_IGNORE_EVASION]
-
-	return GlobalsEntityHelpers.roll_chance(attacker_accuracy)
+	return true

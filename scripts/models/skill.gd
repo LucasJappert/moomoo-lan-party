@@ -98,11 +98,12 @@ func use(my_owner: Entity, target_entity: Entity) -> bool:
 	var was_used := false
 	for skill_class in SkillBase.REGISTERED_SKILLS:
 		was_used = skill_class.try_to_use(my_owner, learned_skill, target_entity)
+		if was_used: break
 
 	if not was_used: return false
 
-	for skill_class in SkillBase.REGISTERED_SKILLS:
-		skill_class.actions_before_cast_skill(my_owner, learned_skill)
+	# for skill_class in SkillBase.REGISTERED_SKILLS:
+	# 	skill_class.actions_before_cast_skill(my_owner, learned_skill)
 
 	learned_skill.reset_last_used_time()
 

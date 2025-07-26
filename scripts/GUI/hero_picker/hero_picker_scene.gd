@@ -2,6 +2,7 @@ class_name HeroPickerScene
 extends CanvasLayer
 
 const HERO_BOX_SCENE: PackedScene = preload("res://scenes/GUI/hero_picker/hero_box.tscn")
+const HERO_PICKER_SCENE := preload("res://scenes/GUI/hero_picker_scene.tscn")
 
 @onready var grid_heros_container: GridContainer = %GridHerosContainer
 @onready var skills_container: GridContainer = %SkillsContainer
@@ -52,7 +53,7 @@ func get_selected_hero_box() -> HeroBox:
 
 # region	SETTERS
 static func load_scene() -> void:
-	var scene = load("res://scenes/GUI/hero_picker_scene.tscn").instantiate()
+	var scene = HERO_PICKER_SCENE.instantiate()
 	GameManager.main_scene.load_scene(scene)
 
 func _start_game() -> void:

@@ -2,6 +2,7 @@ class_name Item
 
 extends ItemSkillBase
 static var REGISTERED_ITEMS: Array = [
+	ItemCleaveEdge,
 	ItemBloodEdge,
 	ItemPowerCore
 ]
@@ -38,16 +39,6 @@ static func initialize_items() -> void:
 	var _item: Item
 
 	for item_class in REGISTERED_ITEMS: item_class.create_and_add_instance()
-	
-	# region ITEM CLEAVE_EDGE
-	# aux_item_name = Names.CLEAVE_EDGE
-	# _ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.PASSIVE)
-	# _item = _ITEMS[aux_item_name]
-	# _item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 4, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
-	# _item.cleave_effect = CleaveEffect.new(0.3, 2)
-	# _item.buy_price = 3300
-	# _item.description = "Grants a " + StringHelpers.format_percent(_item.cleave_effect.percent) + " extra damage to enemies around " + str(_item.cleave_effect.radius_in_tiles) + " tiles."
-	# endregion
 
 	# region ITEM STUNNING_EDGE
 	aux_item_name = Names.STUNNING_EDGE

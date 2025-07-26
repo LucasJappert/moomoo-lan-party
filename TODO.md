@@ -5,12 +5,6 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Retomar cleave attack
-- Retomar blood fury
-- Revisar attack/move reduction
-- Obtener stats como SkillStunningStrike, SkillFrozenTouch, desde las active skills. Debemos editar las CombatStats, eliminando props y usando solo float_dict
-
-- Mejorar spawn de criaturas, está pegando un salto cuando creamos varias de golpee
 - Agregar True Strike a algun enemigo
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
 - Agregar estadísticas in game, como el tiempo transcurrido, el daño causado, el daño recibido, etc.

@@ -8,6 +8,9 @@ const ICON_SLOT := Vector2(7, 1)
 const ANIMATION_RECT_REGION := Rect2(448, 576, 64, 64)
 const FRAMES = 5
 
+func instance_actions_before_receive_damage(_attacker: Entity, _di: DamageInfo) -> bool:
+	return true
+
 static func create_and_add_instance() -> void:
 	SKILLS[NAME] = Skill.new(NAME, SkillType.ACTIVE)
 	SKILLS[NAME].region_rect = Rect2(ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
@@ -16,6 +19,7 @@ static func create_and_add_instance() -> void:
 	float_array = [20, 18, 16]
 	float_array1 = [6, 7, 8]
 	for i in AVAILABLE_LEVELS:
+		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
 		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 7
 		SKILLS[NAME].item_skill_base[i].create_effect = true
 		SKILLS[NAME].item_skill_base[i].instant_use = true
@@ -30,10 +34,10 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 	if not verify_range(_caster, _target, _learned_skill): return false
 
 	var skill := SkillUnbreakable.new(_learned_skill, true)
-	_caster.add_active_skill(skill)
+	_target.add_active_skill(skill)
 
 	# apply_animation(_my_owner, _learned_skill.duration_in_seconds)
-	ShieldEffect.attach_to(_caster.front_animations_node, _learned_skill.duration_in_seconds)
+	ShieldEffect.attach_to(_target.front_animations_node, _learned_skill.duration_in_seconds)
 
 	return true
 
@@ -59,9 +63,3 @@ static func apply_animation(_target: Entity, _duration_in_seconds: float = 0) ->
 	timer.autostart = true
 	sprite.add_child(timer)
 	timer.timeout.connect(func(): sprite.queue_free())
-
-
-static func actions_before_receive_damage(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
-	var _learned_skill := _target.get_learned_skill(NAME)
-
-	return _target.get_learned_skill(NAME) != null

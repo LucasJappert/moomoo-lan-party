@@ -14,22 +14,38 @@ static func is_my_player(_entity) -> bool:
 	return _entity is Player and _entity.is_my_player()
 
 const FUNDAMENTAL_PROPERTIES := ["position", "global_position", "rotation", "scale", "name"]
-
+static var SKIPPED_TYPES_IN_SERIALIZATION := [
+	"CollisionShape2D", "Area2D", "Sprite2D", "AnimatedSprite2D", "Node2D", "Timer",
+	"HUD",
+	"TweenEffects", "Statistics", "MovementHelper",
+	"MonsterSoundsHelper", "EnemySpellCaster", "EffectsHelper", "ShoppingHelper",
+	"Entity",
+	"Moomoo", "Player", "Enemy",
+	# Agregá acá cualquier clase que quieras ignorar
+]
+static var SKIPPED_PROPERTIES_IN_SERIALIZATION := [
+	"_active_skills",
+	"cache_total_stats",
+	"cache_total_stats_no_effects",
+	# "target_to_attack", "target_view", "nearest_enemy_focused", "latest_attacker"
+]
 static func deep_clone(original: Object) -> Object:
 	if original == null or original.get_script() == null:
 		push_error("❗ deep_clone: Invalid object or missing script.")
 		return null
-	var start_time := Time.get_ticks_usec()
+	# var start_time := Time.get_ticks_usec()
 	var new_instance = original.get_script().new()
-	print("script name: " + original.get_script().resource_path)
-	print("get_script().new() took " + str(Time.get_ticks_usec() - start_time) + " microseconds")
-	start_time = Time.get_ticks_usec()
+	# print("script name: " + original.get_script().resource_path)
+	# print("get_script().new() took " + str(Time.get_ticks_usec() - start_time) + " microseconds")
+	# start_time = Time.get_ticks_usec()
 	var data := to_dict(original)
-	print("to_dict took " + str(Time.get_ticks_usec() - start_time) + " microseconds")
-	start_time = Time.get_ticks_usec()
-	var result = from_dict(new_instance, data)
-	print("from_dict took " + str(Time.get_ticks_usec() - start_time) + " microseconds")
-	return result
+	# print("to_dict took " + str(Time.get_ticks_usec() - start_time) + " microseconds")
+	
+	return from_dict(new_instance, data)
+	# start_time = Time.get_ticks_usec()
+	# var result = from_dict(new_instance, data)
+	# print("from_dict took " + str(Time.get_ticks_usec() - start_time) + " microseconds")
+	# return result
 
 static func to_dict(obj: Object) -> Dictionary:
 	if obj == null:
@@ -38,17 +54,21 @@ static func to_dict(obj: Object) -> Dictionary:
 	var dict := {}
 	for prop in obj.get_property_list():
 		var name = prop.name
-		if name == "script":
-			continue
+		if name == "script": continue
 
+		# if name == "_items":
+		# 	print("test de ", name)
 		var usage = prop.usage
 		var is_valid = (usage & PROPERTY_USAGE_SCRIPT_VARIABLE) != 0 or FUNDAMENTAL_PROPERTIES.has(name)
-		if (usage & PROPERTY_USAGE_SCRIPT_VARIABLE) == 0:
-			continue
-		if not is_valid:
-			continue
+		if not is_valid: continue
 
 		var value = obj.get(name)
+		if value == null: continue
+		if name in SKIPPED_PROPERTIES_IN_SERIALIZATION: continue
+		# Ignorar tipos específicos definidos en SKIPPED_TYPES_IN_SERIALIZATION
+		var cls := get_scripted_class_name(value)
+		if cls in SKIPPED_TYPES_IN_SERIALIZATION: continue
+
 		match typeof(value):
 			TYPE_OBJECT:
 				if value != null and not (value is Entity): # evitamos recursividad infinita
@@ -61,6 +81,23 @@ static func to_dict(obj: Object) -> Dictionary:
 				dict[name] = _serialize_variant(value)
 	return dict
 
+static func get_scripted_class_name(obj: Variant) -> String:
+	if obj == null: return ""
+	if typeof(obj) != TYPE_OBJECT: return ""
+	var script = obj.get_script()
+	if script != null:
+		# Godot 4: esto te da el nombre del `class_name`
+		if script.has_method("get_global_name"):
+			var gn = script.get_global_name()
+			if gn != "":
+				return gn
+		# Fallbacks útiles si no hay class_name:
+		if script.resource_name != "":
+			return script.resource_name
+		if script.resource_path != "":
+			return script.resource_path.get_file().get_basename()
+	# Último recurso: la clase base (Node, RefCounted, etc.)
+	return obj.get_class()
 
 static func from_dict(original_obj: Object, data: Dictionary) -> Object:
 	if original_obj == null:

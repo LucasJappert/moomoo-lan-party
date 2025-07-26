@@ -18,7 +18,7 @@ func actions_after_execute_physical_attack(_attacker: Entity, _target: Entity, _
 
 	current_hits = 0
 	var extra_targets := int(learned_skill.float_dict["targets"])
-	var nearest_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, _attacker.get_my_enemies(), _attacker.get_attack_range(), extra_targets, [_target])
+	var nearest_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, _attacker.get_my_enemies(), _attacker.cache_total_stats.get_attack_range(), extra_targets, [_target])
 	for extra_target in nearest_enemies:
 		_attacker.execute_physical_attack(false, extra_target)
 

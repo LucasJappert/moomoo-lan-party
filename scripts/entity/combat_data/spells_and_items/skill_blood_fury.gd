@@ -15,25 +15,37 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].float_dict["perc_attack_power_per_stack"] = aux_array[0][i]
 		SKILLS[NAME].item_skill_base[i].description = "Gives " + StringHelpers.format_percent(aux_array[0][i]) + " extra physical attack power and attack speed per each 10% of lost hp."
 
-static func actions_after_current_hp_updated(_increased_value: int, _attacker: Entity) -> void:
-	var _learned_skill := _attacker.get_learned_skill(NAME)
+static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
+	if _skill.get_name() != NAME: return false
+	if not _skill.get_learned_skill(): return false
+
+	_owner.add_active_skill(SkillBloodFury.new(_skill.get_learned_skill()))
+
+	return true
+
+func _init(p_learned_skill: ItemSkillBase) -> void:
+	super._init(p_learned_skill, true)
+	permanent_effect = true
+
+func instance_actions_after_current_hp_updated(_increased_value: int, _owner: Entity) -> void:
+	var _learned_skill := _owner.get_learned_skill(NAME)
 	if not _learned_skill: return
 
-	# var current_hp = _attacker.current_hp
-	# var total_hp: float = my_combat_stats.get_hp()
-	# var percent_lost_hp: float = floor((1 - current_hp / total_hp) * 10.0) / 10.0
-	# if percent_lost_hp <= 0: return
+	var current_hp = _owner.current_hp
+	var full_health: float = _owner.get_full_health()
+	var percent_lost_hp: float = floor((1 - current_hp / full_health) * 10.0) / 10.0
+	if percent_lost_hp <= 0: return
 
-	# var effect_stats = CombatStats.new()
-	# effect_stats.get_physical_attack_power() = _attacker.cache_total_stats_no_effects.get_physical_attack_power() * percent_lost_hp
-	# effect_stats.attack_speed = _attacker.cache_total_stats_no_effects.attack_speed * percent_lost_hp
-	# effect_stats.level = percent_lost_hp * 10 # Should be 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+	var effect_stats := CombatStats.new()
+	var extra_damage: int = int(_owner.cache_total_stats_no_effects.get_physical_attack_power() * percent_lost_hp)
+	effect_stats.set_physical_attack_power(extra_damage)
+	effect_stats.set_attack_speed(_owner.cache_total_stats_no_effects.get_attack_speed() * percent_lost_hp)
+	effect_stats.level = int(percent_lost_hp * 10) # Should be 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
 
-	# var existing_effect = _attacker.effects_helper.get_effect_by_name(NAME)
-	# if existing_effect:
-	# 	if existing_effect.level == effect_stats.level: return
+	var existing_effect = _owner.effects_helper.get_effect_by_name(NAME)
+	if existing_effect and existing_effect.level == effect_stats.level: return
 
-	# _attacker.remove_effect_by_name(NAME)
+	_owner.remove_effect_by_name(NAME)
 
-	# var new_effect = CombatEffect.get_permanent_effect(NAME, SKILLS[NAME].region_rect, _learned_skill.max_stacks, effect_stats)
-	# _attacker.effects_helper.add_effect(new_effect)
+	var new_effect = CombatEffect.get_permanent_effect(NAME, SKILLS[NAME].region_rect, _learned_skill.max_stacks, effect_stats.get_info())
+	_owner.effects_helper.add_effect(new_effect)

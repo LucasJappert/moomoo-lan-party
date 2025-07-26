@@ -2,12 +2,12 @@ class_name Player
 
 extends Entity
 
+const INITIAL_GOLD: int = 20000
 const PLAYER_CELL_SPAWN: Vector2i = Vector2i(20, 12)
 static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 const MAX_LEVEL: int = 30
 @export var player_id: int = 0
 @export var current_exp: int = 0
-const INITIAL_GOLD: int = 500
 @export var current_gold: int:
 	set(_value):
 		current_gold = _value

@@ -1,4 +1,5 @@
 class_name EnemyBase
+const SCENE = preload("res://scenes/entity/enemy_scene.tscn")
 
 static var REGISTERED_CLASSES = [
 	EnemyRotbull,
@@ -24,7 +25,7 @@ const _FRAME_SIZE = Vector2i(64, 64)
 const _FRAMES = 2
 
 static func get_new_instance(_name: String = "") -> Enemy:
-	var _enemy: Enemy = load("res://scenes/entity/enemy_scene.tscn").instantiate()
+	var _enemy: Enemy = SCENE.instantiate()
 	_enemy.id = UniqueIdGenerator.get_id()
 	if _name.is_empty(): return _enemy
 

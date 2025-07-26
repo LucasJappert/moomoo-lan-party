@@ -19,12 +19,18 @@ func get_attacker() -> Entity:
 	return GameManager.get_entity(attacker_name)
 
 func is_arrow_attack() -> bool:
-	if was_a_cleave_damage or was_reflected or temporal_damage: return false
+	if not is_main_attack(): return false
 	return projectile_type == ProjectileArrow.NAME and damage_type == DamageType.PHYSICAL
 
 func is_melee_attack() -> bool:
-	if was_a_cleave_damage or was_reflected or temporal_damage: return false
+	if not is_main_attack(): return false
 	return projectile_type == ProjectileBase.NONE and damage_type == DamageType.PHYSICAL
+
+func is_main_attack() -> bool:
+	if was_a_cleave_damage or was_reflected or temporal_damage: return false
+	return true
+func is_physical_damage() -> bool:
+	return damage_type == DamageType.PHYSICAL
 
 static func get_instance() -> DamageInfo:
 	return DamageInfo.new()

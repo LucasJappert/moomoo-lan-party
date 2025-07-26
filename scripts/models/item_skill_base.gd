@@ -81,3 +81,73 @@ func get_remaining_cooldown() -> float:
 	var now := Time.get_ticks_msec() / 1000.0
 	var elapsed := now - _last_used_time
 	return max(0.0, cooldown - elapsed)
+
+
+static func roll_true_strike(_attacker: Entity, _di: DamageInfo) -> void:
+	if _di.damage_type != DamageType.PHYSICAL: return
+	if not _di.is_main_attack(): return
+	if ObjectHelpers.is_null(_attacker): return
+
+	_di.can_be_evaded = not GlobalsEntityHelpers.roll_chance(_attacker.cache_total_stats.get_chance_to_ignore_evasion())
+
+static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
+	if not ObjectHelpers.valid_instance(_attacker): return
+
+	var _attacker_stats = _attacker.cache_total_stats
+	# Cleave verification
+	_try_apply_cleave(_attacker, _target, _di)
+
+	# Lifesteal verification
+	_try_apply_lifesteal(_attacker, _target, _di)
+	
+	# Stun verification, we need it after the evasion check
+	_try_apply_stun(_attacker, _target, _di)
+
+# region AUXILIARY METHODS
+static func _try_apply_stun(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
+	if not _di.is_main_attack() or not _di.is_physical_damage(): return
+	if GlobalsEntityHelpers.roll_chance(_attacker.cache_total_stats.get_stun_chance()):
+		_target.apply_stun(_attacker.cache_total_stats.get_stun_duration())
+
+static func _try_apply_lifesteal(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
+	if not _di.is_main_attack() or not _di.is_physical_damage(): return
+	if _attacker.cache_total_stats.get_life_steal_percent() <= 0: return
+
+	if _attacker.current_hp == _attacker.get_full_health() or _di.total_damage <= 0: return
+
+	var total_heal = int(max(1, _di.total_damage * _attacker.cache_total_stats.get_life_steal_percent()))
+	if total_heal <= 0: return
+
+	var new_di = DamageInfo.get_instance()
+	new_di.total_damage = - total_heal
+	_attacker.global_receive_damage_or_heal(new_di)
+	_attacker.update_current_hp(total_heal)
+
+static func _try_apply_cleave(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
+	if not _di.is_main_attack() or not _di.is_physical_damage(): return
+	if _attacker.cache_total_stats.get_cleave_percent() <= 0: return
+
+	var _cleave_range_in_tiles = _attacker.cache_total_stats.get_cleave_range()
+	var _cleave_percent = _attacker.cache_total_stats.get_cleave_percent()
+	CleaveEffect.show_cleave_effect_with_texture(
+		GameManager.game_world.over_terrain_layer_layer_2,
+		_target.global_position,
+		_attacker.get_direction_according_to_target(_target),
+		_cleave_range_in_tiles,
+	)
+
+	var nearest_enemies = GlobalsEntityHelpers.get_closest_entities(_target.global_position, _attacker.get_my_enemies(), _cleave_range_in_tiles, 100, [_target])
+	var filtered_enemies := GlobalsEntityHelpers.filter_enemies_according_to_caster_direction(_attacker.position, _target.position, nearest_enemies)
+
+	if filtered_enemies.is_empty(): return
+
+	var cleave_damage: int = int(_di.total_damage * _cleave_percent)
+
+	for enemy in filtered_enemies:
+		var _cdi := DamageInfo.new(cleave_damage, _di.damage_type, _attacker.name)
+		_cdi.projectile_type = ProjectileBase.NONE
+		_cdi.can_be_evaded = false
+		_cdi.was_a_cleave_damage = true
+		enemy.server_receive_damage(_cdi, _attacker)
+	
+# endregion AUXILIARY METHODS

@@ -34,7 +34,7 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].description = "Unleashes a blazing aura that ignites the ground around the owner, burning nearby enemies for " + StringHelpers.format_float(aux_array[0][i]) + " magic damage per second over " + str(aux_array[3][i]) + " seconds."
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
-	if _learned_skill.my_name != NAME: return true
+	if _learned_skill.my_name != NAME: return false
 
 	if not verify_range(_caster, _target, _learned_skill): return false
 

@@ -4,7 +4,7 @@ class_name Enemy
 
 const DAMAGE_MODIFIER: float = 0.5 # Used to calculate the damage done to the target
 static var _exp_when_dead: int = 0
-var monster_sounds_helper = MonsterSoundsHelper.new()
+var monster_sounds_helper := MonsterSoundsHelper.new()
 
 var timer_500ms: Timer
 

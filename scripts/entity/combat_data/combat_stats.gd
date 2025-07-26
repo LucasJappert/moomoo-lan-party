@@ -56,10 +56,15 @@ func accumulate_info(info_to_add: Dictionary[String, float]) -> Dictionary[Strin
 
 static func aux_accumulate(current: Dictionary[String, float], info_to_add: Dictionary[String, float]) -> Dictionary[String, float]:
 	for key in info_to_add:
-		if current.has(key):
-			current[key] += info_to_add[key]
-		else:
+		if not current.has(key):
 			current[key] = info_to_add[key]
+			continue
+
+		if key == CLEAVE_RANGE:
+			current[key] = max(current[key], info_to_add[key])
+			continue
+		current[key] += info_to_add[key]
+		
 	return current
 
 static func get_extra_info_by_attributes(info: Dictionary[String, float]) -> Dictionary[String, float]:
@@ -124,6 +129,10 @@ func set_value(prop: String, value: float) -> void:
 func set_value_i(prop: String, value: int) -> void:
 	_info[prop] = value
 
+func set_cleave_percent(value: float) -> void:
+	set_value(CLEAVE_PERCENT, value)
+func set_cleave_range(value: int) -> void:
+	set_value_i(CLEAVE_RANGE, value)
 func set_hp(value: int) -> void:
 	set_value_i(HP, value)
 func set_mana(value: int) -> void:
@@ -184,7 +193,6 @@ func set_strength(value: int) -> void:
 	set_value_i(STRENGTH, value)
 func set_intelligence(value: int) -> void:
 	set_value_i(INTELLIGENCE, value)
-
 # endregion SETTERs
 
 # region 	GETTERs
@@ -300,16 +308,13 @@ func get_description() -> String:
 
 	return description
 
-func get_hp() -> int:
-	return _get_value_i(HP)
-func get_mana() -> int:
-	return _get_value_i(MANA)
-func get_physical_defense_percent() -> float:
-	return _get_value(PHYSICAL_DEFENSE_PERCENT)
-func get_magic_defense_percent() -> float:
-	return _get_value(MAGIC_DEFENSE_PERCENT)
-func get_evasion() -> float:
-	return _get_value(EVASION)
+func get_cleave_percent() -> float: return _get_value(CLEAVE_PERCENT)
+func get_cleave_range() -> int: return _get_value_i(CLEAVE_RANGE)
+func get_hp() -> int: return _get_value_i(HP)
+func get_mana() -> int: return _get_value_i(MANA)
+func get_physical_defense_percent() -> float: return _get_value(PHYSICAL_DEFENSE_PERCENT)
+func get_magic_defense_percent() -> float: return _get_value(MAGIC_DEFENSE_PERCENT)
+func get_evasion() -> float: return _get_value(EVASION)
 func get_crit_chance() -> float:
 	return _get_value(CRIT_CHANCE)
 func get_crit_multiplier() -> float:
@@ -375,3 +380,6 @@ func get_critic_description() -> String:
 	if get_crit_chance() == 0: return ""
 	return StringHelpers.format_percent(get_crit_chance()) + " (*" + StringHelpers.format_float_compact(get_crit_multiplier()) + ")"
 # endregion GETTERs
+
+# region ---------- STATIC METHODS
+# endregion ---------- STATIC METHODS

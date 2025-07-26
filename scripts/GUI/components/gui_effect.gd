@@ -2,6 +2,8 @@ class_name GuiEffect
 
 extends Control
 
+const EFFECT_SCENE := preload("res://scenes/GUI/gui_effect_scene.tscn")
+
 @onready var _sprite = $Sprite2D
 var is_permanent: bool = false
 var _duration: float = 0 # In seconds
@@ -11,7 +13,7 @@ var my_owner: Entity
 var _is_hovering := false
 
 static func get_instance(p_effect: CombatEffect) -> GuiEffect:
-	var gui_effect = load("res://scenes/GUI/gui_effect_scene.tscn").instantiate()
+	var gui_effect = EFFECT_SCENE.instantiate()
 	gui_effect._initialize(p_effect)
 	return gui_effect
 

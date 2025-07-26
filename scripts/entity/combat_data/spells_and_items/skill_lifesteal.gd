@@ -4,6 +4,10 @@ extends SkillBase
 const NAME = "Lifesteal"
 const ICON_SLOT = Vector2(5, 0)
 
+func _init(p_learned_skill: ItemSkillBase) -> void:
+	super._init(p_learned_skill, true)
+	permanent_effect = true
+
 static func create_and_add_instance() -> void:
 	SKILLS[NAME] = Skill.new(NAME, SkillType.PASSIVE)
 	SKILLS[NAME].region_rect = Rect2(ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
@@ -19,9 +23,6 @@ static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
 	if _skill.get_name() != NAME: return false
 	if not _skill.get_learned_skill(): return false
 
-	_owner.effects_helper.remove_effect_by_name(NAME)
-
-	var new_effect = CombatEffect.get_permanent_effect_from_skill(_skill)
-	_owner.effects_helper.add_effect(new_effect)
+	_owner.add_active_skill(SkillLifesteal.new(_skill.get_learned_skill()))
 
 	return true

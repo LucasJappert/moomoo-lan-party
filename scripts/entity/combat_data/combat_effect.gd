@@ -96,26 +96,3 @@ static func get_temporal_effect(p_name: String, _duration_in_seconds: float, _ma
 	var result = _get_instance(p_name, _duration_in_seconds, false, _max_stacks, p_info)
 	if p_name == STUN_NAME: result.set_region_rect(CombatEffect.STUN_RECT_REGION)
 	return result
-
-static func actions_after_effective_hit(_attacker: Entity, _receiver: Entity, _di: DamageInfo) -> void:
-	if not ObjectHelpers.valid_instance(_attacker): return
-	
-	# Should be called only on the server
-	var _attacker_stats = _attacker.cache_total_stats
-
-	# Lifesteal verification
-	if not _di.was_a_cleave_damage:
-		if _attacker.current_hp < _attacker.get_full_health() && _di.total_damage > 0:
-			if _attacker_stats.get_life_steal_percent() > 0:
-				var total_heal = int(max(1, _di.total_damage * _attacker_stats.get_life_steal_percent()))
-				if total_heal > 0:
-					var new_di = DamageInfo.get_instance()
-					new_di.total_damage = - total_heal
-					_attacker.global_receive_damage_or_heal(new_di)
-					_attacker.update_current_hp(total_heal)
-
-	# Stun verification, we need it after the evasion check
-	if _di.damage_type == DamageType.PHYSICAL:
-		if GlobalsEntityHelpers.roll_chance(_attacker_stats.get_stun_chance()):
-			_receiver.apply_stun(_attacker_stats.get_stun_duration())
-	return

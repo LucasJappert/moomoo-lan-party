@@ -85,9 +85,6 @@ static func get_new_learned_skill(_skill_name: String, skill_level: int = 1) -> 
 	result.learned_level = skill_level
 	return result
 
-static func actions_after_cast_skill(_owner: Entity, _skill_used: ItemSkillBase) -> void:
-	# At the moment, Implemented in Static Discharge skill
-	pass
 
 static func remove_effects_running_by_owner_name(_owner_name: String) -> void:
 	effects_running_by_owner_name.erase(_owner_name)
@@ -98,16 +95,15 @@ static func get_permanent_active_skill(_learned_skill: ItemSkillBase) -> SkillBa
 	return skill
 
 # Must be overriden
-func on_damage_received(_attacker: Entity, _damage_received: int) -> void:
-	pass
+func on_damage_received(_attacker: Entity, _damage_received: int) -> void: pass
 
 # Must be overriden
-func actions_after_execute_physical_attack(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
-	pass
+func actions_after_execute_physical_attack(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void: pass
+# Must be overriden
+func instance_actions_before_receive_damage(_attacker: Entity, _di: DamageInfo) -> bool: return false
 
 # Must be overriden
-static func create_and_add_instance() -> void:
-	pass
+static func create_and_add_instance() -> void: pass
 
 # Must be overriden
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
@@ -120,29 +116,27 @@ static func verify_range(_caster: Entity, _target: Entity, _learned_skill: ItemS
 	return _caster.is_in_range(_target.movement_helper.current_cell, _learned_skill.cast_range_in_tiles)
 
 # Must be overriden
-static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
-	return false
+static func actions_after_cast_skill(_owner: Entity, _skill_used: ItemSkillBase) -> void: pass
 
 # Must be overriden
-static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
-	return false
+static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool: return false
+
+# Must be overriden
+static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool: return false
 	
 # Must be overriden
-static func on_active_skill_added(_owner: Entity, _skill: SkillBase) -> void:
-	pass
+static func on_active_skill_added(_owner: Entity, _skill: SkillBase) -> void: pass
 
 # Must be overriden
-static func on_active_skill_removed(_owner: Entity, _skill: SkillBase) -> void:
-	pass
+static func on_active_skill_removed(_owner: Entity, _skill: SkillBase) -> void: pass
 
 # Must be overriden
-static func actions_after_die(_owner: Entity, _killed_by: Entity) -> void:
-	pass
+static func actions_after_die(_owner: Entity, _killed_by: Entity) -> void: pass
 
 # Must be overriden
-static func actions_after_current_hp_updated(_increased_value: int, _attacker: Entity) -> void:
-	pass
+static func actions_after_current_hp_updated(_increased_value: int, _owner: Entity) -> void: pass
+# Must be overriden
+func instance_actions_after_current_hp_updated(_increased_value: int, _owner: Entity) -> void: pass
 
 # Must be overriden
-static func actions_before_receive_damage(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
-	return false
+static func actions_before_receive_damage(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool: return false

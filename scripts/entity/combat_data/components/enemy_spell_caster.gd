@@ -37,7 +37,7 @@ func _try_cast_random_skill() -> bool:
 		return true
 	) as Array[Skill]
 
-	if available_skills.size() == 0: return true
+	if available_skills.size() == 0: return false
 
 	var skill_to_cast: Skill = available_skills[randi() % available_skills.size()]
 
