@@ -28,9 +28,9 @@ class WaveInfo:
 
 static var WAVES_INFO = [
 	# TODO: Configurar las stats
-	WaveInfo.new([EnemyInfernalMinotaur.LONG_NAME], [EnemyNightArcher.LONG_NAME], CombatStats.get_instance(3, 1, 1)),
 	WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME], CombatStats.get_instance(1, 1, 1)),
 	WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME], CombatStats.get_instance(2, 1, 1)),
+	WaveInfo.new([EnemyInfernalMinotaur.LONG_NAME], [EnemyNightArcher.LONG_NAME], CombatStats.get_instance(3, 1, 1)),
 	WaveInfo.new([EnemyBoneguard.LONG_NAME], [EnemyFrostboneArcher.LONG_NAME], CombatStats.get_instance(4, 1, 1)),
 	WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME], CombatStats.get_instance(5, 1, 1)),
 	WaveInfo.new([EnemyReflector.LONG_NAME], [EnemyCrimsonWarlock.LONG_NAME], CombatStats.get_instance(6, 1, 1)),
@@ -131,6 +131,9 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 	enemy.combat_stats.accumulate_info(extra_stats_by_wave.get_info())
 	if enemy._boss_level: enemy.combat_stats.accumulate_info(extra_stats_by_wave.get_info())
 	enemy.combat_stats.accumulate_info(_current_wave_info.stats.get_info())
+
+	for skill in enemy._skills:
+		skill.learned_level = min(int(((current_wave - 1) / float(WAVES_INFO.size()))) + 1, 3)
 
 	enemy.combat_stats.set_attack_speed(round(enemy.combat_stats.get_attack_speed() * (1.0 + randf_range(-0.05, 0.05)) * 100.0) / 100.0)
 

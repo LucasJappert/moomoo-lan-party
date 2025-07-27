@@ -194,7 +194,6 @@ func remove_active_skill_by_name(_skill_name: String) -> void:
 
 func add_active_skill(_skill: SkillBase) -> bool:
 	if _stacks_reached(_skill): return false
-	print("Adding active skill: ", _skill.learned_skill.my_name)
 
 	_active_skills.append(_skill)
 	_try_to_apply_effect(_skill)

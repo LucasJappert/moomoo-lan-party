@@ -5,12 +5,9 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- ✅ Improve enemy spawn animation
 - Agregar True Strike a algun enemigo
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
 - Agregar estadísticas in game, como el tiempo transcurrido, el daño causado, el daño recibido, etc.
-- Revisar los Names en la clase Skill, quizas podamos evitarlo y sacarlos de cada clase Skill
-- Mejorar los niveles de skill de enemigos avanzados
 
 - Revisar sonidos en loop
 - Agregar un item que brinda daño splash a todo alreadedor del target (es diferente al cleave)
