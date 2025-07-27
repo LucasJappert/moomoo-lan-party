@@ -82,7 +82,7 @@ func get_remaining_cooldown() -> float:
 	var elapsed := now - _last_used_time
 	return max(0.0, cooldown - elapsed)
 
-
+# region -------- STATICS METHODS
 static func roll_true_strike(_attacker: Entity, _di: DamageInfo) -> void:
 	if _di.damage_type != DamageType.PHYSICAL: return
 	if not _di.is_main_attack(): return
@@ -103,7 +103,9 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 	# Stun verification, we need it after the evasion check
 	_try_apply_stun(_attacker, _target, _di)
 
-# region AUXILIARY METHODS
+# endregion STATICS METHODS
+
+# region -------- AUXILIARY METHODS
 static func _try_apply_stun(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
 	if not _di.is_main_attack() or not _di.is_physical_damage(): return
 	if GlobalsEntityHelpers.roll_chance(_attacker.cache_total_stats.get_stun_chance()):

@@ -20,19 +20,22 @@ static var extra_stats_by_wave: CombatStats
 class WaveInfo:
 	var common_enemies: Array[String]
 	var boss_enemies: Array[String]
-	func _init(p_common_enemies: Array[String], p_boss_enemies: Array[String]):
+	var stats: CombatStats
+	func _init(p_common_enemies: Array[String], p_boss_enemies: Array[String], p_stats: CombatStats):
 		common_enemies = p_common_enemies
 		boss_enemies = p_boss_enemies
+		stats = p_stats
 
 static var WAVES_INFO = [
-	WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME]),
-	WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME]),
-	WaveInfo.new([EnemyBoneguard.LONG_NAME], [EnemyFrostboneArcher.LONG_NAME]),
-	WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME]),
-	WaveInfo.new([EnemyInfernalMinotaur.LONG_NAME], [EnemyNightArcher.LONG_NAME]),
-	WaveInfo.new([EnemyReflector.LONG_NAME], [EnemyCrimsonWarlock.LONG_NAME]),
-	WaveInfo.new([EnemyBlowDigger.LONG_NAME], [EnemyRotbull.LONG_NAME]),
-	WaveInfo.new([EnemyDeadShield.LONG_NAME], [EnemySilentShuriken.LONG_NAME]),
+	# TODO: Configurar las stats
+	WaveInfo.new([EnemyInfernalMinotaur.LONG_NAME], [EnemyNightArcher.LONG_NAME], CombatStats.get_instance(3, 1, 1)),
+	WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME], CombatStats.get_instance(1, 1, 1)),
+	WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME], CombatStats.get_instance(2, 1, 1)),
+	WaveInfo.new([EnemyBoneguard.LONG_NAME], [EnemyFrostboneArcher.LONG_NAME], CombatStats.get_instance(4, 1, 1)),
+	WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME], CombatStats.get_instance(5, 1, 1)),
+	WaveInfo.new([EnemyReflector.LONG_NAME], [EnemyCrimsonWarlock.LONG_NAME], CombatStats.get_instance(6, 1, 1)),
+	WaveInfo.new([EnemyBlowDigger.LONG_NAME], [EnemyRotbull.LONG_NAME], CombatStats.get_instance(7, 1, 1)),
+	WaveInfo.new([EnemyDeadShield.LONG_NAME], [EnemySilentShuriken.LONG_NAME], CombatStats.get_instance(8, 1, 1)),
 ]
 
 static func start_wave_process() -> void:
@@ -90,18 +93,27 @@ static func create_next_wave() -> void:
 
 	_current_wave_info = WAVES_INFO[current_wave % WAVES_INFO.size() - 1]
 
-	for wave_direction in _WAVE_DIRECTIONS:
-		for i in range(ENEMIES_BY_ZONE):
+	# Ejecutar lo demás de forma asíncrona
+	_run_wave_spawn_async()
+
+static func _run_wave_spawn_async() -> void:
+	await _spawn_wave_enemies()
+
+static func _spawn_wave_enemies() -> void:
+	for i in range(ENEMIES_BY_ZONE):
+		for wave_direction in _WAVE_DIRECTIONS:
 			var enemy_type = ""
 			var is_boss = i == 0
 
-			if is_boss: enemy_type = _current_wave_info.boss_enemies[randi() % _current_wave_info.boss_enemies.size()]
-			else: enemy_type = _current_wave_info.common_enemies[randi() % _current_wave_info.common_enemies.size()]
+			if is_boss:
+				enemy_type = _current_wave_info.boss_enemies[randi() % _current_wave_info.boss_enemies.size()]
+			else:
+				enemy_type = _current_wave_info.common_enemies[randi() % _current_wave_info.common_enemies.size()]
 
 			var enemy = _get_enemy(enemy_type, wave_direction, is_boss)
-
-			# enemy.can_attack = false
+			enemy.can_attack = false
 			GameManager.spawn_enemy(enemy)
+			await GameManager.game_world.get_tree().create_timer(0.05).timeout
 		# return
 
 static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: bool) -> Enemy:
@@ -118,6 +130,7 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 
 	enemy.combat_stats.accumulate_info(extra_stats_by_wave.get_info())
 	if enemy._boss_level: enemy.combat_stats.accumulate_info(extra_stats_by_wave.get_info())
+	enemy.combat_stats.accumulate_info(_current_wave_info.stats.get_info())
 
 	enemy.combat_stats.set_attack_speed(round(enemy.combat_stats.get_attack_speed() * (1.0 + randf_range(-0.05, 0.05)) * 100.0) / 100.0)
 

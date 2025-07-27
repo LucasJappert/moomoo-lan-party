@@ -122,6 +122,9 @@ func try_to_upgrade(my_owner: Entity, p_slot_number: int) -> void:
 
 	EventBus.emit_skill_upgraded(my_owner, self, p_slot_number)
 
+	for registered_class in SkillBase.REGISTERED_SKILLS:
+		registered_class.actions_after_skill_updated(my_owner, self)
+
 # endregion ................. SETTERs
 
 

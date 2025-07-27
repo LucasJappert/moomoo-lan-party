@@ -4,11 +4,11 @@ extends MyInitAuxiliary
 
 const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapManager.TILE_SIZE.y, 2))) + 1
 
-var level: int
 static var EMPTY_STATS: CombatStats = CombatStats.new()
 
 var _info: Dictionary[String, float] = {}
 
+const LEVEL = "level"
 const CLEAVE_PERCENT = "cleave_percent"
 const CLEAVE_RANGE = "cleave_range" # In tiles
 
@@ -79,6 +79,13 @@ static func get_extra_info_by_attributes(info: Dictionary[String, float]) -> Dic
 static func get_instance_from_dict(dict: Dictionary) -> CombatStats:
 	var instance = CombatStats.new()
 	ObjectHelpers.from_dict(instance, dict)
+	return instance
+
+static func get_instance(intellicense: int, agility: int, strength: int) -> CombatStats:
+	var instance = CombatStats.new()
+	instance.set_intelligence(intellicense)
+	instance.set_agility(agility)
+	instance.set_strength(strength)
 	return instance
 
 const _HP_BY_STRENGTH = 20; const _HP_REGEN_BY_STRENGTH = 0.1; const _PHYSICAL_ATTACK_POWER_BY_STRENGTH = 0.5
@@ -193,6 +200,7 @@ func set_strength(value: int) -> void:
 	set_value_i(STRENGTH, value)
 func set_intelligence(value: int) -> void:
 	set_value_i(INTELLIGENCE, value)
+func set_level(value: int) -> void: set_value_i(LEVEL, value)
 # endregion SETTERs
 
 # region 	GETTERs
@@ -306,8 +314,12 @@ func get_description() -> String:
 	if get_mana_regeneration_points() != 0:
 		description += str("- Mana regeneration points: ", get_mana_regeneration_points(), "\n")
 
+	if get_level() > 0:
+		description += str("- Level: ", get_level(), "\n")
+
 	return description
 
+func get_level() -> int: return _get_value_i(LEVEL)
 func get_cleave_percent() -> float: return _get_value(CLEAVE_PERCENT)
 func get_cleave_range() -> int: return _get_value_i(CLEAVE_RANGE)
 func get_hp() -> int: return _get_value_i(HP)

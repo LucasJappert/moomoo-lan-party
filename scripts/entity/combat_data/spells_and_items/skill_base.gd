@@ -101,6 +101,8 @@ func on_damage_received(_attacker: Entity, _damage_received: int) -> void: pass
 func actions_after_execute_physical_attack(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void: pass
 # Must be overriden
 func instance_actions_before_receive_damage(_attacker: Entity, _di: DamageInfo) -> bool: return false
+# Must be overriden
+func instance_actions_after_current_hp_updated(_increased_value: int, _owner: Entity) -> void: pass
 
 # Must be overriden
 static func create_and_add_instance() -> void: pass
@@ -135,8 +137,6 @@ static func actions_after_die(_owner: Entity, _killed_by: Entity) -> void: pass
 
 # Must be overriden
 static func actions_after_current_hp_updated(_increased_value: int, _owner: Entity) -> void: pass
-# Must be overriden
-func instance_actions_after_current_hp_updated(_increased_value: int, _owner: Entity) -> void: pass
 
 # Must be overriden
 static func actions_before_receive_damage(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool: return false

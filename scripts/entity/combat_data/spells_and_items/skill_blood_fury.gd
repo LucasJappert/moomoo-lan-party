@@ -19,7 +19,9 @@ static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
 	if _skill.get_name() != NAME: return false
 	if not _skill.get_learned_skill(): return false
 
-	_owner.add_active_skill(SkillBloodFury.new(_skill.get_learned_skill()))
+	var skill := SkillBloodFury.new(_skill.get_learned_skill())
+	skill.permanent_effect = true
+	_owner.add_active_skill(skill)
 
 	return true
 
@@ -40,10 +42,10 @@ func instance_actions_after_current_hp_updated(_increased_value: int, _owner: En
 	var extra_damage: int = int(_owner.cache_total_stats_no_effects.get_physical_attack_power() * percent_lost_hp)
 	effect_stats.set_physical_attack_power(extra_damage)
 	effect_stats.set_attack_speed(_owner.cache_total_stats_no_effects.get_attack_speed() * percent_lost_hp)
-	effect_stats.level = int(percent_lost_hp * 10) # Should be 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+	effect_stats.set_level(int(percent_lost_hp * 10)) # Should be 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
 
 	var existing_effect = _owner.effects_helper.get_effect_by_name(NAME)
-	if existing_effect and existing_effect.level == effect_stats.level: return
+	if existing_effect and existing_effect.get_level() == effect_stats.get_level(): return
 
 	_owner.remove_effect_by_name(NAME)
 

@@ -16,6 +16,7 @@ func _process(delta):
 	if _enemy_owner._boss_level == 0: return
 	if _enemy_owner.is_dead(): return
 	if not _enemy_owner.can_attack: return
+	if _enemy_owner.is_spawning: return
 
 	cast_timer += delta
 	if cast_timer < next_cast_delay: return

@@ -52,7 +52,7 @@ static func _spawn_single_stain(global_position: Vector2, parent: Node, lifetime
 
 	var tween := node.create_tween()
 	tween.tween_property(sprite, "scale", final_scale, APPEAR_TIME)
-	tween.parallel().tween_property(sprite, "modulate:a", 1.0, APPEAR_TIME)
+	tween.parallel().tween_property(sprite, "modulate:a", 0.6, APPEAR_TIME)
 
 	# Esperar el tiempo de vida
 	tween.tween_interval(lifetime)

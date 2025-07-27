@@ -40,6 +40,8 @@ var _current_state: String = ""
 @export var _boss_level: int = 0
 @export var level: int = 1
 
+var is_spawning: bool = true
+
 func _init() -> void:
 	super._init()
 
@@ -49,7 +51,7 @@ func _ready():
 	movement_helper = MovementHelper.new(self)
 	statistics = Statistics.new(self)
 	tween_effects = TweenEffects.new(self)
-	tween_effects.apply_spawn_effect()
+	_test()
 	area_attack_shape.shape = area_attack_shape.shape.duplicate() # to avoid changing the original shape
 	for child in front_animations_node.get_children():
 		child.queue_free()
@@ -60,6 +62,34 @@ func _ready():
 
 	EventBus.connect_to_freed_entity(Callable(self, "_on_entity_freed"))
 	EventBus.connect_to_paused(func(_paused: bool, _show_menu: bool): EntityState.paused_game(self))
+
+func _test():
+	modulate.a = 0
+	scale = Vector2.ZERO
+	modulate = Color(0, 0, 0, 0)
+
+	if self is Enemy:
+		for i in 1:
+			_span_line()
+		await get_tree().create_timer(0.2).timeout # 100 ms
+		
+		for i in 3:
+			_span_line()
+		await get_tree().create_timer(0.2).timeout # 100 ms
+
+		for i in 5:
+			_span_line()
+			await get_tree().create_timer(0.05).timeout # 100 ms
+
+	tween_effects.apply_spawn_effect()
+	is_spawning = false
+
+func _span_line():
+	const M := 24
+	var start_pos := Vector2(global_position.x + randf_range(-M, M), global_position.y + randf_range(-M, M))
+	var end_pos := Vector2(global_position.x + randf_range(-M, M), global_position.y + randf_range(-M, M))
+	var random_duration := randf_range(0.1, 0.2)
+	LineEffect.spawn(GameManager.game_world.general_container, start_pos, end_pos, random_duration)
 
 
 func _post_ready():

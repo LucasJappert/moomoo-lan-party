@@ -12,7 +12,5 @@ static func try_to_init_from_name(_name: String, _enemy: Enemy) -> void:
 	_enemy.extra_info = ExtraInfo.new(LONG_NAME, get_rect_frames(SPRITES_POS_VECTOR), ALIAS)
 
 	_enemy.combat_stats.set_evasion(0.3)
-	_enemy.combat_stats.set_agility(25)
-	_enemy.combat_stats.set_strength(22)
 	_enemy.combat_stats.set_attack_speed(1)
 	_enemy.combat_stats.set_physical_defense_percent(0.3)

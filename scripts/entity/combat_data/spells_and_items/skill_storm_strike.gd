@@ -30,7 +30,7 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 	if not verify_range(_caster, _target, _learned_skill): return false
 
 	var attacker_stats = _caster.cache_total_stats
-	var total_damage = _learned_skill.float_dict["base_damage"] + attacker_stats.intelligence * _learned_skill.float_dict["extra_damage_by_intelligence"]
+	var total_damage := int(_learned_skill.float_dict["base_damage"] + attacker_stats.get_intelligence() * _learned_skill.float_dict["extra_damage_by_intelligence"])
 
 	var targets := GlobalsEntityHelpers.get_closest_entities(_target.global_position, _caster.get_my_enemies(), 6, _learned_skill.max_targets - 1, [_target])
 

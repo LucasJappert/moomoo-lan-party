@@ -69,7 +69,10 @@ func post_ready_combat_data() -> void:
 		if not skill.learned_level: continue
 		if skill.get_learned_skill().type != SkillType.PASSIVE: continue
 
-		add_active_skill(SkillBase.get_permanent_active_skill(skill.get_learned_skill()))
+		
+		for registered_class in SkillBase.REGISTERED_SKILLS:
+			registered_class.actions_after_skill_updated(self, skill)
+		# add_active_skill(SkillBase.get_permanent_active_skill(skill.get_learned_skill()))
 
 	if not GameManager.AM_I_HOST: return
 
@@ -104,6 +107,7 @@ func _process_on_server(_delta: float):
 func server_execute_physical_damage(_target: Entity) -> void:
 	if my_owner().multiplayer.is_server() == false: return
 	if _target == null: return
+	if my_owner().is_spawning: return
 
 	var base_damage := my_owner().cache_total_stats.get_physical_attack_power()
 	
@@ -125,6 +129,7 @@ func server_execute_physical_damage(_target: Entity) -> void:
 func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	if _di.total_damage == 0: return
 	if my_owner().multiplayer.is_server() == false: return
+	if my_owner().is_spawning: return
 
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
 		# Cancel the damage if the skill cancels damage
@@ -188,8 +193,8 @@ func remove_active_skill_by_name(_skill_name: String) -> void:
 			_remove_active_skill(_active_skills[i], i)
 
 func add_active_skill(_skill: SkillBase) -> bool:
-	print("Adding active skill: ", _skill.my_name)
 	if _stacks_reached(_skill): return false
+	print("Adding active skill: ", _skill.learned_skill.my_name)
 
 	_active_skills.append(_skill)
 	_try_to_apply_effect(_skill)
@@ -251,7 +256,7 @@ func _actions_after_current_hp_updated(value_to_increase: int = 0, _attacker: En
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
 		registered_skill.actions_after_current_hp_updated(value_to_increase, my_owner())
 	for active_skill in _active_skills:
-		active_skill.instance_actions_after_current_hp_updated(value_to_increase, my_owner())
+		active_skill.instance_actions_after_current_hp_updated(value_to_increase, self)
 
 	my_owner().hud.update_health_bar()
 	
@@ -537,6 +542,7 @@ func try_physical_attack(_delta: float) -> bool:
 	if not my_owner().multiplayer.is_server(): return false
 	if my_owner().is_dead(): return false
 	if my_owner().current_state != EntityState.States.IDLE: return false # Cant attack while moving
+	if my_owner().is_spawning: return false
 	
 	if target_to_attack == GameManager.moomoo: set_target_to_attack(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
 

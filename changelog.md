@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Improve enemy spawn animation
 - ✅ Improve creature spawn, it's causing a jump when we create multiple of them at once (before 4ms p/u, after 1ms p/u). Huge improvements in the CombatStats class
 - ✅ Add bleeding effect on the ground, also perhaps when an entity dies
 - ✅ Create new enemy Blow Digger, its special skill is to explode after dying, causing huge damage to nearby enemies
