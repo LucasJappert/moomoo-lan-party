@@ -66,7 +66,7 @@ func _try_update_label():
 	# _label.text = str(my_owner.effects_helper.get_effects().size())
 	_label_container.visible = _label.text != ""
 		
-	_label.text = str(my_owner._active_skills.size())
+	_label.text = str(my_owner.projectile_zone.get_children().size())
 
 func update_health_bar():
 	if my_owner.get_full_health() <= 0:

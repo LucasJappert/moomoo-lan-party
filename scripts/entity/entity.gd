@@ -13,7 +13,7 @@ var movement_helper: MovementHelper
 @onready var area_attack_shape: CollisionShape2D = $AreaAttack/CollisionShape2D
 @onready var area_vision: Area2D = $AreaVision
 @onready var area_vision_shape: CollisionShape2D = $AreaVision/CollisionShape2D
-@onready var projectile_zone: CollisionShape2D = $ProjectileZone/CollisionShape2D
+@onready var projectile_zone: CollisionShape2D = %ProjectileZone
 @onready var body_sprite: AnimatedSprite2D = %BodySprite
 @onready var body_shadow: Sprite2D = %BodyShadow
 @onready var front_animations_node: Node2D = $FrontAnimationsNode

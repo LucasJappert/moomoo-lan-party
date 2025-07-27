@@ -22,7 +22,6 @@ properties/3/replication_mode = 2
 script = ExtResource("2_ylf3p")
 player_id = 0
 current_exp = 0
-hero_type = "Iron Vex"
 current_gold = 0
 skill_points_to_assign = 0
 
@@ -32,6 +31,3 @@ replication_config = SubResource("SceneReplicationConfig_2y2wq")
 [node name="ClientInputs" type="Node2D" parent="." index="1"]
 unique_name_in_owner = true
 script = ExtResource("3_uyepr")
-
-[node name="CollisionShape2D" parent="ProjectileZone" index="0"]
-position = Vector2(0, -25)

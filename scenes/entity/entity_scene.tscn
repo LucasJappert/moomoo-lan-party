@@ -165,9 +165,10 @@ position = Vector2(0, -24)
 sprite_frames = SubResource("SpriteFrames_os1up")
 animation = &"idle"
 
-[node name="ProjectileZone" type="Area2D" parent="."]
+[node name="Area2D" type="Area2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ProjectileZone"]
+[node name="ProjectileZone" type="CollisionShape2D" parent="Area2D"]
+unique_name_in_owner = true
 position = Vector2(0, -13)
 shape = SubResource("CircleShape2D_8707b")
 debug_color = Color(1, 1, 1, 0.054)

@@ -4,6 +4,7 @@ extends CharacterBody2D
 
 const EXP_MULTIPLIER: int = 1
 
+var _my_owner: Entity = self
 var shopping_helper := ShoppingHelper.new(self)
 var _active_skills: Array[SkillBase] = []
 var effects_helper := EffectsHelper.new()
@@ -23,7 +24,7 @@ var target_view: Entity
 		if _target_view_name == value: return
 		_target_view_name = value
 		target_view = GameManager.get_entity(value)
-		# EventBus.emit_new_target_view_selected(my_owner(), target_view)
+		# EventBus.emit_new_target_view_selected(_my_owner, target_view)
 	get:
 		return _target_view_name
 var _target_view_name: String = ""
@@ -35,7 +36,7 @@ var target_to_attack: Entity
 		_target_to_attack_name = value
 		target_to_attack = GameManager.get_entity(value)
 		
-		EventBus.emit_new_target_to_attack_selected(my_owner(), target_to_attack)
+		EventBus.emit_new_target_to_attack_selected(_my_owner, target_to_attack)
 		if target_to_attack == null: return
 
 	get:
@@ -57,12 +58,12 @@ func _init():
 		_items.append(null)
 
 func ready_combat_data() -> void:
-	effects_helper.subscribe_to_changes(Callable(my_owner(), "update_cache_total_stats"))
+	effects_helper.subscribe_to_changes(Callable(_my_owner, "update_cache_total_stats"))
 
 	update_cache_total_stats()
 
 func post_ready_combat_data() -> void:
-	effects_helper.set_my_owner(my_owner())
+	effects_helper.set_my_owner(_my_owner)
 	
 	# Intentamos agregar skills aprendidos y que son pasivos
 	for skill in _skills:
@@ -80,14 +81,14 @@ func post_ready_combat_data() -> void:
 	if current_mana == 0: current_mana = get_full_mana()
 
 	# for skill_base in SkillBase.REGISTERED_SKILLS:
-	# 	skill_base.actions_on_load_skills(my_owner(), _skills)
+	# 	skill_base.actions_on_load_skills(_my_owner, _skills)
 
-	if my_owner() is Enemy:
-		enemy_spell_caster = EnemySpellCaster.new(my_owner())
+	if _my_owner is Enemy:
+		enemy_spell_caster = EnemySpellCaster.new(_my_owner)
 
 func process_combat_data(_delta: float): # Run only when it is the host
 	if GameManager.main_scene.PAUSED: return
-	if not my_owner(): return
+	if not _my_owner: return
 
 	effects_helper._process(_delta)
 
@@ -105,11 +106,11 @@ func _process_on_server(_delta: float):
 	update_active_skills(_delta)
 
 func server_execute_physical_damage(_target: Entity) -> void:
-	if my_owner().multiplayer.is_server() == false: return
+	if _my_owner.multiplayer.is_server() == false: return
 	if _target == null: return
-	if my_owner().is_spawning: return
+	if _my_owner.is_spawning: return
 
-	var base_damage := my_owner().cache_total_stats.get_physical_attack_power()
+	var base_damage := _my_owner.cache_total_stats.get_physical_attack_power()
 	
 	var critical_damage = try_critical_hit(base_damage)
 	var total_damage = base_damage + critical_damage
@@ -119,21 +120,21 @@ func server_execute_physical_damage(_target: Entity) -> void:
 	_di.critical = critical_damage
 	_di.projectile_type = projectile_type
 	_di.damage_type = DamageType.PHYSICAL
-	_di.attacker_name = my_owner().name
+	_di.attacker_name = _my_owner.name
 	
 	for active_skill in _active_skills:
-		active_skill.actions_after_execute_physical_attack(my_owner(), _target, _di)
+		active_skill.actions_after_execute_physical_attack(_my_owner, _target, _di)
 
-	_target.server_receive_damage(_di, my_owner())
+	_target.server_receive_damage(_di, _my_owner)
 
 func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	if _di.total_damage == 0: return
-	if my_owner().multiplayer.is_server() == false: return
-	if my_owner().is_spawning: return
+	if _my_owner.multiplayer.is_server() == false: return
+	if _my_owner.is_spawning: return
 
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
 		# Cancel the damage if the skill cancels damage
-		var cancel_damage = registered_skill.actions_before_receive_damage(_attacker, my_owner(), _di)
+		var cancel_damage = registered_skill.actions_before_receive_damage(_attacker, _my_owner, _di)
 		if cancel_damage: return
 
 	for active_skill in _active_skills:
@@ -146,12 +147,12 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 
 	if _check_evade(_di, my_stats): return # Evasion verification (only for physical damage)
 	
-	ItemSkillBase.actions_after_effective_hit(_attacker, my_owner(), _di)
+	ItemSkillBase.actions_after_effective_hit(_attacker, _my_owner, _di)
 
 	_apply_defenses(_di, my_stats)
 
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
-		registered_skill.actions_after_effective_hit(_attacker, my_owner(), _di)
+		registered_skill.actions_after_effective_hit(_attacker, _my_owner, _di)
 
 	global_receive_damage_or_heal(_di)
 
@@ -173,17 +174,17 @@ func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void
 func update_current_mana(value_to_increase: int) -> void:
 	if value_to_increase == 0: return
 	current_mana = clamp(current_mana + value_to_increase, 0, cache_total_stats.get_mana())
-	my_owner().hud.update_mana_bar()
+	_my_owner.hud.update_mana_bar()
 
 func update_active_skills(_delta: float) -> void:
 	for i in range(_active_skills.size() - 1, -1, -1):
-		_active_skills[i].process_skill(my_owner(), _delta)
+		_active_skills[i].process_skill(_my_owner, _delta)
 		if not _active_skills[i].active:
 			_remove_active_skill(_active_skills[i], i)
 
 func _remove_active_skill(_skill: SkillBase, index: int) -> void:
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
-		registered_skill.on_active_skill_removed(my_owner(), _skill)
+		registered_skill.on_active_skill_removed(_my_owner, _skill)
 
 	_active_skills.remove_at(index)
 
@@ -199,10 +200,10 @@ func add_active_skill(_skill: SkillBase) -> bool:
 	_try_to_apply_effect(_skill)
 
 	if _skill.learned_skill.get_silence_duration() > 0:
-		SilenceEffect.attach_to(my_owner().front_animations_node, _skill.learned_skill.duration_in_seconds)
+		SilenceEffect.attach_to(_my_owner.front_animations_node, _skill.learned_skill.duration_in_seconds)
 
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
-		registered_skill.on_active_skill_added(my_owner(), _skill)
+		registered_skill.on_active_skill_added(_my_owner, _skill)
 	
 	return true
 
@@ -218,7 +219,7 @@ func _stacks_reached(_skill: SkillBase) -> bool:
 func _try_to_apply_effect(_skill: SkillBase):
 	if not _skill.learned_skill.create_effect: return
 
-	# print("Agregamos _skill: ", _skill.my_name, " a unidad: ", my_owner().name)
+	# print("Agregamos _skill: ", _skill.my_name, " a unidad: ", _my_owner.name)
 
 	var new_effect := CombatEffect.get_effect_from_skill_base(_skill)
 	effects_helper.add_effect(new_effect)
@@ -245,7 +246,7 @@ func _verify_combat_states_after_stats_change() -> void:
 			is_silenced = true
 
 	if not is_stunned:
-		StunEffect.remove_all_from(my_owner().front_animations_node)
+		StunEffect.remove_all_from(_my_owner.front_animations_node)
 
 func set_current_hp(value: int) -> void:
 	current_hp = value
@@ -253,11 +254,11 @@ func set_current_hp(value: int) -> void:
 
 func _actions_after_current_hp_updated(value_to_increase: int = 0, _attacker: Entity = null) -> void:
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
-		registered_skill.actions_after_current_hp_updated(value_to_increase, my_owner())
+		registered_skill.actions_after_current_hp_updated(value_to_increase, _my_owner)
 	for active_skill in _active_skills:
 		active_skill.instance_actions_after_current_hp_updated(value_to_increase, self)
 
-	my_owner().hud.update_health_bar()
+	_my_owner.hud.update_health_bar()
 	
 	_server_verify_death(_attacker)
 
@@ -272,7 +273,7 @@ func _server_verify_death(_killed_by: Entity) -> void:
 
 	current_hp = 0
 	_try_to_give_experience_to_players(Enemy.get_enemy_exp_when_dead()) # Give experience when an enemy dies
-	my_owner().global_die(_killed_by)
+	_my_owner.global_die(_killed_by)
 	_try_to_add_gold_to_players_on_enemy_die(_killed_by)
 
 	if ObjectHelpers.valid_instance(_killed_by):
@@ -280,7 +281,7 @@ func _server_verify_death(_killed_by: Entity) -> void:
 
 func _try_to_give_experience_to_players(_exp: int) -> void:
 	_exp *= EXP_MULTIPLIER
-	if not my_owner() is Enemy: return
+	if not _my_owner is Enemy: return
 
 	for player in GameManager.get_players():
 		player.increment_current_exp(max(1, _exp))
@@ -288,13 +289,13 @@ func _try_to_give_experience_to_players(_exp: int) -> void:
 func _try_to_add_gold_to_players_on_enemy_die(_attacker: Entity) -> void:
 	if _attacker is Player == false: return
 	
-	var base_earned := EnemiesWavesController.get_gold_earned_by_enemy() * (my_owner()._boss_level + 1)
+	var base_earned := EnemiesWavesController.get_gold_earned_by_enemy() * (_my_owner._boss_level + 1)
 	var earned_gold := randi_range(int(base_earned * 0.8), int(base_earned * 1.2))
 	for player in GameManager.get_players():
 		player.increment_current_gold(earned_gold)
 
 func update_base_stats(new_info: Dictionary[String, float]) -> void:
-	my_owner().combat_stats.set_info(new_info)
+	_my_owner.combat_stats.set_info(new_info)
 	update_cache_total_stats()
 
 func update_item(item: Item, index: int) -> bool:
@@ -302,7 +303,7 @@ func update_item(item: Item, index: int) -> bool:
 
 	if item.quantity <= 0: item = null
 	_items[index] = item
-	EventBus.emit_item_updated(my_owner(), item, index + 1)
+	EventBus.emit_item_updated(_my_owner, item, index + 1)
 
 	update_cache_total_stats()
 	return true
@@ -321,7 +322,7 @@ func use_item(_slot_number: int) -> void: # Called from _on_key_pressed
 	if MainScene.PAUSED or current_hp == 0: return
 	if _items[_slot_number - 1] == null: return print("No item in slot: ", _slot_number)
 
-	_items[_slot_number - 1].use_item(_slot_number, my_owner(), null)
+	_items[_slot_number - 1].use_item(_slot_number, _my_owner, null)
 
 func remove_effect_by_name(effect_name: String) -> void:
 	effects_helper.remove_effect_by_name(effect_name)
@@ -362,23 +363,23 @@ func charge_skill(index: int) -> void:
 	if is_silenced: return
 	if not _skills[index].learned_level: return
 	if _skills[index].get_learned_skill().type == SkillType.PASSIVE: return
-	if not _skills[index].can_use(my_owner()): return
+	if not _skills[index].can_use(_my_owner): return
 
 	if charged_skill and charged_skill.get_name() == _skills[index].get_name():
-		return use_charged_skill(my_owner())
+		return use_charged_skill(_my_owner)
 
 	charged_skill = _skills[index]
 	
 	if not charged_skill.get_learned_skill().instant_use: return
 
-	charged_skill.use(my_owner(), my_owner())
+	charged_skill.use(_my_owner, _my_owner)
 
 func uncharge_skill() -> bool:
 	charged_skill = null
 	return true
 
 func upgrade_skill(slot_number: int) -> void:
-	_skills[slot_number - 1].try_to_upgrade(my_owner(), slot_number)
+	_skills[slot_number - 1].try_to_upgrade(_my_owner, slot_number)
 	
 	var learned_skill := _skills[slot_number - 1].get_learned_skill()
 	if learned_skill.type == SkillType.PASSIVE:
@@ -395,12 +396,12 @@ func use_charged_skill(_target: Entity) -> void:
 	var learned_skill = charged_skill.get_learned_skill()
 
 	# Do not allow the use of damaging skills on oneself
-	if learned_skill.apply_to_enemy and _target.name == my_owner().name: return uncharge_skill()
+	if learned_skill.apply_to_enemy and _target.name == _my_owner.name: return uncharge_skill()
 
 	# Update the target to attack if the skill is not friendly
 	# if not learned_skill.is_owner_friendly1: set_target_to_attack(_target)
 
-	charged_skill.use(my_owner(), _target)
+	charged_skill.use(_my_owner, _target)
 
 	uncharge_skill()
 
@@ -410,10 +411,10 @@ func toogle_keep_ground() -> void:
 
 # region 	PRIVATE GETTERs
 func _get_total_stats(include_effects := true) -> Dictionary[String, float]:
-	if not my_owner(): return {}
+	if not _my_owner: return {}
 	# This function returns the total of all combat_stats, including extras from effects and extras from attributes
-	var _result: Dictionary[String, float] = my_owner().combat_stats.get_total_info_including_extras_by_attributes()
-	# CombatStats.aux_accumulate(_result, my_owner().combat_stats.get_total_info_including_extras_by_attributes())
+	var _result: Dictionary[String, float] = _my_owner.combat_stats.get_total_info_including_extras_by_attributes()
+	# CombatStats.aux_accumulate(_result, _my_owner.combat_stats.get_total_info_including_extras_by_attributes())
 
 	if include_effects: CombatStats.aux_accumulate(_result, _get_combat_info_by_effects())
 	CombatStats.aux_accumulate(_result, _get_combat_info_by_skills())
@@ -498,9 +499,6 @@ func update_cache_total_stats() -> void:
 	_verify_combat_states_after_stats_change()
 
 
-func my_owner() -> Entity:
-	return self
-
 func get_skills() -> Array[Skill]:
 	return _skills
 
@@ -538,10 +536,10 @@ func get_items_by_name(p_name: String) -> Array[Item]:
 
 # region TRY PHISICAL ATTACK
 func try_physical_attack(_delta: float) -> bool:
-	if not my_owner().multiplayer.is_server(): return false
-	if my_owner().is_dead(): return false
-	if my_owner().current_state != EntityState.States.IDLE: return false # Cant attack while moving
-	if my_owner().is_spawning: return false
+	if not _my_owner.multiplayer.is_server(): return false
+	if _my_owner.is_dead(): return false
+	if _my_owner.current_state != EntityState.States.IDLE: return false # Cant attack while moving
+	if _my_owner.is_spawning: return false
 	
 	if target_to_attack == GameManager.moomoo: set_target_to_attack(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
 
@@ -557,24 +555,24 @@ func try_physical_attack(_delta: float) -> bool:
 
 func _get_nearest_target_in_range_attack():
 	var max_range = cache_total_stats.get_attack_range()
-	var start_pos = my_owner().global_position
-	if my_owner() is Player:
+	var start_pos = _my_owner.global_position
+	if _my_owner is Player:
 		return GlobalsEntityHelpers.get_nearest_entity(start_pos, GameManager.get_enemies(), max_range)
 
-	if my_owner() is Enemy:
+	if _my_owner is Enemy:
 		# First we check if there is a player nearby, then if the moomoo is in attack range
 		var nearest_player = GlobalsEntityHelpers.get_nearest_entity(start_pos, GameManager.get_players(), max_range)
 		if nearest_player: return nearest_player
 
-		if GlobalsEntityHelpers.is_target_in_attack_range(my_owner(), GameManager.moomoo): return GameManager.moomoo
+		if GlobalsEntityHelpers.is_target_in_attack_range(_my_owner, GameManager.moomoo): return GameManager.moomoo
 
 	return null
 
 func execute_physical_attack(apply_extra_actions: bool = true, _custom_target: Entity = null) -> void:
-	EntityState.change_to_attack(my_owner())
+	EntityState.change_to_attack(_my_owner)
 
 	var final_target := _custom_target if _custom_target else target_to_attack
-	my_owner().set_direction_according_to_target(final_target)
+	_my_owner.set_direction_according_to_target(final_target)
 
 	_execute_attack_or_launch_projectile(final_target)
 
@@ -584,39 +582,41 @@ func _execute_attack_or_launch_projectile(final_target: Entity) -> void:
 	if projectile_type == ProjectileBase.NONE:
 		return server_execute_physical_damage(final_target)
 
-	var physical_attack_power := my_owner().cache_total_stats.get_physical_attack_power()
+	var physical_attack_power := _my_owner.cache_total_stats.get_physical_attack_power()
 	for registered_projectile in ProjectileBase.REGISTERED_CLASSES:
-		if registered_projectile.try_launch(projectile_type, my_owner(), final_target, physical_attack_power): return
+		if registered_projectile.try_launch(projectile_type, _my_owner, final_target, physical_attack_power): return
 
 	printerr("ERROR: Projectile type not found: " + projectile_type + " 🚀") # Should never happen
 
 func can_physical_attack() -> bool:
-	if not my_owner().can_attack: return false
-	if my_owner().velocity != Vector2.ZERO: return false # If moving, can't attack
+	if not _my_owner.can_attack: return false
+	if _my_owner.velocity != Vector2.ZERO: return false # If moving, can't attack
 	if is_stunned: return false # If stunned, can't attack
 
 	var now = Time.get_ticks_msec()
 	var interval_ms = 1000.0 / cache_total_stats.get_total_attack_speed()
 	if now - last_physical_hit_time < interval_ms: return false # If enough time has passed, can attack
 
-	if not GlobalsEntityHelpers.is_target_in_attack_range(my_owner(), target_to_attack): return false
+	if not GlobalsEntityHelpers.is_target_in_attack_range(_my_owner, target_to_attack): return false
 
 	return true
 # endregion TRY PHISICAL ATTACK
 
 # region 	SERVER METHODS
 func global_receive_damage_or_heal(_di: DamageInfo):
-	BloodStainEffect.spawn_on_bleeding(my_owner().global_position, 2.0)
+	if _di.is_main_attack(): BloodStainEffect.apply_bleeding_on_the_body(_my_owner)
+	else: BloodStainEffect.spawn_on_bleeding(_my_owner.global_position + Vector2(0, 8), 2.0)
+
 	if _di.critical > 0:
-		my_owner().hud.show_message_popup(str(- (_di.total_damage - _di.critical)), Color(1, 0, 0))
-		my_owner().hud.show_message_popup(str(-_di.critical), Color(1, 1, 0))
+		_my_owner.hud.show_message_popup(str(- (_di.total_damage - _di.critical)), Color(1, 0, 0))
+		_my_owner.hud.show_message_popup(str(-_di.critical), Color(1, 1, 0))
 		if _di.is_arrow_attack(): SoundsHelper.play_critical_arrow_shot()
 		if _di.is_melee_attack(): SoundsHelper.play_critical_melee_hit()
 	if _di.critical == 0 and _di.total_damage > 0 and _di.is_melee_attack():
 		SoundsHelper.play_melee_hit()
 
 	if _di.total_damage < 0: # Heal
-		my_owner().hud.show_message_popup(str(abs(_di.total_damage)), Color(0, 1, 0))
+		_my_owner.hud.show_message_popup(str(abs(_di.total_damage)), Color(0, 1, 0))
 	
 	register_attacker(_di.get_attacker())
 

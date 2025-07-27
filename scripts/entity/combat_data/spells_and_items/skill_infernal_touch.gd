@@ -50,6 +50,7 @@ func process_skill(_owner: Entity, _delta: float) -> void:
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
 	if _di.was_reflected or _di.was_a_cleave_damage or _di.temporal_damage: return false
+	if ObjectHelpers.is_null(_attacker): return false
 	
 	var infernal_touch := _attacker.get_learned_skill(NAME)
 	if not infernal_touch: return false

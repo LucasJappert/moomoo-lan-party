@@ -5,7 +5,7 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Agregar True Strike a algun enemigo
+- Agregar boton para silenciar
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
 - Agregar estadísticas in game, como el tiempo transcurrido, el daño causado, el daño recibido, etc.
 

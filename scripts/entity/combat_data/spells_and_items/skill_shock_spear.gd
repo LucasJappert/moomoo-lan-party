@@ -39,7 +39,7 @@ static func apply_strike(_owner: Entity, _target: Entity, _learned_skill: ItemSk
 	_apply_animation(_target)
 	SoundsHelper.play_electric_1()
 
-	var total_magic_damage = _owner.get_total_magic_damage(_learned_skill.float_dict["magic_damage"])
+	var total_magic_damage = _owner.cache_total_stats.get_total_magic_damage(int(_learned_skill.float_dict["magic_damage"]))
 	var _di := DamageInfo.new(total_magic_damage, _learned_skill.damage_type, _owner.name)
 	_target.server_receive_damage(_di, _owner)
 

@@ -34,7 +34,7 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 	var target_enemies = GlobalsEntityHelpers.get_closest_entities(_caster.global_position, _caster.get_my_enemies(), _learned_skill.area_of_effect_in_tiles)
 
 	var magic_damage := int(_caster.cache_total_stats.get_strength() * _learned_skill.float_dict["strength_percent_damage"])
-	var total_magic_damage = _caster.get_total_magic_damage(magic_damage)
+	var total_magic_damage = _caster.cache_total_stats.get_total_magic_damage(magic_damage)
 
 	for _enemy in target_enemies:
 		var _di = DamageInfo.new(total_magic_damage, _learned_skill.damage_type, _caster.name)
