@@ -74,6 +74,9 @@ static func get_extra_info_by_attributes(info: Dictionary[String, float]) -> Dic
 	aux_accumulate(result, get_extra_stats_by_intelligence(info.get(INTELLIGENCE, 0)))
 	return result
 
+static func accumulate_extra_info_by_attributes(info: Dictionary[String, float]):
+	aux_accumulate(info, get_extra_info_by_attributes(info))
+
 # ---------------------------------
 
 static func get_instance_from_dict(dict: Dictionary) -> CombatStats:
@@ -154,8 +157,9 @@ func set_crit_chance(value: float) -> void:
 	set_value(CRIT_CHANCE, value)
 func set_crit_multiplier(value: float) -> void:
 	set_value(CRIT_MULTIPLIER, value)
-func set_stun_chance(value: float) -> void:
+func set_stun_chance(value: float, duration: float = 1) -> void:
 	set_value(STUN_CHANCE, value)
+	set_stun_duration(duration)
 func set_stun_duration(value: float) -> void:
 	set_value(STUN_DURATION, value)
 func set_silence_duration(value: float) -> void:

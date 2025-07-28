@@ -8,7 +8,7 @@ static func create_and_add_instance() -> void:
 	SKILLS[NAME] = Skill.new(NAME, SkillType.ACTIVE)
 	SKILLS[NAME].region_rect = Rect2(ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
 
-	aux_array[0] = [0.2, 0.3, 0.4]
+	aux_array[0] = [0.6, 0.8, 1]
 	aux_array[1] = [80, 110, 140]
 	aux_array[2] = [10, 8, 6]
 	aux_array[3] = [6, 6, 6]

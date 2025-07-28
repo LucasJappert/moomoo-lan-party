@@ -1,14 +1,15 @@
 extends Node
 class_name DamageReflectorEffect
+const NAME := "DamageReflectorEffect"
 
 const ATLAS_LINE_REGION := Rect2(272, 263, 16, 2) # Línea blanca finita
 
-static func attach_to(target: Node2D, duration: float = -1.0) -> Node2D:
-	if target.has_node("DamageReflector"):
-		target.get_node("DamageReflector").queue_free()
+static func attach_to(target: Node, duration: float = -1.0) -> Node2D:
+	if target.has_node(NAME):
+		target.get_node(NAME).queue_free()
 
 	var wrapper := Node2D.new()
-	wrapper.name = "DamageReflector"
+	wrapper.name = NAME
 	wrapper.position = Vector2.ZERO
 	target.add_child(wrapper)
 
@@ -24,6 +25,10 @@ static func attach_to(target: Node2D, duration: float = -1.0) -> Node2D:
 	wrapper.add_child(updater)
 
 	return wrapper
+
+static func remove_from(target: Node) -> void:
+	for node in target.get_children():
+		if node.name == NAME: node.queue_free()
 
 # --- Clase interna ---
 class DamageReflectorUpdater:

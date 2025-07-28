@@ -1,8 +1,9 @@
-[gd_scene load_steps=20 format=3 uid="uid://dh82ovsrtutto"]
+[gd_scene load_steps=21 format=3 uid="uid://dh82ovsrtutto"]
 
 [ext_resource type="Script" uid="uid://ki4w4rg4wu1r" path="res://scripts/entity/entity.gd" id="1_0bgvt"]
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="3_8707b"]
 [ext_resource type="Script" uid="uid://d3sm32sl44mdm" path="res://scripts/entity/components/hud.gd" id="3_wjrb4"]
+[ext_resource type="PackedScene" uid="uid://dbk2teavpilfv" path="res://scenes/entity/my_progress_bar_scene.tscn" id="4_wjrb4"]
 [ext_resource type="Script" uid="uid://gdkfgib81pvd" path="res://scripts/entity/components/area_hovered.gd" id="6_8707b"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_odnte"]
@@ -92,6 +93,15 @@ corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wjrb4"]
+bg_color = Color(0, 0.514293, 0.163191, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gchfm"]
 bg_color = Color(0, 0.441623, 0.715716, 1)
@@ -99,13 +109,7 @@ corner_radius_top_left = 1
 corner_radius_top_right = 1
 corner_radius_bottom_right = 1
 corner_radius_bottom_left = 1
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_os1up"]
-bg_color = Color(0, 0.514293, 0.163191, 1)
-corner_radius_top_left = 1
-corner_radius_top_right = 1
-corner_radius_bottom_right = 1
-corner_radius_bottom_left = 1
+anti_aliasing = false
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8707b"]
 atlas = ExtResource("3_8707b")
@@ -176,42 +180,94 @@ debug_color = Color(1, 1, 1, 0.054)
 [node name="HUD" type="Node2D" parent="."]
 script = ExtResource("3_wjrb4")
 
-[node name="BarsContainer" type="Node2D" parent="HUD"]
-position = Vector2(0, -58)
+[node name="BarsContainer" type="VBoxContainer" parent="HUD"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -21.0
+offset_top = -61.0
+offset_right = 21.0
+offset_bottom = -50.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
 
-[node name="MyManaBar" type="Node2D" parent="HUD/BarsContainer"]
-position = Vector2(0, 1)
+[node name="Node" type="Control" parent="HUD/BarsContainer"]
+layout_mode = 2
 
-[node name="BgBlack" type="Panel" parent="HUD/BarsContainer/MyManaBar"]
-offset_left = -20.0
+[node name="ProgressBarsContainer" type="VBoxContainer" parent="HUD/BarsContainer/Node"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -21.0
 offset_top = -2.0
-offset_right = 22.0
-offset_bottom = 2.0
+offset_right = 21.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 1
+
+[node name="MyProgressBar" parent="HUD/BarsContainer/Node/ProgressBarsContainer" instance=ExtResource("4_wjrb4")]
+visible = false
+layout_mode = 2
+progress_value_percent = 20.0
+progress_color = Color(0.34298, 0.349006, 0.371669, 1)
+
+[node name="MyProgressBar2" parent="HUD/BarsContainer/Node/ProgressBarsContainer" instance=ExtResource("4_wjrb4")]
+visible = false
+layout_mode = 2
+progress_value_percent = 20.0
+progress_color = Color(0.657121, 0.663813, 0.688771, 1)
+
+[node name="MyHealthBarContainer" type="Control" parent="HUD/BarsContainer"]
+custom_minimum_size = Vector2(42, 3)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="BgBlack" type="Panel" parent="HUD/BarsContainer/MyHealthBarContainer"]
+layout_mode = 0
+offset_right = 42.0
+offset_bottom = 4.0
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_8707b")
 
-[node name="CurrentBar" type="Panel" parent="HUD/BarsContainer/MyManaBar"]
-offset_left = -19.0
-offset_top = -1.0
-offset_right = 21.0
-offset_bottom = 1.0
+[node name="CurrentHpBar" type="Panel" parent="HUD/BarsContainer/MyHealthBarContainer"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 41.0
+offset_bottom = 3.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wjrb4")
+
+[node name="MyManaBarContainer" type="Control" parent="HUD/BarsContainer"]
+custom_minimum_size = Vector2(42, 4)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="BgBlack" type="Panel" parent="HUD/BarsContainer/MyManaBarContainer"]
+layout_mode = 2
+offset_right = 42.0
+offset_bottom = 4.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8707b")
+
+[node name="CurrentManaBar" type="Panel" parent="HUD/BarsContainer/MyManaBarContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 41.0
+offset_bottom = 3.0
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_gchfm")
-
-[node name="MyHealthBar" type="Node2D" parent="HUD/BarsContainer"]
-position = Vector2(0, -2)
-
-[node name="BgBlack" type="Panel" parent="HUD/BarsContainer/MyHealthBar"]
-offset_left = -20.0
-offset_top = -2.0
-offset_right = 22.0
-offset_bottom = 2.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_8707b")
-
-[node name="CurrentBar" type="Panel" parent="HUD/BarsContainer/MyHealthBar"]
-offset_left = -19.0
-offset_top = -1.0
-offset_right = 21.0
-offset_bottom = 1.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_os1up")
 
 [node name="DamagePopupContainer" type="Node2D" parent="HUD"]
 z_index = 3

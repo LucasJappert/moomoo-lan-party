@@ -15,6 +15,7 @@ var _description: String = ""
 
 const STUN_RECT_REGION := Rect2(0, 608, 32, 17)
 const STUN_NAME = "Stun"
+const SILENCE_NAME = "Silence"
 
 func _process(delta: float) -> void:
 	if is_permanent: return

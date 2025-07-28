@@ -1,0 +1,78 @@
+[gd_scene load_steps=4 format=3 uid="uid://dbk2teavpilfv"]
+
+[ext_resource type="Script" uid="uid://h4y2regfmldv" path="res://scenes/entity/my_progress_bar_scene.gd" id="1_o7010"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ilqsf"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ssti"]
+bg_color = Color(0.745098, 0.745098, 0.745098, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+anti_aliasing = false
+
+[node name="MyProgressBar" type="Control"]
+custom_minimum_size = Vector2(42, 2)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 42.0
+offset_bottom = 2.0
+script = ExtResource("1_o7010")
+progress_value_percent = 0
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -1.0
+offset_right = 20.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_ilqsf")
+theme_override_styles/fill = SubResource("StyleBoxFlat_8ssti")
+value = 60.0
+show_percentage = false
+
+[node name="Label" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -21.0
+offset_top = -3.0
+offset_right = 259.0
+offset_bottom = 37.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.15, 0.15)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 33
+text = "STUNNED"
+horizontal_alignment = 1
+vertical_alignment = 1

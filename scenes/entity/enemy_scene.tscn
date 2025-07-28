@@ -9,11 +9,12 @@
 radius = 258.627
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v8xvt"]
-bg_color = Color(0.548634, 0.0529023, 1.44392e-07, 1)
+bg_color = Color(0.866667, 0, 0, 0.65098)
 corner_radius_top_left = 1
 corner_radius_top_right = 1
 corner_radius_bottom_right = 1
 corner_radius_bottom_left = 1
+anti_aliasing = false
 
 [node name="Enemy" instance=ExtResource("1_v8xvt")]
 script = ExtResource("2_4sfg8")
@@ -32,10 +33,10 @@ debug_color = Color(100, 100, 100, 0)
 z_index = 2
 z_as_relative = false
 
-[node name="CurrentBar" parent="HUD/BarsContainer/MyHealthBar" index="1"]
+[node name="CurrentHpBar" parent="HUD/BarsContainer/MyHealthBarContainer" index="1"]
 theme_override_styles/panel = SubResource("StyleBoxFlat_v8xvt")
 
-[node name="AreaHovered" parent="." index="10"]
+[node name="AreaHovered" parent="." index="11"]
 light_mask = 0
 collision_layer = 524288
 collision_mask = 0

@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Check stun effect and duration for when it is stunned and receives another stun. Add regressive progress bars for stun and silence
 - ✅ Improve enemy skill levels when repeating waves
 - ✅ Improve enemy spawn animation
 - ✅ Improve creature spawn, it's causing a jump when we create multiple of them at once (before 4ms p/u, after 1ms p/u). Huge improvements in the CombatStats class

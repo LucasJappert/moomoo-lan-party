@@ -125,12 +125,6 @@ static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool: 
 
 # Must be overriden
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool: return false
-	
-# Must be overriden
-static func on_active_skill_added(_owner: Entity, _skill: SkillBase) -> void: pass
-
-# Must be overriden
-static func on_active_skill_removed(_owner: Entity, _skill: SkillBase) -> void: pass
 
 # Must be overriden
 static func actions_after_die(_owner: Entity, _killed_by: Entity) -> void: pass

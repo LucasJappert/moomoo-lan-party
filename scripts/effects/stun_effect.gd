@@ -2,7 +2,7 @@ extends Node2D
 class_name StunEffect
 
 @export var radius: float = 8.0
-@export var num_stars: int = 6
+@export var num_stars: int = 3
 @export var rotation_speed: float = 2
 
 
@@ -33,10 +33,11 @@ func _ready():
 	atlas_tex.region = STAR_REGION
 
 	for i in range(num_stars):
-		var star := Sprite2D.new()
-		star.texture = atlas_tex
-		add_child(star)
-		stars.append(star)
+		var sprite := Sprite2D.new()
+		sprite.texture = atlas_tex
+		sprite.scale = Vector2.ZERO
+		add_child(sprite)
+		stars.append(sprite)
 
 func _process(_delta):
 	var time := Time.get_ticks_msec() / 1000.0
@@ -48,11 +49,11 @@ func _process(_delta):
 		var y := radius * -sin(angle) * 0.5 # Reverse Y axis for depth effect
 
 		var _scale_factor := BASE_STAR_SCALE * (0.5 + 0.5 * (y / radius))
-		var star := stars[i]
-		star.position = Vector2(x, y)
-		star.scale = Vector2.ONE * _scale_factor
+		var sprite := stars[i]
+		sprite.position = Vector2(x, y)
+		sprite.scale = Vector2.ONE * _scale_factor
 		# star.modulate = Color(1, 1, 1, clamp(_scale_factor / BASE_STAR_SCALE, 0.0, 1.0))
-		star.modulate = Color(1, 1, 1, 1)
+		sprite.modulate = Color(1, 1, 1, 1)
 
 func _start_timer(duration: float) -> void:
 	var timer := Timer.new()

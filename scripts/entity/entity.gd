@@ -25,7 +25,7 @@ var can_attack: bool = true
 var id: int = 0
 
 @export var direction: Vector2 = Vector2.ZERO
-var combat_stats = CombatStats.new()
+var combat_stats := CombatStats.new()
 var replicated: bool = false
 
 @export var current_state: String:
@@ -186,7 +186,8 @@ func _apply_effects_after_die(on_finished: Callable) -> void:
 
 	TweenHelper.apply_tween_to_property(body_sprite, tween, "position", body_sprite.position + Vector2(0, -64), TWEEN_DURATION)
 	TweenHelper.apply_tween_to_property(body_sprite, tween, "scale", Vector2(1.5, 1.5), TWEEN_DURATION)
-	TweenHelper.apply_tween_to_property(body_sprite, tween, "modulate:a", 0.0, TWEEN_DURATION + 1)
+	# TweenHelper.apply_tween_to_property(body_sprite, tween, "modulate:a", 0.0, TWEEN_DURATION + 1)
+	TweenHelper.apply_tween_to_property(body_sprite, tween, "modulate", Color(0, 0, 0, body_sprite.modulate.a), TWEEN_DURATION)
 
 	TweenHelper.apply_tween_to_property(body_shadow, tween, "modulate:a", 0.0, TWEEN_DURATION)
 	

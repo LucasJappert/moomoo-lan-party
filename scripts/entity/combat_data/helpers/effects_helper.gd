@@ -33,6 +33,12 @@ func get_effect_by_id(id: int) -> CombatEffect:
 	return null
 
 func add_effect(p_effect: CombatEffect) -> void:
+	# For the case of stuns, we must wait for the existing one to finish
+	if p_effect.effect_name == CombatEffect.STUN_NAME:
+		if get_effect_by_name(p_effect.effect_name): return
+	if p_effect.effect_name == SkillSilentAgony.NAME:
+		if get_effect_by_name(p_effect.effect_name): return
+
 	_server_verifications_before_adding_effect(p_effect)
 	_effects.append(p_effect)
 	notify_changes_to_subscribers()
@@ -40,7 +46,11 @@ func add_effect(p_effect: CombatEffect) -> void:
 	if p_effect.hostile_freeze():
 		AnimationsHelper.apply_frost_hit_animation(_my_owner)
 	if p_effect.hostile_stun():
+		_my_owner.hud.add_stun_progress_bar(p_effect.duration_in_seconds)
 		StunEffect.attach_to(_my_owner.front_animations_node, p_effect.duration_in_seconds)
+	if p_effect.get_silence_duration() > 0:
+		_my_owner.hud.add_silence_progress_bar(p_effect.duration_in_seconds)
+		SilenceEffect.attach_to(_my_owner.front_animations_node, p_effect.duration_in_seconds)
 	
 	_try_to_add_effect_to_my_gui(p_effect)
 

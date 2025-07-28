@@ -11,6 +11,8 @@ const SMALL_SPREAD_RADIUS := 16.0 # radio de dispersion para las manchas de sang
 const BIG_SPREAD_RADIUS := 8.0 # radio de dispersion para las manchas de sangre
 
 const BLEEDING_SPRITES_LIMIT_PER_BODY := 20
+const STAIN_SPRITES_LIMIT_PER_CELL := 50
+static var STAIN_PER_POSITION: Dictionary[Vector2i, int] = {}
 
 static func spawn_on_death(global_position: Vector2, lifetime: float = 5.0) -> void:
 	# Creamos varias chicas
@@ -40,8 +42,10 @@ static func apply_bleeding_on_the_body(_owner: Entity) -> void:
 	for i in 5: _spawn_random_single_drop(_owner.projectile_zone)
 
 static func _spawn_single_stain(global_position: Vector2, parent: Node, lifetime: float, scale_range: Vector2) -> void:
-	var node := Node2D.new()
-	node.global_position = global_position
+	var cell_pos := MapManager.world_to_cell(global_position)
+	if STAIN_PER_POSITION.get(cell_pos, 0) >= STAIN_SPRITES_LIMIT_PER_CELL: return
+	if STAIN_PER_POSITION.has(cell_pos): STAIN_PER_POSITION[cell_pos] += 1
+	else: STAIN_PER_POSITION[cell_pos] = 1
 
 	var sprite := Sprite2D.new()
 	sprite.texture = SpritesHelper.get_texture_from_region(BLOOD_REGION)
@@ -50,13 +54,13 @@ static func _spawn_single_stain(global_position: Vector2, parent: Node, lifetime
 	sprite.scale = Vector2.ZERO
 	sprite.modulate = Color(0.5, 0.5, 0.5, 0.0)
 	sprite.rotation = randf_range(0, TAU)
+	sprite.global_position = global_position
 
-	node.add_child(sprite)
-	parent.add_child(node)
+	parent.add_child(sprite)
 
 	var final_scale := Vector2.ONE * randf_range(scale_range.x, scale_range.y)
 
-	var tween := node.create_tween()
+	var tween := sprite.create_tween()
 	tween.tween_property(sprite, "scale", final_scale, APPEAR_TIME)
 	tween.parallel().tween_property(sprite, "modulate:a", 0.6, APPEAR_TIME)
 
@@ -76,13 +80,15 @@ static func _spawn_single_stain(global_position: Vector2, parent: Node, lifetime
 	# )
 
 	tween.tween_property(sprite, "modulate", Color(0.5, 0.5, 0.5, 0), FADE_TIME).set_ease(Tween.EASE_IN)
-	# tween.parallel().tween_property(sprite, "scale", Vector2.ZERO, FADE_TIME).set_ease(Tween.EASE_IN)
-	tween.tween_callback(node.queue_free)
+	tween.tween_callback(func():
+		if STAIN_PER_POSITION.has(cell_pos): STAIN_PER_POSITION[cell_pos] -= 1
+		sprite.queue_free()
+	)
 
 static func _spawn_random_single_drop(parent: Node) -> void:
 	var sprite := Sprite2D.new()
 	sprite.texture = SpritesHelper.get_texture_from_region(DROP_REGION)
-	ShadersHelper.set_dissolve_shader_material(sprite, 0.5)
+	# ShadersHelper.set_dissolve_shader_material(sprite, 0.5)
 	sprite.centered = true
 	sprite.scale = Vector2.ONE * randf_range(0.2, 0.8)
 	sprite.modulate = Color(
@@ -96,11 +102,13 @@ static func _spawn_random_single_drop(parent: Node) -> void:
 
 	parent.add_child(sprite)
 
-	var LIFETIME := randf_range(0.5, 1.5)
+	var LIFETIME := 0.6
 	var tween := sprite.create_tween()
-	tween.tween_property(sprite, "position:y", sprite.position.y + randf_range(32, 40), LIFETIME).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	tween.tween_property(sprite, "position:y", sprite.position.y + 24, LIFETIME).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	tween.parallel().tween_property(sprite, "scale:x", 0, LIFETIME).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	# tween.parallel().tween_property(sprite, "modulate", Color(0, 0, 0, sprite.modulate.a), LIFETIME)
 
-	TweenHelper.apply_tween_to_dissolve(tween, sprite, LIFETIME)
+	# TweenHelper.apply_tween_to_dissolve(tween, sprite, LIFETIME)
 	
 	# Desvanecer y eliminar
 	tween.tween_callback(func():

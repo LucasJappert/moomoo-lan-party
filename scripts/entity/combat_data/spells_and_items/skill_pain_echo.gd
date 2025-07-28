@@ -30,15 +30,14 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 
 	return true
 
-static func on_active_skill_added(_owner: Entity, _skill: SkillBase) -> void:
-	if _skill.my_name != NAME: return
+static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
+	if _skill.get_name() != NAME: return false
+	if not _skill.get_learned_skill(): return false
 
-	var effect_node = DamageReflectorEffect.attach_to(_owner.back_animations_node)
-	effects_running_by_owner_name[_owner.name] = effect_node
+	var skill := SkillPainEcho.new(_skill.get_learned_skill())
+	skill.permanent_effect = true
+	_owner.add_active_skill(skill)
+	DamageReflectorEffect.remove_from(_owner.back_animations_node)
+	DamageReflectorEffect.attach_to(_owner.back_animations_node)
 
-static func on_active_skill_removed(_owner: Entity, _skill: SkillBase) -> void:
-	if _skill.my_name != NAME: return
-
-	if effects_running_by_owner_name.has(_owner.name):
-		effects_running_by_owner_name[_owner.name].queue_free()
-		effects_running_by_owner_name.erase(_owner.name)
+	return true

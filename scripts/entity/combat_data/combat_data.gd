@@ -183,9 +183,6 @@ func update_active_skills(_delta: float) -> void:
 			_remove_active_skill(_active_skills[i], i)
 
 func _remove_active_skill(_skill: SkillBase, index: int) -> void:
-	for registered_skill in SkillBase.REGISTERED_SKILLS:
-		registered_skill.on_active_skill_removed(_my_owner, _skill)
-
 	_active_skills.remove_at(index)
 
 func remove_active_skill_by_name(_skill_name: String) -> void:
@@ -198,12 +195,6 @@ func add_active_skill(_skill: SkillBase) -> bool:
 
 	_active_skills.append(_skill)
 	_try_to_apply_effect(_skill)
-
-	if _skill.learned_skill.get_silence_duration() > 0:
-		SilenceEffect.attach_to(_my_owner.front_animations_node, _skill.learned_skill.duration_in_seconds)
-
-	for registered_skill in SkillBase.REGISTERED_SKILLS:
-		registered_skill.on_active_skill_added(_my_owner, _skill)
 	
 	return true
 
@@ -439,7 +430,7 @@ func _get_combat_info_by_skills() -> Dictionary[String, float]:
 		if learned_skill.create_effect: continue
 		if learned_skill.hostile_stun(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
 		CombatStats.aux_accumulate(result, learned_skill.get_info())
-	CombatStats.aux_accumulate(result, CombatStats.get_extra_info_by_attributes(result))
+	CombatStats.accumulate_extra_info_by_attributes(result)
 	return result
 
 func _get_combat_info_by_items() -> Dictionary[String, float]:
@@ -450,6 +441,7 @@ func _get_combat_info_by_items() -> Dictionary[String, float]:
 		if _item.type == SkillType.ACTIVE: continue
 		if _item.hostile_stun(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
 		CombatStats.aux_accumulate(result, _item.get_info())
+	CombatStats.accumulate_extra_info_by_attributes(result)
 	return result
 
 func _check_evade(_di: DamageInfo, total_stats: CombatStats) -> bool:
@@ -460,8 +452,8 @@ func _check_evade(_di: DamageInfo, total_stats: CombatStats) -> bool:
 	if not GlobalsEntityHelpers.roll_chance(total_stats.get_evasion()): return false
 
 	# TODO: Crear un helper para enviar mensajes
-	var sm = ServerMessage.new("Dodge", Vector3(0, 0.5, 1))
-	self.hud.show_popup(sm.message, sm.get_color())
+	# var sm = ServerMessage.new("Dodge", Vector3(0, 0.5, 1))
+	# self.hud.show_popup(sm.message, sm.get_color())
 
 	return true
 
