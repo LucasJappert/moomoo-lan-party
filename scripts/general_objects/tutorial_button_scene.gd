@@ -4,14 +4,13 @@ extends Control
 @onready var mouse_message_label = %MouseMessageLabel
 
 const DESCRIPTION = "
-	Welcome to [b]MooRaiders[/b]! Here's a quick guide to help you get started:
-
 	[b]⚡ Basic Controls[/b]
-	• [b]Move and Attack:[/b] Right-click to move your hero — clicking on an enemy will also trigger an attack.  
+	• [b]Move and Attack:[/b] Right-click to move your hero — clicking on an enemy will also trigger an attack.
+	• [b]Use Skills:[/b] Click on a skill to use it, then click on the target to select it. Alternatively, you can use the hotkey associated with the skill.  
 	• [b]Camera Focus:[/b] Press [i]Spacebar[/i] to center the camera on your hero.  
 	• [b]Zoom:[/b] Use the [i]mouse wheel[/i] to zoom in and out.  
-	• [b]Inspect Units:[/b] Hold [i]Ctrl[/i] and click on any unit to view its stats. Press [i]Spacebar[/i] again to quickly return to your hero.  
-	• [b]Pause/Resume:[/b] Press [i]F11[/i] to pause or resume the game at any time.
+	• [b]Inspect Units:[/b] Click on any unit to view its stats. Press [i]Spacebar[/i] again to quickly return to your hero.  
+	• [b]Pause/Resume and Options:[/b] Press [i]Escape[/i] to pause or resume the game at any time. While paused, you can also open the [b]Options[/b] menu.
 
 	[b]⚡ Skills and Leveling[/b]
 	• At the start, you can learn [b]one of four skills[/b] shown in the bottom-right corner.  
@@ -19,6 +18,7 @@ const DESCRIPTION = "
 	• The [b]special skill[/b] (far right) becomes available at [b]Level 6[/b].
 
 	[b]⚡ Items[/b]
+	• You can purchase items by opening the [b]Shop[/b] and right-clicking on the item you wish to acquire.
 	• Use the number keys [b]1 to 6[/b] to activate items from your inventory, also located in the bottom-right.
 
 	[b]⚡ Gameplay Style[/b]

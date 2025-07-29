@@ -27,5 +27,5 @@ static func key_pressed_server_side(_keycode: int, player: Entity) -> void:
 		EventBus.emit_new_target_view_selected(null, GameManager.MY_PLAYER)
 		MyCamera.update_camera_position_to_my_player()
 
-	if _keycode == KEY_F11 and GameManager.MY_PLAYER:
+	if _keycode == KEY_ESCAPE and GameManager.MY_PLAYER:
 		MainScene.set_paused(not MainScene.PAUSED, true, true)

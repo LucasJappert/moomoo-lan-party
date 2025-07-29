@@ -5,6 +5,9 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Extra skill info by holding the Alt key
+- Corregir problema de cursor en modo ataque sobre entidades
+- Cambiar sonido de la cuenta regresiva
 - Agregar efecto para el skill blood fury, tambien para el frenzied silenced
 - Agregar boton para mutear el juego
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido

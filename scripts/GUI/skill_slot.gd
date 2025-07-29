@@ -26,8 +26,7 @@ var slot_number: int
 var _STYLE_BLACK := StyleBoxFlat.new()
 var _STYLE_BEIGE := StyleBoxFlat.new()
 var _owner: Entity
-var HERO_PICKER_SCENE_NAME = "HeroPickerScene"
-var _is_hovering := false
+const HERO_PICKER_SCENE_NAME = "HeroPickerScene"
 
 
 func _ready():
@@ -35,9 +34,8 @@ func _ready():
 	label_cool_down.visible = false
 	upgrade_button.visible = false
 	_initialize_styles()
-	connect("child_exiting_tree", _on_child_exiting_tree)
-	connect("mouse_entered", _on_mouse_entered)
-	connect("mouse_exited", _on_mouse_exited)
+	# connect("mouse_entered", _on_mouse_entered)
+	# connect("mouse_exited", _on_mouse_exited)
 	
 	# Try settings for hero picker
 	if _try_settings_for_hero_picker(): return
@@ -54,16 +52,18 @@ func _ready():
 	EventBus.connect_to_skill_points_to_assign_changed(func(_p_owner: Entity): _update_controls())
 
 func _try_settings_for_hero_picker():
-	if get_owner().name != HERO_PICKER_SCENE_NAME: return false
+	if not _is_hero_picker_scene(): return false
 
 	hotkey.visible = false
 	container_of_skill_levels.visible = false
 
 
 func _process(_delta: float) -> void:
-	if not _owner or not _owner.is_my_player(): return _lock_slot()
+	verify_tooltip()
+
+	if not ObjectHelpers.is_my_player(_owner): return _lock_slot()
 	if not skill: return
-	if not GameManager.MY_PLAYER: return
+	# if not GameManager.MY_PLAYER: return
 
 	if skill.can_use(GameManager.MY_PLAYER):
 		label_cool_down.visible = false
@@ -80,7 +80,8 @@ func _process(_delta: float) -> void:
 		label_cool_down.visible = false
 
 # region 	GETTERS
-
+func _is_hero_picker_scene() -> bool:
+	return get_owner().name == HERO_PICKER_SCENE_NAME
 # endregion GETTERS
 
 # region 	SETTERS
@@ -90,7 +91,6 @@ func _clean_slot():
 	sprite.region_rect = Rect2(0, 0, 0, 0)
 
 func _skill_updated(new_skill: Skill, p_owner: Entity, _slot_number: int):
-	if _is_hovering: MyTooltip.hide_tooltip()
 	if not p_owner: return
 	_owner = p_owner
 	if slot_number == 0: slot_number = _slot_number
@@ -157,18 +157,15 @@ func _lock_slot() -> void:
 
 # endregion SETTERS
 
-
-func _on_mouse_entered():
-	_is_hovering = true
+func verify_tooltip() -> void:
 	if not skill: return
-	MyTooltip.show_tooltip(skill.item_skill_base[0].my_name, skill.get_description(false), 20)
+	if not KeyboardController.ALT_PRESSED and not _is_hero_picker_scene(): return
 
-func _on_mouse_exited():
-	if not skill: return
-	MyTooltip.hide_tooltip()
+	var is_hovering := get_global_rect().has_point(get_global_mouse_position())
+	if not is_hovering: return
 
-func _on_child_exiting_tree(_child) -> void:
-	if _is_hovering: MyTooltip.hide_tooltip()
+	MyTooltip.show_tooltip(skill.item_skill_base[0].my_name, skill.get_description(false), 20, false)
+
 
 func _gui_input(event) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:

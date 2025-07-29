@@ -77,6 +77,7 @@ func _ready():
 		for i in range(ring.num_shields):
 			var shield := Sprite2D.new()
 			shield.texture = atlas_tex
+			shield.scale = Vector2.ZERO
 			shield.centered = true
 			add_child(shield)
 			all_shields.append(shield)

@@ -311,7 +311,7 @@ func add_item(item: Item, index: int = -1) -> bool:
 
 func use_item(_slot_number: int) -> void: # Called from _on_key_pressed
 	if MainScene.PAUSED or current_hp == 0: return
-	if _items[_slot_number - 1] == null: return print("No item in slot: ", _slot_number)
+	if _items[_slot_number - 1] == null: return
 
 	_items[_slot_number - 1].use_item(_slot_number, _my_owner, null)
 
@@ -334,7 +334,6 @@ func reset_target_to_attack_from_nearest_enemy() -> void:
 
 func verify_freed_target_to_attack(entity_name: String) -> void:
 	if target_to_attack_name == entity_name:
-		print("Freed target to attack: ", entity_name)
 		set_target_to_attack(null)
 
 func set_target_view(_target: Entity) -> void:

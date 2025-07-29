@@ -45,7 +45,6 @@ func _on_mouse_exited():
 
 func _on_button_click(event: InputEvent):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-		print("Buy item: ", _item.my_name)
 		_try_apply_shop(_item)
 
 func _try_apply_shop(item: Item) -> void:

@@ -29,10 +29,12 @@ const EXP_BAR_FULL_SIZE = Vector2i(612, 27)
 # endregion
 
 # region Panel BOTTOM LEFT
+static var GREEN_BALL_COLOR := Color.from_string("#00da45ff", Color.WHITE)
+static var RED_BALL_COLOR := Color.from_string("#cd0000ff", Color.WHITE)
 @onready var my_effects: GuiEffects = $PanelBL/MyEffects
 @onready var _label_exp = $PanelBL/LabelExp
 @onready var _my_player_avatar = $PanelBL/MyPlayerAvatar
-@onready var _hp_ball = $PanelBL/HpBall
+@onready var _hp_ball = %HpBall
 @onready var _hp_label = $PanelBL/LabelHP
 @onready var _current_exp_rect = $PanelBL/CurrentExpRect
 @onready var _level = $PanelBL/Level
@@ -73,6 +75,7 @@ func _ready() -> void:
 
 	%JoinAsPlayerButton.connect("pressed", _on_join_as_player_pressed)
 	tutorial_button.hide_mouse_message_label()
+	# _hp_ball.modulate = Color.from_string("#00832a", Color.WHITE)
 	_ORIGINAL_BALL_SIZE = _hp_ball.region_rect.size
 	_ORIGINAL_BALL_POS_Y = _hp_ball.position.y
 	_ORIGINAL_BALL_RECT_POS_Y = _hp_ball.region_rect.position.y
@@ -127,6 +130,8 @@ func _on_shop_button_pressed() -> void:
 	print("Shop button pressed")
 func init_scene(entity: Entity) -> void:
 	_bottom_target = entity
+	if entity is Enemy: _hp_ball.modulate = RED_BALL_COLOR
+	else: _hp_ball.modulate = GREEN_BALL_COLOR
 	_set_my_player_avatar_region(entity)
 	_set_skills()
 	_set_items()

@@ -378,7 +378,8 @@ offset_bottom = 241.0
 color = Color(1.1792e-06, 0.524529, 0.107973, 1)
 
 [node name="HpBall" type="Sprite2D" parent="PanelBL"]
-modulate = Color(0.8, 0, 0, 1)
+unique_name_in_owner = true
+modulate = Color(0, 0.513726, 0.164706, 1)
 texture_filter = 1
 position = Vector2(554, 70)
 texture = ExtResource("1_gbqeo")

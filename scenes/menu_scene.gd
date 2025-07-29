@@ -8,7 +8,7 @@ class_name MenuScene
 @onready var _menu_button: MyButton = %MenuButton
 const HIDDEN_POSITION := Vector2(0, -250)
 const VISIBLE_POSITION := Vector2(0, 216)
-const CHAIN_VOLUME := -10
+const CHAIN_VOLUME := -5
 
 func _ready():
 	_menu_button.on_pressed = func(): MainScene.set_paused(true, true, true)
@@ -42,5 +42,5 @@ func _apply_tween_when_appear():
 
 func _aplly_tween_when_disappear():
 	var custom_tween := MyCustomTween.new(_main_container)
-	custom_tween.tween_property(_main_container, "position", HIDDEN_POSITION, _TWEEN_DURATION, Tween.TRANS_SINE, Tween.EASE_IN)
+	custom_tween.tween_property(_main_container, "position", HIDDEN_POSITION, _TWEEN_DURATION * 0.2, Tween.TRANS_SINE, Tween.EASE_IN)
 	custom_tween.start()
