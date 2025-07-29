@@ -27,7 +27,9 @@ func add_new_label(message: String, _final_message: bool = false):
 	if _final_message: _clean_numbers_container()
 
 	start_now_button.visible = not _final_message
-	SoundsHelper.play_beep()
+	
+	if _final_message: SoundsHelper.play_fight()
+	else: SoundsHelper.play_beep()
 	
 	var new_label: Label = label_number_model.duplicate()
 	new_label.visible = true

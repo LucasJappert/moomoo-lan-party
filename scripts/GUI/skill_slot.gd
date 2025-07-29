@@ -34,10 +34,6 @@ func _ready():
 	label_cool_down.visible = false
 	upgrade_button.visible = false
 	_initialize_styles()
-	# connect("mouse_entered", _on_mouse_entered)
-	# connect("mouse_exited", _on_mouse_exited)
-	
-	# Try settings for hero picker
 	if _try_settings_for_hero_picker(): return
 
 	hotkey.text = OS.get_keycode_string(KeyboardHelper.SKILL_HOTKEYS[get_index()])

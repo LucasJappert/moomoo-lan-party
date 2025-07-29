@@ -1,7 +1,7 @@
 extends Node
 class_name SoundsHelper
 
-const FORCE_MUTED := true
+const FORCE_MUTED := false
 static var _MUTED := false
 const MAX_PLAYERS := 30
 static var _players: Array[AudioStreamPlayer] = []
@@ -189,7 +189,10 @@ static func play_level_up(volume: float = -5.0):
 	play_sfx("res://sounds/generals/level-up.wav", volume, 1)
 
 static func play_beep(volume: float = -10.0):
-	play_sfx("res://sounds/generals/beep.wav", volume, 1)
+	play_sfx("res://sounds/generals/countdown.wav", volume, 1)
+	
+static func play_fight(volume: float = -10.0):
+	play_sfx("res://sounds/generals/fight.wav", volume, 1)
 
 static func play_monster_sound(audio_id: int, max_simultaneous: int = 1, volume: float = -15.0):
 	play_sfx("res://sounds/monsters/%d.wav" % audio_id, volume, max_simultaneous)
