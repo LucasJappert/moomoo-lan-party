@@ -36,7 +36,7 @@ func instance_actions_after_current_hp_updated(_increased_value: int, _owner: En
 	var current_hp = _owner.current_hp
 	var full_health: float = _owner.get_full_health()
 	var percent_lost_hp: float = floor((1 - current_hp / full_health) * 10.0) / 10.0
-	if percent_lost_hp <= 0: return
+	if percent_lost_hp <= 0: return _owner.remove_effect_by_name(NAME)
 
 	var effect_stats := CombatStats.new()
 	var extra_damage: int = int(_owner.cache_total_stats_no_effects.get_physical_attack_power() * percent_lost_hp)

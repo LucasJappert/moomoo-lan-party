@@ -32,7 +32,7 @@ func _post_ready(_entity: Entity):
 
 	var percent := 0.7
 	var scale_diff := my_owner.body_sprite.scale.y - 1.0
-	var diff_player = 40 if my_owner is Player else 0
+	var diff_player = 24 if my_owner is Player else 0
 	bars_container.position.y = bars_container.position.y - (my_owner.sprite_height * percent * scale_diff) - diff_player
 	if my_owner is Moomoo:
 		bars_container.position.y = bars_container.position.y - 40

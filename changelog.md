@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Add text over effect slots, such as the level of the Blood Fury effect or the remaining time of the effect
 - ✅ Check stun effect and duration for when it is stunned and receives another stun. Add regressive progress bars for stun and silence
 - ✅ Improve enemy skill levels when repeating waves
 - ✅ Improve enemy spawn animation

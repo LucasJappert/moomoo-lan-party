@@ -5,13 +5,12 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Corregir problema de cursor en modo ataque sobre entidades
-- Agregar efecto para el skill blood fury, tambien para el frenzied silenced
 - Agregar boton para mutear el juego
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
 - Agregar estadísticas in game, como el tiempo transcurrido, el daño causado, el daño recibido, etc.
 - Agregar afecto de nubes
 - Agregar efecto de lluvia y rayos
+- Corregir problema de cursor en modo ataque sobre entidades
 
 - Revisar sonidos en loop
 - Agregar un item que brinda daño splash a todo alreadedor del target (es diferente al cleave)
