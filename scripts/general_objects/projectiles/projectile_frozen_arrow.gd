@@ -1,8 +1,8 @@
-class_name ProjectileVenomArrow
+class_name ProjectileFrozenArrow
 
 extends ProjectileBase
 
-const NAME = "venom_arrow"
+const NAME = "frozen_arrow"
 const RECTS: Array[Rect2] = [Rect2(Vector2(0, 256), Vector2(64, 32))]
 const SPEED: float = 400
 const SCALE: float = 1
@@ -27,8 +27,8 @@ static func try_init(_projectile: Projectile):
 static func actions_while_flying(_projectile: Projectile):
 	if NAME != _projectile.type: return
 
-	const LIFETIME := 0.2
-	const AMPLITUDE := 15
+	const LIFETIME := 0.1
+	const AMPLITUDE := 8
 	var forward := Vector2(1, 0).rotated(_projectile.rotation)
 	var lateral := Vector2(0, 1).rotated(_projectile.rotation)
 	var forward_offset := forward * 6
@@ -47,5 +47,4 @@ static func actions_while_flying(_projectile: Projectile):
 
 
 static func _get_random_color() -> Color:
-	return Color.from_hsv(0.33, 1, randf_range(0.05, 0.4), 0.3)
-	# return Color.from_hsv(0.33, randf_range(0.6, 1.0), randf_range(0.05, 0.4), 0.3)
+	return Color.from_hsv(randf_range(0.5, 0.55), randf_range(0.1, 0.4), randf_range(0.5, 0.8), 1.0)

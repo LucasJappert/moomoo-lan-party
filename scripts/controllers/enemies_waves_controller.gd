@@ -134,7 +134,8 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 
 	for skill in enemy._skills:
 		if not skill: continue
-		skill.learned_level = min(int(((current_wave - 1) / float(WAVES_INFO.size()))) + 1, 3)
+		skill.learned_level = min(int(((current_wave - 1) / float(4))) + 1, 3)
+		# skill.learned_level = min(int(((current_wave - 1) / float(WAVES_INFO.size()))) + 1, 3)
 
 	enemy.combat_stats.set_attack_speed(round(enemy.combat_stats.get_attack_speed() * (1.0 + randf_range(-0.05, 0.05)) * 100.0) / 100.0)
 

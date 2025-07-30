@@ -5,7 +5,7 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Fix Blood Fury skill and Nature Ball projectile
+- Improve arrow effects based on skills
 - Agregar boton para mutear el juego
 - Ver doble silencio cuando usamos el arquero. También ver cuando entramos en modo pausa, algunos tiempos siguen corriendo.
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
@@ -23,11 +23,8 @@
 - Agregar sonido cuando impacta una flecha
 - Agregar habilidad que consume 15 del hp por un proyectil que quema al enemigo durante 5 segundos, causando 15 de daño cada segundo
 
-- Agregar efecto de daño recibido
 - Ver sonidos que entran en loop indebidamente
 - Agregar bordes rojos/animación cuando tenemos poca vida
-- Sistema de particulas para poder aplicarlo como colas en proyectiles
-- Refactorizar logica de skills antiguos, seguir la nueva metodologia creando un módulo para cada skill
 - Agregar skill, la cual puede activarse o desactivarse, que brindaría chances de matar al enemigo al instante (no aplica a bosses). Consume 20 de mana en cada ataque.
 - Agregar skill pasiva que luego de matar un enemigo lo transforma en 3 esqueletos que lucharán para él.
 - Aumentar nivel de habilidad aprendida en enemgios
