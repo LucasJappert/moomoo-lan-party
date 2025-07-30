@@ -13,6 +13,7 @@ var reseted_gui := false
 
 var _top_left_target: Entity
 var _bottom_target: Entity
+@onready var in_game_statistics: InGameStatistics = %InGameStatisticsScene
 
 # region Panel TOP LEFT
 const _RECT_TARGET_MAX_HP = Rect2(81, 27, 189, 21)

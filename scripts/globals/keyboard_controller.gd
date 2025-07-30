@@ -9,7 +9,7 @@ func _unhandled_input(event: InputEvent):
 	MyCamera.try_update_zoom(event)
 
 	if event is InputEventKey and event.pressed:
-		if event.keycode == KEY_ESCAPE:
+		if event.keycode == KEY_ESCAPE and GameManager.game_world:
 			if GameManager.game_world.gui_scene.shop_interface.close_shop(): return
 			# get_tree().quit() # CLOSE THE GAME
 

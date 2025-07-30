@@ -1,5 +1,11 @@
 extends Node
 
+const MY_PLAYER_STATISTICS_CHANGED := "my_player_statistics_changed"
+signal my_player_statistics_changed()
+func emit_my_player_statistics_changed(): emit_signal(MY_PLAYER_STATISTICS_CHANGED)
+func connect_to_my_player_statistics_changed(p_callback: Callable) -> void:
+	EventBus.connect(MY_PLAYER_STATISTICS_CHANGED, p_callback)
+
 const PAUSED := "paused"
 signal paused(_paused: bool)
 func emit_paused(_paused: bool, _show_menu: bool = false): emit_signal(PAUSED, _paused, _show_menu)

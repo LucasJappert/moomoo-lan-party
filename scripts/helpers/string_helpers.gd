@@ -50,9 +50,11 @@ static func get_formatted_time(total_seconds: int) -> String:
 	var minutes := (total_seconds % 3600) / 60.0
 	var seconds := total_seconds % 60
 
-	if hours > 0: return "%02d:%02d:%02d" % [hours, minutes, seconds]
+	if hours >= 1: return "%02d:%02d:%02d" % [hours, minutes, seconds]
 
-	return "%02d:%02d" % [minutes, seconds]
+	if minutes >= 1: return "%02d:%02d" % [minutes, seconds]
+
+	return "%02d" % seconds
 
 static func format_percent(value: float, include_percent_sign: bool = true, decimals: int = 0) -> String:
 	if value == 0: return "-"

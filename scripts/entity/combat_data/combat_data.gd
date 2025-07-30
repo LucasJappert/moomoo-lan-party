@@ -149,12 +149,14 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	
 	ItemSkillBase.actions_after_effective_hit(_attacker, _my_owner, _di)
 
+	Statistics.try_register_damage(_attacker, _di)
 	_apply_defenses(_di, my_stats)
 
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
 		registered_skill.actions_after_effective_hit(_attacker, _my_owner, _di)
 
 	global_receive_damage_or_heal(_di)
+	Statistics.try_register_received_damage(self, _di)
 
 	update_current_hp(-_di.total_damage, _attacker)
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dywrecu6pml77"]
+[gd_scene load_steps=20 format=3 uid="uid://dywrecu6pml77"]
 
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="1_gbqeo"]
 [ext_resource type="Script" uid="uid://0x16271fub0a" path="res://scripts/GUI/gui_scene.gd" id="1_li5rb"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://crronhxfsf3a1" path="res://scenes/general_objects/countdown_scene.tscn" id="9_b6l0f"]
 [ext_resource type="PackedScene" uid="uid://dnask4newbncn" path="res://scenes/menu_scene.tscn" id="11_fp2g3"]
 [ext_resource type="PackedScene" uid="uid://b2aysykrlkamk" path="res://scenes/end_game_scene.tscn" id="12_rckkk"]
+[ext_resource type="PackedScene" uid="uid://dw13d6pg7cfkp" path="res://scenes/GUI/in_game_statistics_scene.tscn" id="13_kb6mb"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fo7ei"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -827,9 +828,10 @@ vertical_alignment = 1
 text_overrun_behavior = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-offset_top = 120.0
-offset_right = 218.0
-offset_bottom = 212.0
+offset_left = 2.0
+offset_top = 1.0
+offset_right = 220.0
+offset_bottom = 24.0
 
 [node name="LabelFPS" type="Label" parent="VBoxContainer"]
 unique_name_in_owner = true
@@ -839,6 +841,7 @@ text = "FPS:"
 
 [node name="AuxiliaryLabel" type="Label" parent="VBoxContainer"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "asdasd"
@@ -862,3 +865,10 @@ anchor_bottom = 0.0
 grow_vertical = 1
 
 [node name="EndGameScene" parent="." instance=ExtResource("12_rckkk")]
+
+[node name="InGameStatisticsScene" parent="." instance=ExtResource("13_kb6mb")]
+unique_name_in_owner = true
+offset_left = 4.0
+offset_top = 23.0
+offset_right = 404.0
+offset_bottom = 223.0

@@ -5,7 +5,6 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Agregar estadísticas in game, como el tiempo transcurrido, el daño causado, el daño recibido, etc.
 - Agregar boton para mutear el juego
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
 - Agregar afecto de nubes
