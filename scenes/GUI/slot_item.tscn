@@ -60,3 +60,6 @@ theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 15
 text = "12"
+
+[node name="GeneralContainer" type="Node2D" parent="."]
+unique_name_in_owner = true

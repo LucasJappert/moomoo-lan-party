@@ -5,9 +5,9 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Agregar estadísticas in game, como el tiempo transcurrido, el daño causado, el daño recibido, etc.
 - Agregar boton para mutear el juego
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
-- Agregar estadísticas in game, como el tiempo transcurrido, el daño causado, el daño recibido, etc.
 - Agregar afecto de nubes
 - Agregar efecto de lluvia y rayos
 - Corregir problema de cursor en modo ataque sobre entidades
@@ -64,7 +64,6 @@
 - Agregar efectos de sangrado cada vez que una entidad recibo un daño
 - Agregar mas tipos de héroes. En esta primera etapa bastaría con 10 diferentes tipos con sus respectivas 4 habilidades y una ulti.
 - Encapsular lógica de get/set
-- Implementar un shader para el efecto de cooldown de habilidades
 - Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
 
 # #################################### 🧠 PATHFINDING STRATEGY – HIGH PRIORITY

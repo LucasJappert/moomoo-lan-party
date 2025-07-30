@@ -55,11 +55,18 @@ offset_bottom = 86.0
 script = ExtResource("1_0fsu4")
 
 [node name="Panel2" type="NinePatchRect" parent="."]
-layout_mode = 0
-offset_left = -7.0
-offset_top = -7.0
-offset_right = 93.0
-offset_bottom = 93.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("2_1knxt")
 region_rect = Rect2(1056, 1952, 64, 64)
 patch_margin_left = 20
@@ -68,9 +75,10 @@ patch_margin_right = 20
 patch_margin_bottom = 20
 
 [node name="Sprite" type="Sprite2D" parent="."]
-scale = Vector2(1.34375, 1.34375)
+unique_name_in_owner = true
+position = Vector2(43, 43)
+scale = Vector2(1.3125, 1.3125)
 texture = SubResource("AtlasTexture_0fsu4")
-centered = false
 region_enabled = true
 region_rect = Rect2(1632, 1856, 64, 64)
 
@@ -155,3 +163,6 @@ theme_override_font_sizes/font_size = 33
 theme_override_styles/normal = SubResource("StyleBoxTexture_gayjm")
 text = "+"
 horizontal_alignment = 1
+
+[node name="GeneralContainer" type="Node2D" parent="."]
+unique_name_in_owner = true

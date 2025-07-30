@@ -37,7 +37,7 @@ static func actions_while_flying(_projectile: Projectile):
 		var offset := lateral * randf_range(-AMPLITUDE, AMPLITUDE)
 		# var spawn := Vector2(randf_range(-4, 4), randf_range(-2, 2))
 		var pos := _projectile.global_position + forward_offset
-		var sprite := ParticleTrail.spawn(pos, GameManager.game_world.general_container, LIFETIME, _get_random_color(), 0.8)
+		var sprite := ParticleEffects.spawn(pos, GameManager.game_world.general_container, LIFETIME, _get_random_color(), 0.8)
 
 		sprite.create_tween() \
 		.tween_method(

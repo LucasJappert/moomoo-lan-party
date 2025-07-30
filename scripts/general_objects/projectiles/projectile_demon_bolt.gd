@@ -74,7 +74,7 @@ static func actions_while_flying(_projectile: Projectile):
 
 		for i in range(10):
 			var spawn_position = Vector2(randf_range(-TAIL_RADIUS, TAIL_RADIUS), randf_range(-TAIL_RADIUS, TAIL_RADIUS))
-			ParticleTrail.spawn(
+			ParticleEffects.spawn(
 				sprite.global_position + spawn_position,
 				GameManager.game_world.general_container,
 				0.2,

@@ -10,8 +10,8 @@ static func create_and_add_instance() -> void:
 
 	aux_array[0] = [0.6, 0.8, 1]
 	aux_array[1] = [80, 110, 140]
-	aux_array[2] = [10, 8, 6]
-	aux_array[3] = [6, 6, 6]
+	aux_array[2] = [20, 17, 14]
+	aux_array[3] = [12, 12, 12]
 
 	for i in AVAILABLE_LEVELS:
 		SKILLS[NAME].item_skill_base[i].create_effect = true
