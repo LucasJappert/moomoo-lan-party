@@ -297,7 +297,7 @@ func _update_ball_sprite(ball_sprite: Sprite2D, current_value: int, max_value: i
 	ball_sprite.position.y = _ORIGINAL_BALL_POS_Y + crop_from_top
 
 func _update_auxiliary_labels(_delta: float) -> void:
-	%LabelFPS.text = "FPS: %d" % Performance.get_monitor(Performance.TIME_FPS)
+	# %LabelFPS.text = "FPS: %d" % Performance.get_monitor(Performance.TIME_FPS)
 	if not SHOW_DEBUG_DATA:
 		if %AuxiliaryLabel.visible: %AuxiliaryLabel.hide()
 		return

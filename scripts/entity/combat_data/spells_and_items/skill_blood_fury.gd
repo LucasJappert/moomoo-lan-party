@@ -39,10 +39,12 @@ func instance_actions_after_current_hp_updated(_increased_value: int, _owner: En
 	if percent_lost_hp <= 0: return _owner.remove_effect_by_name(NAME)
 
 	var effect_stats := CombatStats.new()
-	var extra_damage: int = int(_owner.cache_total_stats_no_effects.get_physical_attack_power() * percent_lost_hp)
-	effect_stats.set_physical_attack_power(extra_damage)
-	effect_stats.set_attack_speed(_owner.cache_total_stats_no_effects.get_attack_speed() * percent_lost_hp)
 	effect_stats.set_level(int(percent_lost_hp * 10)) # Should be 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+	var skill_percent: float = _learned_skill.float_dict["perc_attack_speed_per_stack"]
+	var extra_percent: float = skill_percent * effect_stats.get_level()
+	effect_stats.set_attack_speed(_owner.cache_total_stats_no_effects.get_attack_speed() * extra_percent)
+	var extra_damage: int = int(_owner.cache_total_stats_no_effects.get_physical_attack_power() * extra_percent)
+	effect_stats.set_physical_attack_power(extra_damage)
 
 	var existing_effect = _owner.effects_helper.get_effect_by_name(NAME)
 	if existing_effect and existing_effect.get_level() == effect_stats.get_level(): return

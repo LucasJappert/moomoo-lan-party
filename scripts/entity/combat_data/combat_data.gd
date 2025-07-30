@@ -597,8 +597,7 @@ func can_physical_attack() -> bool:
 
 # region 	SERVER METHODS
 func global_receive_damage_or_heal(_di: DamageInfo):
-	if _di.is_main_attack(): BloodStainEffect.apply_bleeding_on_the_body(_my_owner)
-	else: BloodStainEffect.spawn_on_bleeding(_my_owner.global_position + Vector2(0, 8), 2.0)
+	BloodStainEffect.apply_bleeding_on_the_body(_my_owner)
 
 	if _di.critical > 0:
 		_my_owner.hud.show_message_popup(str(- (_di.total_damage - _di.critical)), Color(1, 0, 0))

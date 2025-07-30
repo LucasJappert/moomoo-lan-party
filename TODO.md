@@ -5,7 +5,9 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Fix Blood Fury skill and Nature Ball projectile
 - Agregar boton para mutear el juego
+- Ver doble silencio cuando usamos el arquero. También ver cuando entramos en modo pausa, algunos tiempos siguen corriendo.
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
 - Agregar afecto de nubes
 - Agregar efecto de lluvia y rayos

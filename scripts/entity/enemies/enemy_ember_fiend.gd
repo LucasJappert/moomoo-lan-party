@@ -15,3 +15,7 @@ static func try_to_init_from_name(_name: String, _enemy: Enemy) -> void:
 	_enemy.combat_stats.set_attack_range(220)
 	_enemy.projectile_type = ProjectileArrow.NAME
 	# _enemy.combat_stats.set_stun_chance(1, 3)
+	_enemy._skills.append_array([
+		SkillBase.get_new_learned_skill(SkillLifesteal.NAME),
+		SkillBase.get_new_learned_skill(SkillTrueStrike.NAME),
+	])

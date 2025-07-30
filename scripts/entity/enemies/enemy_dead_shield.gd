@@ -14,3 +14,4 @@ static func try_to_init_from_name(_name: String, _enemy: Enemy) -> void:
 	_enemy.combat_stats.set_evasion(0.3)
 	_enemy.combat_stats.set_attack_speed(1)
 	_enemy.combat_stats.set_physical_defense_percent(0.3)
+	_enemy.combat_stats.set_stun_chance(0.05)
