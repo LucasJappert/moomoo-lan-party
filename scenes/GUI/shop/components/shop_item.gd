@@ -1,53 +1,46 @@
-extends Control
 class_name ShopItem
+extends DraggableSlot
 
 const SCENE = preload("res://scenes/GUI/shop/components/shop_item.tscn")
 
-@onready var sprite: Sprite2D = %Sprite
 @onready var panel: NinePatchRect = %Panel
 @onready var texture_rect: TextureRect = %TextureRect
 
-var _item: Item
-var _is_hovering := false
-
-static func get_instance(item: Item) -> ShopItem:
+static func get_instance(_item: Item) -> ShopItem:
 	var instance: ShopItem = SCENE.instantiate()
-	instance._item = item
+	instance.item = _item
 	return instance
 	
 
 func _ready() -> void:
-	if not _item: return
+	slot_type = SlotType.SHOP_ITEM
+	super._ready()
+	if not item: return
 	
-	connect("child_exiting_tree", _on_child_exiting_tree)
 	texture_rect.connect("mouse_entered", _on_mouse_entered)
 	texture_rect.connect("mouse_exited", _on_mouse_exited)
-	texture_rect.connect("gui_input", _on_button_click)
 
-	sprite.region_rect = _item.region_rect
+	sprite.region_rect = item.region_rect
 	
 	var atlas_texture = AtlasTexture.new()
 	atlas_texture.atlas = SpritesHelper._ATLAS1
-	atlas_texture.region = _item.region_rect
+	atlas_texture.region = item.region_rect
 	texture_rect.texture = atlas_texture
 
 
-func _on_child_exiting_tree(_child) -> void:
-	if _is_hovering: MyTooltip.hide_tooltip()
-
 func _on_mouse_entered():
-	_is_hovering = true
-	MyTooltip.show_tooltip(_item.my_name, _item.get_description(false))
+	MyTooltip.show_tooltip(item.my_name, item.get_description(false))
 
 func _on_mouse_exited():
-	_is_hovering = false
 	MyTooltip.hide_tooltip()
 
-func _on_button_click(event: InputEvent):
+func _gui_input(event):
+	super._gui_input(event)
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-		_try_apply_shop(_item)
+		_try_apply_shop()
 
-func _try_apply_shop(item: Item) -> void:
+func _try_apply_shop() -> void:
+	if not item: return
 	if not GameManager.MY_PLAYER: return
 
 	return GameManager.MY_PLAYER.shopping_helper.try_shop_item(item)

@@ -14,6 +14,7 @@ var reseted_gui := false
 var _top_left_target: Entity
 var _bottom_target: Entity
 @onready var in_game_statistics: InGameStatistics = %InGameStatisticsScene
+@onready var draggable_slots_container: Node = %DraggableSlotsContainer
 
 # region Panel TOP LEFT
 const _RECT_TARGET_MAX_HP = Rect2(81, 27, 189, 21)
@@ -190,6 +191,8 @@ func get_item_slots() -> Array[SlotItem]:
 	return result
 func get_items() -> Array[SlotItem]:
 	return _item_slots_container.get_children() as Array[SlotItem]
+static func get_draggable_slots_container() -> Node:
+	return GameManager.get_gui_scene().draggable_slots_container
 # endregion GETTERs
 
 

@@ -1,14 +1,10 @@
 class_name SlotItem
+extends DraggableSlot
 
-extends Control
-
-@onready var sprite = $Sprite
 @onready var hotkey = $Hotkey
 @onready var label_cool_down = $LabelCoolDown
 @onready var label_amount = $LabelAmount
 
-var item: Item = null
-var slot_number: int = 0
 var _is_my_player_owner: bool
 
 const HOTKEY_BY_SLOT = ["1", "2", "3", "4", "5", "6"]
@@ -21,6 +17,9 @@ func _init(p_item: Item = null, p_slot_number: int = 0, p_quantity: int = 1, is_
 	_is_my_player_owner = is_my_player_owner
 	
 func _ready():
+	if is_cloned: return
+	slot_type = SlotType.INVENTORY_ITEM
+	super._ready()
 	label_cool_down.text = "0"
 	label_cool_down.visible = false
 	
@@ -30,6 +29,7 @@ func _ready():
 	connect("mouse_exited", func(): _on_mouse_exited())
 
 func _process(_delta: float) -> void:
+	if is_cloned: return
 	if not GameManager.MY_PLAYER: return
 	if not item: return
 
@@ -56,10 +56,25 @@ func _on_mouse_exited():
 	MyTooltip.hide_tooltip()
 
 func _gui_input(event):
+	super._gui_input(event)
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		if not GameManager.MY_PLAYER: return
 		KeyboardHelper.key_pressed_server_side(KeyboardHelper.INVENTORY_HOTKEYS[slot_number - 1], GameManager.MY_PLAYER)
 		
+func on_drag_started(_slot: DraggableSlot) -> void:
+	super.on_drag_started(_slot)
+	print("on_drag_started ", _slot.slot_type)
+
+func on_drag_ended(_draggable_slot: DraggableSlot) -> void:
+	if not _is_my_player_owner or not GameManager.MY_PLAYER: return
+	super.on_drag_ended(_draggable_slot)
+
+	if _draggable_slot.slot_type == SlotType.INVENTORY_ITEM:
+		GameManager.MY_PLAYER.update_item(item, _draggable_slot.slot_number - 1) # Actualizamos el slot origen
+		GameManager.MY_PLAYER.update_item(_draggable_slot.item, slot_number - 1) # Actualizamos el slot destino, o sea esta referencia
+
+	print("on_drag_ended ", slot_number)
+
 # region	GETTERS
 
 func can_use(my_owner: Entity) -> bool:
@@ -87,4 +102,7 @@ func _update_controls():
 	hotkey.text = OS.get_keycode_string(KeyboardHelper.INVENTORY_HOTKEYS[slot_number - 1])
 	if item && item.quantity > 1: label_amount.text = str(item.quantity)
 	else: label_amount.text = ""
+	if item == null:
+		label_cool_down.visible = false
+		sprite.modulate = ItemSkillBase.CAN_USE_COLOR
 # endregion SETTERS

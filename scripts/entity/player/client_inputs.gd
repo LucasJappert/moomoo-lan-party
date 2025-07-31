@@ -26,6 +26,7 @@ func _unhandled_input(event):
 		# var window := get_viewport().get_window() # 👈 importante!
 		# var node := window.gui_get_hovered_control()
 		# print("Clicked at: ", pos, " - Hovered control: ", node)
+		if DraggableSlot.verify_global_click(event): return
 		if event.button_index == MOUSE_BUTTON_RIGHT:
 			# if ObjectHelpers.is_enemy(AreaHovered.hovered_entity):
 			# 	if not KeyboardController.SHIFT_PRESSED: return rpc_id(1, "_on_right_click_on_entity", _get_hovered_entity_name())

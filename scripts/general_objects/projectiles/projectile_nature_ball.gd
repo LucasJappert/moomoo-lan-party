@@ -11,7 +11,6 @@ const VOLUME: float = -10
 static func try_init(_projectile: Projectile):
 	if _projectile.type != NAME: return
 
-	print(_projectile.rotation)
 	_projectile.speed = SPEED
 	set_frames(_projectile, [RECT_REGION])
 	_projectile.sprite.play("default")

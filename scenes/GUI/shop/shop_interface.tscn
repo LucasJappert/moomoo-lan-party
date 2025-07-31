@@ -22,7 +22,6 @@ offset_right = 430.0
 offset_bottom = 620.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
 
 [node name="MainContainerItems" type="NinePatchRect" parent="MainContainer"]
 unique_name_in_owner = true
@@ -52,11 +51,13 @@ offset_left = 13.0
 offset_top = 23.0
 offset_right = 417.0
 offset_bottom = 339.0
+mouse_filter = 2
 theme_override_constants/separation = 20
 
 [node name="ContainerItemByTypesModel" type="VBoxContainer" parent="MainContainer/MainContainerItems/ContainerOfContainerItemByTypes"]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 8
 
 [node name="LabelTitle" type="Label" parent="MainContainer/MainContainerItems/ContainerOfContainerItemByTypes/ContainerItemByTypesModel"]
@@ -69,6 +70,7 @@ uppercase = true
 
 [node name="ItemsContainer" type="GridContainer" parent="MainContainer/MainContainerItems/ContainerOfContainerItemByTypes/ContainerItemByTypesModel"]
 layout_mode = 2
+mouse_filter = 2
 columns = 6
 
 [node name="ShopItem" parent="MainContainer/MainContainerItems/ContainerOfContainerItemByTypes/ContainerItemByTypesModel/ItemsContainer" instance=ExtResource("2_t66vx")]

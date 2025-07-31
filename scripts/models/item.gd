@@ -25,6 +25,7 @@ static var aux_array: Array = [[], [], [], [], [], [], [], [], [], [], [], []]
 var quantity: int = 1
 var is_consumable: bool = false
 var buy_price: int = 0
+const SELL_PRICE_FACTOR = 0.7
 var region_rect: Rect2 = Rect2()
 
 func _init(_name: String = "", _type: String = SkillType.PASSIVE):
@@ -184,7 +185,7 @@ func get_description(include_stats_description: bool = true) -> String:
 	if buy_price > 0:
 		result += "\n"
 		result += str("- Buy price: ", StringHelpers.format_float(buy_price), "\n")
-		result += str("- Sell price: ", StringHelpers.format_float(buy_price * 0.7), "\n")
+		result += str("- Sell price: ", StringHelpers.format_float(buy_price * SELL_PRICE_FACTOR), "\n")
 	
 	return result
 

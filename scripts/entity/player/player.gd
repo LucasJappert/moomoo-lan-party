@@ -13,6 +13,7 @@ const MAX_LEVEL: int = 30
 		current_gold = _value
 		if current_gold > 9999: current_gold_string = StringHelpers.format_float_compact(current_gold)
 		else: current_gold_string = StringHelpers.format_float(current_gold)
+		if is_my_player(): SoundsHelper.play_coins()
 var current_gold_string: String = ""
 @export var skill_points_to_assign: int:
 	set(_value):
@@ -87,7 +88,6 @@ func increment_current_gold(value_to_increment: int) -> void:
 	if current_hp <= 0: return
 	current_gold += value_to_increment
 	statistics.add_gold(value_to_increment)
-	if is_my_player(): SoundsHelper.play_gold_sound()
 # endregion SETTERs
 
 static func get_exp_per_level(_level: int) -> int:

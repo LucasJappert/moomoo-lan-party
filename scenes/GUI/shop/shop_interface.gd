@@ -5,11 +5,13 @@ class_name ShopInterface
 @onready var _container_item_by_types_model: VBoxContainer = %ContainerItemByTypesModel
 @onready var _main_container_items: NinePatchRect = %MainContainerItems
 @onready var _shop_button: MyButton = %ShopButton
+@onready var _main_container: Control = %MainContainer
 
 var _items_visible := true
 const ORIGINAL_WIDTH = 430
 
 func _ready() -> void:
+	_main_container.gui_input.connect(_on_main_container_gui_input)
 	_main_container_items.position.x = ORIGINAL_WIDTH
 	_container_item_by_types_model.visible = false
 
@@ -33,10 +35,14 @@ func _ready() -> void:
 			var shop_item = ShopItem.get_instance(item)
 			items_container.add_child(shop_item)
 
+
+func _on_main_container_gui_input(event) -> void:
+	if event is InputEventMouseButton and event.pressed:
+		DraggableSlot.on_shop_interface_clicked(event)
+
 func _toggle_shop() -> void:
 	if _items_visible: close_shop()
 	else: open_shop()
-
 const TWEEN_DURATION := 0.2
 func close_shop() -> bool:
 	if not _items_visible: return false
@@ -45,7 +51,6 @@ func close_shop() -> bool:
 	var tween := _main_container_items.create_tween()
 	tween.tween_property(_main_container_items, "position:x", ORIGINAL_WIDTH, TWEEN_DURATION)
 	return true
-
 func open_shop():
 	_items_visible = true
 	_shop_button.text = "Hide"

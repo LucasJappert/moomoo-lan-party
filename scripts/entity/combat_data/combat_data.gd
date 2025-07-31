@@ -294,7 +294,8 @@ func update_base_stats(new_info: Dictionary[String, float]) -> void:
 func update_item(item: Item, index: int) -> bool:
 	if index >= _items.size(): printerr("Index out of range: ", index)
 
-	if item.quantity <= 0: item = null
+	if item and item.quantity <= 0:
+		item = null
 	_items[index] = item
 	EventBus.emit_item_updated(_my_owner, item, index + 1)
 

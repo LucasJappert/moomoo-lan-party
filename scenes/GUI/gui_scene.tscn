@@ -846,6 +846,9 @@ layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "asdasd"
 
+[node name="DraggableSlotsContainer" type="Node" parent="."]
+unique_name_in_owner = true
+
 [node name="TutorialButton" parent="." instance=ExtResource("8_7pojj")]
 unique_name_in_owner = true
 offset_left = 1817.0

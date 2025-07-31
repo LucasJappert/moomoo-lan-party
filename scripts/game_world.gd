@@ -82,3 +82,7 @@ func _init_projectiles_spawner():
 	projectiles_spawner.spawn_function = Callable(self, "_spawn_custom_projectile")
 func _spawn_custom_projectile(data: Dictionary = {}) -> Node:
 	return Projectile.get_instance_from_dict(data)
+
+# region 	GETTERs
+static func get_gui_scene() -> GUIScene: return GameManager.game_world.gui_scene
+# endregion GETTERs
