@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Rearranging items in the inventory, being able to sell them
 - ✅ Add in-game statistics, such as time elapsed, damage dealt, damage taken, etc
 - ✅ Implement some effect when skill cooldown is completed
 - ✅ Add text over effect slots, such as the level of the Blood Fury effect or the remaining time of the effect

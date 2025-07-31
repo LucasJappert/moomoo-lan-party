@@ -37,8 +37,7 @@ func _ready() -> void:
 
 
 func _on_main_container_gui_input(event) -> void:
-	if event is InputEventMouseButton and event.pressed:
-		DraggableSlot.on_shop_interface_clicked(event)
+	if event is InputEventMouseButton and event.pressed: _on_shop_interface_clicked(event)
 
 func _toggle_shop() -> void:
 	if _items_visible: close_shop()
@@ -59,3 +58,13 @@ func open_shop():
 
 static func static_close_shop() -> bool:
 	return GameManager.game_world.gui_scene.shop_interface.close_shop()
+
+static func _on_shop_interface_clicked(_event: InputEventMouseButton) -> void:
+	if not DraggableSlot.ghost: return
+	if not GameManager.MY_PLAYER: return
+
+	print("Soltamos el item en el shop")
+	GameManager.MY_PLAYER.increment_current_gold(int(DraggableSlot.ghost.item.get_sell_price()))
+	GameManager.MY_PLAYER.update_item(null, DraggableSlot.ghost.slot_number - 1)
+
+	DraggableSlot.ghost.emit_drop(false)

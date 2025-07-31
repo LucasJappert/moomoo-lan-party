@@ -49,31 +49,26 @@ func _process(_delta: float) -> void:
 
 func _on_mouse_entered():
 	if not item: return
-	MyTooltip.show_tooltip(item.my_name, item.get_description(false))
+	MyTooltip.show_tooltip(item.my_name, item.get_description(false, false))
 
 func _on_mouse_exited():
 	if not item: return
 	MyTooltip.hide_tooltip()
 
 func _gui_input(event):
-	super._gui_input(event)
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		if not GameManager.MY_PLAYER: return
-		KeyboardHelper.key_pressed_server_side(KeyboardHelper.INVENTORY_HOTKEYS[slot_number - 1], GameManager.MY_PLAYER)
-		
-func on_drag_started(_slot: DraggableSlot) -> void:
-	super.on_drag_started(_slot)
-	print("on_drag_started ", _slot.slot_type)
+		if not DraggableSlot.ghost:
+			KeyboardHelper.key_pressed_server_side(KeyboardHelper.INVENTORY_HOTKEYS[slot_number - 1], GameManager.MY_PLAYER)
+
+	super._gui_input(event)
 
 func on_drag_ended(_draggable_slot: DraggableSlot) -> void:
 	if not _is_my_player_owner or not GameManager.MY_PLAYER: return
-	super.on_drag_ended(_draggable_slot)
 
 	if _draggable_slot.slot_type == SlotType.INVENTORY_ITEM:
 		GameManager.MY_PLAYER.update_item(item, _draggable_slot.slot_number - 1) # Actualizamos el slot origen
 		GameManager.MY_PLAYER.update_item(_draggable_slot.item, slot_number - 1) # Actualizamos el slot destino, o sea esta referencia
-
-	print("on_drag_ended ", slot_number)
 
 # region	GETTERS
 

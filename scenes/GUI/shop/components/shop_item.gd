@@ -17,8 +17,8 @@ func _ready() -> void:
 	super._ready()
 	if not item: return
 	
-	texture_rect.connect("mouse_entered", _on_mouse_entered)
-	texture_rect.connect("mouse_exited", _on_mouse_exited)
+	connect("mouse_entered", _on_mouse_entered)
+	connect("mouse_exited", _on_mouse_exited)
 
 	sprite.region_rect = item.region_rect
 	
@@ -29,7 +29,7 @@ func _ready() -> void:
 
 
 func _on_mouse_entered():
-	MyTooltip.show_tooltip(item.my_name, item.get_description(false))
+	MyTooltip.show_tooltip(item.my_name, item.get_description(false, true))
 
 func _on_mouse_exited():
 	MyTooltip.hide_tooltip()

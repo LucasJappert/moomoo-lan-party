@@ -179,13 +179,13 @@ static func get_item(_item_name: String, p_quantity: int = 1, new_copy: bool = t
 	new_item.quantity = p_quantity
 	return new_item
 
-func get_description(include_stats_description: bool = true) -> String:
+func get_description(include_stats_description: bool = true, show_buy_price: bool = true) -> String:
 	var result = super.get_description(include_stats_description)
 
 	if buy_price > 0:
 		result += "\n"
-		result += str("- Buy price: ", StringHelpers.format_float(buy_price), "\n")
-		result += str("- Sell price: ", StringHelpers.format_float(buy_price * SELL_PRICE_FACTOR), "\n")
+		if show_buy_price: result += str("- Buy price: ", StringHelpers.format_float(buy_price), "\n")
+		if not show_buy_price: result += str("- Sell price: ", StringHelpers.format_float(buy_price * SELL_PRICE_FACTOR), "\n")
 	
 	return result
 
@@ -195,4 +195,6 @@ func can_use(my_owner: Entity) -> bool:
 
 	return super.can_use(my_owner)
 
+func get_sell_price() -> int:
+	return int(buy_price * SELL_PRICE_FACTOR * quantity)
 # endregion ................. GETTERs

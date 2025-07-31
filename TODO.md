@@ -5,9 +5,6 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Ver porqué no elimina el item vendido
-- Ver hover sobre items del shop
-- 🔵 Drag items in the inventory, be able to throw them on the floor, be able to sell them
 - Agregar boton para mutear el juego
 - Ver doble silencio cuando usamos el arquero. También ver cuando entramos en modo pausa, algunos tiempos siguen corriendo.
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido

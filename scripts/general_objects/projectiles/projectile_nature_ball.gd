@@ -33,5 +33,6 @@ static func actions_while_flying(_projectile: Projectile):
 			GameManager.game_world.general_container,
 			_projectile.global_position + spawn_position,
 			particle_sprite,
-			0.2
+			0.2,
+			Color(0, 0, 0, 0)
 		)

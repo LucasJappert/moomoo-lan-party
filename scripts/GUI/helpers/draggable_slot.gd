@@ -13,48 +13,48 @@ static var ghost: DraggableSlot
 var drag_offset := Vector2.ZERO
 
 func _ready() -> void:
-	print("DraggableSlot ready")
+	# print("DraggableSlot ready")
+	pass
 
 func _gui_input(event):
 	if slot_type != SlotType.INVENTORY_ITEM: return
 	
 	if event is InputEventMouseButton and event.pressed:
-		print("InputEventMouseButton")
 		if ghost: emit_drop()
 
 		if item and event.button_index == MOUSE_BUTTON_RIGHT:
 			drag_offset = get_local_mouse_position()
 			ghost = _create_ghost()
 			GUIScene.get_draggable_slots_container().add_child(ghost)
+			ghost.label_cool_down.visible = false
 			on_drag_started(self)
 
 func _process(_delta):
-	if ghost: ghost.global_position = get_global_mouse_position() - Vector2(32, 32)
+	if ghost: ghost.global_position = get_global_mouse_position() - Vector2(48, 48)
 
 func _create_ghost() -> DraggableSlot:
-	var _clone: DraggableSlot = duplicate()
+	var _clone: DraggableSlot = self.duplicate()
+	_clone.scale = Vector2.ONE * 1.5
 	_clone.slot_number = slot_number
 	_clone.is_cloned = true
 	_clone.item = self.item
 	_clone.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_clone.modulate = Color(0.9, 0.9, 0.9, 0.9)
-	# _clone.z_index = 1000
+	_clone.modulate = Color(1, 1, 1, 0.8)
 	return _clone
 
-func emit_drop():
-	if ghost:
-		on_drag_ended(ghost)
-		ghost.queue_free()
-		ghost = null
+func emit_drop(execute_drag_ended: bool = true) -> void:
+	if not ghost: return
+
+	if execute_drag_ended: on_drag_ended(ghost)
+	ghost.queue_free()
+	ghost = null
 
 # Must be overriden
 func on_drag_started(_slot: DraggableSlot) -> void:
-	print("on_drag_started ", _slot.slot_type)
 	pass
 
 # Must be overriden
 func on_drag_ended(_slot: DraggableSlot) -> void:
-	print("on_drag_ended", _slot.slot_type)
 	pass
 
 
@@ -67,13 +67,3 @@ static func verify_global_click(_event: InputEventMouseButton) -> bool:
 		print("Soltamos el item en el suelo o shop")
 
 	return true
-
-static func on_shop_interface_clicked(_event: InputEventMouseButton) -> void:
-	if not ghost: return
-	if not GameManager.MY_PLAYER: return
-
-	print("Soltamos el item en el shop")
-	GameManager.MY_PLAYER.increment_current_gold(int(ghost.item.buy_price * Item.SELL_PRICE_FACTOR * ghost.item.quantity))
-	GameManager.MY_PLAYER.update_item(null, ghost.slot_number - 1)
-
-	ghost.emit_drop()
