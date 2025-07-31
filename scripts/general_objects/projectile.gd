@@ -26,6 +26,7 @@ func _get_origin_entity() -> Entity:
 	return GameManager.get_entity(origin_entity_name)
 
 func _physics_process(delta: float) -> void:
+	if MainScene.PAUSED: return
 	_server_move(delta)
 	for registered_class in ProjectileBase.REGISTERED_CLASSES: registered_class.actions_while_flying(self)
 

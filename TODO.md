@@ -5,7 +5,7 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Improve arrow effects based on skills
+- 🔵 Arrastrar items en el inventario, poder tirarlos al suelo, poder venderlos
 - Agregar boton para mutear el juego
 - Ver doble silencio cuando usamos el arquero. También ver cuando entramos en modo pausa, algunos tiempos siguen corriendo.
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
