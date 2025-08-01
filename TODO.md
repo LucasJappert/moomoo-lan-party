@@ -5,11 +5,13 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Agregar boton para mutear el juego
-- Ver doble silencio cuando usamos el arquero. También ver cuando entramos en modo pausa, algunos tiempos siguen corriendo.
-- Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
+- Agregar algún borde en la base de la unidad seleccionada
+- Check double silence when using the archer. Also check when entering pause mode, some timers keep running.
 - Agregar afecto de nubes
 - Agregar efecto de lluvia y rayos
+- Agregar boton para mutear el juego
+- Agregar algunos items más
+- Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
 - Corregir problema de cursor en modo ataque sobre entidades
 
 - Revisar sonidos en loop

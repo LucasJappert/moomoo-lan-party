@@ -34,7 +34,7 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 	if not verify_range(_caster, _target, _learned_skill): return false
 
 	var skill := SkillUnbreakable.new(_learned_skill, true)
-	_target.add_active_skill(skill)
+	if not _target.add_active_skill(skill): return false
 
 	# apply_animation(_my_owner, _learned_skill.duration_in_seconds)
 	ShieldEffect.attach_to(_target.front_animations_node, _learned_skill.duration_in_seconds)

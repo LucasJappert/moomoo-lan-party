@@ -69,6 +69,4 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 
 	var _percent_to_release: float = _learned_skill.float_dict["percent_to_release"]
 	var skill_base := SkillAbsorbAndRelease.new(_learned_skill, true, _percent_to_release, _learned_skill.area_of_effect_in_tiles)
-	_target.add_active_skill(skill_base)
-
-	return true
+	return _target.add_active_skill(skill_base)

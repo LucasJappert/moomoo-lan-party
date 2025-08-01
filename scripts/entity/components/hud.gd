@@ -98,12 +98,24 @@ func show_popup(text: String, color: Color = Color.RED, speed_scale: float = 1.0
 func set_last_damage_to_my_player():
 	_last_damage_to_my_player = Time.get_ticks_msec()
 
-func add_stun_progress_bar(_lifetime_in_seconds: float):
+func add_stun_progress_bar(_lifetime_in_seconds: float) -> void:
+	for child in progress_bars_container.get_children():
+		if child is MyProgressBarScene:
+			var current_bar := child as MyProgressBarScene
+			if current_bar.my_name == CombatEffect.STUN_NAME:
+				return current_bar.update_lifetime(_lifetime_in_seconds)
+
 	var progress_bar: MyProgressBarScene = MY_PROGRESS_BAR.instantiate()
 	progress_bar.init(CombatEffect.STUN_NAME, _lifetime_in_seconds, Color.from_string("#a38800ff", Color.WHITE))
 	progress_bars_container.add_child(progress_bar)
 
-func add_silence_progress_bar(_lifetime_in_seconds: float):
+func add_silence_progress_bar(_lifetime_in_seconds: float) -> void:
+	for child in progress_bars_container.get_children():
+		if child is MyProgressBarScene:
+			var current_bar := child as MyProgressBarScene
+			if current_bar.my_name == CombatEffect.SILENCE_NAME:
+				return current_bar.update_lifetime(_lifetime_in_seconds)
+
 	var progress_bar: MyProgressBarScene = MY_PROGRESS_BAR.instantiate()
-	progress_bar.init(CombatEffect.SILENCE_NAME, _lifetime_in_seconds, Color.from_string("#82008efe", Color.WHITE))
 	progress_bars_container.add_child(progress_bar)
+	progress_bar.init(CombatEffect.SILENCE_NAME, _lifetime_in_seconds, Color.from_string("#82008efe", Color.WHITE))

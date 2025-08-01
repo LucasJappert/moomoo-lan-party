@@ -38,9 +38,7 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 
 	if not verify_range(_caster, _target, _learned_skill): return false
 
-	_target.add_active_skill(SkillBurningPresence.new(_caster, _learned_skill))
-
-	return true
+	return _target.add_active_skill(SkillBurningPresence.new(_caster, _learned_skill))
 
 func _init(_owner: Entity, p_learned_skill: ItemSkillBase) -> void:
 	super._init(p_learned_skill, true)

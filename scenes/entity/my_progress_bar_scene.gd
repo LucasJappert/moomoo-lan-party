@@ -17,23 +17,31 @@ class_name MyProgressBarScene
 			_update_progress_bar_style()
 
 var _lifetime_in_ms: float = 0.0
-var _start_time_in_ms: float = 0.0
-var _my_name: String
+var my_name: String
 var _my_id: int
+var _start_time_in_ms: int
+var _start_total_paused_time: int
 
-func init(my_name: String, lifetime_in_seconds: float = 1.0, _color: Color = Color.GRAY):
+
+func init(_my_name: String, lifetime_in_seconds: float = 1.0, _color: Color = Color.GRAY):
 	_lifetime_in_ms = lifetime_in_seconds * 1000.0
 	progress_color = _color
 	progress_value_percent = 100.0
 	_start_time_in_ms = Time.get_ticks_msec()
 	_my_id = UniqueIdGenerator.get_id()
-	_my_name = my_name
+	my_name = _my_name
+	start_lifetime(lifetime_in_seconds)
 
 func _ready():
 	progress_bar.value = progress_value_percent
 	_update_progress_bar_style()
 	if _start_time_in_ms == 0.0:
 		_start_time_in_ms = Time.get_ticks_msec()
+
+func start_lifetime(lifetime_in_seconds: float) -> void:
+	_lifetime_in_ms = lifetime_in_seconds * 1000.0
+	_start_time_in_ms = Time.get_ticks_msec()
+	_start_total_paused_time = MainScene.total_paused_time # asumimos que es accesible como estática
 
 func _update_progress_bar_style():
 	var stylebox := StyleBoxFlat.new()
@@ -50,15 +58,27 @@ func _update_progress_bar_style():
 	progress_bar.set("theme_override_styles/fill", stylebox)
 
 func _process(_delta: float) -> void:
-	if _lifetime_in_ms <= 0.0:
-		return
+	if MainScene.PAUSED: return
+	if _lifetime_in_ms <= 0.0: return
 
 	var current_time_in_ms = Time.get_ticks_msec()
-	var elapsed_time_in_ms = current_time_in_ms - _start_time_in_ms
+	var paused_offset = MainScene.total_paused_time - _start_total_paused_time
+	var elapsed_time_in_ms = current_time_in_ms - _start_time_in_ms - paused_offset
 
 	if elapsed_time_in_ms > _lifetime_in_ms:
-		queue_free()
-		return
+		return queue_free()
 
 	var remaining_percent = 100.0 - (elapsed_time_in_ms * 100.0 / _lifetime_in_ms)
 	progress_value_percent = remaining_percent
+
+func update_lifetime(new_lifetime_in_seconds: float) -> void:
+	var current_time_in_ms = Time.get_ticks_msec()
+	var elapsed_ms = current_time_in_ms - _start_time_in_ms
+	var remaining_ms = _lifetime_in_ms - elapsed_ms
+	var new_lifetime_ms = new_lifetime_in_seconds * 1000.0
+
+	if new_lifetime_ms > remaining_ms:
+		# Reiniciar desde 100% con el nuevo tiempo
+		_lifetime_in_ms = new_lifetime_ms
+		_start_time_in_ms = current_time_in_ms
+		progress_value_percent = 100.0

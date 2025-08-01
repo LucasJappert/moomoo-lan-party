@@ -23,7 +23,7 @@ func load_scene(scene):
 	layer_1.add_child(scene)
 
 # region 	GETTERs
-static func get_elapsed_time() -> float:
+static func get_elapsed_time_in_sec() -> float:
 	return (Time.get_ticks_msec() - total_paused_time) / 1000.0
 # endregion GETTERs
 

@@ -33,7 +33,7 @@ func set_last_used_time(p_last_used_time: float) -> void:
 	_last_used_time = p_last_used_time
 
 func reset_last_used_time() -> void:
-	_last_used_time = Time.get_ticks_msec() / 1000.0
+	_last_used_time = MainScene.get_elapsed_time_in_sec()
 
 func get_last_used_time() -> float:
 	return _last_used_time
@@ -77,10 +77,13 @@ func can_use(my_owner: Entity) -> bool:
 
 	return get_remaining_cooldown() == 0
 
+var _last_frozen_time: float
 func get_remaining_cooldown() -> float:
-	var now := Time.get_ticks_msec() / 1000.0
+	if MainScene.PAUSED: return _last_frozen_time
+	var now := MainScene.get_elapsed_time_in_sec()
 	var elapsed := now - _last_used_time
-	return max(0.0, cooldown - elapsed)
+	_last_frozen_time = max(0.0, cooldown - elapsed)
+	return _last_frozen_time
 
 # region -------- STATICS METHODS
 static func roll_true_strike(_attacker: Entity, _di: DamageInfo) -> void:

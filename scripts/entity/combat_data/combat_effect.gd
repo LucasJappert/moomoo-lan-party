@@ -13,7 +13,7 @@ var unique_id: int = UniqueIdGenerator.get_id()
 var is_cooldown_finished: bool = false
 var _description: String = ""
 
-const STUN_RECT_REGION := Rect2(0, 608, 32, 17)
+const STUN_RECT_REGION := Rect2(416, 256, 32, 32)
 const STUN_NAME = "Stun"
 const SILENCE_NAME = "Silence"
 

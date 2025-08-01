@@ -36,8 +36,6 @@ func add_effect(p_effect: CombatEffect) -> void:
 	# For the case of stuns, we must wait for the existing one to finish
 	if p_effect.effect_name == CombatEffect.STUN_NAME:
 		if get_effect_by_name(p_effect.effect_name): return
-	if p_effect.effect_name == SkillSilentAgony.NAME:
-		if get_effect_by_name(p_effect.effect_name): return
 
 	_server_verifications_before_adding_effect(p_effect)
 	_effects.append(p_effect)

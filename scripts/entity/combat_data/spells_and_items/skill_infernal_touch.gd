@@ -59,7 +59,7 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 	if damage_per_second == 0: damage_per_second = 1
 
 	infernal_touch.float_dict["damage_per_second"] = damage_per_second
-	_target.add_active_skill(SkillInfernalTouch.new(_target, _attacker, infernal_touch))
+	if not _target.add_active_skill(SkillInfernalTouch.new(_target, _attacker, infernal_touch)): return false
 
 	var effect := CombatEffect.get_effect_from_item_skill_base(infernal_touch)
 	effect.set_description("Inflicting " + StringHelpers.format_float(infernal_touch.float_dict["damage_per_second"]) + " damage per second for " + str(infernal_touch.duration_in_seconds) + " seconds")

@@ -856,6 +856,11 @@ offset_top = 28.0
 offset_right = 1817.0
 offset_bottom = 28.0
 
+[node name="CountdownScene" parent="." instance=ExtResource("9_b6l0f")]
+unique_name_in_owner = true
+offset_top = -694.0
+offset_bottom = -694.0
+
 [node name="MenuScene" parent="." instance=ExtResource("11_fp2g3")]
 unique_name_in_owner = true
 anchors_preset = 5
@@ -865,11 +870,6 @@ anchor_bottom = 0.0
 grow_vertical = 1
 
 [node name="EndGameScene" parent="." instance=ExtResource("12_rckkk")]
-
-[node name="CountdownScene" parent="." instance=ExtResource("9_b6l0f")]
-unique_name_in_owner = true
-offset_top = -694.0
-offset_bottom = -694.0
 
 [node name="InGameStatisticsScene" parent="." instance=ExtResource("13_kb6mb")]
 unique_name_in_owner = true

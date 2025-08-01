@@ -212,8 +212,6 @@ func _stacks_reached(_skill: SkillBase) -> bool:
 func _try_to_apply_effect(_skill: SkillBase):
 	if not _skill.learned_skill.create_effect: return
 
-	# print("Agregamos _skill: ", _skill.my_name, " a unidad: ", _my_owner.name)
-
 	var new_effect := CombatEffect.get_effect_from_skill_base(_skill)
 	effects_helper.add_effect(new_effect)
 

@@ -94,7 +94,6 @@ func use(my_owner: Entity, target_entity: Entity) -> bool:
 		print("Cannot use skill: ", learned_skill)
 		return false
 
-	# New way to use skills
 	var was_used := false
 	for skill_class in SkillBase.REGISTERED_SKILLS:
 		was_used = skill_class.try_to_use(my_owner, learned_skill, target_entity)

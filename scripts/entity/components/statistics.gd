@@ -78,7 +78,7 @@ static func try_register_received_damage(_attacker: Entity, _di: DamageInfo):
 
 func get_summary() -> String:
 	var summary := ""
-	summary += "⚡ Time: %s\n" % StringHelpers.get_formatted_time(int(MainScene.get_elapsed_time()))
+	summary += "⚡ Time: %s\n" % StringHelpers.get_formatted_time(int(MainScene.get_elapsed_time_in_sec()))
 	summary += "⚡ Enemies: %d\n" % _enemies_killed
 	summary += "⚡ Gold Earned: %s\n" % StringHelpers.format_float(_gold_earned)
 	summary += "⚡ Hero: %s\n" % _hero_name
