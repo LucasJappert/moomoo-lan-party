@@ -5,7 +5,6 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- No bloquear slots pasivos cuando estamos silenciados
 - Agregar afecto de nubes
 - Agregar efecto de lluvia y rayos
 - Agregar boton para mutear el juego

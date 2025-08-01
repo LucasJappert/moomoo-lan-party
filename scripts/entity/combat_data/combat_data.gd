@@ -42,7 +42,7 @@ var target_to_attack: Entity
 		EventBus.emit_new_target_to_attack_selected(_my_owner, target_to_attack)
 		if target_to_attack == null: return
 		if target_to_attack.current_hp != 0 and _my_owner.is_my_player():
-			ShadersHelper.apply_border_shader(target_to_attack, "target_to_attack", true, Color(1, 0, 0, 1))
+			ShadersHelper.apply_border_shader(target_to_attack, "target_to_attack", true, Color(1, 0, 0, 0.7))
 
 	get:
 		return _target_to_attack_name

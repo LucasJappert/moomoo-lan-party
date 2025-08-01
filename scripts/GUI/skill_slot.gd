@@ -34,6 +34,7 @@ func _ready():
 	# Commons settings
 	label_cool_down.visible = false
 	upgrade_button.visible = false
+	sprite.modulate = ItemSkillBase.CANT_USE_COLOR
 	_initialize_styles()
 	if _try_settings_for_hero_picker(): return
 
@@ -56,10 +57,10 @@ func _try_settings_for_hero_picker():
 
 func _process(_delta: float) -> void:
 	verify_tooltip()
-
+	if not skill: return
+	if skill.learned_level == 0: return
 
 	if not ObjectHelpers.is_my_player(_owner): return _lock_slot()
-	if not skill: return
 	# if not GameManager.MY_PLAYER: return
 
 	if skill.can_use(GameManager.MY_PLAYER):
@@ -70,6 +71,7 @@ func _process(_delta: float) -> void:
 	
 	# Cant use
 	sprite.modulate = ItemSkillBase.CANT_USE_COLOR
+	if skill.get_safe_learned_skill().type == SkillType.PASSIVE: sprite.modulate = ItemSkillBase.CAN_USE_COLOR
 	var remaining_cooldown := skill.get_remaining_cooldown()
 	if remaining_cooldown > 0:
 		label_cool_down.visible = true
