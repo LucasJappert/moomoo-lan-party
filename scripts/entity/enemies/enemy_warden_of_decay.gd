@@ -13,7 +13,6 @@ static func try_to_init_from_name(_name: String, _enemy: Enemy) -> void:
 
 	_enemy.combat_stats.set_crit_chance(0.1)
 	_enemy.combat_stats.set_crit_multiplier(1.5)
-	_enemy.combat_stats.set_stun_chance(1, 4)
 
 	_enemy._skills.append_array([
 		SkillBase.get_new_learned_skill(SkillTrueStrike.NAME),

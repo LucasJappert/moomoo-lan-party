@@ -34,10 +34,15 @@ var target_to_attack: Entity
 	set(value):
 		if _target_to_attack_name == value: return
 		_target_to_attack_name = value
+
+		if target_to_attack and _my_owner.is_my_player():
+			ShadersHelper.clear_border_shader(target_to_attack, "target_to_attack")
 		target_to_attack = GameManager.get_entity(value)
 		
 		EventBus.emit_new_target_to_attack_selected(_my_owner, target_to_attack)
 		if target_to_attack == null: return
+		if target_to_attack.current_hp != 0 and _my_owner.is_my_player():
+			ShadersHelper.apply_border_shader(target_to_attack, "target_to_attack", true, Color(1, 0, 0, 1))
 
 	get:
 		return _target_to_attack_name
@@ -327,7 +332,6 @@ func register_attacker(attacker: Entity) -> void:
 func set_target_to_attack(_target: Entity) -> void: # Used only by the server
 	if _target == target_to_attack: return
 
-	target_to_attack = _target
 	target_to_attack_name = str(_target.name) if _target else ""
 
 func reset_target_to_attack_from_nearest_enemy() -> void:

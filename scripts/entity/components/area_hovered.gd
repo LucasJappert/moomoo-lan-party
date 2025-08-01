@@ -5,6 +5,7 @@ extends Area2D
 static var hovered_entity: Entity
 static var _currently_hovered_entities: Array[Entity] = []
 var my_owner: Entity
+const HOVERED_SHADER_NAME: String = "Hovered"
 
 func _ready() -> void:
 	my_owner = get_parent()
@@ -38,12 +39,13 @@ func _on_mouse_entered():
 
 func _on_mouse_exited():
 	_currently_hovered_entities.erase(my_owner)
-	if my_owner is Enemy: my_owner.body_sprite.modulate = Color.WHITE
+	if my_owner is Enemy:
+		ShadersHelper.clear_border_shader(my_owner, HOVERED_SHADER_NAME)
 
 static func _update_hovered_entity():
 	if KeyboardController.SHIFT_PRESSED:
 		if not ObjectHelpers.is_null(hovered_entity):
-			hovered_entity.body_sprite.modulate = Color.WHITE
+			ShadersHelper.clear_border_shader(hovered_entity, HOVERED_SHADER_NAME)
 			hovered_entity = null
 		return
 
@@ -57,9 +59,10 @@ static func _update_hovered_entity():
 	var best_entity := _currently_hovered_entities[0]
 	for e in _currently_hovered_entities:
 		if e.global_position.y > best_entity.global_position.y:
-			if best_entity is Enemy: best_entity.body_sprite.modulate = Color.WHITE
+			if best_entity is Enemy:
+				ShadersHelper.clear_border_shader(best_entity, HOVERED_SHADER_NAME)
 			best_entity = e
 
 	if best_entity is Enemy:
-		best_entity.body_sprite.modulate = Color(1, 0.6, 0.6, 1)
+		ShadersHelper.apply_border_shader(best_entity, HOVERED_SHADER_NAME, false, Color(1, 0, 0, 1))
 	hovered_entity = best_entity

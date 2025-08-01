@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Add a border to the unit we are attacking and also to the one we are hovering over
 - ✅ Rearranging items in the inventory, being able to sell them
 - ✅ Add in-game statistics, such as time elapsed, damage dealt, damage taken, etc
 - ✅ Implement some effect when skill cooldown is completed
