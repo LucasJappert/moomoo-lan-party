@@ -6,7 +6,6 @@
 📝 [Go to Changelog](./changelog.md)
 
 - Agregar algún borde en la base de la unidad seleccionada
-- Check double silence when using the archer. Also check when entering pause mode, some timers keep running.
 - Agregar afecto de nubes
 - Agregar efecto de lluvia y rayos
 - Agregar boton para mutear el juego

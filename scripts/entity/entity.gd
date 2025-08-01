@@ -60,6 +60,11 @@ func _ready():
 	ready_combat_data()
 	ShadersHelper.set_dissolve_shader_material(body_sprite)
 
+	var shader := load("res://shaders/border_shader.gdshader")
+	var border_shader := ShaderMaterial.new()
+	border_shader.shader = shader
+	body_sprite.material = border_shader
+
 	EventBus.connect_to_freed_entity(Callable(self, "_on_entity_freed"))
 	EventBus.connect_to_paused(func(_paused: bool, _show_menu: bool): EntityState.paused_game(self))
 
