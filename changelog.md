@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Create item Stunning Edge that grants a 20% (10% for ranged units) chance to stun the target for 2 seconds.
 - ✅ Add item that gives +15 int and +5 str/agi.
 - ✅ Add item that gives +15 str and +5 int/agi.
 - ✅ Add item that gives +15 agi and +5 str/int.

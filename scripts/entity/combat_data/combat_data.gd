@@ -445,6 +445,7 @@ func _get_combat_info_by_items() -> Dictionary[String, float]:
 		if _item.type == SkillType.ACTIVE: continue
 		if _item.hostile_stun(): continue # Do not add stun combat_stats if it is an effect that is hostile to the owner
 		CombatStats.aux_accumulate(result, _item.get_info())
+		CombatStats.aux_accumulate(result, _item.get_debuffs(_my_owner))
 	CombatStats.accumulate_extra_info_by_attributes(result)
 	return result
 
@@ -528,6 +529,9 @@ func get_items_by_name(p_name: String) -> Array[Item]:
 		if not _item: continue
 		if _item.my_name == p_name: result.append(_item)
 	return result
+
+func is_melee() -> bool:
+	return projectile_type == ProjectileBase.NONE
 # endregion GETTERs
 
 # region TRY PHISICAL ATTACK

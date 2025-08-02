@@ -5,8 +5,13 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Crear item que agrega 2 nuevos proyectiles extras, los cuales causan el 50% del daño original
+- Agregar item que brinda un +50 de rango de ataque (sólo para unidades de rango), 10% de AS y +10% de ataque mágico
+- Agregar item que brinda un +20% de defensa mágica
+- Agregar item que brinda +10% de MS, +10% de AS y +7 de fza/agi/int
 - Permitir abrir/cerrar el shop estando en pausa
 - No seleccionar unidad si hacemos click izquierdo teniendo un skill cargado
+- Cada 3ra oleada, generar todos bosses con skills randoms.
 - Agregar afecto de nubes
 - Agregar efecto de lluvia y rayos
 - Agregar boton para mutear el juego

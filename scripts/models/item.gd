@@ -2,6 +2,7 @@ class_name Item
 
 extends ItemSkillBase
 static var REGISTERED_ITEMS: Array = [
+	ItemStunningEdge,
 	ItemGhostplume,
 	ItemBruteheart,
 	ItemMindcore,
@@ -17,8 +18,6 @@ const Names = {
 	MANA_POTION_I = "Mana Potion I",
 	MANA_POTION_II = "Mana Potion II",
 	MANA_POTION_III = "Mana Potion III",
-	STUNNING_EDGE = "Stunning Edge",
-	CLEAVE_EDGE = "Cleave Edge",
 }
 
 static var _ITEMS: Dictionary[String, Item]
@@ -43,17 +42,6 @@ static func initialize_items() -> void:
 	var _item: Item
 
 	for item_class in REGISTERED_ITEMS: item_class.create_and_add_instance()
-
-	# region ITEM STUNNING_EDGE
-	aux_item_name = Names.STUNNING_EDGE
-	_ITEMS[aux_item_name] = Item.new(aux_item_name, SkillType.PASSIVE)
-	_item = _ITEMS[aux_item_name]
-	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 3, _ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
-	_item.set_stun_chance(0.2)
-	_item.set_stun_duration(1.5)
-	_item.buy_price = 2400
-	_item.description = "Grants a " + StringHelpers.format_percent(_item.get_stun_chance()) + " chance to stun the target for " + StringHelpers.format_float_compact(_item.get_stun_duration()) + " seconds."
-	# endregion
 
 	# region ITEM HEALTH_POTION_I
 	aux_item_name = Names.HEALTH_POTION_I

@@ -7,6 +7,8 @@ const MIN_ATTACK_RANGE: int = int(sqrt(pow(MapManager.TILE_SIZE.x, 2) + pow(MapM
 static var EMPTY_STATS: CombatStats = CombatStats.new()
 
 var _info: Dictionary[String, float] = {}
+var _debuffs: Dictionary[String, float] = {}
+var _debuffs_keys: Dictionary[String, bool] = {}
 
 const LEVEL = "level"
 const CLEAVE_PERCENT = "cleave_percent"
@@ -215,7 +217,23 @@ func _get_value_i(key: String) -> int:
 
 func get_info() -> Dictionary[String, float]:
 	return _info
+
+const DEBUFF_KEY_RANGED_UNITS = "ranged_units"
+const DEBUFF_KEY_MELEE_UNITS = "melee_units"
+func get_debuffs(_owner: Entity) -> Dictionary[String, float]:
+	if _debuffs_keys.is_empty(): return {}
+
+	if _debuffs_keys.has(DEBUFF_KEY_RANGED_UNITS):
+		if not _owner.is_melee(): return _debuffs
+
+	if _debuffs_keys.has(DEBUFF_KEY_MELEE_UNITS):
+		if _owner.is_melee(): return _debuffs
 	
+	return {}
+func add_debuff(debuff_key: String, prop_key: String, value: float) -> void:
+	_debuffs_keys[debuff_key] = true
+	_debuffs[prop_key] = value
+
 func get_total_info_including_extras_by_attributes() -> Dictionary[String, float]:
 	var result: Dictionary[String, float] = {}
 	aux_accumulate(result, _info)
