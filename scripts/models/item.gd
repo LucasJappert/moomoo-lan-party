@@ -2,6 +2,9 @@ class_name Item
 
 extends ItemSkillBase
 static var REGISTERED_ITEMS: Array = [
+	ItemGhostplume,
+	ItemBruteheart,
+	ItemMindcore,
 	ItemCleaveEdge,
 	ItemBloodEdge,
 	ItemPowerCore

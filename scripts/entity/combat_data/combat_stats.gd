@@ -91,7 +91,7 @@ static func get_instance(intellicense: int, agility: int, strength: int) -> Comb
 	instance.set_strength(strength)
 	return instance
 
-const _HP_BY_STRENGTH = 20; const _HP_REGEN_BY_STRENGTH = 0.1; const _PHYSICAL_ATTACK_POWER_BY_STRENGTH = 0.5
+const _HP_BY_STRENGTH = 20; const _HP_REGEN_BY_STRENGTH = 0.15; const _PHYSICAL_ATTACK_POWER_BY_STRENGTH = 0.25
 static var STRENGTH_PROPERTIES = "Gives " + StringHelpers.format_float(_HP_BY_STRENGTH) + " hp, " + \
 	StringHelpers.format_float(_HP_REGEN_BY_STRENGTH) + " hp regen and " + \
 	StringHelpers.format_float(_PHYSICAL_ATTACK_POWER_BY_STRENGTH) + " physical attack power per point of strength"
@@ -102,8 +102,8 @@ static func get_extra_stats_by_strength(_str: int) -> Dictionary[String, float]:
 	result[PHYSICAL_ATTACK_POWER] = _str * _PHYSICAL_ATTACK_POWER_BY_STRENGTH
 	return result
 
-const _MANA_BY_INTELLIGENCE = 10; const _MANA_REGEN_BY_INTELLIGENCE = 0.05; const _MAGIC_ATTACK_POWER_BY_INTELLIGENCE = 0.25
-const _MAGIC_DEFENSE_BY_INTELLIGENCE = 1 / _AUX
+const _MANA_BY_INTELLIGENCE = 10; const _MANA_REGEN_BY_INTELLIGENCE = 0.3; const _MAGIC_ATTACK_POWER_BY_INTELLIGENCE = 0.5
+const _MAGIC_DEFENSE_BY_INTELLIGENCE = 2 / _AUX
 static var INTELLIGENCE_PROPERTIES = "Gives " + StringHelpers.format_float(_MANA_BY_INTELLIGENCE) + " mana, " + \
 	StringHelpers.format_float(_MANA_REGEN_BY_INTELLIGENCE) + " mana regen, " + \
 	StringHelpers.format_float(_MAGIC_ATTACK_POWER_BY_INTELLIGENCE) + " magic attack power and " + \
@@ -117,9 +117,9 @@ static func get_extra_stats_by_intelligence(_int: int) -> Dictionary[String, flo
 	return result
 
 const _AUX: float = 1000
-const _ATTACK_SPEED_BY_AGILITY: float = 1 / _AUX
+const _ATTACK_SPEED_BY_AGILITY: float = 2 / _AUX
 const _EVASION_BY_AGILITY: float = 1 / _AUX
-const _DEFENSE_BY_AGILITY: float = 1 / _AUX
+const _DEFENSE_BY_AGILITY: float = 2 / _AUX
 static var AGILITY_PROPERTIES = "Gives " + StringHelpers.format_percent(_ATTACK_SPEED_BY_AGILITY, true, 1) + " attack speed, " + \
 	StringHelpers.format_percent(_EVASION_BY_AGILITY, true, 1) + " evasion and " + \
 	StringHelpers.format_percent(_DEFENSE_BY_AGILITY, true, 1) + " defense per point of agility"

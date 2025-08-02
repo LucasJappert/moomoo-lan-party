@@ -5,13 +5,12 @@ class_name ShopInterface
 @onready var _container_item_by_types_model: VBoxContainer = %ContainerItemByTypesModel
 @onready var _main_container_items: NinePatchRect = %MainContainerItems
 @onready var _shop_button: MyButton = %ShopButton
-@onready var _main_container: Control = %MainContainer
 
 var _items_visible := true
 const ORIGINAL_WIDTH = 430
 
 func _ready() -> void:
-	_main_container.gui_input.connect(_on_main_container_gui_input)
+	_main_container_items.gui_input.connect(_on_main_container_gui_input)
 	_main_container_items.position.x = ORIGINAL_WIDTH
 	_container_item_by_types_model.visible = false
 

@@ -5,12 +5,13 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Permitir abrir/cerrar el shop estando en pausa
+- No seleccionar unidad si hacemos click izquierdo teniendo un skill cargado
 - Agregar afecto de nubes
 - Agregar efecto de lluvia y rayos
 - Agregar boton para mutear el juego
 - Agregar algunos items más
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
-- Corregir problema de cursor en modo ataque sobre entidades
 
 - Revisar sonidos en loop
 - Agregar un item que brinda daño splash a todo alreadedor del target (es diferente al cleave)
@@ -19,7 +20,6 @@
 - Sonidos limitarlos a la vista en pantalla
 - Agregar barra de vida del moomoo y del pj fijas en algun lugar comodo
 - Modificar particulas en la explosión de proyectil natura ball
-- Agregar sonido cuando impacta una flecha
 - Agregar habilidad que consume 15 del hp por un proyectil que quema al enemigo durante 5 segundos, causando 15 de daño cada segundo
 
 - Ver sonidos que entran en loop indebidamente

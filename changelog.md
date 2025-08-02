@@ -2,6 +2,9 @@
 
 📆 xx/07/2025
 
+- ✅ Add item that gives +15 int and +5 str/agi.
+- ✅ Add item that gives +15 str and +5 int/agi.
+- ✅ Add item that gives +15 agi and +5 str/int.
 - ✅ Do not dim passive skills when we are silenced. Dim skills not learned.
 - ✅ Add a border to the unit we are attacking and also to the one we are hovering over
 - ✅ Rearranging items in the inventory, being able to sell them
