@@ -6,6 +6,7 @@ const FRAME_SIZE = 64
 const CAN_USE_COLOR = Color.WHITE
 const CANT_USE_COLOR = Color(0.5, 0.5, 0.5)
 
+var is_consumable: bool = false
 var apply_to_enemy: bool = true
 var cast_range_in_tiles: int = 0
 var area_of_effect_in_tiles: int = 0
@@ -43,8 +44,16 @@ func get_description(include_stats_description: bool = true) -> String:
 
 	if description: result += description + "\n"
 	
-	if include_stats_description: result += super.get_description()
-	
+	if include_stats_description and not is_consumable:
+		var stats_description: String = super.get_new_description()
+		if stats_description: result += "\n" + stats_description
+		
+	result += _internal_desrtiption()
+
+	return result
+
+func _internal_desrtiption() -> String:
+	var result := ""
 	if duration_in_seconds > 0:
 		result += str("- Duration: ", StringHelpers.format_float_compact(duration_in_seconds), "s\n")
 
@@ -68,6 +77,8 @@ func get_description(include_stats_description: bool = true) -> String:
 
 	if damage_type != DamageType.NONE:
 		result += "- Damage type: " + str(damage_type) + "\n"
+	
+	if not result.is_empty(): result = "\n" + result
 
 	return result
 

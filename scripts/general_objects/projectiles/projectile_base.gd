@@ -30,9 +30,12 @@ static func set_frames(_projectile: Projectile, rects: Array[Rect2]):
 
 	_projectile.sprite.frames = frames
 	projectile_frames[_projectile.type] = frames
+	
+static func try_launch(_proj_type: String, _entity: Entity, _target: Entity, _damage: int, _name: String, _extra_projectile: bool = false) -> bool:
+	if _proj_type != _name: return false
 
-static func try_launch(_proj_type: String, _entity: Entity, _target: Entity, _damage: int) -> bool:
-	return false
+	Projectile.launch(_entity, _target, _damage, _extra_projectile)
+	return true
 
 static func actions_while_flying(_projectile: Projectile):
 	pass

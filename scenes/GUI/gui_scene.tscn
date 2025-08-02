@@ -654,6 +654,14 @@ theme_override_font_sizes/font_size = 16
 text = "- AS:"
 text_overrun_behavior = 3
 
+[node name="RangeAttack" type="Label" parent="PanelBL/StatsContainer/Panel2/VBoxContainer1"]
+layout_mode = 2
+mouse_filter = 0
+theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_font_sizes/font_size = 16
+text = "- RA:"
+text_overrun_behavior = 3
+
 [node name="VBoxContainer2" type="VBoxContainer" parent="PanelBL/StatsContainer/Panel2"]
 layout_mode = 2
 offset_left = 42.0
@@ -695,6 +703,16 @@ text = "22"
 justification_flags = 35
 
 [node name="AttackSpeedValue" type="Label" parent="PanelBL/StatsContainer/Panel2/VBoxContainer2"]
+layout_mode = 2
+mouse_filter = 0
+theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_styles/normal = ExtResource("4_0ehin")
+text = "22"
+justification_flags = 35
+
+[node name="RangeAttackValue" type="Label" parent="PanelBL/StatsContainer/Panel2/VBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 0
 theme_override_colors/font_color = Color(0.827451, 0.772549, 0.67451, 1)

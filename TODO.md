@@ -5,7 +5,8 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Crear item que agrega 2 nuevos proyectiles extras, los cuales causan el 50% del daño original
+- ✅ Create item Multi Shot that adds 2 new extra projectiles, which deal 50% of the original damage. It also increases attack range by 50
+- Agregar item que brinda critico
 - Agregar item que brinda un +50 de rango de ataque (sólo para unidades de rango), 10% de AS y +10% de ataque mágico
 - Agregar item que brinda un +20% de defensa mágica
 - Agregar item que brinda +10% de MS, +10% de AS y +7 de fza/agi/int

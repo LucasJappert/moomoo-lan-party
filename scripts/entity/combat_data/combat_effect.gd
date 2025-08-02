@@ -35,7 +35,7 @@ func get_description() -> String:
 	if duration_in_seconds > 0.0:
 		description += str("- Duration: ", StringHelpers.format_float_compact(duration_in_seconds), "s\n")
 
-	description += super.get_description()
+	description += super.get_new_description()
 
 	if max_stacks > 1: description += str("- Max stacks: ", max_stacks, "\n")
 

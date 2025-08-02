@@ -8,11 +8,6 @@ const SPEED: float = 400
 const SCALE: float = 1
 const VOLUME: float = -15
 
-static func try_launch(_proj_type: String, _entity: Entity, _target: Entity, _damage: int) -> bool:
-	if _proj_type != NAME: return false
-
-	Projectile.launch(_entity, _target, _damage)
-	return true
 
 static func try_init(_projectile: Projectile):
 	if _projectile.type != NAME: return

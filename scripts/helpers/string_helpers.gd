@@ -31,7 +31,7 @@ static func format_float_compact(value: float, max_decimals: int = 2) -> String:
 	if abs_value >= 1_000_000:
 		suffix = "M"
 		divisor = 1_000_000.0
-	elif abs_value >= 1_000:
+	elif abs_value >= 10_000:
 		suffix = "K"
 		divisor = 1_000.0
 

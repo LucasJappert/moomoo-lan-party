@@ -45,6 +45,7 @@ static var RED_BALL_COLOR := Color.from_string("#cd0000ff", Color.WHITE)
 @onready var _int_value = $PanelBL/StatsContainer/Panel2/VBoxContainer2/IntValue
 @onready var _move_speed_value = $PanelBL/StatsContainer/Panel2/VBoxContainer2/MoveSpeedValue
 @onready var _attack_speed_value = $PanelBL/StatsContainer/Panel2/VBoxContainer2/AttackSpeedValue
+@onready var _range_attack_value: Label = %RangeAttackValue
 
 @onready var _damage_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/DamageValue
 @onready var _magic_power_multiplier_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/MagicPowerMultiplierValue
@@ -251,6 +252,7 @@ func _update_panel_bottom_left() -> void:
 	_int_value.text = StringHelpers.format_float_compact(total_stats.get_intelligence())
 	_move_speed_value.text = StringHelpers.format_float_compact(total_stats.get_total_move_speed())
 	_attack_speed_value.text = StringHelpers.format_float_compact(total_stats.get_total_attack_speed())
+	_range_attack_value.text = StringHelpers.format_float_compact(total_stats.get_attack_range())
 	_lifesteal_value.text = StringHelpers.format_percent(total_stats.get_life_steal_percent())
 
 	_damage_value.text = StringHelpers.format_float_compact(total_stats.get_physical_attack_power())

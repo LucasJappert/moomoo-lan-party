@@ -29,7 +29,7 @@ func _ready() -> void:
 
 
 func _on_mouse_entered():
-	MyTooltip.show_tooltip(item.my_name, item.get_description(false, true))
+	MyTooltip.show_tooltip(item.my_name, item.get_description(true, true))
 
 func _on_mouse_exited():
 	MyTooltip.hide_tooltip()

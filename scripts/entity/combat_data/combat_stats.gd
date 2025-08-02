@@ -10,6 +10,8 @@ var _info: Dictionary[String, float] = {}
 var _debuffs: Dictionary[String, float] = {}
 var _debuffs_keys: Dictionary[String, bool] = {}
 
+const EXTRA_PROJECTILES_PERCENT_DAMAGE = "extra_projectiles_percent_damage"
+const EXTRA_PROJECTILES = "extra_projectiles"
 const LEVEL = "level"
 const CLEAVE_PERCENT = "cleave_percent"
 const CLEAVE_RANGE = "cleave_range" # In tiles
@@ -63,8 +65,13 @@ static func aux_accumulate(current: Dictionary[String, float], info_to_add: Dict
 			continue
 
 		if key == CLEAVE_RANGE:
-			current[key] = max(current[key], info_to_add[key])
+			current[key] = min(current[key], info_to_add[key])
 			continue
+
+		if key == EXTRA_PROJECTILES_PERCENT_DAMAGE:
+			current[key] = min(current[key], info_to_add[key])
+			continue
+			
 		current[key] += info_to_add[key]
 		
 	return current
@@ -93,7 +100,7 @@ static func get_instance(intellicense: int, agility: int, strength: int) -> Comb
 	instance.set_strength(strength)
 	return instance
 
-const _HP_BY_STRENGTH = 20; const _HP_REGEN_BY_STRENGTH = 0.15; const _PHYSICAL_ATTACK_POWER_BY_STRENGTH = 0.25
+const _HP_BY_STRENGTH = 20; const _HP_REGEN_BY_STRENGTH = 0.1; const _PHYSICAL_ATTACK_POWER_BY_STRENGTH = 0.25
 static var STRENGTH_PROPERTIES = "Gives " + StringHelpers.format_float(_HP_BY_STRENGTH) + " hp, " + \
 	StringHelpers.format_float(_HP_REGEN_BY_STRENGTH) + " hp regen and " + \
 	StringHelpers.format_float(_PHYSICAL_ATTACK_POWER_BY_STRENGTH) + " physical attack power per point of strength"
@@ -104,7 +111,7 @@ static func get_extra_stats_by_strength(_str: int) -> Dictionary[String, float]:
 	result[PHYSICAL_ATTACK_POWER] = _str * _PHYSICAL_ATTACK_POWER_BY_STRENGTH
 	return result
 
-const _MANA_BY_INTELLIGENCE = 10; const _MANA_REGEN_BY_INTELLIGENCE = 0.3; const _MAGIC_ATTACK_POWER_BY_INTELLIGENCE = 0.5
+const _MANA_BY_INTELLIGENCE = 10; const _MANA_REGEN_BY_INTELLIGENCE = 0.1; const _MAGIC_ATTACK_POWER_BY_INTELLIGENCE = 0.5
 const _MAGIC_DEFENSE_BY_INTELLIGENCE = 2 / _AUX
 static var INTELLIGENCE_PROPERTIES = "Gives " + StringHelpers.format_float(_MANA_BY_INTELLIGENCE) + " mana, " + \
 	StringHelpers.format_float(_MANA_REGEN_BY_INTELLIGENCE) + " mana regen, " + \
@@ -207,6 +214,9 @@ func set_strength(value: int) -> void:
 func set_intelligence(value: int) -> void:
 	set_value_i(INTELLIGENCE, value)
 func set_level(value: int) -> void: set_value_i(LEVEL, value)
+func set_extra_projectiles(value: int, percent_damage: float) -> void:
+	set_value_i(EXTRA_PROJECTILES, value)
+	set_value(EXTRA_PROJECTILES_PERCENT_DAMAGE, percent_damage)
 # endregion SETTERs
 
 # region 	GETTERs
@@ -264,83 +274,21 @@ func hostile_silence() -> bool:
 func hostile_freeze() -> bool:
 	return get_freeze_duration() > 0
 
-func get_description() -> String:
-	var description = ""
+func _aux_formatted_description_by_key(key: String) -> String:
+	var words := key.split("_")
+	for i in range(words.size()):
+		words[i] = words[i].capitalize()
+	return "- " + " ".join(words) + ": "
 
-	if get_hp() != 0:
-		description += str("- HP: ", get_hp(), "\n")
-	
-	if get_mana() != 0:
-		description += str("- Mana: ", get_mana(), "\n")
+func get_new_description() -> String:
+	var result := ""
+	for key in _info:
+		if _info[key] != 0:
+			result += _aux_formatted_description_by_key(key) + StringHelpers.format_float(_info[key]) + "\n"
+	return result
 
-	if get_physical_defense_percent() != 0:
-		description += str("- Physical defense percent: ", StringHelpers.format_percent(get_physical_defense_percent()), "\n")
-
-	if get_magic_defense_percent() != 0:
-		description += str("- Magic defense percent: ", StringHelpers.format_percent(get_magic_defense_percent()), "\n")
-
-	if get_evasion() != 0:
-		description += str("- Evasion: ", StringHelpers.format_percent(get_evasion()), "\n")
-
-	if get_crit_chance() != 0:
-		description += str("- Crit chance: ", StringHelpers.format_percent(get_crit_chance()), "\n")
-
-	if get_crit_multiplier() != 0:
-		description += str("- Crit multiplier: ", StringHelpers.format_float_compact(get_crit_multiplier()), "\n")
-
-	if get_stun_chance() != 0:
-		description += str("- Stun chance: ", StringHelpers.format_percent(get_stun_chance()), "\n")
-
-	if get_stun_duration() != 0:
-		description += str("- Stun duration: ", StringHelpers.format_float_compact(get_stun_duration()), "s\n")
-
-	if get_attack_range() != 0:
-		description += str("- Attack range: ", get_attack_range(), "\n")
-
-	if get_physical_attack_power() != 0:
-		description += str("- Physical attack power: ", get_physical_attack_power(), "\n")
-
-	if get_physical_attack_power_percent() != 0:
-		description += str("- Physical attack power percent: ", StringHelpers.format_percent(get_physical_attack_power_percent()), "\n")
-
-	if get_magic_attack_power() != 0:
-		description += str("- Magic attack power: ", get_magic_attack_power(), "\n")
-
-	if get_magic_attack_power_percent() != 0:
-		description += str("- Magic attack power percent: ", StringHelpers.format_percent(get_magic_attack_power_percent()), "\n")
-
-	if get_attack_speed() != 0:
-		description += str("- Attack speed: ", StringHelpers.format_float_compact(get_attack_speed()), "\n")
-
-	if get_attack_speed_percent() != 0:
-		description += str("- Attack speed percent: ", StringHelpers.format_percent(get_attack_speed_percent()), "\n")
-
-	if get_move_speed() != 0:
-		description += str("- Move speed: ", StringHelpers.format_float_compact(get_move_speed()), "\n")
-
-	if get_move_speed_percent() != 0:
-		description += str("- Move speed percent: ", StringHelpers.format_percent(get_move_speed_percent()), "\n")
-
-	if get_freeze_duration() != 0:
-		description += str("- Freeze duration: ", StringHelpers.format_float_compact(get_freeze_duration()), "\n")
-
-	if get_life_steal_percent() != 0:
-		description += str("- Life steal percent: ", StringHelpers.format_percent(get_life_steal_percent()), "\n")
-
-	if get_hp_regeneration_points() != 0:
-		description += str("- HP regeneration points: ", get_hp_regeneration_points(), "\n")
-
-	if get_hp_regeneration_points_percent() != 0:
-		description += str("- HP regeneration points percent: ", StringHelpers.format_percent(get_hp_regeneration_points_percent(), true, 1), "\n")
-
-	if get_mana_regeneration_points() != 0:
-		description += str("- Mana regeneration points: ", get_mana_regeneration_points(), "\n")
-
-	if get_level() > 0:
-		description += str("- Level: ", get_level(), "\n")
-
-	return description
-
+func get_extra_projectile_percent_damage() -> float: return _get_value(EXTRA_PROJECTILES_PERCENT_DAMAGE)
+func get_extra_projectiles() -> int: return _get_value_i(EXTRA_PROJECTILES)
 func get_level() -> int: return _get_value_i(LEVEL)
 func get_cleave_percent() -> float: return _get_value(CLEAVE_PERCENT)
 func get_cleave_range() -> int: return _get_value_i(CLEAVE_RANGE)

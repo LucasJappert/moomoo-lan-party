@@ -53,7 +53,7 @@ class DamageReflectorUpdater:
 
 		# Emitir líneas blancas
 		time_accumulator += delta
-		if time_accumulator >= 0.02:
+		if time_accumulator >= 0.08:
 			time_accumulator = 0.0
 			for i in range(2): _emit_line_burst()
 
@@ -74,6 +74,6 @@ class DamageReflectorUpdater:
 		const DURATION := 0.4
 		var tween := line.create_tween()
 		tween.tween_property(line, "position", final_offset, DURATION)
-		tween.parallel().tween_property(line, "scale:x", 1, DURATION)
+		tween.parallel().tween_property(line, "scale:x", 1.5, DURATION)
 		tween.parallel().tween_property(line, "modulate:a", 1, DURATION)
 		tween.tween_callback(line.queue_free)

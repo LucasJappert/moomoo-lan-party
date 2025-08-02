@@ -15,9 +15,3 @@ static func try_init(_projectile: Projectile):
 	set_frames(_projectile, RECTS)
 	_projectile.sprite.play("default")
 	SoundsHelper.play_projectile_hit(_projectile.type, VOLUME)
-
-static func try_launch(_proj_type: String, _entity: Entity, _target: Entity, _damage: int) -> bool:
-	if _proj_type != NAME: return false
-
-	Projectile.launch(_entity, _target, _damage)
-	return true

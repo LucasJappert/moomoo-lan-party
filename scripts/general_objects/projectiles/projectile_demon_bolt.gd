@@ -9,13 +9,6 @@ const SCALE: float = 1
 const VOLUME: float = -15
 const PARTICLE_RECT := Rect2(272, 272, 16, 16)
 
-
-static func try_launch(_proj_type: String, _entity: Entity, _target: Entity, _damage: int) -> bool:
-	if _proj_type != NAME: return false
-
-	Projectile.launch(_entity, _target, _damage)
-	return true
-
 static func try_init(_projectile: Projectile):
 	if _projectile.type != NAME: return
 
@@ -23,7 +16,6 @@ static func try_init(_projectile: Projectile):
 	_projectile.sprite.visible = false
 	_projectile.set_meta("oscillating_balls", [])
 	_projectile.set_meta("oscillation_time", 0.0)
-
 
 	var balls_container := Node2D.new()
 	var radius := 8

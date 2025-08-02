@@ -5,6 +5,7 @@ extends Node2D
 const PROJECTILE_SCENE = preload("res://scenes/general_objects/projectile.tscn")
 
 @onready var general_objects_container = %GeneralObjectsContainer
+var is_extra_projectile := false
 var speed: float = 400.0
 var direction := Vector2.ZERO
 var target_position := Vector2.ZERO
@@ -46,17 +47,18 @@ func _server_move(delta: float):
 
 func _projectile_reached_target():
 	if get_target_entity() != null && _get_origin_entity() != null:
-		_get_origin_entity().server_execute_physical_damage(get_target_entity())
+		_get_origin_entity().server_execute_physical_damage(get_target_entity(), is_extra_projectile)
+	for reg_proj in ProjectileBase.REGISTERED_CLASSES: reg_proj.actions_on_reaching_target(self)
 	queue_free()
-	for registered_class in ProjectileBase.REGISTERED_CLASSES: registered_class.actions_on_reaching_target(self)
 
 static func get_instance_from_dict(dict: Dictionary) -> Projectile:
 	var instance = PROJECTILE_SCENE.instantiate()
 	ObjectHelpers.from_dict(instance, dict)
 	return instance
 
-static func launch(_origin: Entity, _target: Entity, _damage: int):
+static func launch(_origin: Entity, _target: Entity, _damage: int, _extra_projectile: bool = false):
 	var projectile = PROJECTILE_SCENE.instantiate()
+	projectile.is_extra_projectile = _extra_projectile
 	projectile.type = _origin.projectile_type
 	projectile.damage = _damage
 	projectile.origin_entity_name = _origin.name

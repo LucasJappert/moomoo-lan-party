@@ -2,6 +2,7 @@ class_name Item
 
 extends ItemSkillBase
 static var REGISTERED_ITEMS: Array = [
+	ItemMultiShot,
 	ItemStunningEdge,
 	ItemGhostplume,
 	ItemBruteheart,
@@ -25,7 +26,6 @@ const _ATLAS_START_POS = Vector2(0, 1504)
 static var aux_array: Array = [[], [], [], [], [], [], [], [], [], [], [], []]
 
 var quantity: int = 1
-var is_consumable: bool = false
 var buy_price: int = 0
 const SELL_PRICE_FACTOR = 0.7
 var region_rect: Rect2 = Rect2()
@@ -189,3 +189,6 @@ func can_use(my_owner: Entity) -> bool:
 func get_sell_price() -> int:
 	return int(buy_price * SELL_PRICE_FACTOR * quantity)
 # endregion ................. GETTERs
+
+# Must be overriden
+static func static_actions_after_execute_physical_attack(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void: pass

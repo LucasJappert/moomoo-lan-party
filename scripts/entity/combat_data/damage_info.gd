@@ -3,6 +3,7 @@ class_name DamageInfo
 var total_damage: int # Positive for damage, negative for heal
 var critical: int
 var projectile_type: String = ProjectileBase.NONE
+var is_extra_projectile: bool = false
 var damage_type: String = DamageType.PHYSICAL
 var attacker_name: String
 var can_be_evaded: bool = true
@@ -27,7 +28,7 @@ func is_melee_attack() -> bool:
 	return projectile_type == ProjectileBase.NONE and damage_type == DamageType.PHYSICAL
 
 func is_main_attack() -> bool:
-	if was_a_cleave_damage or was_reflected or temporal_damage: return false
+	if was_a_cleave_damage or was_reflected or temporal_damage or is_extra_projectile: return false
 	return true
 func is_physical_damage() -> bool:
 	return damage_type == DamageType.PHYSICAL

@@ -110,7 +110,7 @@ func _process_on_server(_delta: float):
 
 	update_active_skills(_delta)
 
-func server_execute_physical_damage(_target: Entity) -> void:
+func server_execute_physical_damage(_target: Entity, _extra_projectile: bool) -> void:
 	if _my_owner.multiplayer.is_server() == false: return
 	if _target == null: return
 	if _my_owner.is_spawning: return
@@ -121,6 +121,7 @@ func server_execute_physical_damage(_target: Entity) -> void:
 	var total_damage = base_damage + critical_damage
 
 	var _di = DamageInfo.get_instance()
+	_di.is_extra_projectile = _extra_projectile
 	_di.total_damage = total_damage
 	_di.critical = critical_damage
 	_di.projectile_type = projectile_type
@@ -129,6 +130,9 @@ func server_execute_physical_damage(_target: Entity) -> void:
 	
 	for active_skill in _active_skills:
 		active_skill.actions_after_execute_physical_attack(_my_owner, _target, _di)
+	
+	# for registered_item in Item.REGISTERED_ITEMS:
+	# 	registered_item.static_actions_after_execute_physical_attack(_my_owner, _target, _di)
 
 	_target.server_receive_damage(_di, _my_owner)
 
@@ -579,14 +583,38 @@ func execute_physical_attack(apply_extra_actions: bool = true, _custom_target: E
 	if not apply_extra_actions: return
 
 func _execute_attack_or_launch_projectile(final_target: Entity) -> void:
-	if projectile_type == ProjectileBase.NONE:
-		return server_execute_physical_damage(final_target)
+	if is_melee(): return server_execute_physical_damage(final_target, false)
 
-	var physical_attack_power := _my_owner.cache_total_stats.get_physical_attack_power()
-	for registered_projectile in ProjectileBase.REGISTERED_CLASSES:
-		if registered_projectile.try_launch(projectile_type, _my_owner, final_target, physical_attack_power): return
+	if launch_projectile(final_target, false): return
 
 	printerr("ERROR: Projectile type not found: " + projectile_type + " 🚀") # Should never happen
+
+func launch_projectile(final_target: Entity, _extra_projectile: bool) -> bool:
+	var executed_shot := false
+	var physical_attack_power := _my_owner.cache_total_stats.get_physical_attack_power()
+
+	# First, we apply the projectile to the main target
+	for reg_proj in ProjectileBase.REGISTERED_CLASSES:
+		if reg_proj.try_launch(projectile_type, _my_owner, final_target, physical_attack_power, reg_proj.NAME, _extra_projectile):
+			executed_shot = true
+			break
+
+	if _extra_projectile: return executed_shot
+
+	# Then we try to launch extra projectiles if it's a direct attack (original projectile)
+	var extra_targets: Array[Entity] = []
+	if _my_owner.cache_total_stats.get_extra_projectiles() > 0:
+		extra_targets.append_array(GlobalsEntityHelpers.get_closest_entities(_my_owner.global_position, _my_owner.get_my_enemies(), cache_total_stats.get_attack_range(), cache_total_stats.get_extra_projectiles(), [final_target]))
+
+	var percent_damage := cache_total_stats.get_extra_projectile_percent_damage()
+	var new_physical_attack_power := int(max(physical_attack_power * percent_damage, 1))
+	for target in extra_targets:
+		for reg_proj in ProjectileBase.REGISTERED_CLASSES:
+			if reg_proj.try_launch(projectile_type, _my_owner, target, new_physical_attack_power, reg_proj.NAME, true):
+				executed_shot = true
+				break
+
+	return executed_shot
 
 func can_physical_attack() -> bool:
 	if not _my_owner.can_attack: return false
@@ -614,7 +642,7 @@ func global_receive_damage_or_heal(_di: DamageInfo):
 	if _di.critical == 0 and _di.total_damage > 0 and _di.is_melee_attack():
 		SoundsHelper.play_melee_hit()
 
-	if _di.total_damage < 0: # Heal
+	if _di.total_damage < 0 and _my_owner.is_my_player(): # Heal
 		_my_owner.hud.show_message_popup(str(abs(_di.total_damage)), Color(0, 1, 0))
 	
 	register_attacker(_di.get_attacker())
