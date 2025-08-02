@@ -72,6 +72,14 @@ static func aux_accumulate(current: Dictionary[String, float], info_to_add: Dict
 			current[key] = min(current[key], info_to_add[key])
 			continue
 			
+		if key == CRIT_MULTIPLIER:
+			current[key] = min(current[key], info_to_add[key])
+			continue
+			
+		if key == STUN_DURATION:
+			current[key] = min(current[key], info_to_add[key])
+			continue
+			
 		current[key] += info_to_add[key]
 		
 	return current
@@ -162,8 +170,9 @@ func set_magic_defense_percent(value: float) -> void:
 	set_value(MAGIC_DEFENSE_PERCENT, value)
 func set_evasion(value: float) -> void:
 	set_value(EVASION, value)
-func set_crit_chance(value: float) -> void:
+func set_crit_chance(value: float, multiplier: float = 1) -> void:
 	set_value(CRIT_CHANCE, value)
+	set_crit_multiplier(multiplier)
 func set_crit_multiplier(value: float) -> void:
 	set_value(CRIT_MULTIPLIER, value)
 func set_stun_chance(value: float, duration: float = 1) -> void:

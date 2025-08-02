@@ -2,6 +2,8 @@
 
 📆 xx/07/2025
 
+- ✅ Add item Phantom Edge that grants 20% critical chance (150% extra damage). Also increases agility by 20 points.
+- ✅ Create item Multi Shot that adds 2 new extra projectiles, which deal 50% of the original damage. It also increases attack range by 50
 - ✅ Create item Stunning Edge that grants a 20% (10% for ranged units) chance to stun the target for 2 seconds.
 - ✅ Add item that gives +15 int and +5 str/agi.
 - ✅ Add item that gives +15 str and +5 int/agi.
