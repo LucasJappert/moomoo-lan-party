@@ -166,6 +166,8 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 
 	_apply_defenses(_di, my_stats)
 
+	if _di.total_damage == _di.critical: return # Case when all damage is critical, but all base damage was evaded by defenses
+
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
 		registered_skill.actions_after_effective_hit(_attacker, _my_owner, _di)
 		
