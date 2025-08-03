@@ -299,19 +299,17 @@ func get_new_description() -> String:
 func get_extra_projectile_percent_damage() -> float: return _get_value(EXTRA_PROJECTILES_PERCENT_DAMAGE)
 func get_extra_projectiles() -> int: return _get_value_i(EXTRA_PROJECTILES)
 func get_level() -> int: return _get_value_i(LEVEL)
-func get_cleave_percent() -> float: return _get_value(CLEAVE_PERCENT)
+func get_cleave_percent() -> float: return min(1, _get_value(CLEAVE_PERCENT))
 func get_cleave_range() -> int: return _get_value_i(CLEAVE_RANGE)
 func get_hp() -> int: return _get_value_i(HP)
 func get_mana() -> int: return _get_value_i(MANA)
-func get_physical_defense_percent() -> float: return _get_value(PHYSICAL_DEFENSE_PERCENT)
-func get_magic_defense_percent() -> float: return _get_value(MAGIC_DEFENSE_PERCENT)
-func get_evasion() -> float: return _get_value(EVASION)
-func get_crit_chance() -> float:
-	return _get_value(CRIT_CHANCE)
+func get_physical_defense_percent() -> float: return min(1, _get_value(PHYSICAL_DEFENSE_PERCENT))
+func get_magic_defense_percent() -> float: return min(1, _get_value(MAGIC_DEFENSE_PERCENT))
+func get_evasion() -> float: return min(1, _get_value(EVASION))
+func get_crit_chance() -> float: return min(1, _get_value(CRIT_CHANCE))
 func get_crit_multiplier() -> float:
 	return _get_value(CRIT_MULTIPLIER)
-func get_stun_chance() -> float:
-	return _get_value(STUN_CHANCE)
+func get_stun_chance() -> float: return min(1, _get_value(STUN_CHANCE))
 func get_stun_duration() -> float:
 	return _get_value(STUN_DURATION)
 func get_silence_duration() -> float:
@@ -348,8 +346,7 @@ func get_mana_regeneration_points_percent() -> float:
 	return _get_value(MANA_REGENERATION_POINTS_PERCENT)
 func get_percent_mana_to_burn() -> float:
 	return _get_value(PERCENT_MANA_TO_BURN)
-func get_chance_to_ignore_evasion() -> float:
-	return _get_value(CHANCE_TO_IGNORE_EVASION)
+func get_chance_to_ignore_evasion() -> float: return min(1, _get_value(CHANCE_TO_IGNORE_EVASION))
 func get_agility() -> int:
 	return _get_value_i(AGILITY)
 func get_strength() -> int:

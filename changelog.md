@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Add Ghostplate item that grants +20% physical and magical defense, and 20% evasion.
 - ✅ Add Swift Mirage item that grants 15% AS, 15% evasion and +10 to all attributes
 - ✅ Agregar item Soul Pact: Each physical attack inflicts either Burn or Poison, dealing 15 magic damage per second for 5 seconds (up to 10 stacks). This ability costs no mana, but sacrifices 15 HP from the user on each hit.
 - ✅ Add item Phantom Edge that grants 20% critical chance (150% extra damage). Also increases agility by 20 points.

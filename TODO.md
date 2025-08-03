@@ -5,9 +5,8 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Agregar item que brinda un +30% de ataque mágico y físico
-- Agregar item que brinda un +20% de defensa física y mágica. También brinda un 30% de evasión.
-- Agregar item que brinda +10% de MS, +10% de AS y +7 de fza/agi/int
+- Agregar item que brinda +30% de MS, +20% de AS y +10 de fza/agi/int
+- Agregar item que brinda un 15% de chances de disparar una rafaga de rayos a 5 enemigos cercanos. El daño de cada rayo es igual al 50% de la inteligencia total.
 - Permitir abrir/cerrar el shop estando en pausa
 - No seleccionar unidad si hacemos click izquierdo teniendo un skill cargado
 - Cada 3ra oleada, generar todos bosses con skills randoms.
@@ -18,6 +17,7 @@
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
 - Agregar animacion de explosión cuando muere un enemigo que tiene esa skill
 - Ver bug que cambia el target de ataque cuando muere otro enemigo
+- Agregar item que brinda un +30% de ataque mágico y físico y algo mas
 
 - Revisar sonidos en loop
 - Agregar un item que brinda daño splash a todo alreadedor del target (es diferente al cleave)

@@ -111,7 +111,7 @@ static func _spawn_wave_enemies() -> void:
 				enemy_type = _current_wave_info.common_enemies[randi() % _current_wave_info.common_enemies.size()]
 
 			var enemy = _get_enemy(enemy_type, wave_direction, is_boss)
-			enemy.can_attack = false
+			# enemy.can_attack = false
 			GameManager.spawn_enemy(enemy)
 			await GameManager.game_world.get_tree().create_timer(0.01).timeout
 			# return
