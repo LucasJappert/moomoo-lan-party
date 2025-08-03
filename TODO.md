@@ -5,7 +5,8 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Agregar item que brinda un +50 de rango de ataque (sólo para unidades de rango), 10% de AS y +10% de ataque mágico
+- Agregar item que brinda 15% de AS, 15% de evasión y +10 a todos los atributos
+- Agregar item que brinda un +30% de ataque mágico y físico
 - Agregar item que brinda un +20% de defensa física y mágica. También brinda un 30% de evasión.
 - Agregar item que brinda +10% de MS, +10% de AS y +7 de fza/agi/int
 - Permitir abrir/cerrar el shop estando en pausa
@@ -16,6 +17,8 @@
 - Agregar boton para mutear el juego
 - Agregar algunos items más
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
+- Agregar animacion de explosión cuando muere un enemigo que tiene esa skill
+- Ver bug que cambia el target de ataque cuando muere otro enemigo
 
 - Revisar sonidos en loop
 - Agregar un item que brinda daño splash a todo alreadedor del target (es diferente al cleave)

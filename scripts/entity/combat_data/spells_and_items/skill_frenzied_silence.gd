@@ -34,7 +34,7 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 	
 	if not _target or not _learned_skill: return false
 
-	var new_effect = CombatEffect.get_effect_from_item_skill_base(_learned_skill)
+	var new_effect = CombatEffect.get_effect_from_item_skill_base(_learned_skill, SKILLS[NAME].region_rect)
 	_target.effects_helper.add_effect(new_effect)
 
 	return true

@@ -11,5 +11,7 @@ static func create_and_add_instance() -> void:
 	_ITEMS[NAME].max_stacks = 6
 	_ITEMS[NAME].set_cleave_percent(0.2)
 	_ITEMS[NAME].set_cleave_range(2)
+	_ITEMS[NAME].add_debuff(CombatStats.DEBUFF_KEY_RANGED_UNITS, CombatStats.CLEAVE_PERCENT, -0.2)
+	_ITEMS[NAME].add_debuff(CombatStats.DEBUFF_KEY_RANGED_UNITS, CombatStats.CLEAVE_RANGE, -2)
 	_ITEMS[NAME].buy_price = 1600
-	_ITEMS[NAME].description = "Grants a " + StringHelpers.format_percent(_ITEMS[NAME].get_cleave_percent()) + " extra damage to enemies around " + str(_ITEMS[NAME].get_cleave_range()) + " tiles."
+	_ITEMS[NAME].description = "Grants a " + StringHelpers.format_percent(_ITEMS[NAME].get_cleave_percent()) + " extra damage to enemies around " + str(_ITEMS[NAME].get_cleave_range()) + " tiles.\n(Only applies to melee units)"

@@ -11,11 +11,12 @@ func _init() -> void:
 func set_my_owner(p_owner: Entity) -> void:
 	_my_owner = p_owner
 
-func _process(_delta: float) -> void:
+func process(_delta: float) -> void:
 	var effects_ids_to_remove: Array[int] = []
 	for effect in _effects:
-		effect._process(_delta)
+		effect.process(_delta)
 		if effect.is_cooldown_finished: effects_ids_to_remove.append(effect.id)
+		effect.verify_interval_trigger()
 
 	remove_effect_by_ids(effects_ids_to_remove)
 

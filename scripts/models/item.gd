@@ -2,6 +2,7 @@ class_name Item
 
 extends ItemSkillBase
 static var REGISTERED_ITEMS: Array = [
+	ItemSoulPact,
 	ItemPhantomEdge,
 	ItemMultiShot,
 	ItemStunningEdge,
@@ -193,3 +194,15 @@ func get_sell_price() -> int:
 
 # Must be overriden
 static func static_actions_after_execute_physical_attack(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void: pass
+
+# Must be overriden
+static func static_actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool: return false
+
+# Must be overriden
+static func static_actions_before_receive_damage(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool: return false
+
+# Must be overriden
+static func static_actions_after_interval_trigger(_effect: CombatEffect) -> bool: return false
+
+# Must be overriden
+static func static_actions_before_execute_physical_attack(_attacker: Entity, _target: Entity) -> void: pass

@@ -30,7 +30,7 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 
 	if not verify_range(_caster, _target, _learned_skill): return false
 
-	var new_effect = CombatEffect.get_effect_from_item_skill_base(_learned_skill)
+	var new_effect = CombatEffect.get_effect_from_item_skill_base(_learned_skill, SKILLS[NAME].region_rect)
 	new_effect.set_description(_learned_skill.description)
 	new_effect.set_region_rect(SkillBase.SKILLS[_learned_skill.my_name].region_rect)
 	_target.effects_helper.add_effect(new_effect)

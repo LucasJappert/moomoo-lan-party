@@ -27,7 +27,7 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 	var _learned_skill := _attacker.get_learned_skill(NAME)
 	if not _learned_skill: return false
 
-	var effect = CombatEffect.get_effect_from_item_skill_base(_learned_skill)
+	var effect = CombatEffect.get_effect_from_item_skill_base(_learned_skill, SKILLS[NAME].region_rect)
 	_target.effects_helper.add_effect(effect)
 	SoundsHelper.play_random_ice_hit()
 

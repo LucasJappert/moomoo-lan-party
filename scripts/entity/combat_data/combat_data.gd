@@ -95,7 +95,7 @@ func process_combat_data(_delta: float): # Run only when it is the host
 	if GameManager.main_scene.PAUSED: return
 	if not _my_owner: return
 
-	effects_helper._process(_delta)
+	effects_helper.process(_delta)
 
 	_process_on_server(_delta)
 
@@ -131,8 +131,8 @@ func server_execute_physical_damage(_target: Entity, _extra_projectile: bool) ->
 	for active_skill in _active_skills:
 		active_skill.actions_after_execute_physical_attack(_my_owner, _target, _di)
 	
-	# for registered_item in Item.REGISTERED_ITEMS:
-	# 	registered_item.static_actions_after_execute_physical_attack(_my_owner, _target, _di)
+	for registered_item in Item.REGISTERED_ITEMS:
+		registered_item.static_actions_after_execute_physical_attack(_my_owner, _target, _di)
 
 	_target.server_receive_damage(_di, _my_owner)
 
@@ -149,6 +149,10 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	for active_skill in _active_skills:
 		var cancel_damage = active_skill.instance_actions_before_receive_damage(_attacker, _di)
 		if cancel_damage: return
+	
+	for reg in Item.REGISTERED_ITEMS:
+		var cancel_damage = reg.static_actions_before_receive_damage(_attacker, _my_owner, _di)
+		if cancel_damage: return
 
 	var my_stats = cache_total_stats
 	
@@ -159,10 +163,14 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 	ItemSkillBase.actions_after_effective_hit(_attacker, _my_owner, _di)
 
 	Statistics.try_register_damage(_attacker, _di)
+
 	_apply_defenses(_di, my_stats)
 
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
 		registered_skill.actions_after_effective_hit(_attacker, _my_owner, _di)
+		
+	for reg in Item.REGISTERED_ITEMS:
+		reg.static_actions_after_effective_hit(_attacker, _my_owner, _di)
 
 	global_receive_damage_or_heal(_di)
 	Statistics.try_register_received_damage(self, _di)
@@ -583,6 +591,9 @@ func execute_physical_attack(apply_extra_actions: bool = true, _custom_target: E
 	if not apply_extra_actions: return
 
 func _execute_attack_or_launch_projectile(final_target: Entity) -> void:
+	for registered_item in Item.REGISTERED_ITEMS:
+		registered_item.static_actions_before_execute_physical_attack(_my_owner, final_target)
+
 	if is_melee(): return server_execute_physical_damage(final_target, false)
 
 	if launch_projectile(final_target, false): return
