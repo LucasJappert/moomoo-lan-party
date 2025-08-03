@@ -5,7 +5,6 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Agregar item que brinda 15% de AS, 15% de evasión y +10 a todos los atributos
 - Agregar item que brinda un +30% de ataque mágico y físico
 - Agregar item que brinda un +20% de defensa física y mágica. También brinda un 30% de evasión.
 - Agregar item que brinda +10% de MS, +10% de AS y +7 de fza/agi/int

@@ -29,7 +29,7 @@ static func static_actions_before_execute_physical_attack(_attacker: Entity, _ta
 
 # Luego si el ataque llega al destino agregamos el efecto de quemadura (es decir, el target no lo evadió, no lo canceló, etc.)
 static func static_actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
-	if _di.is_extra_projectile: return false
+	if not _di.is_main_attack(): return false
 	if _di.damage_type != DamageType.PHYSICAL: return false
 	var items_in_attacker := _attacker.get_items_by_name(NAME)
 	if items_in_attacker.is_empty(): return false
