@@ -64,6 +64,5 @@ static func verify_global_click(_event: InputEventMouseButton) -> bool:
 	if _event is InputEventMouseButton and _event.pressed:
 		# _event.button_index == MOUSE_BUTTON_LEFT
 		ghost.emit_drop()
-		print("Soltamos el item en el suelo o shop")
 
 	return true

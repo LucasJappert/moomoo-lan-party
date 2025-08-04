@@ -106,6 +106,15 @@ static func roll_true_strike(_attacker: Entity, _di: DamageInfo) -> void:
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
 	if not ObjectHelpers.valid_instance(_attacker): return
+	if not _di.is_main_attack(): return
+	
+	# Stun verification, we need it after the evasion check
+	_try_apply_stun(_attacker, _target, _di)
+
+static func static_actions_after_apply_defenses(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
+	if not ObjectHelpers.valid_instance(_attacker): return
+	if _di.is_zero_damage(): return
+	if not _di.is_main_attack(): return
 
 	var _attacker_stats = _attacker.cache_total_stats
 	# Cleave verification
@@ -113,9 +122,6 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 
 	# Lifesteal verification
 	_try_apply_lifesteal(_attacker, _target, _di)
-	
-	# Stun verification, we need it after the evasion check
-	_try_apply_stun(_attacker, _target, _di)
 
 # endregion STATICS METHODS
 

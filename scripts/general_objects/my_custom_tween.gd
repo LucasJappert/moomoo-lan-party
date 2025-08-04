@@ -123,30 +123,30 @@ func start():
 
 func _get_initial_value(node: Node, property: String) -> Variant:
 	if not property.contains(":"): return node.get(property)
-	
+
 	var parts = property.split(":")
 	var base_prop = parts[0]
 	var sub_prop = parts[1]
 
 	var base_value = node.get(base_prop)
 	match sub_prop:
-		"a":
-			return base_value.a
-		"r":
-			return base_value.r
-		"g":
-			return base_value.g
-		"b":
-			return base_value.b
+		"x": return base_value.x
+		"y": return base_value.y
+		"z": return base_value.z
+		"r": return base_value.r
+		"g": return base_value.g
+		"b": return base_value.b
+		"a": return base_value.a
 		_:
 			push_error("Propiedad desconocida: %s" % property)
 			return null
+
 
 func _apply_value(node: Node, property: String, value: Variant) -> void:
 	if not property.contains(":"):
 		node.set(property, value)
 		return
-	
+
 	var parts = property.split(":")
 	var base_prop = parts[0]
 	var sub_prop = parts[1]
@@ -154,14 +154,13 @@ func _apply_value(node: Node, property: String, value: Variant) -> void:
 	var base_value = node.get(base_prop)
 
 	match sub_prop:
-		"a":
-			base_value.a = value
-		"r":
-			base_value.r = value
-		"g":
-			base_value.g = value
-		"b":
-			base_value.b = value
+		"x": base_value.x = value
+		"y": base_value.y = value
+		"z": base_value.z = value
+		"r": base_value.r = value
+		"g": base_value.g = value
+		"b": base_value.b = value
+		"a": base_value.a = value
 		_:
 			push_error("Propiedad desconocida al aplicar: %s" % property)
 			return

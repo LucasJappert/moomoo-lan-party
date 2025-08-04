@@ -299,7 +299,7 @@ func get_new_description() -> String:
 func get_extra_projectile_percent_damage() -> float: return _get_value(EXTRA_PROJECTILES_PERCENT_DAMAGE)
 func get_extra_projectiles() -> int: return _get_value_i(EXTRA_PROJECTILES)
 func get_level() -> int: return _get_value_i(LEVEL)
-func get_cleave_percent() -> float: return min(1, _get_value(CLEAVE_PERCENT))
+func get_cleave_percent() -> float: return _get_value(CLEAVE_PERCENT)
 func get_cleave_range() -> int: return _get_value_i(CLEAVE_RANGE)
 func get_hp() -> int: return _get_value_i(HP)
 func get_mana() -> int: return _get_value_i(MANA)

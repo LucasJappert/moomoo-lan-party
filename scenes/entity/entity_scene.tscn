@@ -150,6 +150,7 @@ shape = SubResource("CircleShape2D_5ixpm")
 debug_color = Color(0, 0.6, 0.7, 0.052)
 
 [node name="AreaAttack" type="Area2D" parent="."]
+input_pickable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AreaAttack"]
 shape = SubResource("CircleShape2D_idfl5")
@@ -170,6 +171,7 @@ sprite_frames = SubResource("SpriteFrames_os1up")
 animation = &"idle"
 
 [node name="Area2D" type="Area2D" parent="."]
+input_pickable = false
 
 [node name="ProjectileZone" type="CollisionShape2D" parent="Area2D"]
 unique_name_in_owner = true
@@ -192,6 +194,7 @@ offset_right = 21.0
 offset_bottom = -50.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Node" type="Control" parent="HUD/BarsContainer"]
@@ -211,6 +214,7 @@ offset_top = -2.0
 offset_right = 21.0
 grow_horizontal = 2
 grow_vertical = 0
+mouse_filter = 2
 theme_override_constants/separation = 1
 
 [node name="MyProgressBar" parent="HUD/BarsContainer/Node/ProgressBarsContainer" instance=ExtResource("4_wjrb4")]

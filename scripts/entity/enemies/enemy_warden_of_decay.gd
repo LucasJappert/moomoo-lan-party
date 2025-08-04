@@ -16,3 +16,4 @@ static func try_to_init_from_name(_name: String, _enemy: Enemy) -> void:
 	_enemy._skills.append_array([
 		SkillBase.get_new_learned_skill(SkillTrueStrike.NAME),
 	])
+	# _enemy.add_item(Item.get_item(ItemPowerCore.NAME, 1, true))

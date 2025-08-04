@@ -19,8 +19,8 @@ func _ready() -> void:
 
 func _on_input_event(_viewport, _event, _shape_idx):
 	if _event is InputEventMouseButton and _event.pressed:
-		if _event.button_index == MOUSE_BUTTON_LEFT:
-			EventBus.emit_new_target_view_selected(null, my_owner)
+		# var hovered_control = get_viewport().get_window().gui_get_hovered_control()
+		# print("Hovered control: ", hovered_control) # ⚠️ Puede ser null
 		if _event.button_index == MOUSE_BUTTON_RIGHT:
 			if GameManager.MY_PLAYER and not KeyboardController.SHIFT_PRESSED:
 				if my_owner.is_my_player(): return

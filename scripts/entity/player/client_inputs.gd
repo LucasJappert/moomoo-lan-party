@@ -17,15 +17,30 @@ func _get_hovered_entity_name() -> String:
 	return str(AreaHovered.hovered_entity.name) if AreaHovered.hovered_entity else ""
 
 
+func get_area2d_under_mouse() -> Area2D:
+	var query := PhysicsPointQueryParameters2D.new()
+	query.position = get_global_mouse_position()
+	query.collide_with_areas = true
+	query.collide_with_bodies = false
+
+	var space := get_world_2d().direct_space_state
+	var results := space.intersect_point(query)
+
+	if results.size() > 0:
+		var collider = results[0].get("collider")
+		if collider is Area2D:
+			return collider
+	return null
+
+
 func _unhandled_input(event):
 	MyCamera.handle_input(event)
 	
 	if event is InputEventMouseButton and event.pressed:
 		# #### Keep this code for debug 🔍
-		# var pos = get_viewport().get_mouse_position()
-		# var window := get_viewport().get_window() # 👈 importante!
-		# var node := window.gui_get_hovered_control()
-		# print("Clicked at: ", pos, " - Hovered control: ", node)
+		# var area := get_area2d_under_mouse()
+		# if area: print("Clicked on Area2D:", area.name)
+		# else: print("No Area2D under mouse.")
 		if DraggableSlot.verify_global_click(event): return
 		if event.button_index == MOUSE_BUTTON_RIGHT:
 			# if ObjectHelpers.is_enemy(AreaHovered.hovered_entity):
@@ -59,6 +74,8 @@ func _on_left_click(_target_entity_name: String):
 	ShopInterface.static_close_shop()
 
 	if not GameManager.MY_PLAYER: return
+
+	if not player.charged_skill: EventBus.emit_new_target_view_selected(GameManager.MY_PLAYER, target_entity)
 
 	player.use_charged_skill(target_entity)
 

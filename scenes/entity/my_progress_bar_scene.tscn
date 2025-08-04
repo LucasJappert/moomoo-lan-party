@@ -32,8 +32,8 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 42.0
 offset_bottom = 2.0
+mouse_filter = 2
 script = ExtResource("1_o7010")
-progress_value_percent = 0
 
 [node name="ProgressBar" type="ProgressBar" parent="."]
 unique_name_in_owner = true
@@ -50,9 +50,9 @@ offset_right = 20.0
 offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme_override_styles/background = SubResource("StyleBoxFlat_ilqsf")
 theme_override_styles/fill = SubResource("StyleBoxFlat_8ssti")
-value = 60.0
 show_percentage = false
 
 [node name="Label" type="Label" parent="."]

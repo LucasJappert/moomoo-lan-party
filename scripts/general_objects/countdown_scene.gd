@@ -9,7 +9,7 @@ extends Control
 
 var text_to_show: String
 var duration := 1
-var speed := MapManager.TILE_SIZE_INT * 6
+var speed := MapManager.TILE_SIZE_INT * 5
 var fade_out := true
 var SCALE_FROM = Vector2(1, 1)
 var SCALE_TO = Vector2(0.5, 0.5)

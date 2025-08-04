@@ -5,18 +5,15 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Cada 3ra oleada, generar todos bosses con skills randoms.
 - Agregar item que brinda +30% de MS, +20% de AS y +10 de fza/agi/int
 - Agregar item que brinda un 15% de chances de disparar una rafaga de rayos a 5 enemigos cercanos. El daño de cada rayo es igual al 50% de la inteligencia total.
-- Permitir abrir/cerrar el shop estando en pausa
-- No seleccionar unidad si hacemos click izquierdo teniendo un skill cargado
-- Cada 3ra oleada, generar todos bosses con skills randoms.
 - Agregar afecto de nubes
 - Agregar efecto de lluvia y rayos
 - Agregar boton para mutear el juego
 - Agregar algunos items más
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
 - Agregar animacion de explosión cuando muere un enemigo que tiene esa skill
-- Ver bug que cambia el target de ataque cuando muere otro enemigo
 - Agregar item que brinda un +30% de ataque mágico y físico y algo mas
 
 - Revisar sonidos en loop
@@ -26,7 +23,6 @@
 - Sonidos limitarlos a la vista en pantalla
 - Agregar barra de vida del moomoo y del pj fijas en algun lugar comodo
 - Modificar particulas en la explosión de proyectil natura ball
-- Agregar habilidad que consume 15 del hp por un proyectil que quema al enemigo durante 5 segundos, causando 15 de daño cada segundo
 
 - Ver sonidos que entran en loop indebidamente
 - Agregar bordes rojos/animación cuando tenemos poca vida

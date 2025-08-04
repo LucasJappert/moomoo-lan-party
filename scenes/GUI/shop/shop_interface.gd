@@ -46,14 +46,19 @@ func close_shop() -> bool:
 	if not _items_visible: return false
 	_items_visible = false
 	_shop_button.text = "Shop"
-	var tween := _main_container_items.create_tween()
-	tween.tween_property(_main_container_items, "position:x", ORIGINAL_WIDTH, TWEEN_DURATION)
+	
+	var custom_tween := MyCustomTween.new(_main_container_items)
+	custom_tween.tween_property(_main_container_items, "position:x", ORIGINAL_WIDTH, TWEEN_DURATION)
+	custom_tween.start()
+
 	return true
 func open_shop():
 	_items_visible = true
 	_shop_button.text = "Hide"
-	var tween := _main_container_items.create_tween()
-	tween.tween_property(_main_container_items, "position:x", 0, TWEEN_DURATION)
+	
+	var custom_tween := MyCustomTween.new(_main_container_items)
+	custom_tween.tween_property(_main_container_items, "position:x", 0, TWEEN_DURATION)
+	custom_tween.start()
 
 static func static_close_shop() -> bool:
 	return GameManager.game_world.gui_scene.shop_interface.close_shop()
@@ -62,7 +67,6 @@ static func _on_shop_interface_clicked(_event: InputEventMouseButton) -> void:
 	if not DraggableSlot.ghost: return
 	if not GameManager.MY_PLAYER: return
 
-	print("Soltamos el item en el shop")
 	GameManager.MY_PLAYER.increment_current_gold(int(DraggableSlot.ghost.item.get_sell_price()))
 	GameManager.MY_PLAYER.update_item(null, DraggableSlot.ghost.slot_number - 1)
 

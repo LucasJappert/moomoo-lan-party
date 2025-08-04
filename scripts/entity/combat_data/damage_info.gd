@@ -33,5 +33,8 @@ func is_main_attack() -> bool:
 func is_physical_damage() -> bool:
 	return damage_type == DamageType.PHYSICAL
 
+func is_zero_damage() -> bool:
+	return total_damage == 0 or total_damage == critical
+
 static func get_instance() -> DamageInfo:
 	return DamageInfo.new()

@@ -166,6 +166,8 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 
 	_apply_defenses(_di, my_stats)
 
+	ItemSkillBase.static_actions_after_apply_defenses(_attacker, _my_owner, _di)
+
 	if _di.total_damage == _di.critical: return # Case when all damage is critical, but all base damage was evaded by defenses
 
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
@@ -282,12 +284,14 @@ func _server_verify_death(_killed_by: Entity) -> void:
 	if current_hp > 0: return
 
 	current_hp = 0
+
+	if ObjectHelpers.valid_instance(_killed_by) and _killed_by.target_to_attack_name == _my_owner.name:
+		_killed_by.reset_target_to_attack_from_nearest_enemy()
+
 	_try_to_give_experience_to_players(Enemy.get_enemy_exp_when_dead()) # Give experience when an enemy dies
 	_my_owner.global_die(_killed_by)
 	_try_to_add_gold_to_players_on_enemy_die(_killed_by)
 
-	if ObjectHelpers.valid_instance(_killed_by):
-		_killed_by.reset_target_to_attack_from_nearest_enemy()
 
 func _try_to_give_experience_to_players(_exp: int) -> void:
 	_exp *= EXP_MULTIPLIER
@@ -477,6 +481,7 @@ func _check_evade(_di: DamageInfo, total_stats: CombatStats) -> bool:
 	return true
 
 func _apply_defenses(_di: DamageInfo, total_stats: CombatStats) -> void:
+	if _di.was_a_cleave_damage: return
 	var damage_before_defense := _di.total_damage
 
 	if _di.damage_type == DamageType.PHYSICAL:
