@@ -32,6 +32,7 @@ func _try_cast_random_skill() -> bool:
 	if _enemy_owner.target_to_attack == null: return false
 
 	var available_skills: Array[Skill] = _enemy_owner.get_skills().filter(func(skill):
+		if not skill: return false
 		if skill.get_learned_skill() == null: return false
 		if not skill.can_use(_enemy_owner): return false
 

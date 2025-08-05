@@ -2,7 +2,7 @@ class_name Player
 
 extends Entity
 
-const INITIAL_GOLD: int = 50000
+const INITIAL_GOLD: int = 500 # 00
 const PLAYER_CELL_SPAWN: Vector2i = Vector2i(20, 12)
 static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 const MAX_LEVEL: int = 30

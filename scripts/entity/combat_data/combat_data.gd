@@ -72,6 +72,7 @@ func post_ready_combat_data() -> void:
 	
 	# Intentamos agregar skills aprendidos y que son pasivos
 	for skill in _skills:
+		if not skill: continue
 		if not skill.learned_level: continue
 		if skill.get_learned_skill().type != SkillType.PASSIVE: continue
 
@@ -526,6 +527,7 @@ func get_skill(p_name: String) -> Skill:
 	
 func get_learned_skill(p_name: String) -> ItemSkillBase:
 	for skill in _skills:
+		if not skill: continue
 		if not skill.learned_level: continue
 		if not skill.get_learned_skill(): continue
 		if skill.get_learned_skill().my_name == p_name: return skill.get_learned_skill()

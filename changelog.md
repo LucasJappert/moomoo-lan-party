@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Allow enemies to use items
 - ✅ Every 2 normal rounds, generate an extra special round with 4 bosses, which have extra attributes and 4 random skills.
 - ✅ Add Ghostplate item that grants +20% physical and magical defense, and 20% evasion.
 - ✅ Add Swift Mirage item that grants 15% AS, 15% evasion and +10 to all attributes

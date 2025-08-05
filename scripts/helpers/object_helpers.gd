@@ -166,23 +166,28 @@ static func _from_dict_array(obj: Object, key: String, value: Array) -> void:
 		return
 
 	# Caso normal de array de objetos complejos
-	if target_array.size() < value.size():
-		var script := _resolve_script_for_array(value)
-		if script == null:
-			return push_error("❗ No se pudo determinar el script del array '" + key + "'")
-		target_array.clear()
-		for _x in value.size():
-			target_array.append(script.new())
 
-	for i in range(value.size()):
-		if i < target_array.size() and typeof(value[i]) == TYPE_DICTIONARY:
+	# nos aseguramos de que el target_array tenga la misma cantidad de items
+	if value.size() > 0 and target_array.size() <= value.size():
+		for _x in value.size():
+			if _x >= target_array.size(): target_array.append(null)
+
+	if value.size() > 0:
+		for i in range(value.size()):
+			if typeof(value[i]) != TYPE_DICTIONARY: continue
+			if value[i].size() == 0: continue
+			var script := _resolve_script_from_dict(value[i])
+			if script == null:
+				push_error("❗ No se pudo determinar el script del array '" + key + "'")
+				continue
+			target_array[i] = script.new()
 			from_dict(target_array[i], value[i])
 
 	obj.set(key, target_array)
 
 
-static func _resolve_script_for_array(value: Array) -> Script:
-	return _get_expected_script(value[0]) if not value.is_empty() and typeof(value[0]) == TYPE_DICTIONARY else null
+static func _resolve_script_from_dict(data: Dictionary) -> Script:
+	return _get_expected_script(data)
 
 static func _get_expected_script(data: Dictionary) -> Script:
 	for key in ["script", "script_path"]:

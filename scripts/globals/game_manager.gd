@@ -100,7 +100,6 @@ func spawn_player(hero_type: String) -> void:
 	add_entity(new_player)
 
 func spawn_enemy(_enemy: Enemy) -> void:
-	# var new_enemy: Enemy = game_world.enemies_spawner.spawn(ObjectHelpers.to_dict(_enemy))
 	add_entity(game_world.enemies_spawner.spawn(ObjectHelpers.to_dict(_enemy)))
 
 # region 	SETTERs

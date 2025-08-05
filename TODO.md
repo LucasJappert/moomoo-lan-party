@@ -5,7 +5,6 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Permitir usar items a los enemigos
 - Al finalizar las rondas, el moomoo se revela en contra del jugador.
 - Desarrollar historia
 - Agregar item que brinda +30% de MS, +20% de AS y +10 de fza/agi/int
