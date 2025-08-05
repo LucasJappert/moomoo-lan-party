@@ -16,7 +16,8 @@ func _update_text() -> void:
 	var result := ""
 	result += "- FPS: %d \n" % Performance.get_monitor(Performance.TIME_FPS)
 	result += "- TIME ELAPSED: " + GameManager.MY_PLAYER.statistics.formatted_time_elapsed + "\n"
-	result += "- WAVE REACHED: %d of %d\n" % [EnemiesWavesController.current_wave, EnemiesWavesController.WAVES_INFO.size()]
+	result += "- NORMAL WAVE REACHED: %d of %d\n" % [EnemiesWavesController.current_wave, EnemiesWavesController.WAVES_INFO.size()]
+	result += "- SPECIAL WAVE REACHED: %d\n" % [EnemiesWavesController.special_wave]
 	result += "- UNITS KILLED: " + GameManager.MY_PLAYER.statistics.formatted_enemies_killed + "\n"
 	result += "- DAMAGE DEALT: " + GameManager.MY_PLAYER.statistics.formatted_damage_dealt + "\n"
 	result += "- DAMAGE RECEIVED: " + GameManager.MY_PLAYER.statistics.formatted_damage_received + "\n"

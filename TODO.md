@@ -5,7 +5,9 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Cada 3ra oleada, generar todos bosses con skills randoms.
+- Permitir usar items a los enemigos
+- Al finalizar las rondas, el moomoo se revela en contra del jugador.
+- Desarrollar historia
 - Agregar item que brinda +30% de MS, +20% de AS y +10 de fza/agi/int
 - Agregar item que brinda un 15% de chances de disparar una rafaga de rayos a 5 enemigos cercanos. El daño de cada rayo es igual al 50% de la inteligencia total.
 - Agregar afecto de nubes
@@ -15,6 +17,7 @@
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
 - Agregar animacion de explosión cuando muere un enemigo que tiene esa skill
 - Agregar item que brinda un +30% de ataque mágico y físico y algo mas
+- Generar skill/item que da chances de invocar esqueletos ante cada ataque
 
 - Revisar sonidos en loop
 - Agregar un item que brinda daño splash a todo alreadedor del target (es diferente al cleave)

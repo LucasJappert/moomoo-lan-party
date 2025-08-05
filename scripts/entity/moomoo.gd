@@ -3,7 +3,7 @@ class_name Moomoo
 extends Entity
 
 const SPAWN_POSITION = Vector2i(20, 11)
-const RECT_REGION = Rect2(512, 864, 128, 128)
+const RECTS: Array[Rect2] = [Rect2(512, 864, 128, 128), Rect2(640, 864, 128, 128)]
 const BODY_SCALE: float = 0.7
 
 func _ready():

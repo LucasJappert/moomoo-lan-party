@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Every 2 normal rounds, generate an extra special round with 4 bosses, which have extra attributes and 4 random skills.
 - ✅ Add Ghostplate item that grants +20% physical and magical defense, and 20% evasion.
 - ✅ Add Swift Mirage item that grants 15% AS, 15% evasion and +10 to all attributes
 - ✅ Agregar item Soul Pact: Each physical attack inflicts either Burn or Poison, dealing 15 magic damage per second for 5 seconds (up to 10 stacks). This ability costs no mana, but sacrifices 15 HP from the user on each hit.

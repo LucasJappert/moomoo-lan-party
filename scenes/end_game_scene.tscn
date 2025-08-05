@@ -86,10 +86,11 @@ vertical_alignment = 1
 [node name="CenterContainer" type="VBoxContainer" parent="MainContainer/GridContainer"]
 layout_mode = 0
 offset_left = 212.0
-offset_top = 205.0
+offset_top = 151.0
 offset_right = 547.0
 offset_bottom = 471.0
 theme_override_constants/separation = 50
+alignment = 1
 
 [node name="StatisticLabel" type="Label" parent="MainContainer/GridContainer/CenterContainer"]
 unique_name_in_owner = true

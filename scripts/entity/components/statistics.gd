@@ -11,11 +11,13 @@ var formatted_enemies_killed := "0"
 var _gold_earned := 0
 var formatted_earned_gold := "0"
 var _hero_name := ""
-var _wave_reached := 0
+var _normal_wave_reached := 0
+var _special_wave_reached := 0
 var _damage_dealt := 0
 var formatted_damage_dealt := "0"
 var _damage_received := 0
 var formatted_damage_received := "0"
+
 
 var _owner: Entity
 
@@ -31,7 +33,8 @@ func _reset():
 	_enemies_killed = 0
 	_gold_earned = 0
 	_hero_name = ""
-	_wave_reached = 0
+	_normal_wave_reached = 0
+	_special_wave_reached = 0
 
 func _process(delta: float) -> void:
 	_time_elapsed += delta
@@ -51,8 +54,12 @@ func add_gold(amount: int) -> void:
 	formatted_earned_gold = StringHelpers.format_float_compact(_gold_earned)
 	if ObjectHelpers.is_my_player(_owner): EventBus.emit_my_player_statistics_changed()
 
-func set_wave(wave_number: int) -> void:
-	_wave_reached = wave_number
+func set_normal_wave(wave_number: int) -> void:
+	_normal_wave_reached = wave_number
+	if ObjectHelpers.is_my_player(_owner): EventBus.emit_my_player_statistics_changed()
+
+func set_special_wave(wave_number: int) -> void:
+	_special_wave_reached = wave_number
 	if ObjectHelpers.is_my_player(_owner): EventBus.emit_my_player_statistics_changed()
 
 func register_damage(_di: DamageInfo) -> void:
@@ -78,9 +85,10 @@ static func try_register_received_damage(_attacker: Entity, _di: DamageInfo):
 
 func get_summary() -> String:
 	var summary := ""
-	summary += "⚡ Time: %s\n" % StringHelpers.get_formatted_time(int(MainScene.get_elapsed_time_in_sec()))
-	summary += "⚡ Enemies: %d\n" % _enemies_killed
-	summary += "⚡ Gold Earned: %s\n" % StringHelpers.format_float(_gold_earned)
-	summary += "⚡ Hero: %s\n" % _hero_name
-	summary += "⚡ Wave Reached: %d" % _wave_reached
+	summary += "⚡ Time: %s" % StringHelpers.get_formatted_time(int(MainScene.get_elapsed_time_in_sec()))
+	summary += "\n⚡ Enemies: %d" % _enemies_killed
+	summary += "\n⚡ Gold Earned: %s" % StringHelpers.format_float(_gold_earned)
+	summary += "\n⚡ Hero: %s" % _hero_name
+	summary += "\n⚡ Normal Wave Reached: %d" % _normal_wave_reached
+	summary += "\n⚡ Special Wave Reached: %d" % _special_wave_reached
 	return summary
