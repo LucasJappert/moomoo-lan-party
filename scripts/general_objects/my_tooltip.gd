@@ -7,7 +7,6 @@ extends Control
 @onready var _rich_description: RichTextLabel = $Panel/Description
 var _current_description: String
 
-var current_requester: Control = null
 var _show_until_frame: int = -1
 var _force_visible: bool = false
 

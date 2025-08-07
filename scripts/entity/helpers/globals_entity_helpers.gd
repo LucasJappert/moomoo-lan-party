@@ -114,7 +114,6 @@ static func grants_random_skills(entity: Entity, learned_level: int = 1) -> void
 	for i in range(1, 5):
 		var random_skill := available_skills[randi_range(0, available_skills.size() - 1)]
 		
-		print("random_skill: ", random_skill.get_name())
 		entity._skills.append(SkillBase.get_new_learned_skill(random_skill.get_name(), min(3, learned_level)))
 
 		if available_skills.size() <= 0: continue

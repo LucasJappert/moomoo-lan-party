@@ -1,8 +1,8 @@
 class_name HeroPickerScene
 extends CanvasLayer
 
-const HERO_BOX_SCENE: PackedScene = preload("res://scenes/GUI/hero_picker/hero_box.tscn")
 const HERO_PICKER_SCENE := preload("res://scenes/GUI/hero_picker_scene.tscn")
+const HERO_BOX_SCENE: PackedScene = preload("res://scenes/GUI/hero_picker/hero_box.tscn")
 
 @onready var grid_heros_container: GridContainer = %GridHerosContainer
 @onready var skills_container: GridContainer = %SkillsContainer

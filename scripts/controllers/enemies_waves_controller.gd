@@ -89,6 +89,9 @@ static func create_next_wave() -> void:
 
 
 static func _create_normal_wave() -> void:
+	if current_wave + 1 > WAVES_INFO.size():
+		return print("All waves finished!")
+		
 	current_wave += 1
 	GameManager.MY_PLAYER.statistics.set_normal_wave(current_wave)
 	print("Wave " + str(current_wave) + " started!")
@@ -97,7 +100,7 @@ static func _create_normal_wave() -> void:
 	extra_stats_by_wave.set_strength(5 * current_wave)
 	extra_stats_by_wave.set_intelligence(5 * current_wave)
 
-	_current_wave_info = WAVES_INFO[current_wave % WAVES_INFO.size() - 1]
+	_current_wave_info = WAVES_INFO[current_wave - 1]
 
 	# Ejecutar lo demás de forma asíncrona
 	_run_wave_spawn_async()
@@ -107,9 +110,8 @@ const WAVES_PER_SPECIAL_WAVE := 2.0
 static func _try_create_special_wave() -> bool:
 	if current_wave < (special_wave + 1) * WAVES_PER_SPECIAL_WAVE: return false
 	
-
 	special_wave += 1
-	GameManager.MY_PLAYER.statistics.set_normal_wave(special_wave)
+	GameManager.MY_PLAYER.statistics.set_special_wave(special_wave)
 	print("🎉 Special wave " + str(special_wave) + " started! ")
 
 	var available_enemies: Array[String] = []

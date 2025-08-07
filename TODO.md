@@ -5,7 +5,9 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Al finalizar las rondas, el moomoo se revela en contra del jugador.
+- 🔵 Crear escena inicial
+- Al finalizar las rondas, el moomoo se revela en contra del jugador. Agregar efectos en el suelo como rajaduras con lava. Hacer caer meteoritos desde el cielo, etc.
+- Crear ronda numero 9, con un enemigo que lanza cuchillas y otro que lanza piedras
 - Desarrollar historia
 - Agregar item que brinda +30% de MS, +20% de AS y +10 de fza/agi/int
 - Agregar item que brinda un 15% de chances de disparar una rafaga de rayos a 5 enemigos cercanos. El daño de cada rayo es igual al 50% de la inteligencia total.

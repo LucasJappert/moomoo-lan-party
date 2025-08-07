@@ -9,13 +9,13 @@ static var PAUSED = false
 static var pause_start_time := 0
 static var total_paused_time := 0
 
-# Main.gd
 func _ready():
 	GameManager.main_scene = self
 	SoundsHelper.initialize(audio_node)
 	MyCamera.set_screen_size()
 	MyCamera.create_camera()
-	HeroPickerScene.load_scene()
+	# HeroPickerScene.load_scene()
+	InitialScene.load_scene()
 	pass
 
 func load_scene(scene):
