@@ -60,7 +60,8 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.PHYSICAL
 		SKILLS[NAME].item_skill_base[i].mana_cost = int_array1[i]
 		SKILLS[NAME].item_skill_base[i].cooldown = int_array[i]
-		SKILLS[NAME].item_skill_base[i].description = "Accumulates all damage received over " + StringHelpers.format_float(seconds_to_release) + " seconds. Then releases " + StringHelpers.format_percent(float_array[i]) + " of the accumulated damage as physical damage to all enemies within " + str(effect_radius) + " tiles."
+		SKILLS[NAME].item_skill_base[i].en_description = "Accumulates all damage received over " + StringHelpers.format_float(seconds_to_release) + " seconds. Then releases " + StringHelpers.format_percent(float_array[i]) + " of the accumulated damage as physical damage to all enemies within " + str(effect_radius) + " tiles."
+		SKILLS[NAME].item_skill_base[i].es_description = "Acumula todo el daño recibido durante " + StringHelpers.format_float(seconds_to_release) + " segundos. Luego libera un " + StringHelpers.format_percent(float_array[i]) + " del daño acumulado como daño físico a todos los enemigos dentro de un área de " + str(effect_radius) + " tiles."
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return false

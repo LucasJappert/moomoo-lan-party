@@ -16,7 +16,7 @@ static func get_instance() -> Moomoo:
 	var moomoo: Moomoo = load("res://scenes/entity/moomoo_scene.tscn").instantiate()
 	moomoo.name = "Moomoo"
 	moomoo.global_position = MapManager.cell_to_world(MapManager.get_safe_cell(SPAWN_POSITION))
-	moomoo.combat_stats.set_hp(1000000)
+	moomoo.combat_stats.set_hp(10000)
 	moomoo.set_current_hp_and_mana()
 	
 	return moomoo

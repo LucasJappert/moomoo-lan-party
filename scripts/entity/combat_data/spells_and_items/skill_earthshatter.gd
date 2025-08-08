@@ -20,10 +20,13 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].float_dict["strength_percent_damage"] = aux_array[2][i]
 		SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]
 		SKILLS[NAME].item_skill_base[i].cooldown = 12
-		SKILLS[NAME].item_skill_base[i].description = (
+		SKILLS[NAME].item_skill_base[i].en_description = (
 			"Stuns all enemies within " + str(SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles) + " tiles for " + str(aux_array[0][i]) +
 			" seconds and deals " + StringHelpers.format_percent(aux_array[2][i]) +
 			" of the hero's total strength as damage."
+		)
+		SKILLS[NAME].item_skill_base[i].es_description = (
+			"Aturde a todos los enemigos dentro de un área de " + str(SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles) + " tiles durante " + str(aux_array[0][i]) + " segundos y causa daño equivalente al " + StringHelpers.format_percent(aux_array[2][i]) + " de la fuerza total del héroe."
 		)
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:

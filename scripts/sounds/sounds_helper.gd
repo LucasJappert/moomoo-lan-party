@@ -1,7 +1,7 @@
 extends Node
 class_name SoundsHelper
 
-const FORCE_MUTED := true
+const FORCE_MUTED := false
 static var _MUTED := false
 const MAX_PLAYERS := 30
 static var _players: Array[AudioStreamPlayer] = []
@@ -63,15 +63,15 @@ static func _get_or_load_stream(path: String) -> AudioStream:
 
 	_audio_cache[path] = stream
 	return stream
+	
 static func _setup_player(player: AudioStreamPlayer, stream: AudioStream, volume: float, is_looping: bool, path: String) -> void:
 	player.stop()
 	player.stream = stream
 	player.volume_db = volume
 
-	# 👇 Desconectar cualquier conexión previa a 'finished'
 	_disconnect_all_finished_connections(player)
 
-	# 👇 Forzar valor de loop si el stream lo soporta
+	# Si el stream soporta loop, lo seteamos (esto es opcional si ya viene así del importador)
 	if stream.has_method("set_loop"):
 		stream.loop = is_looping
 
@@ -81,9 +81,9 @@ static func _setup_player(player: AudioStreamPlayer, stream: AudioStream, volume
 
 	if is_looping:
 		_looping_players.append(player)
-		# Conectar directamente al método 'play' del propio player
 		print("🎵 Looping sound: %s" % path)
-		player.finished.connect(Callable(player, "play"))
+
+		# 👇 Nada más. No conectamos `finished`.
 	else:
 		player.finished.connect(func():
 			if _playing_counts.has(path):
@@ -200,8 +200,8 @@ static func play_monster_sound(audio_id: int, max_simultaneous: int = 1, volume:
 static func play_coins(volume: float = -5.0):
 	play_sfx("res://sounds/generals/gold.wav", volume, 2)
 
-static func play_track1():
-	SoundsHelper.play_looping_sfx("res://sounds/music/track1.wav", -10.0)
+static func play_track1(volume: float = -10.0):
+	SoundsHelper.play_looping_sfx("res://sounds/music/track1.wav", volume)
 
 static func play_random_ice_hit():
 	var random_ice_hit := randi() % 4 + 1
@@ -211,4 +211,8 @@ static func play_dying():
 	var available_types := ["dying1", "dying2", "dying3", "dying4", "dying5"]
 	var random_dying := randi() % available_types.size()
 	play_sfx("res://sounds/generals/dying/%s.wav" % available_types[random_dying], -10.0, 3)
+
+static func play_random_drink():
+	var random_id := randi() % 3 + 1
+	play_sfx("res://sounds/generals/drink%d.wav" % random_id, -10.0, 1)
 # endregion AUXILIARIES FOR EXTERNALS

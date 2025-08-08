@@ -1,0 +1,49 @@
+[gd_scene load_steps=5 format=3 uid="uid://cxqpwi15yb8xu"]
+
+[ext_resource type="Script" uid="uid://k3iwr22h36xe" path="res://scenes/general_objects/my_check_scene.gd" id="1_mee1n"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_tu6er"]
+load_path = "res://.godot/imported/atlas1.png-b746480e760b4dfa305f535fd92b3009.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wxxx4"]
+atlas = SubResource("CompressedTexture2D_tu6er")
+region = Rect2(1024, 1920, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mee1n"]
+atlas = SubResource("CompressedTexture2D_tu6er")
+region = Rect2(992, 1920, 32, 32)
+
+[node name="MyCheckScene" type="HBoxContainer"]
+mouse_filter = 0
+mouse_default_cursor_shape = 2
+script = ExtResource("1_mee1n")
+
+[node name="Node" type="Node2D" parent="."]
+z_index = 3
+z_as_relative = false
+
+[node name="CheckTexture" type="TextureRect" parent="Node"]
+unique_name_in_owner = true
+offset_right = 32.0
+offset_bottom = 37.0
+texture = SubResource("AtlasTexture_wxxx4")
+stretch_mode = 3
+
+[node name="UncheckTexture" type="TextureRect" parent="."]
+unique_name_in_owner = true
+z_index = 2
+z_as_relative = false
+layout_mode = 2
+texture = SubResource("AtlasTexture_mee1n")
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.839216, 0.784314, 0.694118, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+text = "English"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2

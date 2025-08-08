@@ -22,9 +22,12 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]
 		SKILLS[NAME].item_skill_base[i].cooldown = aux_array[2][i]
 		SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[3][i]
-		SKILLS[NAME].item_skill_base[i].description = (
+		SKILLS[NAME].item_skill_base[i].en_description = (
 			"Grants a " + StringHelpers.format_percent(aux_array[0][i]) + " attack speed boost for " + str(aux_array[3][i]) +
 			" seconds. Also gets silenced for the same duration."
+		)
+		SKILLS[NAME].item_skill_base[i].es_description = (
+			"Otorga un aumento del " + StringHelpers.format_percent(aux_array[0][i]) + " en la velocidad de ataque durante " + str(aux_array[3][i]) + " segundos. También queda silenciado por el mismo tiempo."
 		)
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:

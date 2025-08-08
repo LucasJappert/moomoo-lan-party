@@ -20,7 +20,6 @@
 - Agregar item que brinda un +30% de ataque mágico y físico y algo mas
 - Generar skill/item que da chances de invocar esqueletos ante cada ataque
 
-- Revisar sonidos en loop
 - Agregar un item que brinda daño splash a todo alreadedor del target (es diferente al cleave)
 - Implementar sistema de craft de items
 - Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)

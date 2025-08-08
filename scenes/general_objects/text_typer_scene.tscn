@@ -8,20 +8,53 @@
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1280.0
-offset_bottom = 240.0
+offset_bottom = 140.0
 script = ExtResource("1_2tcu0")
 
 [node name="Panel" type="NinePatchRect" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
 offset_right = 1280.0
-offset_bottom = 242.0
+offset_bottom = 147.0
 texture = ExtResource("1_gsoxh")
 region_rect = Rect2(1056, 1952, 64, 64)
 patch_margin_left = 20
 patch_margin_top = 20
 patch_margin_right = 20
 patch_margin_bottom = 20
+
+[node name="ParticlesContainer" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -640.0
+offset_top = 7.0
+offset_right = 640.0
+offset_bottom = 7.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="MyButton" parent="." instance=ExtResource("3_bimru")]
+unique_name_in_owner = true
+z_index = 1
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -62.0
+offset_top = -69.0
+offset_right = 62.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Next"
+force_width = 0
 
 [node name="AuxDescription" type="RichTextLabel" parent="."]
 unique_name_in_owner = true
@@ -30,6 +63,7 @@ offset_left = 20.0
 offset_top = 20.0
 offset_right = 1260.0
 offset_bottom = 189.0
+mouse_filter = 2
 theme_override_colors/default_color = Color(0.839216, 0.784314, 0.694118, 0)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/bold_italics_font_size = 28
@@ -46,11 +80,13 @@ autowrap_mode = 2
 
 [node name="Description" type="RichTextLabel" parent="."]
 unique_name_in_owner = true
+auto_translate_mode = 1
 layout_mode = 2
 offset_left = 20.0
 offset_top = 20.0
-offset_right = 1300.0
+offset_right = 1260.0
 offset_bottom = 189.0
+mouse_filter = 2
 theme_override_colors/default_color = Color(0.838724, 0.786182, 0.692404, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/line_separation = 0
@@ -65,19 +101,3 @@ but locked deep within its core slumbered a forbidden power: the Primordial Hear
 "
 scroll_active = false
 autowrap_mode = 2
-
-[node name="DescriptionButton" parent="." instance=ExtResource("3_bimru")]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -80.0
-offset_top = -65.0
-offset_right = 80.0
-offset_bottom = 0.0
-grow_horizontal = 2
-grow_vertical = 0
-text = "Next"

@@ -1,0 +1,148 @@
+
+🧩 Historia completa de MooRaiders (Versión inicial para el primer lanzamiento)
+
+Prólogo
+-------
+Hace milenios, las Tierras Eternas fueron protegidas por una criatura ancestral conocida como MooMoo, un ser místico que guardaba el equilibrio entre las fuerzas del caos y la armonía. Se decía que su energía era la fuente de vida del mundo, pero también albergaba un poder prohibido, encerrado en su núcleo: el Corazón Primigenio.
+
+Con el paso del tiempo, las civilizaciones olvidaron su propósito y comenzaron a adorarlo como un dios dormido. Pero recientemente, algo ha perturbado su reposo...
+
+🛡️ Parte 1: La Defensa del MooMoo
+----------------------------------
+Los jugadores, héroes de distintas regiones, reciben visiones o mensajes de antiguos sabios que les advierten: "El despertar del MooMoo traerá el fin del mundo, a menos que su espíritu pueda ser contenido".
+
+Así, cada jugador acude al santuario donde descansa el MooMoo, dispuesto a defenderlo de hordas de criaturas corrompidas por la energía oscura que rodea al Corazón Primigenio.
+
+- Oleadas 1 a 8: Enemigos menores, cada vez más numerosos.
+- Oleadas 2, 4, 6, 8: Aparición de bosses, enviados por fuerzas misteriosas que quieren apoderarse del MooMoo para liberar su núcleo.
+
+Durante estas rondas, los jugadores piensan que están haciendo lo correcto, que están evitando que el mundo caiga.
+
+🧨 Parte 2: La Revelación
+-------------------------
+Al vencer la oleada 12, cuando todo parece en calma, una escena se activa.
+
+El MooMoo comienza a temblar, su energía oscila. Una voz profunda y distorsionada resuena:
+
+  "Gracias por protegerme... Ahora que he recuperado mi fuerza... no los necesito más."
+
+El MooMoo se alza, ya no como un guardián, sino como un ser colosal y corrompido por su propia energía. Ha despertado no como aliado, sino como el verdadero jefe final, una amenaza creada por el desequilibrio de sus poderes reprimidos.
+
+🐉 Parte 3: Batalla Final - El MooMoo Despierto
+-----------------------------------------------
+El MooMoo ahora posee:
+
+- Nuevas habilidades únicas, basadas en los elementos del juego (fuego, sombra, electricidad, etc.).
+- Ataques en área devastadores.
+- Transiciones de fases: cada cierto porcentaje de vida, el MooMoo cambia de forma o invoca fragmentos de su esencia.
+
+Durante la batalla, los jugadores descubren pistas: fragmentos de memoria, frases confusas, y visiones que insinúan que el MooMoo no actuó por voluntad propia, sino por una fuerza aún mayor que lo manipula desde las sombras.
+
+🌒 Epílogo (tras la victoria o derrota)
+--------------------------------------
+Si los jugadores ganan, el MooMoo colapsa y sus últimas palabras son:
+
+  "He visto más allá del velo... él vendrá... pronto..."
+
+Una grieta dimensional comienza a abrirse en el cielo. Fin.
+
+Si los jugadores pierden, se muestra una cinemática del MooMoo extendiendo su corrupción por el mundo, y se oye la misma frase… pero más distorsionada.
+
+📦 Posibles expansiones futuras
+-------------------------------
+- "El Velo del Vacío": una campaña donde los jugadores exploran qué entidad manipuló al MooMoo.
+- "Los Fragmentos del Corazón": misiones para recuperar partes del Corazón Primigenio antes de que sea usado para abrir el portal.
+- "El Heraldo del Abismo": un nuevo jefe que emergió desde la grieta, más poderoso que el MooMoo mismo.
+
+
+
+----------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------
+
+🎮 Estructura narrativa recomendada para MooRaiders
+🎬 1. Intro breve antes de la selección de héroe
+Escena: Fondo oscuro o visual de las Tierras Eternas (puede ser una imagen fija con partículas o fuego lento).
+
+Texto narrado o subtitulado automáticamente (sin interacción aún, estilo prólogo):
+
+"Las Tierras Eternas tiemblan. La criatura que equilibra el mundo… está despertando.
+Visiones ancestrales hablan de un poder sellado.
+Solo los elegidos podrán contener el despertar del MooMoo.*"
+
+Dura 10–15 segundos, luego pasa a la escena de selección de héroes.
+
+🧙 2. Selección de héroe con lore integrado
+Cuando el jugador pasa el mouse o hace clic sobre un héroe, mostrás una breve descripción narrativa:
+
+🧝 Eldrin, el Errante
+"Guiado por sueños fragmentados del Corazón Primigenio, Eldrin busca evitar que el mundo repita los errores del pasado."
+
+Así, ya le vas metiendo más sentido a la historia con cada héroe.
+
+🗺️ 3. Inicio del mapa (antes de la Oleada 1)
+Podés usar una pantalla de fade-in con un monólogo interno del héroe elegido o una voz misteriosa:
+
+"He llegado al Santuario del MooMoo… pero no estoy solo.
+Algo en esta tierra susurra muerte…"
+
+Alternativamente, puede aparecer un NPC tipo guía espiritual (un Oráculo, por ejemplo) que lanza una advertencia en texto antes de desaparecer.
+
+🧠 4. Durante el gameplay — narrativa mínima y ambiental
+Antes de cada oleada de bosses (oleadas 2, 4, 6, 8):
+
+Mostrá un mensaje como:
+
+"Una fuerza oscura se aproxima… No vienen solos esta vez."
+o
+"Los Heraldos del Núcleo se manifiestan…"
+
+Esto da pistas sin cortar el ritmo del juego.
+
+Mientras jugás, podés usar:
+
+Efectos de sonido de susurros, terremotos lejanos o vibraciones al fondo.
+
+Texto breve en la parte superior de la pantalla como:
+
+"La energía del MooMoo se vuelve inestable..."
+"El Corazón Primigenio late más rápido..."
+
+💀 5. Oleada 12 — Transición a la Revelación
+Una vez ganada la última ronda:
+
+⏸ Pausás el juego automáticamente y mostrás una cinemática breve:
+
+El MooMoo empieza a brillar o sacudirse.
+
+Fondo se oscurece.
+
+Voz grave y distorsionada:
+
+"Gracias por protegerme... Ahora que he recuperado mi fuerza... no los necesito más."
+
+Cambio visual: el MooMoo cambia de sprite o se transforma y aparece con barra de vida gigante.
+Ya comienza el boss final.
+
+🌒 6. Epílogo (tras victoria o derrota)
+Si gana: fade out, aparece el MooMoo muriendo y suelta una frase críptica:
+
+"He visto más allá del velo... él vendrá... pronto..."
+(La cámara muestra el cielo partiéndose)
+
+Si pierde: fade out, mapa corrompido, frase distorsionada.
+
+📦 ¿Cómo implementarlo técnicamente?
+Escenas sugeridas:
+IntroScene – texto automático (opcional, saltable).
+
+HeroSelectionScene – selección con lore breve.
+
+GameScene – mapa y oleadas.
+
+CutsceneFinalBoss.tscn – animación/transición del MooMoo.
+
+EndingScene – resumen + cliffhanger.
+
+Podés usar nodos CanvasLayer + RichTextLabel para los mensajes flotantes y AnimationPlayer para los efectos de transición.

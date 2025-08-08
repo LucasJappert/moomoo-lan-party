@@ -16,6 +16,7 @@ var SCALE_TO = Vector2(0.5, 0.5)
 var final_message = false
 
 func _ready():
+	LanguageManager.translate_ui(self)
 	label_number_model.visible = false
 	_clean_numbers_container()
 	start_now_button.connect("gui_input", func(event: InputEvent): _on_start_now_button_click(event))

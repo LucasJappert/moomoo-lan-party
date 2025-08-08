@@ -12,4 +12,5 @@ static func create_and_add_instance() -> void:
 	_ITEMS[NAME].set_extra_projectiles(2, 0.5)
 	_ITEMS[NAME].add_debuff(CombatStats.DEBUFF_KEY_MELEE_UNITS, CombatStats.EXTRA_PROJECTILES, -2)
 	_ITEMS[NAME].buy_price = 3200
-	_ITEMS[NAME].description = "Increases attack range and fires 2 extra projectiles. \n (Only applies to ranged units)"
+	_ITEMS[NAME].en_description = "Increases attack range and fires 2 extra projectiles. \n (Only applies to ranged units)"
+	_ITEMS[NAME].es_description = "Aumenta el alcance de ataque y lanza 2 proyectiles adicionales.\n(Solo aplica a unidades a distancia)"

@@ -4,9 +4,9 @@ class_name FireEffect
 const FIRE_REGION := Rect2(160, 256, 32, 32)
 const WIDTH_BOX_SPAWN := 16
 
-static func spawn_fire_effect(parent: Node, p_position: Vector2, duration: float = 0) -> GPUParticles2D:
+static func spawn_fire_effect(parent: Node, p_position: Vector2, duration: float = 0, scale_factor: float = 1.0) -> GPUParticles2D:
 	var texture := SpritesHelper.get_texture_from_region(FIRE_REGION)
-	var particles := _create_fire_particles(texture, p_position)
+	var particles := _create_fire_particles(texture, p_position, scale_factor)
 	parent.add_child(particles)
 
 	if duration > 0.0:
@@ -17,9 +17,9 @@ static func spawn_fire_effect(parent: Node, p_position: Vector2, duration: float
 	return particles
 
 
-static func _create_fire_particles(texture: Texture2D, position: Vector2) -> GPUParticles2D:
+static func _create_fire_particles(texture: Texture2D, position: Vector2, scale_factor: float = 1.0) -> GPUParticles2D:
 	var particles := GPUParticles2D.new()
-	particles.position = Vector2(position.x - WIDTH_BOX_SPAWN * 0.5, position.y)
+	particles.position = Vector2(position.x - WIDTH_BOX_SPAWN * 0.5 * scale_factor, position.y)
 	particles.texture = texture
 	particles.amount = 50
 	particles.lifetime = 0.8
@@ -34,11 +34,11 @@ static func _create_fire_particles(texture: Texture2D, position: Vector2) -> GPU
 	# material.linear_accel = Vector2(-120.0, 0.0)
 	material.angle = Vector2(0.0, 0.0)
 	material.gravity = Vector3(0, 0, 0)
-	material.scale = Vector2(0.4, 0.4)
+	material.scale = Vector2(0.4, 0.4) * scale_factor
 	material.direction = Vector3(1, 0, 1)
 	material.spread = 20.0
 	material.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
-	material.emission_box_extents = Vector3(2, WIDTH_BOX_SPAWN * 0.25, 0)
+	material.emission_box_extents = Vector3(2, WIDTH_BOX_SPAWN * 0.25 * scale_factor, 0)
 	material.scale_curve = _generate_scale_curve_texture()
 	material.color_ramp = _generate_alpha_only_ramp()
 	particles.process_material = material

@@ -6,9 +6,13 @@ const HERO_BOX_SCENE := preload("res://scenes/GUI/hero_picker/hero_box.tscn")
 const INITIAL_SCENE := preload("res://scenes/initial_scene.tscn")
 
 const TIMER_TIME := 5
-@onready var _logo: TextureRect = %TextureRectLogo
-@onready var _logo1: Sprite2D = %Sprite2D
+@onready var _logo: Sprite2D = %Sprite2D
 @onready var _particles_container: Node2D = %ParticlesContainer
+@onready var _text_typer_scene: TextTyperScene = %TextTyperScene
+@onready var _spanish_button: MyCheckScene = %SpanishButton
+@onready var _english_button: MyCheckScene = %EnglishButton
+@onready var _lang_ok_button: MyButton = %LangOkButton
+@onready var _lang_picker_panel: Panel = %LangPickerPanel
 # @onready var _grid_container: NinePatchRect = %GridContainer
 
 
@@ -19,11 +23,13 @@ func _ready():
 	timer.wait_time = TIMER_TIME
 	timer.one_shot = false
 	timer.start()
-	# HeroPickerScene.load_scene()
-	_animate_logo()
 
-	# Primer spawn inmediato sin delay
-	_spawn_particles_immediately()
+	_spawn_particles_immediately() # Primer spawn inmediato sin delay
+
+	_spanish_button.on_pressed = _on_spanish_button_pressed
+	_english_button.on_pressed = _on_english_button_pressed
+	_lang_ok_button.on_pressed = _start_scene
+
 
 func _spawn_particles_immediately() -> void:
 	var screen := get_viewport().get_visible_rect().size
@@ -45,10 +51,26 @@ static func load_scene() -> void:
 	var scene = INITIAL_SCENE.instantiate()
 	GameManager.main_scene.load_scene(scene)
 
+func _start_scene() -> void:
+	if not LanguageManager.initialized(): return
+
+	# Hacemos aparecer el logo y luego la animacion tanto del logo como del texto de la historia
+	var _appear_tween = create_tween()
+	_appear_tween.tween_property(_lang_picker_panel, "modulate:a", 0, 1)
+	_appear_tween.tween_callback(func():
+		_lang_picker_panel.visible = false
+		_animate_logo()
+		_text_typer_scene.show_me()
+	)
+
+	# Creamos el efecto de fuego en el fondo de la pantalla
+	# var screen_size = get_viewport().get_visible_rect().size
+	# for x in range(0, screen_size.x, 20):
+	# 	FireEffect.spawn_fire_effect(_particles_container, Vector2(x, screen_size.y), 0, 2)
 
 func _animate_logo() -> void:
 	# Guarda la posición original del logo
-	var original_position = _logo1.position
+	var original_position = _logo.position
 	
 	# Crea un nuevo Tween
 	var _tween = create_tween()
@@ -57,6 +79,14 @@ func _animate_logo() -> void:
 	_tween.set_ease(Tween.EASE_IN_OUT) # Para aceleración/desaceleración suave
 	
 	# Animación hacia abajo (20 píxeles)
-	_tween.tween_property(_logo1, "position:y", original_position.y + 20, 3)
+	_tween.tween_property(_logo, "position:y", original_position.y + 20, 3)
 	# Animación de regreso a la posición original
-	_tween.tween_property(_logo1, "position:y", original_position.y, 3)
+	_tween.tween_property(_logo, "position:y", original_position.y, 3)
+
+func _on_spanish_button_pressed():
+	LanguageManager.set_spanish()
+	_english_button.set_checked(false)
+
+func _on_english_button_pressed():
+	LanguageManager.set_english()
+	_spanish_button.set_checked(false)

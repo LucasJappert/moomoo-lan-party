@@ -79,7 +79,7 @@ offset_bottom = 93.0
 theme_override_colors/font_color = Color(0.623529, 0.627451, 0.133333, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 60
-text = "VICTORY"
+text = "YOU WIN"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -98,11 +98,6 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.605274, 0.605274, 0.605274, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 29
-text = "⏱ Time:
-⚔️ Enemies:
-💰 Gold Earned:
-⚡ Hero:	
-🌊 Wave Reached:"
 vertical_alignment = 1
 
 [node name="RetryButton" parent="MainContainer/GridContainer" instance=ExtResource("3_n4w7i")]

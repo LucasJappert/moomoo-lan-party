@@ -3,7 +3,7 @@ extends Control
 @onready var nine_patch_rect = %NinePatchRect
 @onready var mouse_message_label = %MouseMessageLabel
 
-const DESCRIPTION = "
+const ENGLISH_DESCRIPTION = "
 	[b]⚡ Basic Controls[/b]
 	• [b]Move and Attack:[/b] Right-click to move your hero — clicking on an enemy will also trigger an attack.
 	• [b]Use Skills:[/b] Click on a skill to use it, then click on the target to select it. Alternatively, you can use the hotkey associated with the skill.  
@@ -26,13 +26,42 @@ const DESCRIPTION = "
 
 	[i]Let us know if you have any questions or suggestions — and most importantly, have fun defending the statue![/i] ⚔️
 "
+const SPANISH_DESCRIPTION = "
+	[b]⚡ Controles Básicos[/b]
+	• [b]Mover y Atacar:[/b] Haz clic derecho para mover a tu héroe — si haces clic sobre un enemigo, también lo atacarás.
+	• [b]Usar Habilidades:[/b] Haz clic sobre una habilidad para activarla y luego clic en el objetivo. También puedes usar la tecla rápida asignada a la habilidad.  
+	• [b]Centrar Cámara:[/b] Presiona [i]Espacio[/i] para centrar la cámara en tu héroe.  
+	• [b]Zoom:[/b] Usa la [i]rueda del mouse[/i] para acercar o alejar la vista.  
+	• [b]Inspeccionar Unidades:[/b] Haz clic en cualquier unidad para ver sus estadísticas. Presiona [i]Espacio[/i] nuevamente para volver rápidamente a tu héroe.  
+	• [b]Pausar/Reanudar y Opciones:[/b] Presiona [i]Escape[/i] para pausar o reanudar el juego en cualquier momento. Mientras está pausado, también puedes abrir el menú de [b]Opciones[/b].
+
+	[b]⚡ Habilidades y Subida de Nivel[/b]
+	• Al comenzar, puedes aprender [b]una de las cuatro habilidades[/b] que aparecen en la esquina inferior derecha.  
+	• Cada vez que subas de nivel, puedes [b]aprender o mejorar[/b] una habilidad de tu elección.  
+	• La [b]habilidad especial[/b] (la última a la derecha) se desbloquea al alcanzar el [b]Nivel 6[/b].
+
+	[b]⚡ Objetos[/b]
+	• Puedes comprar objetos abriendo la [b]Tienda[/b] y haciendo clic derecho sobre el objeto que deseas adquirir.
+	• Usa las teclas del [b]1 al 6[/b] para activar objetos desde tu inventario, ubicado también en la esquina inferior derecha.
+
+	[b]⚡ Estilo de Juego[/b]
+	La jugabilidad está inspirada en juegos como [i]Dota[/i] o [i]League of Legends[/i], con acción en tiempo real, selección de habilidades y posicionamiento estratégico.
+
+	[i]¡Contanos si tenés preguntas o sugerencias — y lo más importante, divertite defendiendo la estatua![/i] ⚔️
+"
+const EN_TITLE = "📖 How to Play MooRaiders - Quick Tutorial"
+const ES_TITLE = "📖 Como jugar MooRaiders - Breve Tutorial"
 
 func _ready():
 	nine_patch_rect.connect("mouse_entered", func(): _on_mouse_entered())
 	nine_patch_rect.connect("mouse_exited", func(): _on_mouse_exited())
 
-func _on_mouse_entered():
-	MyTooltip.show_tooltip("📖 How to Play MooRaiders – Quick Tutorial", DESCRIPTION, 36)
+func _on_mouse_entered() -> void:
+	if LanguageManager.is_english():
+		return MyTooltip.show_tooltip(EN_TITLE, ENGLISH_DESCRIPTION, 36)
+
+	return MyTooltip.show_tooltip(ES_TITLE, SPANISH_DESCRIPTION, 36)
+	
 
 func _on_mouse_exited():
 	MyTooltip.hide_tooltip()

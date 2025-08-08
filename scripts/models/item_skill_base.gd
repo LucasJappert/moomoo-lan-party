@@ -19,7 +19,8 @@ var duration_in_seconds: float
 var type: String = SkillType.ACTIVE
 var cooldown: float = 0 # In seconds
 var mana_cost: int = 0
-var description: String = ""
+var en_description: String = ""
+var es_description: String = ""
 var max_stacks: int = 1
 var damage_type: String = DamageType.NONE
 var max_targets: int = 1
@@ -42,45 +43,48 @@ func get_last_used_time() -> float:
 func get_description(include_stats_description: bool = true) -> String:
 	var result = ""
 
-	if description: result += description + "\n"
+	if en_description: result += en_description if LanguageManager.is_english() else es_description + "\n"
 	
 	if include_stats_description and not is_consumable:
 		var stats_description: String = super.get_new_description()
 		if stats_description: result += "\n" + stats_description
 		
-	result += _internal_desrtiption()
+	if include_stats_description: result += _internal_description()
 
 	return result
 
-func _internal_desrtiption() -> String:
+func _internal_description() -> String:
 	var result := ""
+
 	if duration_in_seconds > 0:
-		result += str("- Duration: ", StringHelpers.format_float_compact(duration_in_seconds), "s\n")
+		result += "- " + LanguageManager.translate("Duration") + ": " + StringHelpers.format_float_compact(duration_in_seconds) + "s\n"
 
 	if area_of_effect_in_tiles > 0:
-		result += str("- Area of effect: ", area_of_effect_in_tiles, " tiles\n")
+		result += "- " + LanguageManager.translate("Area of Effect") + ": " + str(area_of_effect_in_tiles) + " " + LanguageManager.translate("tiles") + "\n"
 
 	if cast_range_in_tiles > 0:
-		result += str("- Cast range: ", cast_range_in_tiles, " tiles\n")
+		result += "- " + LanguageManager.translate("Cast Range") + ": " + str(cast_range_in_tiles) + " " + LanguageManager.translate("tiles") + "\n"
 
 	if mana_cost > 0:
-		result += str("- Mana cost: ", mana_cost, "\n")
+		result += "- " + LanguageManager.translate("Mana Cost") + ": " + str(mana_cost) + "\n"
 
 	if cooldown > 0.0:
-		result += str("- Cooldown: ", StringHelpers.format_float_compact(cooldown), "s\n")
+		result += "- " + LanguageManager.translate("Cooldown") + ": " + StringHelpers.format_float_compact(cooldown) + "s\n"
 
 	if max_targets > 1:
-		result += "- Max targets: " + str(max_targets) + "\n"
+		result += "- " + LanguageManager.translate("Max Targets") + ": " + str(max_targets) + "\n"
 
 	if max_stacks > 1:
-		result += "- Max stacks: " + str(max_stacks) + "\n"
+		result += "- " + LanguageManager.translate("Max Stacks") + ": " + str(max_stacks) + "\n"
 
 	if damage_type != DamageType.NONE:
-		result += "- Damage type: " + str(damage_type) + "\n"
-	
-	if not result.is_empty(): result = "\n" + result
+		result += "- " + LanguageManager.translate("Damage Type") + ": " + str(damage_type) + "\n"
+
+	if not result.is_empty():
+		result = "\n" + result
 
 	return result
+
 
 func can_use(my_owner: Entity) -> bool:
 	if mana_cost > 0:

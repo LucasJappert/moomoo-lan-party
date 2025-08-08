@@ -1,0 +1,142 @@
+🧩 Complete Story of MooRaiders (Initial Version for the First Release)
+
+Prologue
+--------
+Millennia ago, the Eternal Lands were protected by an ancient creature known as MooMoo, a mystical being who maintained the balance between the forces of chaos and harmony. It was said that its energy was the life source of the world, but it also harbored a forbidden power locked within its core: the Primordial Heart.
+
+Over time, civilizations forgot its purpose and began worshiping it as a sleeping god. But recently, something has disturbed its slumber...
+
+🛡️ Part 1: The Defense of the MooMoo
+------------------------------------
+Players, heroes from different regions, receive visions or messages from ancient sages who warn them: "The awakening of the MooMoo will bring the end of the world unless its spirit can be contained."
+
+Thus, each player travels to the sanctuary where the MooMoo rests, determined to defend it from hordes of creatures corrupted by the dark energy surrounding the Primordial Heart.
+
+- Waves 1 to 8: Minor enemies, increasingly numerous.
+- Waves 2, 4, 6, 8: Boss appearances, sent by mysterious forces that seek to take the MooMoo and release its core.
+
+During these rounds, players believe they are doing the right thing, preventing the world from falling.
+
+🧨 Part 2: The Revelation
+-------------------------
+After defeating wave 12, when all seems calm, a scene is triggered.
+
+The MooMoo begins to tremble, its energy flickers. A deep, distorted voice resounds:
+
+  "Thank you for protecting me... Now that I've regained my strength... I don't need you anymore."
+
+The MooMoo rises—not as a guardian, but as a colossal being corrupted by its own energy. It has awakened not as an ally, but as the true final boss, a threat born from the imbalance of its repressed powers.
+
+🐉 Part 3: Final Battle – The Awakened MooMoo
+---------------------------------------------
+The MooMoo now possesses:
+
+- Unique new abilities, based on the game's elements (fire, shadow, electricity, etc.).
+- Devastating area attacks.
+- Phase transitions: at certain health percentages, MooMoo changes form or summons fragments of its essence.
+
+During the battle, players uncover clues: memory fragments, cryptic phrases, and visions hinting that the MooMoo did not act of its own will, but under the influence of a greater force manipulating it from the shadows.
+
+🌒 Epilogue (after victory or defeat)
+------------------------------------
+If players win, the MooMoo collapses and its last words are:
+
+  "I have seen beyond the veil... he is coming... soon..."
+
+A dimensional rift begins to open in the sky. The end.
+
+If the players lose, a cutscene shows MooMoo spreading its corruption across the world, and the same phrase is heard... but more distorted.
+
+📦 Possible Future Expansions
+-----------------------------
+- "The Veil of the Void": a campaign where players explore which entity manipulated the MooMoo.
+- "The Heart's Fragments": missions to recover pieces of the Primordial Heart before they are used to open the portal.
+- "The Abyss Herald": a new boss that emerged from the rift, more powerful than the MooMoo itself.
+
+----------------------------------------------------------------------------------------------------------------------------
+
+🎮 Recommended Narrative Structure for MooRaiders
+🎬 1. Short Intro Before Hero Selection
+Scene: Dark background or visual of the Eternal Lands (could be a static image with particles or slow fire).
+
+Narrated or subtitled text automatically shown (no interaction yet, prologue style):
+
+"The Eternal Lands tremble. The creature that balances the world... is awakening.
+Ancient visions speak of a sealed power.
+Only the chosen ones can contain the MooMoo's awakening."
+
+Lasts 10–15 seconds, then transitions to the hero selection scene.
+
+🧙 2. Hero Selection with Integrated Lore
+When the player hovers or clicks on a hero, show a brief narrative description:
+
+🧝 Eldrin, the Wanderer
+"Guided by fragmented dreams of the Primordial Heart, Eldrin seeks to prevent the world from repeating the mistakes of the past."
+
+This adds more depth to the story with each hero.
+
+🗺️ 3. Map Start (Before Wave 1)
+Use a fade-in screen with internal monologue of the selected hero or a mysterious voice:
+
+"I've arrived at the MooMoo's Sanctuary... but I am not alone.
+Something in this land whispers death..."
+
+Alternatively, a spiritual guide-type NPC (an Oracle, for example) may appear and give a warning in text before disappearing.
+
+🧠 4. During Gameplay – Minimal and Environmental Narrative
+Before each boss wave (waves 2, 4, 6, 8):
+
+Show a message like:
+
+"A dark force approaches... They’re not alone this time."
+or
+"The Heralds of the Core manifest..."
+
+This provides hints without breaking game flow.
+
+While playing, you can use:
+
+Sound effects of whispers, distant earthquakes, or background rumblings.
+
+Short text at the top of the screen like:
+
+"The MooMoo’s energy becomes unstable..."
+"The Primordial Heart beats faster..."
+
+💀 5. Wave 12 – Transition to the Revelation
+Once the final wave is won:
+
+⏸ Automatically pause the game and show a short cutscene:
+
+MooMoo begins to glow or tremble.
+
+Background darkens.
+
+Deep, distorted voice:
+
+"Thank you for protecting me... Now that I've regained my strength... I don't need you anymore."
+
+Visual change: MooMoo changes sprite or transforms and appears with a giant health bar.
+The final boss fight begins.
+
+🌒 6. Epilogue (After Victory or Defeat)
+If victorious: fade out, MooMoo collapses and utters a cryptic phrase:
+
+"I have seen beyond the veil... he is coming... soon..."
+(Camera shows the sky breaking apart)
+
+If defeated: fade out, corrupted map, distorted phrase.
+
+📦 Technical Implementation Suggestions
+Suggested Scenes:
+IntroScene – automatic text (optional, skippable).
+
+HeroSelectionScene – selection with brief lore.
+
+GameScene – map and waves.
+
+CutsceneFinalBoss.tscn – MooMoo transformation/cinematic.
+
+EndingScene – summary + cliffhanger.
+
+Use CanvasLayer + RichTextLabel for floating messages and AnimationPlayer for transitions.

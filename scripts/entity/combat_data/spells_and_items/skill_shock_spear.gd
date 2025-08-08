@@ -24,7 +24,8 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
 		SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]
 		SKILLS[NAME].item_skill_base[i].cooldown = aux_array[2][i]
-		SKILLS[NAME].item_skill_base[i].description = "Calls down a lightning strike on a target enemy, dealing " + StringHelpers.format_float(aux_array[0][i]) + " magic damage and stunning them and nearby enemies for " + StringHelpers.format_float(aux_array[3][i]) + " seconds."
+		SKILLS[NAME].item_skill_base[i].en_description = "Calls down a lightning strike on a target enemy, dealing " + StringHelpers.format_float(aux_array[0][i]) + " magic damage and stunning them and nearby enemies for " + StringHelpers.format_float(aux_array[3][i]) + " seconds."
+		SKILLS[NAME].item_skill_base[i].es_description = "Invoca un rayo sobre un enemigo objetivo, infligiendo " + StringHelpers.format_float(aux_array[0][i]) + " de daño mágico y aturdiéndolo a él y a los enemigos cercanos durante " + StringHelpers.format_float(aux_array[3][i]) + " segundos."
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return false

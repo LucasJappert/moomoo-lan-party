@@ -190,12 +190,12 @@ func _lock_slot() -> void:
 
 func verify_tooltip() -> void:
 	if not skill: return
-	if not KeyboardController.ALT_PRESSED and not _is_hero_picker_scene(): return
 
 	var is_hovering := get_global_rect().has_point(get_global_mouse_position())
 	if not is_hovering: return
 
-	MyTooltip.show_tooltip(skill.item_skill_base[0].my_name, skill.get_description(false), 20, false)
+	var desc := skill.get_description(true) if KeyboardController.ALT_PRESSED else skill.get_description(false)
+	MyTooltip.show_tooltip(skill.item_skill_base[0].my_name, desc, 20, false)
 
 
 func _gui_input(event) -> void:

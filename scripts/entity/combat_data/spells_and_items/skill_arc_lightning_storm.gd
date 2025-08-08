@@ -79,7 +79,8 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
 		SKILLS[NAME].item_skill_base[i].mana_cost = int_array1[i]
 		SKILLS[NAME].item_skill_base[i].cooldown = aux_array[1][i]
-		SKILLS[NAME].item_skill_base[i].description = "Unleashes a chain lightning that starts from a target and arcs to up to " + str(aux_array[0][i]) + " nearby enemies, dealing " + StringHelpers.format_float(int_array[i]) + " magic damage and stunning each for " + StringHelpers.format_float(float_array1[i]) + " seconds."
+		SKILLS[NAME].item_skill_base[i].en_description = "Unleashes a chain lightning that starts from a target and arcs to up to " + str(aux_array[0][i]) + " nearby enemies, dealing " + StringHelpers.format_float(int_array[i]) + " magic damage and stunning each for " + StringHelpers.format_float(float_array1[i]) + " seconds."
+		SKILLS[NAME].item_skill_base[i].es_description = "Desata una cadena de rayos que parte de un objetivo y salta hasta " + str(aux_array[0][i]) + " enemigos cercanos, infligiendo " + StringHelpers.format_float(int_array[i]) + " de daño mágico y aturdiendo a cada uno durante " + StringHelpers.format_float(float_array1[i]) + " segundos."
 
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:

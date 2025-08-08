@@ -14,4 +14,5 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
 		SKILLS[NAME].item_skill_base[i].set_cleave_percent(aux_array[0][i])
 		SKILLS[NAME].item_skill_base[i].set_cleave_range(aux_array[1][i])
-		SKILLS[NAME].item_skill_base[i].description = "Deals " + StringHelpers.format_percent(aux_array[0][i]) + " of the damage as a cleave effect to enemies behind the target for " + str(aux_array[1][i]) + " tiles."
+		SKILLS[NAME].item_skill_base[i].en_description = "Deals " + StringHelpers.format_percent(aux_array[0][i]) + " of the damage as a cleave effect to enemies behind the target for " + str(aux_array[1][i]) + " tiles."
+		SKILLS[NAME].item_skill_base[i].es_description = "Inflige un " + StringHelpers.format_percent(aux_array[0][i]) + " del daño como efecto de tajo a los enemigos que estén detrás del objetivo en un área de " + str(aux_array[1][i]) + " tiles."

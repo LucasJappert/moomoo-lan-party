@@ -26,7 +26,8 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].mana_cost = int_array[i]
 		SKILLS[NAME].item_skill_base[i].cooldown = float_array[i]
 		SKILLS[NAME].item_skill_base[i].duration_in_seconds = float_array1[i]
-		SKILLS[NAME].item_skill_base[i].description = "Grants complete immunity to all damage for " + StringHelpers.format_float(float_array1[i]) + " seconds."
+		SKILLS[NAME].item_skill_base[i].en_description = "Grants complete immunity to all damage for " + StringHelpers.format_float(float_array1[i]) + " seconds."
+		SKILLS[NAME].item_skill_base[i].es_description = "Otorga inmunidad total a todo tipo de daño durante " + StringHelpers.format_float(float_array1[i]) + " segundos."
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return false

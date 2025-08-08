@@ -12,7 +12,7 @@ static func try_to_init_from_name(_name: String, player: Player, stats: CombatSt
 	stats.set_evasion(0.1)
 	stats.set_agility(50)
 	stats.set_strength(40)
-	stats.set_intelligence(35)
+	stats.set_intelligence(30)
 	player._skills = [
 		# SkillBase.get_skill(SkillTrueStrike.NAME),
 		SkillBase.get_skill(SkillLifesteal.NAME),

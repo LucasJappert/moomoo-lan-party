@@ -53,7 +53,9 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]
 		SKILLS[NAME].item_skill_base[i].cooldown = aux_array[2][i]
 		SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[3][i]
-		SKILLS[NAME].item_skill_base[i].description = "Silences the target for " + StringHelpers.format_float(aux_array[3][i]) + " seconds, dealing " + StringHelpers.format_float(aux_array[0][i]) + " magic damage every second."
+		SKILLS[NAME].item_skill_base[i].en_description = "Silences the target for " + StringHelpers.format_float(aux_array[3][i]) + " seconds, dealing " + StringHelpers.format_float(aux_array[0][i]) + " magic damage every second."
+		SKILLS[NAME].item_skill_base[i].es_description = "Silencia al objetivo durante " + StringHelpers.format_float(aux_array[3][i]) + " segundos, causando " + StringHelpers.format_float(aux_array[0][i]) + " de daño mágico por segundo."
+
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return false

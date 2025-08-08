@@ -35,8 +35,8 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].float_dict["hits_to_trigger"] = aux_array[0][i]
 		SKILLS[NAME].item_skill_base[i].float_dict["targets"] = aux_array[1][i]
 		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
-
-		SKILLS[NAME].item_skill_base[i].description = "Every " + str(aux_array[0][i]) + " attacks executes a multiple attack to " + str(aux_array[1][i]) + " extra enemies"
+		SKILLS[NAME].item_skill_base[i].en_description = "Every " + str(aux_array[0][i]) + " attacks executes a multiple attack to " + str(aux_array[1][i]) + " extra enemies"
+		SKILLS[NAME].item_skill_base[i].es_description = "Cada " + str(aux_array[0][i]) + " ataques desata un golpe múltiple que alcanza a " + str(aux_array[1][i]) + " enemigos adicionales."
 
 static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
 	if _skill.get_name() != NAME: return false

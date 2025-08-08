@@ -14,9 +14,10 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].create_effect = true
 		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.PURE
 		SKILLS[NAME].item_skill_base[i].float_dict["percent_reflected"] = aux_array[0][i]
-		SKILLS[NAME].item_skill_base[i].description = "Reflects " + StringHelpers.format_percent(aux_array[0][i]) + " of damage back to the attacker."
+		SKILLS[NAME].item_skill_base[i].en_description = "Reflects " + StringHelpers.format_percent(aux_array[0][i]) + " of damage back to the attacker."
+		SKILLS[NAME].item_skill_base[i].es_description = "Devuelve el " + StringHelpers.format_percent(aux_array[0][i]) + " del daño recibido al agresor."
 
-		
+
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
 	if _di.was_reflected or _di.was_a_cleave_damage or _di.temporal_damage: return false
 	

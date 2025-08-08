@@ -12,4 +12,5 @@ static func create_and_add_instance() -> void:
 	_ITEMS[NAME].set_strength(40)
 	_ITEMS[NAME].set_agility(40)
 	_ITEMS[NAME].buy_price = 2000
-	_ITEMS[NAME].description = "Grants 40 points of intelligence, strength and agility."
+	_ITEMS[NAME].en_description = "Grants 40 points of intelligence, strength and agility."
+	_ITEMS[NAME].es_description = "Otorga 40 puntos de inteligencia, fuerza y agilidad."

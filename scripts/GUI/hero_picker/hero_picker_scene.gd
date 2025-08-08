@@ -17,6 +17,8 @@ var selected_hero: Player
 static var hero_picked_type: String
 
 func _ready() -> void:
+	LanguageManager.translate_ui(self)
+	
 	EventBusHeroPicker.connect_to_hero_selected(func(player: Player, p_start_game: bool):
 		_on_hero_selected(player)
 		if p_start_game: _start_game()

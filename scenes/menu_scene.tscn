@@ -20,10 +20,11 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -80.0
-offset_right = 80.0
+offset_left = -100.0
+offset_right = 100.0
 grow_horizontal = 2
 text = "MENU"
+force_width = 140
 
 [node name="MainContainer" type="Control" parent="."]
 unique_name_in_owner = true

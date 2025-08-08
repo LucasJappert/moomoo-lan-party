@@ -2,7 +2,7 @@ class_name Player
 
 extends Entity
 
-const INITIAL_GOLD: int = 500 # 00
+const INITIAL_GOLD: int = 50000
 const PLAYER_CELL_SPAWN: Vector2i = Vector2i(20, 12)
 static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 const MAX_LEVEL: int = 30
@@ -19,7 +19,10 @@ var current_gold_string: String = ""
 	set(_value):
 		skill_points_to_assign = _value
 		EventBus.emit_skill_points_to_assign_changed(self)
-const EXTRA_ATTRIBUTES_STATS_BY_LEVEL = 6
+var EXTRA_INT_BY_LEVEL: int = 0
+var EXTRA_STR_BY_LEVEL: int = 0
+var EXTRA_AGI_BY_LEVEL: int = 0
+const ATTR_PERC_EXTRA_BY_LEVEL = 0.1
 
 func set_player(data: Dictionary) -> void:
 	player_id = data["player_id"]
@@ -27,6 +30,9 @@ func set_player(data: Dictionary) -> void:
 	skill_points_to_assign = 1
 	current_gold = INITIAL_GOLD
 	HeroBase.initialize_from_name(extra_info.key_type, self)
+	EXTRA_INT_BY_LEVEL = round(cache_total_stats.get_intelligence() * ATTR_PERC_EXTRA_BY_LEVEL)
+	EXTRA_STR_BY_LEVEL = round(cache_total_stats.get_strength() * ATTR_PERC_EXTRA_BY_LEVEL)
+	EXTRA_AGI_BY_LEVEL = round(cache_total_stats.get_agility() * ATTR_PERC_EXTRA_BY_LEVEL)
 
 func get_client_inputs(): return %ClientInputs
 
@@ -73,9 +79,9 @@ func level_up() -> void:
 	var current_percent_hp := current_hp / float(get_full_health())
 
 	var stats_to_add = CombatStats.new()
-	stats_to_add.set_strength(EXTRA_ATTRIBUTES_STATS_BY_LEVEL)
-	stats_to_add.set_agility(EXTRA_ATTRIBUTES_STATS_BY_LEVEL)
-	stats_to_add.set_intelligence(EXTRA_ATTRIBUTES_STATS_BY_LEVEL)
+	stats_to_add.set_strength(EXTRA_STR_BY_LEVEL)
+	stats_to_add.set_agility(EXTRA_AGI_BY_LEVEL)
+	stats_to_add.set_intelligence(EXTRA_INT_BY_LEVEL)
 	combat_stats.accumulate_info(stats_to_add.get_info())
 
 	update_base_stats(combat_stats.get_info())

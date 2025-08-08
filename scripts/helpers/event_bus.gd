@@ -1,5 +1,11 @@
 extends Node
 
+const LANG_CHANGED := "lang_changed"
+signal lang_changed()
+func emit_lang_changed(): emit_signal(LANG_CHANGED)
+func connect_to_lang_changed(p_callback: Callable) -> void:
+	EventBus.connect(LANG_CHANGED, p_callback)
+
 const MY_PLAYER_STATISTICS_CHANGED := "my_player_statistics_changed"
 signal my_player_statistics_changed()
 func emit_my_player_statistics_changed(): emit_signal(MY_PLAYER_STATISTICS_CHANGED)

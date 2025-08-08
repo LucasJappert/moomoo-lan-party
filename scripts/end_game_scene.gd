@@ -10,6 +10,7 @@ const WIN_COLOR: Color = Color(0.5, 1.0, 0.5)
 const LOSE_COLOR: Color = Color(1.0, 0.5, 0.5)
 
 func _ready():
+	LanguageManager.translate_ui(self)
 	visible = false
 	EventBus.connect_to_entity_died(func(_entity_died: Entity, _killed_by: Entity):
 		if _entity_died.is_my_player():

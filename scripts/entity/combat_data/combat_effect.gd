@@ -33,14 +33,15 @@ func process(delta: float) -> void:
 func get_description() -> String:
 	var description = ""
 
-	if _description != "": description += _description + "\n"
+	if _description != "":
+		description += _description + "\n"
 
 	if duration_in_seconds > 0.0:
-		description += str("- Duration: ", StringHelpers.format_float_compact(duration_in_seconds), "s\n")
+		description += str("- ", LanguageManager.translate("Duration") + ": ", StringHelpers.format_float_compact(duration_in_seconds), "s\n")
 
 	description += super.get_new_description()
 
-	if max_stacks > 1: description += str("- Max stacks: ", max_stacks, "\n")
+	if max_stacks > 1: description += str("- ", LanguageManager.translate("Max Stacks"), ": ", max_stacks, "\n")
 
 	return description
 
@@ -109,14 +110,14 @@ static func get_permanent_effect(p_name: String, p_region_rect: Rect2, _max_stac
 static func get_effect_from_skill_base(skill: SkillBase) -> CombatEffect:
 	var learned_skill := skill.learned_skill
 	var result = _get_instance(learned_skill.my_name, learned_skill.duration_in_seconds, skill.permanent_effect, learned_skill.max_stacks, learned_skill.get_info())
-	result.set_description(learned_skill.description)
+	result.set_description(learned_skill.get_description())
 	result.set_region_rect(SkillBase.SKILLS[learned_skill.my_name].region_rect)
 	return result
 
 static func get_effect_from_item_skill_base(skill: ItemSkillBase, rect_region: Rect2) -> CombatEffect:
 	var _is_permanent = skill.duration_in_seconds <= 0
 	var result = _get_instance(skill.my_name, skill.duration_in_seconds, _is_permanent, skill.max_stacks, skill.get_info())
-	result.set_description(skill.description)
+	result.set_description(skill.get_description())
 	result.set_region_rect(rect_region)
 	return result
 	

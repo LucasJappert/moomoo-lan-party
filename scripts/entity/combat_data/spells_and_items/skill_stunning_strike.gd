@@ -13,7 +13,9 @@ static func create_and_add_instance() -> void:
 	for i in AVAILABLE_LEVELS:
 		SKILLS[NAME].item_skill_base[i].set_stun_chance(aux_array[0][i])
 		SKILLS[NAME].item_skill_base[i].set_stun_duration(2)
-		SKILLS[NAME].item_skill_base[i].description = "Has a " + StringHelpers.format_percent(aux_array[0][i]) + " chance to stun the target for 2 seconds."
+		SKILLS[NAME].item_skill_base[i].en_description = "Has a " + StringHelpers.format_percent(aux_array[0][i]) + " chance to stun the target for 2 seconds."
+		SKILLS[NAME].item_skill_base[i].es_description = "Tiene un " + StringHelpers.format_percent(aux_array[0][i]) + " de probabilidad de aturdir al objetivo durante 2 segundos."
+
 	
 static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
 	if _skill.get_name() != NAME: return false

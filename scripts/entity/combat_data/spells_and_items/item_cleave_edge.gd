@@ -14,4 +14,5 @@ static func create_and_add_instance() -> void:
 	_ITEMS[NAME].add_debuff(CombatStats.DEBUFF_KEY_RANGED_UNITS, CombatStats.CLEAVE_PERCENT, -0.2)
 	_ITEMS[NAME].add_debuff(CombatStats.DEBUFF_KEY_RANGED_UNITS, CombatStats.CLEAVE_RANGE, -2)
 	_ITEMS[NAME].buy_price = 1600
-	_ITEMS[NAME].description = "Grants a " + StringHelpers.format_percent(_ITEMS[NAME].get_cleave_percent()) + " extra damage to enemies around " + str(_ITEMS[NAME].get_cleave_range()) + " tiles.\n(Only applies to melee units)"
+	_ITEMS[NAME].en_description = "Grants a " + StringHelpers.format_percent(_ITEMS[NAME].get_cleave_percent()) + " extra damage to enemies around " + str(_ITEMS[NAME].get_cleave_range()) + " tiles.\n(Only applies to melee units)"
+	_ITEMS[NAME].es_description = "Otorga un " + StringHelpers.format_percent(_ITEMS[NAME].get_cleave_percent()) + " de daño adicional a enemigos cercanos en un radio de " + str(_ITEMS[NAME].get_cleave_range()) + " tiles.\n(Solo aplica a unidades cuerpo a cuerpo)"

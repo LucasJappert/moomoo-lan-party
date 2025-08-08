@@ -53,7 +53,9 @@ static func _reset_wave_process() -> void:
 	_current_wave_info = null
 
 static func _get_final_message() -> String:
-	return "Wave " + str(current_wave + 1) + " is coming!\nLet's fight!"
+	if LanguageManager.is_english(): return "Wave " + str(current_wave + 1) + " is coming!\nLet's fight!"
+	return "¡Se aproxima la oleada " + str(current_wave + 1) + "!\n¡Es hora de pelear!"
+
 
 static func _process(_delta: float) -> void:
 	if not GameManager.AM_I_HOST: return

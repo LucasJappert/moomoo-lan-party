@@ -16,9 +16,10 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].type = SkillType.PASSIVE
 		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
 		SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 3
-		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
+		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.PURE
 		SKILLS[NAME].item_skill_base[i].float_dict["percentage_of_life_to_deal"] = aux_array[0][i]
-		SKILLS[NAME].item_skill_base[i].description = "Exlodes the body of the owner, dealing " + StringHelpers.format_percent(aux_array[0][i]) + " of their total life as magic damage to all enemies in the area."
+		SKILLS[NAME].item_skill_base[i].en_description = "Exlodes the body of the owner, dealing " + StringHelpers.format_percent(aux_array[0][i]) + " of their total life as magic damage to all enemies in the area."
+		SKILLS[NAME].item_skill_base[i].es_description = "Hace explotar el cuerpo del portador, infligiendo " + StringHelpers.format_percent(aux_array[0][i]) + " de su vida total como daño mágico a todos los enemigos en el área."
 
 
 static func actions_after_die(_owner: Entity, _killed_by: Entity) -> void:

@@ -23,7 +23,9 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[3][i]
 		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.PHYSICAL
 		SKILLS[NAME].item_skill_base[i].float_dict["precentage_damage_per_second"] = aux_array[0][i]
-		SKILLS[NAME].item_skill_base[i].description = "After each physical attack, inflicts an additional " + StringHelpers.format_percent(aux_array[0][i]) + " of the physical damage inflicted as physical damage per second for " + str(aux_array[3][i]) + " seconds."
+		SKILLS[NAME].item_skill_base[i].en_description = "After each physical attack, inflicts an additional " + StringHelpers.format_percent(aux_array[0][i]) + " of the physical damage inflicted as physical damage per second for " + str(aux_array[3][i]) + " seconds."
+		SKILLS[NAME].item_skill_base[i].es_description = "Después de cada ataque físico, inflige un " + StringHelpers.format_percent(aux_array[0][i]) + " del daño físico causado como daño físico por segundo durante " + str(aux_array[3][i]) + " segundos."
+
 
 func _init(_owner: Entity, _caster: Entity, p_learned_skill: ItemSkillBase) -> void:
 	super._init(p_learned_skill, true)
@@ -62,7 +64,10 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 	if not _target.add_active_skill(SkillInfernalTouch.new(_target, _attacker, infernal_touch)): return false
 
 	var effect := CombatEffect.get_effect_from_item_skill_base(infernal_touch, SKILLS[NAME].region_rect)
-	effect.set_description("Inflicting " + StringHelpers.format_float(infernal_touch.float_dict["damage_per_second"]) + " damage per second for " + str(infernal_touch.duration_in_seconds) + " seconds")
+	var _description := ""
+	if LanguageManager.is_english(): _description = "Inflicting " + StringHelpers.format_float(infernal_touch.float_dict["damage_per_second"]) + " damage per second for " + str(infernal_touch.duration_in_seconds) + " seconds"
+	if not LanguageManager.is_english(): _description = "Infligiendo " + StringHelpers.format_float(infernal_touch.float_dict["damage_per_second"]) + " daño por segundo durante " + str(infernal_touch.duration_in_seconds) + " segundos"
+	effect.set_description(_description)
 	_target.effects_helper.add_effect(effect)
 
 	return true

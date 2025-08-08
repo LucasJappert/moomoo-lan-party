@@ -14,4 +14,5 @@ static func create_and_add_instance() -> void:
 	_ITEMS[NAME].set_strength(10)
 	_ITEMS[NAME].set_intelligence(10)
 	_ITEMS[NAME].buy_price = 1600
-	_ITEMS[NAME].description = "Grants 10 points of strength, agility and intelligence, and " + StringHelpers.format_percent(_ITEMS[NAME].get_evasion()) + " evasion and " + StringHelpers.format_percent(_ITEMS[NAME].get_attack_speed()) + " attack speed."
+	_ITEMS[NAME].en_description = "Grants 10 points of strength, agility and intelligence, and " + StringHelpers.format_percent(_ITEMS[NAME].get_evasion()) + " evasion and " + StringHelpers.format_percent(_ITEMS[NAME].get_attack_speed()) + " attack speed."
+	_ITEMS[NAME].es_description = "Otorga 10 puntos de fuerza, agilidad e inteligencia, y " + StringHelpers.format_percent(_ITEMS[NAME].get_evasion()) + " de evasión y " + StringHelpers.format_percent(_ITEMS[NAME].get_attack_speed()) + " de velocidad de ataque."

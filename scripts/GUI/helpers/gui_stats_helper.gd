@@ -3,19 +3,19 @@ class_name GUIStatsHelper
 static func _ready(gui: GUIScene):
 	gui._str_value.connect("mouse_entered", func():
 		if not GameManager.MY_PLAYER: return
-		MyTooltip.show_tooltip("STRENGTH", CombatStats.STRENGTH_PROPERTIES)
+		MyTooltip.show_tooltip("STRENGTH", CombatStats.STRENGTH_PROPERTIES if LanguageManager.is_english() else CombatStats.ES_STRENGTH_PROPERTIES)
 	)
 	gui._str_value.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
 
 	gui._agi_value.connect("mouse_entered", func():
 		if not GameManager.MY_PLAYER: return
-		MyTooltip.show_tooltip("AGILITY", CombatStats.AGILITY_PROPERTIES)
+		MyTooltip.show_tooltip("AGILITY", CombatStats.AGILITY_PROPERTIES if LanguageManager.is_english() else CombatStats.ES_AGILITY_PROPERTIES)
 	)
 	gui._agi_value.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
 
 	gui._int_value.connect("mouse_entered", func():
 		if not GameManager.MY_PLAYER: return
-		MyTooltip.show_tooltip("INTELLIGENCE", CombatStats.INTELLIGENCE_PROPERTIES)
+		MyTooltip.show_tooltip("INTELLIGENCE", CombatStats.INTELLIGENCE_PROPERTIES if LanguageManager.is_english() else CombatStats.ES_INTELLIGENCE_PROPERTIES)
 	)
 	gui._int_value.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
 

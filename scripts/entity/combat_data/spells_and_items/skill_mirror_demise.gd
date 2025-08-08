@@ -10,7 +10,8 @@ static func create_and_add_instance() -> void:
 	
 	for i in AVAILABLE_LEVELS:
 		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
-		SKILLS[NAME].item_skill_base[i].description = "Upon death, splits into " + str((i + 1) * 2) + " copies with half the original HP."
+		SKILLS[NAME].item_skill_base[i].en_description = "Upon death, splits into " + str((i + 1) * 2) + " copies with half the original HP."
+		SKILLS[NAME].item_skill_base[i].es_description = "Al morir, se divide en " + str((i + 1) * 2) + " copias con la mitad de la vida original."
 
 
 static func actions_after_die(_owner: Entity, _killed_by: Entity) -> void:

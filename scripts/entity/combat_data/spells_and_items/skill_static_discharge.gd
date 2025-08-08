@@ -40,4 +40,5 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 7
 		SKILLS[NAME].item_skill_base[i].float_dict["percent_damage_from_max_hp"] = 0.05
 		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
-		SKILLS[NAME].item_skill_base[i].description = "Each time the hero casts a skill, nearby enemies are electrified, taking magic damage equal to " + StringHelpers.format_percent(aux_array[0][i]) + " of their max HP."
+		SKILLS[NAME].item_skill_base[i].en_description = "Each time the hero casts a skill, nearby enemies are electrified, taking magic damage equal to " + StringHelpers.format_percent(aux_array[0][i]) + " of their max HP."
+		SKILLS[NAME].item_skill_base[i].es_description = "Cada vez que el héroe lanza una habilidad, los enemigos cercanos son electrificados, recibiendo daño mágico equivalente al " + StringHelpers.format_percent(aux_array[0][i]) + " de su vida máxima."

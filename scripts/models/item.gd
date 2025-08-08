@@ -56,7 +56,8 @@ static func initialize_items() -> void:
 	_item.cooldown = 0.5
 	_item.buy_price = 10
 	_item.is_consumable = true
-	_item.description = "Restores " + StringHelpers.format_float_compact(500) + " HP."
+	_item.en_description = "Restores " + StringHelpers.format_float_compact(500) + " HP."
+	_item.es_description = "Restaura " + StringHelpers.format_float_compact(500) + " HP."
 	# endregion
 	
 	# region ITEM HEALTH_POTION_II
@@ -68,7 +69,8 @@ static func initialize_items() -> void:
 	_item.cooldown = 0.5
 	_item.buy_price = 20
 	_item.is_consumable = true
-	_item.description = "Restores " + StringHelpers.format_float_compact(2000) + " HP."
+	_item.en_description = "Restores " + StringHelpers.format_float_compact(2000) + " HP."
+	_item.es_description = "Restaura " + StringHelpers.format_float_compact(2000) + " HP."
 	# endregion
 
 	# region ITEM HEALTH_POTION_III
@@ -80,7 +82,8 @@ static func initialize_items() -> void:
 	_item.cooldown = 0.5
 	_item.buy_price = 50
 	_item.is_consumable = true
-	_item.description = "Restores " + StringHelpers.format_float_compact(10000) + " HP."
+	_item.en_description = "Restores " + StringHelpers.format_float_compact(10000) + " HP."
+	_item.es_description = "Restaura " + StringHelpers.format_float_compact(10000) + " HP."
 	# endregion
 
 	
@@ -93,7 +96,8 @@ static func initialize_items() -> void:
 	_item.cooldown = 0.5
 	_item.buy_price = 10
 	_item.is_consumable = true
-	_item.description = "Restores " + StringHelpers.format_float_compact(500) + " mana."
+	_item.en_description = "Restores " + StringHelpers.format_float_compact(500) + " mana."
+	_item.es_description = "Restaura " + StringHelpers.format_float_compact(500) + " mana."
 	# endregion
 
 	# region ITEM MANA_POTION_II
@@ -105,7 +109,8 @@ static func initialize_items() -> void:
 	_item.cooldown = 0.5
 	_item.buy_price = 20
 	_item.is_consumable = true
-	_item.description = "Restores " + StringHelpers.format_float_compact(2000) + " mana."
+	_item.en_description = "Restores " + StringHelpers.format_float_compact(2000) + " mana."
+	_item.es_description = "Restaura " + StringHelpers.format_float_compact(2000) + " mana."
 	# endregion
 
 	# region ITEM MANA_POTION_III
@@ -117,7 +122,8 @@ static func initialize_items() -> void:
 	_item.cooldown = 0.5
 	_item.buy_price = 50
 	_item.is_consumable = true
-	_item.description = "Restores " + StringHelpers.format_float_compact(10000) + " mana."
+	_item.en_description = "Restores " + StringHelpers.format_float_compact(10000) + " mana."
+	_item.es_description = "Restaura " + StringHelpers.format_float_compact(10000) + " mana."
 	# endregion
 
 func use_item(_slot_number: int, _my_owner: Entity, _target: Entity = null) -> void:
@@ -127,11 +133,13 @@ func use_item(_slot_number: int, _my_owner: Entity, _target: Entity = null) -> v
 	if health_names.has(my_name):
 		if not _my_owner.current_hp < _my_owner.get_full_health(): return
 		_my_owner.update_current_hp(get_hp())
+		if _my_owner.is_my_player(): SoundsHelper.play_random_drink()
 
 	var mana_names = [Item.Names.MANA_POTION_I, Item.Names.MANA_POTION_II, Item.Names.MANA_POTION_III]
 	if mana_names.has(my_name):
 		if not _my_owner.current_mana < _my_owner.get_full_mana(): return
 		_my_owner.update_current_mana(get_mana())
+		if _my_owner.is_my_player(): SoundsHelper.play_random_drink()
 
 
 	_aux_after_use(_slot_number, _my_owner, _target)

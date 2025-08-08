@@ -11,4 +11,5 @@ static func create_and_add_instance() -> void:
 	_ITEMS[NAME].set_physical_defense_percent(0.2)
 	_ITEMS[NAME].set_evasion(0.2)
 	_ITEMS[NAME].buy_price = 1900
-	_ITEMS[NAME].description = "Grants 20% magic and physical defense, and 20% evasion."
+	_ITEMS[NAME].en_description = "Grants 20% magic and physical defense, and 20% evasion."
+	_ITEMS[NAME].es_description = "Otorga 20% de defensa mágica y física, y 20% de evasión."

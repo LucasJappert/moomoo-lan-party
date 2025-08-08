@@ -17,7 +17,8 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].set_freeze_duration(4)
 		SKILLS[NAME].item_skill_base[i].duration_in_seconds = 4
 		SKILLS[NAME].item_skill_base[i].max_stacks = aux_array[0][i]
-		SKILLS[NAME].item_skill_base[i].description = "The attacker's icy touch partially freezes the target, reducing their movement and attack speed by " + StringHelpers.format_percent(aux_array[1][0]) + " for " + str(SKILLS[NAME].item_skill_base[i].duration_in_seconds) + " seconds."
+		SKILLS[NAME].item_skill_base[i].en_description = "The attacker's icy touch partially freezes the target, reducing their movement and attack speed by " + StringHelpers.format_percent(aux_array[1][0]) + " for " + str(SKILLS[NAME].item_skill_base[i].duration_in_seconds) + " seconds."
+		SKILLS[NAME].item_skill_base[i].es_description = "El toque helado del atacante congela parcialmente al objetivo, reduciendo su velocidad de movimiento y de ataque en un " + StringHelpers.format_percent(aux_array[1][0]) + " durante " + str(SKILLS[NAME].item_skill_base[i].duration_in_seconds) + " segundos."
 
 		
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:

@@ -45,7 +45,7 @@ const TWEEN_DURATION := 0.2
 func close_shop() -> bool:
 	if not _items_visible: return false
 	_items_visible = false
-	_shop_button.text = "Shop"
+	_shop_button.text = LanguageManager.translate("Shop")
 	
 	var custom_tween := MyCustomTween.new(_main_container_items)
 	custom_tween.tween_property(_main_container_items, "position:x", ORIGINAL_WIDTH, TWEEN_DURATION)
@@ -54,7 +54,7 @@ func close_shop() -> bool:
 	return true
 func open_shop():
 	_items_visible = true
-	_shop_button.text = "Hide"
+	_shop_button.text = LanguageManager.translate("Hide")
 	
 	var custom_tween := MyCustomTween.new(_main_container_items)
 	custom_tween.tween_property(_main_container_items, "position:x", 0, TWEEN_DURATION)

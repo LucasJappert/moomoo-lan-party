@@ -13,7 +13,8 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].apply_to_enemy = true
 		SKILLS[NAME].item_skill_base[i].float_dict["perc_attack_speed_per_stack"] = aux_array[0][i]
 		SKILLS[NAME].item_skill_base[i].float_dict["perc_attack_power_per_stack"] = aux_array[0][i]
-		SKILLS[NAME].item_skill_base[i].description = "Gives " + StringHelpers.format_percent(aux_array[0][i]) + " extra physical attack power and attack speed per each 10% of lost hp."
+		SKILLS[NAME].item_skill_base[i].en_description = "Gives " + StringHelpers.format_percent(aux_array[0][i]) + " extra physical attack power and attack speed per each 10% of lost hp."
+		SKILLS[NAME].item_skill_base[i].es_description = "Otorga un " + StringHelpers.format_percent(aux_array[0][i]) + " adicional de poder de ataque físico y velocidad de ataque por cada 10% de vida perdida."
 
 static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
 	if _skill.get_name() != NAME: return false

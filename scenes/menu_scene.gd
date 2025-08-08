@@ -11,6 +11,7 @@ const VISIBLE_POSITION := Vector2(0, 216)
 const CHAIN_VOLUME := -5
 
 func _ready():
+	LanguageManager.translate_ui(self)
 	_menu_button.on_pressed = func(): MainScene.set_paused(true, true, true)
 	_main_container.position = HIDDEN_POSITION
 	EventBus.connect_to_paused(func(_paused: bool, _show_menu: bool):

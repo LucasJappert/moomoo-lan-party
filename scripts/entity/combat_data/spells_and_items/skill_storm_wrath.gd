@@ -51,10 +51,13 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
 		SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[3][i]
 		SKILLS[NAME].item_skill_base[i].cooldown = aux_array[4][i]
-		SKILLS[NAME].item_skill_base[i].description = (
+		SKILLS[NAME].item_skill_base[i].en_description = (
 			"Summons a fierce thunderstorm for "
 			+ str(aux_array[2][i]) + " seconds, automatically casting " + SkillArcLightningStorm.NAME + " on random enemies every "
 			+ str(aux_array[1][i]) + " second(s). Each cast replicates the full effects of the " + SkillArcLightningStorm.NAME + " skill."
+		)
+		SKILLS[NAME].item_skill_base[i].es_description = (
+			"Invoca una feroz tormenta eléctrica durante " + str(aux_array[2][i]) + " segundos, lanzando automáticamente " + SkillArcLightningStorm.NAME + " sobre enemigos aleatorios cada " + str(aux_array[1][i]) + " segundo(s). Cada lanzamiento replica todos los efectos de la habilidad " + SkillArcLightningStorm.NAME + "."
 		)
 
 		

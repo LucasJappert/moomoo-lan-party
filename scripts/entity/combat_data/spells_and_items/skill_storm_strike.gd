@@ -22,8 +22,10 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].max_targets = aux_array[2][i]
 		SKILLS[NAME].item_skill_base[i].float_dict["base_damage"] = aux_array[3][i]
 		SKILLS[NAME].item_skill_base[i].float_dict["extra_damage_by_intelligence"] = aux_array[4][i]
-		SKILLS[NAME].item_skill_base[i].description = "Calls down a bolt of arcane lightning, dealing " + StringHelpers.format_float(aux_array[3][i]) + " base magic damage, plus an additional " + StringHelpers.format_percent(aux_array[4][i]) + " of the caster's total Intelligence to multiple targets."
+		SKILLS[NAME].item_skill_base[i].en_description = "Calls down a bolt of arcane lightning, dealing " + StringHelpers.format_float(aux_array[3][i]) + " base magic damage, plus an additional " + StringHelpers.format_percent(aux_array[4][i]) + " of the caster's total Intelligence to multiple targets."
+		SKILLS[NAME].item_skill_base[i].es_description = "Invoca un rayo de energía arcana que inflige " + StringHelpers.format_float(aux_array[3][i]) + " de daño mágico base, más un " + StringHelpers.format_percent(aux_array[4][i]) + " del total de Inteligencia del lanzador a múltiples objetivos."
 
+		
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return false
 

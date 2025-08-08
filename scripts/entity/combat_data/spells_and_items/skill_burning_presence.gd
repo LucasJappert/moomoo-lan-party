@@ -31,7 +31,9 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]
 		SKILLS[NAME].item_skill_base[i].cooldown = aux_array[2][i]
 		SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[3][i]
-		SKILLS[NAME].item_skill_base[i].description = "Unleashes a blazing aura that ignites the ground around the owner, burning nearby enemies for " + StringHelpers.format_float(aux_array[0][i]) + " magic damage per second over " + str(aux_array[3][i]) + " seconds."
+		SKILLS[NAME].item_skill_base[i].en_description = "Unleashes a blazing aura that ignites the ground around the owner, burning nearby enemies for " + StringHelpers.format_float(aux_array[0][i]) + " magic damage per second over " + str(aux_array[3][i]) + " seconds."
+		SKILLS[NAME].item_skill_base[i].es_description = "Desata un aura llameante que enciende el suelo alrededor del portador, quemando a los enemigos cercanos con " + StringHelpers.format_float(aux_array[0][i]) + " de daño mágico por segundo durante " + str(aux_array[3][i]) + " segundos."
+
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
 	if _learned_skill.my_name != NAME: return false

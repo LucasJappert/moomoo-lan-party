@@ -12,7 +12,9 @@ static func create_and_add_instance() -> void:
 	for i in AVAILABLE_LEVELS:
 		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
 		SKILLS[NAME].item_skill_base[i].float_dict[CombatStats.PERCENT_MANA_TO_BURN] = aux_array[0][i]
-		SKILLS[NAME].item_skill_base[i].description = "Burns mana from the target equal to " + StringHelpers.format_percent(aux_array[0][i]) + " of the physical damage dealt, and deals physical damage equivalent to the mana burned."
+		SKILLS[NAME].item_skill_base[i].en_description = "Burns mana from the target equal to " + StringHelpers.format_percent(aux_array[0][i]) + " of the physical damage dealt, and deals physical damage equivalent to the mana burned."
+		SKILLS[NAME].item_skill_base[i].es_description = "Quema una cantidad de maná del objetivo igual al " + StringHelpers.format_percent(aux_array[0][i]) + " del daño físico infligido, y luego inflige daño físico equivalente al maná quemado."
+
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
 	if _di.was_reflected or _di.was_a_cleave_damage or _di.temporal_damage: return false

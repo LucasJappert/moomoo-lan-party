@@ -2,6 +2,7 @@ extends Node
 
 var main_scene: MainScene
 var game_world: GameWorld
+var music_helper: MusicHelper
 
 var entities: Dictionary[String, Entity] = {}
 var moomoo: Moomoo
@@ -12,7 +13,8 @@ var AM_I_HOST = true
 
 func _ready():
 	# main_scene = get_tree().get_root().get_node("MainScene")
-	pass
+	music_helper = MusicHelper.new()
+	add_child(music_helper)
 
 func _init_projectiles_spawner() -> void:
 	game_world.projectiles_spawner.spawn_function = func(data: Dictionary) -> Node:

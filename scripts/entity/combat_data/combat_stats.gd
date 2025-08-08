@@ -112,6 +112,7 @@ const _HP_BY_STRENGTH = 20; const _HP_REGEN_BY_STRENGTH = 0.1; const _PHYSICAL_A
 static var STRENGTH_PROPERTIES = "Gives " + StringHelpers.format_float(_HP_BY_STRENGTH) + " hp, " + \
 	StringHelpers.format_float(_HP_REGEN_BY_STRENGTH) + " hp regen and " + \
 	StringHelpers.format_float(_PHYSICAL_ATTACK_POWER_BY_STRENGTH) + " physical attack power per point of strength"
+static var ES_STRENGTH_PROPERTIES = "Otorga " + StringHelpers.format_float(_HP_BY_STRENGTH) + " de vida, " + StringHelpers.format_float(_HP_REGEN_BY_STRENGTH) + " de regeneración de vida y " + StringHelpers.format_float(_PHYSICAL_ATTACK_POWER_BY_STRENGTH) + " de poder de ataque físico por cada punto de fuerza."
 static func get_extra_stats_by_strength(_str: int) -> Dictionary[String, float]:
 	var result: Dictionary[String, float] = {}
 	result[HP] = _str * _HP_BY_STRENGTH
@@ -125,6 +126,7 @@ static var INTELLIGENCE_PROPERTIES = "Gives " + StringHelpers.format_float(_MANA
 	StringHelpers.format_float(_MANA_REGEN_BY_INTELLIGENCE) + " mana regen, " + \
 	StringHelpers.format_float(_MAGIC_ATTACK_POWER_BY_INTELLIGENCE) + " magic attack power and " + \
 	StringHelpers.format_percent(_MAGIC_DEFENSE_BY_INTELLIGENCE, true, 1) + " magic defense per point of intelligence"
+static var ES_INTELLIGENCE_PROPERTIES = "Otorga " + StringHelpers.format_float(_MANA_BY_INTELLIGENCE) + " de maná, " + StringHelpers.format_float(_MANA_REGEN_BY_INTELLIGENCE) + " de regeneración de maná, " + StringHelpers.format_float(_MAGIC_ATTACK_POWER_BY_INTELLIGENCE) + " de poder de ataque mágico y " + StringHelpers.format_percent(_MAGIC_DEFENSE_BY_INTELLIGENCE, true, 1) + " de defensa mágica por cada punto de inteligencia."
 static func get_extra_stats_by_intelligence(_int: int) -> Dictionary[String, float]:
 	var result: Dictionary[String, float] = {}
 	result[MANA] = _int * _MANA_BY_INTELLIGENCE
@@ -140,6 +142,7 @@ const _DEFENSE_BY_AGILITY: float = 2 / _AUX
 static var AGILITY_PROPERTIES = "Gives " + StringHelpers.format_percent(_ATTACK_SPEED_BY_AGILITY, true, 1) + " attack speed, " + \
 	StringHelpers.format_percent(_EVASION_BY_AGILITY, true, 1) + " evasion and " + \
 	StringHelpers.format_percent(_DEFENSE_BY_AGILITY, true, 1) + " defense per point of agility"
+static var ES_AGILITY_PROPERTIES = "Otorga " + StringHelpers.format_percent(_ATTACK_SPEED_BY_AGILITY, true, 1) + " de velocidad de ataque, " + StringHelpers.format_percent(_EVASION_BY_AGILITY, true, 1) + " de evasión y " + StringHelpers.format_percent(_DEFENSE_BY_AGILITY, true, 1) + " de defensa por cada punto de agilidad."
 static func get_extra_stats_by_agility(_agi: int) -> Dictionary[String, float]:
 	var result: Dictionary[String, float] = {}
 	result[ATTACK_SPEED] = _agi * _ATTACK_SPEED_BY_AGILITY # 1000 of agility = 1 = Cada segundo 1 ataque
@@ -252,6 +255,8 @@ func get_debuffs(_owner: Entity) -> Dictionary[String, float]:
 func add_debuff(debuff_key: String, prop_key: String, value: float) -> void:
 	_debuffs_keys[debuff_key] = true
 	_debuffs[prop_key] = value
+func get_debuff(prop_key: String) -> float:
+	return _debuffs.get(prop_key, 0)
 
 func get_total_info_including_extras_by_attributes() -> Dictionary[String, float]:
 	var result: Dictionary[String, float] = {}
@@ -287,7 +292,9 @@ func _aux_formatted_description_by_key(key: String) -> String:
 	var words := key.split("_")
 	for i in range(words.size()):
 		words[i] = words[i].capitalize()
-	return "- " + " ".join(words) + ": "
+	var joined := " ".join(words)
+	var result = LanguageManager.translate(joined)
+	return "- " + result + ": "
 
 func get_new_description() -> String:
 	var result := ""
