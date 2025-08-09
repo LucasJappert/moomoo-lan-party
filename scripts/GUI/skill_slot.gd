@@ -16,7 +16,7 @@ const SKILL_LEVEL_REQUIREMENTS := {
 @onready var _general_container: Node2D = %GeneralContainer
 @onready var sprite: Sprite2D = %Sprite
 @onready var hotkey = $Hotkey
-@onready var label_cool_down = $LabelCoolDown
+@onready var label_cool_down: Label = $LabelCoolDown
 @onready var container_of_skill_levels: Panel = $Panel
 @onready var panel1: Panel = $Panel/CenterContainer/HBoxContainer/Panel1
 @onready var panel2: Panel = $Panel/CenterContainer/HBoxContainer/Panel2
@@ -64,7 +64,7 @@ func _process(_delta: float) -> void:
 	# if not GameManager.MY_PLAYER: return
 
 	if skill.can_use(GameManager.MY_PLAYER):
-		if label_cool_down.visible: _on_cool_down_completed()
+		if label_cool_down.visible: CompletedCooldownEffect.play(self, sprite, _general_container, 1.5)
 		label_cool_down.visible = false
 		sprite.modulate = ItemSkillBase.CAN_USE_COLOR
 		return
@@ -77,7 +77,7 @@ func _process(_delta: float) -> void:
 		label_cool_down.visible = true
 		label_cool_down.text = StringHelpers.format_float_compact(remaining_cooldown, 1)
 	else:
-		if label_cool_down.visible: _on_cool_down_completed()
+		if label_cool_down.visible: CompletedCooldownEffect.play(self, sprite, _general_container, 1.5)
 		label_cool_down.visible = false
 
 # region 	GETTERS
@@ -86,35 +86,6 @@ func _is_hero_picker_scene() -> bool:
 # endregion GETTERS
 
 # region 	SETTERS
-func _on_cool_down_completed():
-	_apply_effect_after_cool_down_completed()
-
-func _apply_effect_after_cool_down_completed():
-	const LIFETIME := 1
-	var ORIGINAL_SCALE := sprite.scale
-	var tween := create_tween()
-	tween.tween_property(sprite, "scale", ORIGINAL_SCALE * 1.2, LIFETIME * 0.4)
-	tween.tween_property(sprite, "scale", ORIGINAL_SCALE, LIFETIME * 0.4)
-
-	for point in _get_perimeter_points():
-		ParticleEffects.spawn(point, _general_container, LIFETIME, Color.WHITE, 1.5)
-
-func _get_perimeter_points(step: float = 4) -> Array[Vector2]:
-	var points: Array[Vector2] = []
-
-	var texture_size := sprite.region_rect.size * sprite.scale
-	var top_left := Vector2.ZERO # Vector2(-texture_size.x / 2, -texture_size.y / 2)
-
-	for x in range(0, int(texture_size.x), int(step)):
-		points.append(top_left + Vector2(x, 0))
-	for y in range(0, int(texture_size.y), int(step)):
-		points.append(top_left + Vector2(texture_size.x, y))
-	for x in range(int(texture_size.x), 0, -int(step)):
-		points.append(top_left + Vector2(x, texture_size.y))
-	for y in range(int(texture_size.y), 0, -int(step)):
-		points.append(top_left + Vector2(0, y))
-
-	return points
 
 func _clean_slot():
 	skill = null

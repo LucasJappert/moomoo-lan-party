@@ -2,8 +2,9 @@ class_name SlotItem
 extends DraggableSlot
 
 @onready var hotkey = $Hotkey
-@onready var label_cool_down = $LabelCoolDown
+@onready var label_cool_down: Label = $LabelCoolDown
 @onready var label_amount = $LabelAmount
+@onready var _general_container: Node2D = %GeneralContainer
 
 var _is_my_player_owner: bool
 
@@ -34,6 +35,7 @@ func _process(_delta: float) -> void:
 	if not item: return
 
 	if can_use(GameManager.MY_PLAYER):
+		if label_cool_down.visible: CompletedCooldownEffect.play(self, sprite, _general_container, 1.2)
 		label_cool_down.visible = false
 		sprite.modulate = ItemSkillBase.CAN_USE_COLOR
 		return
@@ -45,11 +47,12 @@ func _process(_delta: float) -> void:
 		label_cool_down.visible = true
 		label_cool_down.text = StringHelpers.format_float_compact(remaining_cooldown, 1)
 	else:
+		if label_cool_down.visible: CompletedCooldownEffect.play(self, sprite, _general_container, 1.2)
 		label_cool_down.visible = false
 
 func _on_mouse_entered():
 	if not item: return
-	MyTooltip.show_tooltip(item.my_name, item.get_description(true, false))
+	MyTooltip.show_tooltip(item.my_name, item.get_description(true, false), 20)
 
 func _on_mouse_exited():
 	if not item: return

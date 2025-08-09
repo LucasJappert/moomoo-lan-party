@@ -2,6 +2,11 @@
 
 📆 xx/07/2025
 
+- ✅ Added an item that grants +30% Movement Speed, +30% Attack Speed, and +30 Strength, Agility, and Intelligence.
+- ✅ Added an item that grants +30% Physical and Magical Defense and +1000 HP.
+- ✅ Added an item that grants +40% Lifesteal, +20% chance to Stun, and +200 Physical & Magical Attack.
+- ✅ Added an item that grants +100 Intelligence and +2000 HP, with a 20% chance when hit by a physical attack to unleash 5 lightning bolts at random enemies within range, each dealing magic damage based on Intelligence.
+- ✅ Crear escena inicial + Selección de lenguaje + Música
 - ✅ Allow enemies to use items
 - ✅ Every 2 normal rounds, generate an extra special round with 4 bosses, which have extra attributes and 4 random skills.
 - ✅ Add Ghostplate item that grants +20% physical and magical defense, and 20% evasion.

@@ -5,11 +5,8 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- 🔵 Crear escena inicial
+- Desarrollar historia y mostrar diálogos en diferentes momentos
 - Al finalizar las rondas, el moomoo se revela en contra del jugador. Agregar efectos en el suelo como rajaduras con lava. Hacer caer meteoritos desde el cielo, etc.
-- Crear ronda numero 9, con un enemigo que lanza cuchillas y otro que lanza piedras
-- Desarrollar historia
-- Agregar item que brinda +30% de MS, +20% de AS y +10 de fza/agi/int
 - Agregar item que brinda un 15% de chances de disparar una rafaga de rayos a 5 enemigos cercanos. El daño de cada rayo es igual al 50% de la inteligencia total.
 - Agregar afecto de nubes
 - Agregar efecto de lluvia y rayos
@@ -20,6 +17,7 @@
 - Agregar item que brinda un +30% de ataque mágico y físico y algo mas
 - Generar skill/item que da chances de invocar esqueletos ante cada ataque
 
+- Crear ronda numero 9, con un enemigo que lanza cuchillas y otro que lanza piedras
 - Agregar un item que brinda daño splash a todo alreadedor del target (es diferente al cleave)
 - Implementar sistema de craft de items
 - Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)

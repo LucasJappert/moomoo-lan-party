@@ -19,8 +19,8 @@ script = ExtResource("1_tbj2q")
 
 [node name="Sprite" type="Sprite2D" parent="."]
 unique_name_in_owner = true
+position = Vector2(28, 28)
 texture = SubResource("AtlasTexture_6p74b")
-centered = false
 region_enabled = true
 region_rect = Rect2(1617, 1977, 55, 55)
 

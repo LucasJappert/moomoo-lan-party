@@ -9,7 +9,7 @@ const ANIMATION_NAMES = {
 
 static func apply_animation(target: Entity, anim_name: String) -> void:
 	if anim_name == ANIMATION_NAMES.LIGHTNING:
-		_apply_lightning_animation(target)
+		apply_lightning_animation(target)
 	if anim_name == ANIMATION_NAMES.LEVEL_UP:
 		_apply_level_up_animation(target)
 
@@ -57,7 +57,7 @@ static func spawn_front_animation(
 	sprite.animation_finished.connect(func(): sprite.queue_free())
 	return sprite
 
-static func _apply_lightning_animation(target: Entity):
+static func apply_lightning_animation(target: Entity):
 	var sprite_size = Vector2(64, 96)
 	var frames = SpritesHelper.get_sprite_frames(Vector2(0, 640), sprite_size, 12, 25, false)
 	spawn_front_animation(target, frames, ANIMATION_NAMES.LIGHTNING, get_position_of_bottom_of_the_cell(sprite_size))

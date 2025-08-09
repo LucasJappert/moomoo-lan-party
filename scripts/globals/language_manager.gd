@@ -44,6 +44,7 @@ static var _translations := {
 	"Cleave Percent": {LangTypes.SPANISH: "Daño en área (%)"},
 	"Cleave Range": {LangTypes.SPANISH: "Rango de daño en área (tiles)"},
 	"HP": {LangTypes.SPANISH: "Vida"},
+	"Hp": {LangTypes.SPANISH: "Vida"},
 	"Mana": {LangTypes.SPANISH: "Maná"},
 	"Physical Defense Percent": {LangTypes.SPANISH: "Defensa Física"},
 	"Magic Defense Percent": {LangTypes.SPANISH: "Defensa Mágica"},
