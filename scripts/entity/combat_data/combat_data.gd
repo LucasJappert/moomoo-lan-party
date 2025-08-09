@@ -80,6 +80,12 @@ func post_ready_combat_data() -> void:
 		for registered_class in SkillBase.REGISTERED_SKILLS:
 			registered_class.actions_after_skill_updated(self, skill)
 		# add_active_skill(SkillBase.get_permanent_active_skill(skill.get_learned_skill()))
+	
+	for i in range(_items.size()):
+		for registered_item in Item.REGISTERED_ITEMS:
+			registered_item.static_actions_after_update_item(_my_owner, _items[i], i + 1)
+			
+	ItemSkywrath.verify_existing(_my_owner)
 
 	if not GameManager.AM_I_HOST: return
 
@@ -320,6 +326,9 @@ func update_item(item: Item, index: int) -> bool:
 	_items[index] = item
 
 	EventBus.emit_item_updated(_my_owner, item, index + 1)
+	
+	for registered_item in Item.REGISTERED_ITEMS:
+		registered_item.static_actions_after_update_item(_my_owner, item, index + 1)
 
 	update_cache_total_stats()
 	return true

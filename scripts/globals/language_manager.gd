@@ -100,7 +100,7 @@ static func translate(original_text: String) -> String:
 		return original_text
 
 	if not _translations[original_text].has(language):
-		push_warning("Missing translation for '%s' in language '%s'" % [original_text, language])
+		if language != LangTypes.ENGLISH: push_warning("Missing translation for '%s' in language '%s'" % [original_text, language])
 		return original_text
 
 	return _translations[original_text][language]

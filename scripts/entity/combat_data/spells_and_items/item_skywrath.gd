@@ -79,3 +79,9 @@ static func static_actions_after_effective_hit(_attacker: Entity, _target: Entit
 		enemy.server_receive_damage(_ldi, _target)
 
 	return true
+
+static func verify_existing(_owner: Entity) -> void:
+	var has_item := _owner.get_items_by_name(NAME).size() > 0
+	if has_item: return SkywrathEffect.attach_to(_owner.front_animations_node, 0)
+
+	return SkywrathEffect.remove_all_from(_owner.front_animations_node)

@@ -6,14 +6,15 @@
 📝 [Go to Changelog](./changelog.md)
 
 - Desarrollar historia y mostrar diálogos en diferentes momentos
+- Agregar item epicos a enemigos bosses
+- Aumentar dificultar de rondas normales y especiales
+- Efecto de sangrado de acuerdo al daño causado
 - Al finalizar las rondas, el moomoo se revela en contra del jugador. Agregar efectos en el suelo como rajaduras con lava. Hacer caer meteoritos desde el cielo, etc.
-- Agregar item que brinda un 15% de chances de disparar una rafaga de rayos a 5 enemigos cercanos. El daño de cada rayo es igual al 50% de la inteligencia total.
 - Agregar afecto de nubes
 - Agregar efecto de lluvia y rayos
 - Agregar boton para mutear el juego
 - Agregar algunos items más
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
-- Agregar animacion de explosión cuando muere un enemigo que tiene esa skill
 - Agregar item que brinda un +30% de ataque mágico y físico y algo mas
 - Generar skill/item que da chances de invocar esqueletos ante cada ataque
 

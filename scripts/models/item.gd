@@ -220,3 +220,6 @@ static func static_actions_after_interval_trigger(_effect: CombatEffect) -> bool
 
 # Must be overriden
 static func static_actions_before_execute_physical_attack(_attacker: Entity, _target: Entity) -> void: pass
+
+# Must be overriden
+static func static_actions_after_update_item(_owner: Entity, _item: Item, _slot_number: int) -> void: pass
