@@ -3,10 +3,10 @@ class_name ObjectHelpers
 static func is_null(object):
 	return object == null or not is_instance_valid(object)
 
-static func is_enemy(_entity) -> bool:
+static func is_enemy_of_player(_entity) -> bool:
 	if is_null(_entity): return false
 	
-	return _entity is Enemy
+	return (_entity as Entity).is_enemy_of_player()
 
 static func is_my_player(_entity) -> bool:
 	if is_null(_entity): return false

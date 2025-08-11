@@ -10,6 +10,8 @@ static func initialized() -> bool: return language != ""
 
 static func is_english() -> bool: return language == LangTypes.ENGLISH
 
+static func is_spanish() -> bool: return language == LangTypes.SPANISH
+
 static func set_english() -> void:
 	language = LangTypes.ENGLISH
 	TranslationServer.set_locale(language)
@@ -22,6 +24,7 @@ static func set_spanish() -> void:
 
 ## 🧠 Diccionario con las traducciones
 static var _translations := {
+	"The Eternal Guardian": {LangTypes.SPANISH: "El Guardián Eterno"},
 	"Skills:": {LangTypes.SPANISH: "Habilidades:"},
 	"<< Hover your mouse here": {LangTypes.SPANISH: "<< Deslizá el mouse aquí"},
 	"TUTORIAL": {LangTypes.SPANISH: "TUTORIAL"},
@@ -46,8 +49,8 @@ static var _translations := {
 	"HP": {LangTypes.SPANISH: "Vida"},
 	"Hp": {LangTypes.SPANISH: "Vida"},
 	"Mana": {LangTypes.SPANISH: "Maná"},
-	"Physical Defense Percent": {LangTypes.SPANISH: "Defensa Física"},
-	"Magic Defense Percent": {LangTypes.SPANISH: "Defensa Mágica"},
+	"Physical Defense Points": {LangTypes.SPANISH: "Puntos Defensa Física"},
+	"Magic Defense Points": {LangTypes.SPANISH: "Puntos Defensa Mágica"},
 	"Evasion": {LangTypes.SPANISH: "Evasión"},
 	"Crit Chance": {LangTypes.SPANISH: "Probabilidad de Crítico"},
 	"Crit Multiplier": {LangTypes.SPANISH: "Multiplicador de Crítico"},

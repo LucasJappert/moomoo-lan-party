@@ -1,5 +1,18 @@
 class_name GlobalsEntityHelpers
 
+static func get_nearest_enemy_inside_vision(_owner: Entity) -> Entity:
+	var result: Entity
+	var closest_distance := INF
+
+	for enemy in _owner.get_my_enemies():
+		var dist = _owner.global_position.distance_to(enemy.global_position)
+		if dist > _owner.area_vision_shape.shape.radius: continue
+		if dist >= closest_distance: continue
+
+		closest_distance = dist
+		result = enemy
+
+	return result
 
 static func is_target_in_attack_range(_origin: Entity, _target) -> bool:
 	if ObjectHelpers.is_null(_target): return false

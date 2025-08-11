@@ -23,7 +23,7 @@ func _init_projectiles_spawner() -> void:
 func _process(delta: float) -> void:
 	CursorManager._static_process(delta)
 	WindowFocusWatcher._process(delta)
-	EnemiesWavesController._process(delta)
+	EnemiesWavesController.process(delta)
 
 func add_my_tree(my_tree: MyTree) -> void:
 	game_world.my_trees_node.add_child(my_tree, true)

@@ -43,8 +43,6 @@ func _unhandled_input(event):
 		# else: print("No Area2D under mouse.")
 		if DraggableSlot.verify_global_click(event): return
 		if event.button_index == MOUSE_BUTTON_RIGHT:
-			# if ObjectHelpers.is_enemy(AreaHovered.hovered_entity):
-			# 	if not KeyboardController.SHIFT_PRESSED: return rpc_id(1, "_on_right_click_on_entity", _get_hovered_entity_name())
 			if AreaHovered.hovered_entity: return
 			rpc_id(1, "_on_try_to_move", MapManager.world_to_cell(MapManager.GLOBAL_MOUSE_POSITION))
 		if event.button_index == MOUSE_BUTTON_LEFT:
@@ -59,12 +57,6 @@ func _unhandled_input(event):
 func _on_try_to_move(_target_cell: Vector2i):
 	CursorManager.show_move_effect()
 	player.movement_helper.set_target_cell(_target_cell)
-
-@rpc("authority", "call_local")
-func _on_right_click_on_entity(_target_entity_name: String):
-	var target_entity = GameManager.get_entity(_target_entity_name)
-	player.set_target_to_attack(target_entity)
-	player.movement_helper.set_target_entity(target_entity)
 	
 @rpc("authority", "call_local")
 func _on_left_click(_target_entity_name: String):

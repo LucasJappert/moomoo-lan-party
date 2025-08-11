@@ -27,7 +27,8 @@ const ATTR_PERC_EXTRA_BY_LEVEL = 0.1
 func set_player(data: Dictionary) -> void:
 	player_id = data["player_id"]
 	extra_info.key_type = data["key_type"]
-	skill_points_to_assign = 1
+	skill_points_to_assign = 15
+	level = 15
 	current_gold = INITIAL_GOLD
 	HeroBase.initialize_from_name(extra_info.key_type, self)
 	EXTRA_INT_BY_LEVEL = round(cache_total_stats.get_intelligence() * ATTR_PERC_EXTRA_BY_LEVEL)

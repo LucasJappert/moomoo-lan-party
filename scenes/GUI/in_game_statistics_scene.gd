@@ -20,11 +20,11 @@ func _update_text() -> void:
 	result += "- " + ("FPS:" if is_english else "FPS:") + " %d\n" % Performance.get_monitor(Performance.TIME_FPS)
 	result += "- " + ("TIME ELAPSED: " if is_english else "TIEMPO TRANSCURRIDO: ") + GameManager.MY_PLAYER.statistics.formatted_time_elapsed + "\n"
 	result += "- " + ("NORMAL WAVE REACHED: " if is_english else "OLEADA NORMAL ALCANZADA: ") + "%d %s %d\n" % [
-		EnemiesWavesController.current_wave,
+		EnemiesWavesController.current_normal_wave,
 		("of" if is_english else "de"),
 		EnemiesWavesController.WAVES_INFO.size()
 	]
-	result += "- " + ("SPECIAL WAVE REACHED: " if is_english else "OLEADA ESPECIAL ALCANZADA: ") + "%d\n" % EnemiesWavesController.special_wave
+	result += "- " + ("SPECIAL WAVE REACHED: " if is_english else "OLEADA ESPECIAL ALCANZADA: ") + "%d\n" % EnemiesWavesController.current_special_wave
 	result += "- " + ("UNITS KILLED: " if is_english else "UNIDADES ELIMINADAS: ") + GameManager.MY_PLAYER.statistics.formatted_enemies_killed + "\n"
 	result += "- " + ("DAMAGE DEALT: " if is_english else "DAÑO INFLIGIDO: ") + GameManager.MY_PLAYER.statistics.formatted_damage_dealt + "\n"
 	result += "- " + ("DAMAGE RECEIVED: " if is_english else "DAÑO RECIBIDO: ") + GameManager.MY_PLAYER.statistics.formatted_damage_received + "\n"

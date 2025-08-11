@@ -1,11 +1,18 @@
 class_name MovementHelper
 
+enum AttackMoveType {
+	None,
+	PhysicalAttack,
+	SkillAttack,
+}
+
 var my_owner: Entity
 var current_target_pos = null
 var _target_entity: Entity
 var _target_cell
 var current_path: Array[Vector2i] = []
 var _attack_move = false
+var _attack_move_type := AttackMoveType.None
 var _can_move := true
 var _last_current_path_update_time: float = - INF
 var current_cell: Vector2i
@@ -14,7 +21,7 @@ const _NEXT_PATH_RECALC_MS = 1000
 func _init(p_owner: Entity):
 	my_owner = p_owner
 	current_cell = MapManager.world_to_cell(my_owner.global_position)
-	if my_owner is Moomoo: _can_move = false
+	# if my_owner is Moomoo: _can_move = false
 
 func _physics_process(_delta: float) -> void:
 	if GameManager.main_scene.PAUSED: return
@@ -35,8 +42,9 @@ func _physics_process(_delta: float) -> void:
 func clean_path() -> void:
 	current_path = []
 
-func set_attack_mode_mode(p_value: bool) -> void:
+func set_attack_mode_mode(p_value: bool, attack_move_type: AttackMoveType) -> void:
 	_attack_move = p_value
+	_attack_move_type = attack_move_type
 
 func _stop_movements() -> void:
 	current_target_pos = null
@@ -47,16 +55,16 @@ func _clean_movements() -> void:
 	_target_cell = null
 	_target_entity = null
 	current_path = []
-	set_attack_mode_mode(false)
+	set_attack_mode_mode(false, AttackMoveType.None)
 
-func set_target_entity(target: Entity) -> void:
+func set_target_entity(target: Entity, attack_move_type: AttackMoveType) -> void:
 	if target == _target_entity: return
 	
 	_clean_movements()
 
 	if target == null: return
 
-	set_attack_mode_mode(true)
+	set_attack_mode_mode(true, attack_move_type)
 	_target_entity = target
 	update_path()
 
@@ -82,6 +90,17 @@ func update_path() -> void:
 
 # endregion SETTERs
 
+func _verify_range_from_charged_skill() -> bool:
+	if _attack_move_type != AttackMoveType.SkillAttack: return false
+	if not my_owner.charged_skill: return false
+	var learned_skill = my_owner.charged_skill.get_learned_skill()
+	if not learned_skill: return false # Should never happen
+	
+	var is_in_range := my_owner.is_in_range(_target_entity.movement_helper.current_cell, learned_skill.cast_range_in_tiles)
+	if not is_in_range: return false
+	my_owner.use_charged_skill(_target_entity)
+	return true
+
 func _try_set_next_current_target_pos() -> void:
 	update_path()
 
@@ -91,6 +110,8 @@ func _try_set_next_current_target_pos() -> void:
 
 	if _attack_move:
 		# Return if the target is in attack range (dont move, just attack)
+		if _verify_range_from_charged_skill(): return _clean_movements()
+
 		var target_in_attack_range = GlobalsEntityHelpers.is_target_in_attack_range(my_owner, my_owner.get_target_entity())
 		if target_in_attack_range: return _clean_movements()
 
@@ -115,7 +136,7 @@ func _try_to_update_target_from_latest_attacker():
 	var nearest_enemy: Entity
 	nearest_enemy = GlobalsEntityHelpers.get_nearest_entity(my_owner.global_position, GameManager.get_enemies(), my_owner.area_vision_shape.shape.radius)
 
-	set_target_entity(nearest_enemy)
+	set_target_entity(nearest_enemy, AttackMoveType.PhysicalAttack)
 	my_owner.set_target_to_attack(nearest_enemy)
 
 func _try_to_move(_delta: float) -> void:

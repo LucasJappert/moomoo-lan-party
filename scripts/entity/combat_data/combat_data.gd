@@ -95,8 +95,7 @@ func post_ready_combat_data() -> void:
 	# for skill_base in SkillBase.REGISTERED_SKILLS:
 	# 	skill_base.actions_on_load_skills(_my_owner, _skills)
 
-	if _my_owner is Enemy:
-		enemy_spell_caster = EnemySpellCaster.new(_my_owner)
+	if not _my_owner is Player: enemy_spell_caster = EnemySpellCaster.new(_my_owner)
 
 func process_combat_data(_delta: float): # Run only when it is the host
 	if GameManager.main_scene.PAUSED: return
@@ -421,10 +420,15 @@ func use_charged_skill(_target: Entity) -> void:
 	# Do not allow the use of damaging skills on oneself
 	if learned_skill.apply_to_enemy and _target.name == _my_owner.name: return uncharge_skill()
 
-	# Update the target to attack if the skill is not friendly
-	# if not learned_skill.is_owner_friendly1: set_target_to_attack(_target)
+	# Si el objetivo está fuera de rango entonces intentamos movernos hacia una posición válida más cercana
+	if not _my_owner.is_in_range(_target.movement_helper.current_cell, learned_skill.cast_range_in_tiles):
+		return GameManager.MY_PLAYER.movement_helper.set_target_entity(_target, MovementHelper.AttackMoveType.SkillAttack)
 
-	charged_skill.use(_my_owner, _target)
+	# Update the target to attack if the skill is not friendly
+	if _target.is_enemy_of_player(): set_target_to_attack(_target)
+
+	if charged_skill.use(_my_owner, _target):
+		for skill_class in SkillBase.REGISTERED_SKILLS: skill_class.actions_after_cast_skill(_my_owner, learned_skill)
 
 	uncharge_skill()
 
@@ -571,7 +575,8 @@ func try_physical_attack(_delta: float) -> bool:
 	if _my_owner.current_state != EntityState.States.IDLE: return false # Cant attack while moving
 	if _my_owner.is_spawning: return false
 	
-	if target_to_attack == GameManager.moomoo: set_target_to_attack(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
+	if target_to_attack == GameManager.moomoo and _my_owner is Enemy:
+		set_target_to_attack(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
 
 	if target_to_attack == null: return false
 	if target_to_attack.is_dead(): return false
@@ -587,7 +592,7 @@ func _get_nearest_target_in_range_attack():
 	var max_range = cache_total_stats.get_attack_range()
 	var start_pos = _my_owner.global_position
 	if _my_owner is Player:
-		return GlobalsEntityHelpers.get_nearest_entity(start_pos, GameManager.get_enemies(), max_range)
+		return GlobalsEntityHelpers.get_nearest_entity(start_pos, _my_owner.get_my_enemies(), max_range)
 
 	if _my_owner is Enemy:
 		# First we check if there is a player nearby, then if the moomoo is in attack range

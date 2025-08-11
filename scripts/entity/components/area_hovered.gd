@@ -25,7 +25,7 @@ func _on_input_event(_viewport, _event, _shape_idx):
 			if GameManager.MY_PLAYER and not KeyboardController.SHIFT_PRESSED:
 				if my_owner.is_my_player(): return
 				GameManager.MY_PLAYER.set_target_to_attack(my_owner)
-				GameManager.MY_PLAYER.movement_helper.set_target_entity(my_owner)
+				GameManager.MY_PLAYER.movement_helper.set_target_entity(my_owner, MovementHelper.AttackMoveType.PhysicalAttack)
 
 func _process(_delta: float) -> void:
 	if not is_instance_valid(hovered_entity):
@@ -39,7 +39,7 @@ func _on_mouse_entered():
 
 func _on_mouse_exited():
 	_currently_hovered_entities.erase(my_owner)
-	if my_owner is Enemy:
+	if my_owner.is_enemy_of_player():
 		ShadersHelper.clear_border_shader(my_owner, HOVERED_SHADER_NAME)
 
 static func _update_hovered_entity():
@@ -59,10 +59,10 @@ static func _update_hovered_entity():
 	var best_entity := _currently_hovered_entities[0]
 	for e in _currently_hovered_entities:
 		if e.global_position.y > best_entity.global_position.y:
-			if best_entity is Enemy:
+			if best_entity.is_enemy_of_player():
 				ShadersHelper.clear_border_shader(best_entity, HOVERED_SHADER_NAME)
 			best_entity = e
 
-	if best_entity is Enemy:
+	if best_entity.is_enemy_of_player():
 		ShadersHelper.apply_border_shader(best_entity, HOVERED_SHADER_NAME, false, Color(1, 0, 0, 1))
 	hovered_entity = best_entity

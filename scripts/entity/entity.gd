@@ -114,18 +114,26 @@ func _on_entity_freed(entity_name: String) -> void:
 	verify_freed_target_view(entity_name)
 
 # region 	GETTERs
+func is_enemy_of_player() -> bool:
+	if not GameManager.MY_PLAYER: return false
+	if GameManager.MY_PLAYER in get_my_enemies(): return true
+	return false
 func is_in_range(target_cell: Vector2i, distance_in_tiles: int) -> bool:
 	return (target_cell - movement_helper.current_cell).length() <= distance_in_tiles
 
 func is_my_player() -> bool: return false
 
 func get_my_enemies() -> Array[Entity]:
-	if self is Player or self is Moomoo: return GameManager.get_enemies()
+	if self is Player:
+		var result: Array[Entity] = []
+		result.append_array(GameManager.get_enemies())
+		if Moomoo.static_is_awake(): result.append(GameManager.get_moomoo())
+		return result
 
 	if self is Enemy:
 		var result: Array[Entity] = []
 		result.append_array(GameManager.get_players())
-		result.append(GameManager.get_moomoo())
+		if not Moomoo.static_is_awake(): result.append(GameManager.get_moomoo())
 		return result
 		
 	return []

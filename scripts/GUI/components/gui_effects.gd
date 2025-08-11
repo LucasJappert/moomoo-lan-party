@@ -48,6 +48,7 @@ func _process(_delta: float) -> void:
 func _try_add_effect(_owner: Entity, effect: CombatEffect) -> void:
 	if TYPE != Type.MY_EFFECTS: return
 	if ObjectHelpers.is_null(_owner): return
+	if ObjectHelpers.is_null(_entity_info): return
 	if _entity_info.name != _owner.name: return
 
 	add_child(GuiEffect.get_instance(effect), true)

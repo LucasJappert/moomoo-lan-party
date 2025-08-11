@@ -12,8 +12,8 @@ static func create_and_add_instance() -> void:
 
 	aux_array[0] = [60, 100, 140] # magic_damage
 	aux_array[1] = [120, 200, 320] # mana cost
-	aux_array[2] = [8, 6, 4] # cooldown
-	aux_array[3] = [1, 1.5, 2] # stun_duration
+	aux_array[2] = [10, 8, 6] # cooldown
+	aux_array[3] = [2, 4, 6] # stun_duration
 	for i in AVAILABLE_LEVELS:
 		SKILLS[NAME].item_skill_base[i].instant_use = false
 		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 7

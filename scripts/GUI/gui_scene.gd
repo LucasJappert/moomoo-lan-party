@@ -49,7 +49,7 @@ static var RED_BALL_COLOR := Color.from_string("#cd0000ff", Color.WHITE)
 
 @onready var _damage_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/DamageValue
 @onready var _magic_power_multiplier_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/MagicPowerMultiplierValue
-@onready var _defense_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/DefenseValue
+@onready var _defense_value: Label = %DefenseValue
 @onready var _evasion_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/EvasionValue
 @onready var _stun_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/StunValue
 @onready var _critic_value = $PanelBL/StatsContainer/Panel1/VBoxContainer2/CriticValue
@@ -101,10 +101,11 @@ func _ready() -> void:
 		MyTooltip.show_tooltip("Mana regen", str(regen_points) + " points per second", 7)
 	)
 	%ManaBallCircle.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
+	_defense_value.connect("mouse_entered", func(): _on_mouse_entered_defense_value())
+	_defense_value.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
 	
 	EventBus.connect_to_new_target_view_selected(func(_owner: Entity, _viewed_target: Entity): _on_new_target_view_selected(_owner, _viewed_target))
 
-	
 func _on_join_as_player_pressed() -> void:
 	MultiplayerManager.become_client()
 
@@ -129,6 +130,13 @@ func _process(_delta: float) -> void:
 
 
 # region	SETTERS
+func _on_mouse_entered_defense_value() -> void:
+	if not _bottom_target: return
+	var _total_physical_defense_points = _bottom_target.cache_total_stats.get_physical_defense_points() + DefensesHelper.defense_points_from_agility(_bottom_target.cache_total_stats.get_agility())
+	var _total_magic_defense_points = _bottom_target.cache_total_stats.get_magic_defense_points() + DefensesHelper.defense_points_from_intelligence(_bottom_target.cache_total_stats.get_intelligence())
+	if LanguageManager.is_english(): MyTooltip.show_tooltip("Defenses points", "Physical defense points: " + StringHelpers.format_float(_total_physical_defense_points) + "\nMagic defense points: " + StringHelpers.format_float(_total_magic_defense_points))
+	if LanguageManager.is_spanish(): MyTooltip.show_tooltip("Puntos de defensa", "Puntos de defensa física: " + StringHelpers.format_float(_total_physical_defense_points) + "\nPuntos de defensa mágica: " + StringHelpers.format_float(_total_magic_defense_points))
+	
 func _on_shop_button_pressed() -> void:
 	print("Shop button pressed")
 func init_scene(entity: Entity) -> void:
@@ -153,7 +161,6 @@ func _set_items() -> void:
 		_slots[i].item_updated(_bottom_target._items[i])
 
 func _set_my_player_avatar_region(_entity: Entity) -> void:
-	if _entity is Moomoo: return # TODO: fix
 	_my_player_avatar.region_rect = _entity.extra_info.rects[0]
 
 func set_target_avatar_region(region_rect: Rect2) -> void:
@@ -242,6 +249,8 @@ func _update_panel_bottom_left() -> void:
 	_update_hp_ball_sprite()
 	_update_exp_bar()
 
+	# _hero_type.text = LanguageManager.translate(_bottom_target.extra_info.key_type)
+	# _hero_alias.text = LanguageManager.translate(_bottom_target.extra_info.alias)
 	_hero_type.text = _bottom_target.extra_info.key_type
 	_hero_alias.text = _bottom_target.extra_info.alias
 	_level.text = str(_bottom_target.level)
@@ -257,7 +266,7 @@ func _update_panel_bottom_left() -> void:
 
 	_damage_value.text = StringHelpers.format_float_compact(total_stats.get_physical_attack_power())
 	_magic_power_multiplier_value.text = "+" + StringHelpers.format_percent(total_stats.get_magic_power_multiplier() - 1)
-	_defense_value.text = StringHelpers.format_percent(total_stats.get_physical_defense_percent(), false) + "-" + StringHelpers.format_percent(total_stats.get_magic_defense_percent(), false) + " %"
+	_defense_value.text = StringHelpers.format_percent(total_stats.get_physical_defense_percent()) + " - " + StringHelpers.format_percent(total_stats.get_magic_defense_percent())
 	_evasion_value.text = StringHelpers.format_percent(total_stats.get_evasion())
 	_stun_value.text = StringHelpers.format_percent(total_stats.get_stun_chance())
 	_critic_value.text = total_stats.get_critic_description()

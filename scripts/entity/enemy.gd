@@ -35,11 +35,11 @@ func set_enemy_type(_enemy_type: String) -> void:
 
 func _on_every_timer_500ms() -> void:
 	var target: Entity = GameManager.moomoo
-	var nearest_player = get_nearest_player_inside_vision()
+	var nearest_player = get_nearest_enemy_inside_vision()
 	if nearest_player: target = nearest_player
 	
 	set_target_to_attack(target)
-	movement_helper.set_target_entity(target)
+	movement_helper.set_target_entity(target, MovementHelper.AttackMoveType.PhysicalAttack)
 
 # region 	GETTERs
 func get_physical_attack_power() -> int:
@@ -54,14 +54,14 @@ static func get_instance_from_dict(dict: Dictionary) -> Enemy:
 # endregion GETTERs
 
 static func get_enemy_exp_when_dead() -> int:
-	if _exp_when_dead > 0: return _exp_when_dead * EnemiesWavesController.current_wave
+	if _exp_when_dead > 0: return _exp_when_dead * EnemiesWavesController.current_normal_wave
 
 	var player_total_accumulated_exp: float = Player.get_total_accumulated_exp()
 	_exp_when_dead = int(player_total_accumulated_exp / EnemiesWavesController.TOTAL_ENEMIES_TO_CREATE * 0.05)
 
-	return _exp_when_dead * EnemiesWavesController.current_wave
+	return _exp_when_dead * EnemiesWavesController.current_normal_wave
 
-func get_nearest_player_inside_vision() -> Entity:
+func get_nearest_enemy_inside_vision() -> Entity:
 	var closest_player: Entity
 	var closest_distance := INF
 

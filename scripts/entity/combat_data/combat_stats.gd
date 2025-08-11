@@ -18,8 +18,8 @@ const CLEAVE_RANGE = "cleave_range" # In tiles
 
 const HP = "hp"
 const MANA = "mana"
-const PHYSICAL_DEFENSE_PERCENT = "physical_defense_percent"
-const MAGIC_DEFENSE_PERCENT = "magic_defense_percent"
+const PHYSICAL_DEFENSE_POINTS = "physical_defense_points"
+const MAGIC_DEFENSE_POINTS = "magic_defense_points"
 const EVASION = "evasion"
 const CRIT_CHANCE = "crit_chance"
 const CRIT_MULTIPLIER = "crit_multiplier"
@@ -120,34 +120,35 @@ static func get_extra_stats_by_strength(_str: int) -> Dictionary[String, float]:
 	result[PHYSICAL_ATTACK_POWER] = _str * _PHYSICAL_ATTACK_POWER_BY_STRENGTH
 	return result
 
-const _MANA_BY_INTELLIGENCE = 10; const _MANA_REGEN_BY_INTELLIGENCE = 0.1; const _MAGIC_ATTACK_POWER_BY_INTELLIGENCE = 0.5
-const _MAGIC_DEFENSE_BY_INTELLIGENCE = 2 / _AUX
-static var INTELLIGENCE_PROPERTIES = "Gives " + StringHelpers.format_float(_MANA_BY_INTELLIGENCE) + " mana, " + \
-	StringHelpers.format_float(_MANA_REGEN_BY_INTELLIGENCE) + " mana regen, " + \
-	StringHelpers.format_float(_MAGIC_ATTACK_POWER_BY_INTELLIGENCE) + " magic attack power and " + \
-	StringHelpers.format_percent(_MAGIC_DEFENSE_BY_INTELLIGENCE, true, 1) + " magic defense per point of intelligence"
-static var ES_INTELLIGENCE_PROPERTIES = "Otorga " + StringHelpers.format_float(_MANA_BY_INTELLIGENCE) + " de maná, " + StringHelpers.format_float(_MANA_REGEN_BY_INTELLIGENCE) + " de regeneración de maná, " + StringHelpers.format_float(_MAGIC_ATTACK_POWER_BY_INTELLIGENCE) + " de poder de ataque mágico y " + StringHelpers.format_percent(_MAGIC_DEFENSE_BY_INTELLIGENCE, true, 1) + " de defensa mágica por cada punto de inteligencia."
+const _MANA_BY_INTELLIGENCE: float = 10.0
+const _MANA_REGEN_BY_INTELLIGENCE: float = 0.1
+const _MAGIC_ATTACK_POWER_BY_INTELLIGENCE: float = 0.5
+static var INTELLIGENCE_PROPERTIES := "Gives " + StringHelpers.format_float(_MANA_BY_INTELLIGENCE) + " mana, " + \
+    StringHelpers.format_float(_MANA_REGEN_BY_INTELLIGENCE) + " mana regen, " + \
+    StringHelpers.format_float(_MAGIC_ATTACK_POWER_BY_INTELLIGENCE) + " magic attack power and " + \
+    StringHelpers.format_float(DefensesHelper.MAGIC_DEFENSE_POINTS_PER_INT, 1) + " magic defense points per point of Intelligence."
+static var ES_INTELLIGENCE_PROPERTIES := "Otorga " + StringHelpers.format_float(_MANA_BY_INTELLIGENCE) + " de maná, " + \
+    StringHelpers.format_float(_MANA_REGEN_BY_INTELLIGENCE) + " de regeneración de maná, " + \
+    StringHelpers.format_float(_MAGIC_ATTACK_POWER_BY_INTELLIGENCE) + " de poder de ataque mágico y " + \
+    StringHelpers.format_float(DefensesHelper.MAGIC_DEFENSE_POINTS_PER_INT, 1) + " puntos de defensa mágica por cada punto de Inteligencia."
 static func get_extra_stats_by_intelligence(_int: int) -> Dictionary[String, float]:
 	var result: Dictionary[String, float] = {}
 	result[MANA] = _int * _MANA_BY_INTELLIGENCE
 	result[MANA_REGENERATION_POINTS] = _int * _MANA_REGEN_BY_INTELLIGENCE
 	result[MAGIC_ATTACK_POWER] = _int * _MAGIC_ATTACK_POWER_BY_INTELLIGENCE
-	result[MAGIC_DEFENSE_PERCENT] = _int * _MAGIC_DEFENSE_BY_INTELLIGENCE
 	return result
 
 const _AUX: float = 1000
-const _ATTACK_SPEED_BY_AGILITY: float = 2 / _AUX
-const _EVASION_BY_AGILITY: float = 1 / _AUX
-const _DEFENSE_BY_AGILITY: float = 2 / _AUX
-static var AGILITY_PROPERTIES = "Gives " + StringHelpers.format_percent(_ATTACK_SPEED_BY_AGILITY, true, 1) + " attack speed, " + \
-	StringHelpers.format_percent(_EVASION_BY_AGILITY, true, 1) + " evasion and " + \
-	StringHelpers.format_percent(_DEFENSE_BY_AGILITY, true, 1) + " defense per point of agility"
-static var ES_AGILITY_PROPERTIES = "Otorga " + StringHelpers.format_percent(_ATTACK_SPEED_BY_AGILITY, true, 1) + " de velocidad de ataque, " + StringHelpers.format_percent(_EVASION_BY_AGILITY, true, 1) + " de evasión y " + StringHelpers.format_percent(_DEFENSE_BY_AGILITY, true, 1) + " de defensa por cada punto de agilidad."
+const _ATTACK_SPEED_BY_AGILITY: float = 2.0 / _AUX # = +0.2% per AGI
+const _DEFENSE_POINTS_BY_AGILITY: float = 0.6 # = +0.6 defense points per AGI
+static var AGILITY_PROPERTIES = "Gives " + StringHelpers.format_percent(_ATTACK_SPEED_BY_AGILITY, true, 1) + " attack speed and " + \
+    StringHelpers.format_float(_DEFENSE_POINTS_BY_AGILITY, 1) + " defense points per point of Agility"
+static var ES_AGILITY_PROPERTIES = "Otorga " + StringHelpers.format_percent(_ATTACK_SPEED_BY_AGILITY, true, 1) + " de velocidad de ataque y " + \
+    StringHelpers.format_float(_DEFENSE_POINTS_BY_AGILITY, 1) + " puntos de defensa por cada punto de Agilidad."
+
 static func get_extra_stats_by_agility(_agi: int) -> Dictionary[String, float]:
 	var result: Dictionary[String, float] = {}
 	result[ATTACK_SPEED] = _agi * _ATTACK_SPEED_BY_AGILITY # 1000 of agility = 1 = Cada segundo 1 ataque
-	result[EVASION] = _agi * _EVASION_BY_AGILITY # 1000 of agility = 1 = 100% evasion
-	result[PHYSICAL_DEFENSE_PERCENT] = _agi * _DEFENSE_BY_AGILITY # 1000 of agility = 1 = 100% defense
 	return result
 
 
@@ -167,10 +168,8 @@ func set_hp(value: int) -> void:
 	set_value_i(HP, value)
 func set_mana(value: int) -> void:
 	set_value_i(MANA, value)
-func set_physical_defense_percent(value: float) -> void:
-	set_value(PHYSICAL_DEFENSE_PERCENT, value)
-func set_magic_defense_percent(value: float) -> void:
-	set_value(MAGIC_DEFENSE_PERCENT, value)
+func set_physical_defense_points(value: int) -> void: set_value_i(PHYSICAL_DEFENSE_POINTS, value)
+func set_magic_defense_points(value: int) -> void: set_value_i(MAGIC_DEFENSE_POINTS, value)
 func set_evasion(value: float) -> void:
 	set_value(EVASION, value)
 func set_crit_chance(value: float, multiplier: float = 1) -> void:
@@ -239,6 +238,12 @@ func _get_value_i(key: String) -> int:
 
 func get_info() -> Dictionary[String, float]:
 	return _info
+
+func get_physical_defense_percent() -> float:
+	return DefensesHelper.physical_defense_percent(_get_value_i(AGILITY), _get_value_i(PHYSICAL_DEFENSE_POINTS))
+
+func get_magic_defense_percent() -> float:
+	return DefensesHelper.magic_defense_percent(_get_value_i(INTELLIGENCE), _get_value_i(MAGIC_DEFENSE_POINTS))
 
 const DEBUFF_KEY_RANGED_UNITS = "ranged_units"
 const DEBUFF_KEY_MELEE_UNITS = "melee_units"
@@ -310,8 +315,8 @@ func get_cleave_percent() -> float: return _get_value(CLEAVE_PERCENT)
 func get_cleave_range() -> int: return _get_value_i(CLEAVE_RANGE)
 func get_hp() -> int: return _get_value_i(HP)
 func get_mana() -> int: return _get_value_i(MANA)
-func get_physical_defense_percent() -> float: return min(1, _get_value(PHYSICAL_DEFENSE_PERCENT))
-func get_magic_defense_percent() -> float: return min(1, _get_value(MAGIC_DEFENSE_PERCENT))
+func get_physical_defense_points() -> int: return _get_value_i(PHYSICAL_DEFENSE_POINTS)
+func get_magic_defense_points() -> int: return _get_value_i(MAGIC_DEFENSE_POINTS)
 func get_evasion() -> float: return min(1, _get_value(EVASION))
 func get_crit_chance() -> float: return min(1, _get_value(CRIT_CHANCE))
 func get_crit_multiplier() -> float:

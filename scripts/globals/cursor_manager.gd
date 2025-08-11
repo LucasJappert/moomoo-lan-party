@@ -40,9 +40,9 @@ static func _static_process(_delta):
 	# Change cursor dynamically depending on the hovered entity
 	if not GameManager.MY_PLAYER: return set_cursor(CursorType.DEFAULT)
 
-	if GameManager.MY_PLAYER.charged_skill: return set_cursor(CursorType.CAST)
+	if GameManager.MY_PLAYER.charged_skill and GameManager.MY_PLAYER.movement_helper._attack_move_type != MovementHelper.AttackMoveType.SkillAttack: return set_cursor(CursorType.CAST)
 
-	if ObjectHelpers.is_enemy(AreaHovered.hovered_entity): return set_cursor(CursorType.SWORD)
+	if ObjectHelpers.is_enemy_of_player(AreaHovered.hovered_entity): return set_cursor(CursorType.SWORD)
 
 	set_cursor(CursorType.DEFAULT)
 
