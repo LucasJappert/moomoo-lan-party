@@ -109,7 +109,7 @@ static func roll_true_strike(_attacker: Entity, _di: DamageInfo) -> void:
 	_di.can_be_evaded = not GlobalsEntityHelpers.roll_chance(_attacker.cache_total_stats.get_chance_to_ignore_evasion())
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
-	if not ObjectHelpers.valid_instance(_attacker): return
+	if ObjectHelpers.is_null(_attacker): return
 	if not _di.is_main_attack(): return
 	
 	# Stun verification, we need it after the evasion check

@@ -2,6 +2,10 @@
 
 📆 xx/07/2025
 
+- ✅ Create item Deadeye that grants a chance to ignore the target's evasion
+- ✅ Generate a skill/item that gives a chance to summon skeletons with each attack
+- ✅ Move the player to an appropriate position when casting a spell on an enemy that is out of range
+- ✅ Check for a stun with a longer duration over another
 - ✅ Added an item that grants +30% Movement Speed, +30% Attack Speed, and +30 Strength, Agility, and Intelligence.
 - ✅ Added an item that grants +30% Physical and Magical Defense and +1000 HP.
 - ✅ Added an item that grants +40% Lifesteal, +20% chance to Stun, and +200 Physical & Magical Attack.

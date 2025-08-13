@@ -304,7 +304,6 @@ func _server_verify_death(_killed_by: Entity) -> void:
 	_my_owner.global_die(_killed_by)
 	_try_to_add_gold_to_players_on_enemy_die(_killed_by)
 
-
 func _try_to_give_experience_to_players(_exp: int) -> void:
 	_exp *= EXP_MULTIPLIER
 	if not _my_owner is Enemy: return

@@ -2,7 +2,7 @@ extends Node2D
 class_name MainScene
 
 @onready var my_tooltip: MyTooltip = $Layer10/MyTooltip
-@onready var layer_1 = $Layer1
+@onready var layer_1: Node2D = $Layer1
 @onready var audio_node: Node = $Audio
 
 static var PAUSED = false
@@ -18,9 +18,9 @@ func _ready():
 	InitialScene.load_scene()
 	pass
 
-func load_scene(scene):
-	clear_scenes()
-	layer_1.add_child(scene)
+static func load_scene(scene: Node):
+	_clear_scenes()
+	GameManager.main_scene.layer_1.add_child(scene)
 
 # region 	GETTERs
 static func get_elapsed_time_in_sec() -> float:
@@ -40,6 +40,9 @@ static func set_paused(_paused: bool, stop_time_scale := true, show_menu: bool =
 	EventBus.emit_paused(_paused, show_menu)
 # endregion SETTERs
 
-func clear_scenes():
-	for child in layer_1.get_children():
+static func _clear_scenes():
+	for child in GameManager.main_scene.layer_1.get_children():
 		child.queue_free()
+
+static func get_current_scene() -> Node:
+	return GameManager.main_scene.layer_1.get_child(0)

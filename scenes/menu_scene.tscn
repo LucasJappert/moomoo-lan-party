@@ -25,6 +25,7 @@ offset_right = 100.0
 grow_horizontal = 2
 text = "MENU"
 force_width = 140
+border_color = Color(1, 1, 1, 1)
 
 [node name="MainContainer" type="Control" parent="."]
 unique_name_in_owner = true
@@ -88,7 +89,7 @@ offset_left = 9.0
 offset_top = 8.0
 offset_right = 421.0
 offset_bottom = 93.0
-theme_override_colors/font_color = Color(0.443192, 0.432662, 0.451055, 1)
+theme_override_colors/font_color = Color(0.839216, 0.784314, 0.694118, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 60
 text = "MENU"
@@ -124,18 +125,18 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Resume"
 force_width = 200
-color = Color(0, 0.364447, 0.107189, 1)
+border_color = Color(0, 1, 0, 1)
 
 [node name="RestartButton" parent="MainContainer/GridContainer/VBoxContainer" instance=ExtResource("2_6wmco")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Restart"
 force_width = 200
-color = Color(0.376259, 0.376259, 0, 1)
+border_color = Color(1, 1, 0, 1)
 
 [node name="ExitButton" parent="MainContainer/GridContainer/VBoxContainer" instance=ExtResource("2_6wmco")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Exit game"
 force_width = 200
-color = Color(0.431782, 0, 0.0892535, 1)
+border_color = Color(1, 0, 0, 1)

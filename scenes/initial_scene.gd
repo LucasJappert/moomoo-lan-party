@@ -26,9 +26,12 @@ func _ready():
 
 	_spawn_particles_immediately() # Primer spawn inmediato sin delay
 
+	_start_scene()
+
+	_lang_ok_button.visible = false
 	_spanish_button.on_pressed = _on_spanish_button_pressed
 	_english_button.on_pressed = _on_english_button_pressed
-	_lang_ok_button.on_pressed = _start_scene
+	# _lang_ok_button.on_pressed = _start_scene
 
 
 func _spawn_particles_immediately() -> void:
@@ -49,16 +52,17 @@ func spawn_particles_with_delay(amount: int, delay: float) -> void:
 # region	SETTERS
 static func load_scene() -> void:
 	var scene = INITIAL_SCENE.instantiate()
-	GameManager.main_scene.load_scene(scene)
+	MainScene.load_scene(scene)
 
 func _start_scene() -> void:
-	if not LanguageManager.initialized(): return
+	LanguageManager.set_from_OS()
+	LanguageManager.set_spanish()
 
 	# Hacemos aparecer el logo y luego la animacion tanto del logo como del texto de la historia
 	var _appear_tween = create_tween()
 	_appear_tween.tween_property(_lang_picker_panel, "modulate:a", 0, 1)
 	_appear_tween.tween_callback(func():
-		_lang_picker_panel.visible = false
+		# _lang_picker_panel.visible = false
 		_animate_logo()
 		_text_typer_scene.show_me()
 	)
@@ -84,9 +88,11 @@ func _animate_logo() -> void:
 	_tween.tween_property(_logo, "position:y", original_position.y, 3)
 
 func _on_spanish_button_pressed():
+	_lang_ok_button.visible = true
 	LanguageManager.set_spanish()
 	_english_button.set_checked(false)
 
 func _on_english_button_pressed():
+	_lang_ok_button.visible = true
 	LanguageManager.set_english()
 	_spanish_button.set_checked(false)

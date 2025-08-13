@@ -10,10 +10,14 @@ class_name MyButton
 	set(value):
 		force_width = value
 		if is_inside_tree(): _update_label()
-@export var color: Color = Color(1, 1, 1):
+@export var border_color: Color = Color(1, 1, 1):
 	set(value):
-		color = value
-		if is_inside_tree(): _update_color()
+		border_color = value
+		if is_inside_tree(): _update_border_color()
+@export var text_color: Color = Color(1, 1, 1):
+	set(value):
+		text_color = value
+		if is_inside_tree(): _update_text_color()
 
 @onready var _label: Label = %TextLabel
 @onready var _border: NinePatchRect = %Border
@@ -25,7 +29,8 @@ const MARGINS = 30
 
 func _ready():
 	_update_label()
-	_update_color()
+	_update_border_color()
+	_update_text_color()
 	_update_border_size()
 	connect("gui_input", _on_button_click)
 
@@ -51,6 +56,9 @@ func _update_label():
 	var text_width = _label.get_minimum_size().x
 	set_size(Vector2(text_width + MARGINS * 2, text_height))
 
-func _update_color():
+func _update_border_color():
 	if not _border: return
-	_border.modulate = color
+	_border.modulate = border_color
+
+func _update_text_color():
+	_label.modulate = text_color

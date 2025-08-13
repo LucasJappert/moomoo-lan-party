@@ -6,11 +6,39 @@ class LangTypes:
 
 static var language: String = ""
 
+# region 	GETTERs
 static func initialized() -> bool: return language != ""
 
 static func is_english() -> bool: return language == LangTypes.ENGLISH
 
 static func is_spanish() -> bool: return language == LangTypes.SPANISH
+
+static func is_OS_english(prefer_browser_on_web: bool = true) -> bool:
+	var loc: String = OS.get_locale() # "es_AR", "en_US", "en", etc.
+
+	if prefer_browser_on_web and OS.has_feature("web"):
+		var js := """
+			(function(){
+				var l = (navigator.languages && navigator.languages[0]) || navigator.language || "";
+				return l;
+			})()
+		"""
+		var res: Variant = JavaScriptBridge.eval(js)
+		if typeof(res) == TYPE_STRING and not String(res).is_empty():
+			loc = String(res)
+
+	if loc.is_empty():
+		return false # sin info, consideramos que NO es inglés
+
+	loc = loc.replace("-", "_")
+	var lang := loc.split("_", false, 2)[0].to_lower()
+	return lang == "en"
+# endregion	GETTERs
+
+# region 	SETTERs
+static func set_from_OS() -> void:
+	if is_OS_english(): return set_english()
+	return set_spanish()
 
 static func set_english() -> void:
 	language = LangTypes.ENGLISH
@@ -21,6 +49,7 @@ static func set_spanish() -> void:
 	language = LangTypes.SPANISH
 	TranslationServer.set_locale(language)
 	EventBus.emit_lang_changed()
+# endregion	SETTERs
 
 ## 🧠 Diccionario con las traducciones
 static var _translations := {
@@ -88,7 +117,6 @@ static var _translations := {
 	"Damage Type": {LangTypes.SPANISH: "Tipo de daño"}
 }
 
-
 ## ✅ Traducción basada en clave
 static func translate(original_text: String) -> String:
 	# ⚠️ Ignorar si es número (aunque venga como string)
@@ -107,7 +135,6 @@ static func translate(original_text: String) -> String:
 		return original_text
 
 	return _translations[original_text][language]
-
 
 static func translate_ui(root: Node) -> void:
 	for child in root.get_children():

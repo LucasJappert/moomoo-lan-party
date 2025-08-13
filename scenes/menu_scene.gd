@@ -15,11 +15,12 @@ func _ready():
 	_menu_button.on_pressed = func(): MainScene.set_paused(true, true, true)
 	_main_container.position = HIDDEN_POSITION
 	EventBus.connect_to_paused(func(_paused: bool, _show_menu: bool):
+		if not GameManager.GAME_RUNNING: return
 		if _paused and _show_menu: _show_me()
 		if not _paused: _hide_me()
 	)
 	_resume_button.on_pressed = func(): MainScene.set_paused(false)
-	_restart_button.on_pressed = _restart_game
+	_restart_button.on_pressed = GameManager.restart_game
 	_exit_button.on_pressed = func(): get_tree().quit()
 
 func _show_me() -> void:
@@ -30,10 +31,6 @@ func _hide_me() -> void:
 	MainScene.set_paused(false)
 	SoundsHelper.play_sfx("res://sounds/generals/chains.wav", CHAIN_VOLUME, 2)
 	_aplly_tween_when_disappear()
-
-func _restart_game():
-	MainScene.set_paused(false)
-	HeroPickerScene.load_scene()
 
 const _TWEEN_DURATION := 0.5
 func _apply_tween_when_appear():

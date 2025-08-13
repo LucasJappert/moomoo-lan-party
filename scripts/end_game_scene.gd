@@ -13,12 +13,13 @@ func _ready():
 	LanguageManager.translate_ui(self)
 	visible = false
 	EventBus.connect_to_entity_died(func(_entity_died: Entity, _killed_by: Entity):
+		if not GameManager.GAME_RUNNING: return
 		if _entity_died.is_my_player():
 			_statistic_label.text = _entity_died.statistics.get_summary()
 			_show_me()
 	)
 
-	_retry_button.on_pressed = _restart_game
+	_retry_button.on_pressed = GameManager.restart_game
 	pass
 
 func _show_me() -> void:
@@ -27,11 +28,6 @@ func _show_me() -> void:
 	_defeat_label.text = "YOU LOST"
 	_defeat_label.modulate = LOSE_COLOR
 	MainScene.set_paused(true, false)
-
-func _restart_game() -> void:
-	visible = false
-	MainScene.set_paused(false)
-	HeroPickerScene.load_scene()
 
 func apply_tween_when_appear():
 	# _main_container.scale = Vector2.ZERO

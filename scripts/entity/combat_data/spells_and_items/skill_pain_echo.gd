@@ -27,6 +27,7 @@ static func create_and_add_instance() -> void:
 
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
 	if _di.was_reflected: return false
+	if ObjectHelpers.is_null(_attacker): return false
 	
 	var skill_base := _target.get_active_skill(NAME)
 	if not skill_base: return false

@@ -24,7 +24,7 @@ func _on_input_event(_viewport, _event, _shape_idx):
 		if _event.button_index == MOUSE_BUTTON_RIGHT:
 			if GameManager.MY_PLAYER and not KeyboardController.SHIFT_PRESSED:
 				if my_owner.is_my_player(): return
-				GameManager.MY_PLAYER.set_target_to_attack(my_owner)
+				if my_owner.is_enemy_of_player(): GameManager.MY_PLAYER.set_target_to_attack(my_owner)
 				GameManager.MY_PLAYER.movement_helper.set_target_entity(my_owner, MovementHelper.AttackMoveType.PhysicalAttack)
 
 func _process(_delta: float) -> void:

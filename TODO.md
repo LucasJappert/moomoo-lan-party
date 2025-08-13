@@ -5,11 +5,7 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Ver bug de pausa cuando reiniciamos
-- Ver bug de ataque a mi unidad summoneada
-- 🔵 Generar skill/item que da chances de invocar esqueletos ante cada ataque
-- ✅ Acercar player cuando casteamos un hechizo fuera de rango
-- ✅ Ver stun con mayor duracion sobre otro
+- Dibujar zona rango de ataque cuando presionamos ALT
 - COnfigurar skills moomoo en cada state
 - Desarrollar historia y mostrar diálogos en diferentes momentos
 - Agregar item epicos a bosses enemigos

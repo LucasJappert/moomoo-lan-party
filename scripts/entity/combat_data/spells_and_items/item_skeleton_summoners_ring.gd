@@ -12,21 +12,23 @@ static func create_and_add_instance() -> void:
 	_ITEMS[NAME].float_dict["summons_duration_in_seconds"] = 40
 	_ITEMS[NAME].cooldown = 2
 	_ITEMS[NAME].buy_price = 3500
+	_ITEMS[NAME].en_description = "Each physical attack has a " + StringHelpers.format_percent(_ITEMS[NAME].float_dict["chance"]) + " chance to summon a Skeleton Blade and a Skeleton Bow for " + StringHelpers.format_float(_ITEMS[NAME].float_dict["summons_duration_in_seconds"]) + " seconds (up to " + StringHelpers.format_float(_ITEMS[NAME].float_dict["max_summons"]) + " skeletons)."
+	_ITEMS[NAME].es_description = "Cada ataque fisico tiene una probabilidad del " + StringHelpers.format_percent(_ITEMS[NAME].float_dict["chance"]) + " de invocar un esqueleto de espada y un esqueleto de arco por " + StringHelpers.format_float(_ITEMS[NAME].float_dict["summons_duration_in_seconds"]) + " segundos (hasta " + StringHelpers.format_float(_ITEMS[NAME].float_dict["max_summons"]) + " esqueletos)."
 
-static func static_actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
-	if not _di.is_main_attack(): return false
-	if _di.damage_type != DamageType.PHYSICAL: return false
+static func static_actions_after_execute_physical_attack(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
+	if not _di.is_main_attack(): return
+	if _di.damage_type != DamageType.PHYSICAL: return
 	var items_in_target := _attacker.get_items_by_name(NAME)
-	if items_in_target.is_empty(): return false
+	if items_in_target.is_empty(): return
 
 	var item := items_in_target[0]
-	if item.get_remaining_cooldown() > 0: return false
+	if item.get_remaining_cooldown() > 0: return
 
 	var chance := items_in_target[0].float_dict["chance"]
-	if not GlobalsEntityHelpers.roll_chance(chance): return false
+	if not GlobalsEntityHelpers.roll_chance(chance): return
 
 	var SUMM_TYPES: Array[String] = [EnemySummonedSkeletonBlade.LONG_NAME, EnemySummonedSkeletonBow.LONG_NAME]
-	if _attacker.get_summoned_entities(SUMM_TYPES).size() >= items_in_target[0].float_dict["max_summons"]: return false
+	if _attacker.get_summoned_entities(SUMM_TYPES).size() >= items_in_target[0].float_dict["max_summons"]: return
 	
 	for _item in items_in_target: _item.reset_last_used_time()
 
@@ -34,8 +36,6 @@ static func static_actions_after_effective_hit(_attacker: Entity, _target: Entit
 
 	_spawn_melee_skeleton(_attacker, _target, duration)
 	_spawn_ranged_skeleton(_attacker, _target, duration)
-
-	return true
 
 static func _spawn_melee_skeleton(_attacker: Entity, _target: Entity, _duration: float) -> void:
 	var enemy: Enemy = EnemyBase.get_new_instance(EnemySummonedSkeletonBlade.LONG_NAME)
@@ -46,7 +46,7 @@ static func _spawn_melee_skeleton(_attacker: Entity, _target: Entity, _duration:
 		SkillBase.get_new_learned_skill(SkillTrueStrike.NAME, 3),
 	]
 	enemy.set_summoned_helper(_attacker.name, _duration)
-	enemy.combat_stats.set_hp(_attacker.get_full_health() * 2)
+	enemy.combat_stats.set_hp(int(_attacker.get_full_health() * 0.5))
 	enemy.combat_stats.set_physical_attack_power(int(_attacker.cache_total_stats.get_physical_attack_power() * randf_range(0.3, 0.5)))
 	enemy.combat_stats.set_magic_attack_power(int(_attacker.cache_total_stats.get_magic_attack_power() * randf_range(0.3, 0.5)))
 	enemy.combat_stats.set_agility(int(_attacker.cache_total_stats.get_agility() * randf_range(0.5, 2)))
@@ -69,7 +69,7 @@ static func _spawn_ranged_skeleton(_attacker: Entity, _target: Entity, _duration
 	enemy.projectile_type = ProjectileVenomArrow.NAME
 	enemy.combat_stats.set_attack_range(300)
 	enemy.set_summoned_helper(_attacker.name, _duration)
-	enemy.combat_stats.set_hp(int(_attacker.get_full_health() * 1.5))
+	enemy.combat_stats.set_hp(int(_attacker.get_full_health() * 0.3))
 	enemy.combat_stats.set_physical_attack_power(int(_attacker.cache_total_stats.get_physical_attack_power() * randf_range(0.3, 0.5)))
 	enemy.combat_stats.set_magic_attack_power(int(_attacker.cache_total_stats.get_magic_attack_power() * randf_range(0.3, 0.5)))
 	enemy.combat_stats.set_agility(int(_attacker.cache_total_stats.get_agility() * randf_range(0.5, 1.5)))

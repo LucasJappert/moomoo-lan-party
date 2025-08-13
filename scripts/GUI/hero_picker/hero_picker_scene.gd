@@ -3,6 +3,7 @@ extends CanvasLayer
 
 const HERO_PICKER_SCENE := preload("res://scenes/GUI/hero_picker_scene.tscn")
 const HERO_BOX_SCENE: PackedScene = preload("res://scenes/GUI/hero_picker/hero_box.tscn")
+const NAME := "HeroPickerScene"
 
 @onready var grid_heros_container: GridContainer = %GridHerosContainer
 @onready var skills_container: GridContainer = %SkillsContainer
@@ -21,11 +22,11 @@ func _ready() -> void:
 	
 	EventBusHeroPicker.connect_to_hero_selected(func(player: Player, p_start_game: bool):
 		_on_hero_selected(player)
-		if p_start_game: _start_game()
+		if p_start_game: GameManager.start_game(selected_hero.extra_info.key_type)
 	)
 	choose_and_play_button.connect("gui_input", func(event: InputEvent):
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			if selected_hero: _start_game()
+			if selected_hero: GameManager.start_game(selected_hero.extra_info.key_type)
 	)
 
 	choose_and_play_button.modulate = Color(0.4, 0.4, 0.4, 1)
@@ -57,12 +58,7 @@ func get_selected_hero_box() -> HeroBox:
 static func load_scene() -> void:
 	GameManager.reset_state()
 	var scene = HERO_PICKER_SCENE.instantiate()
-	GameManager.main_scene.load_scene(scene)
-
-func _start_game() -> void:
-	GameManager.main_scene.clear_scenes()
-	hero_picked_type = selected_hero.extra_info.key_type
-	GameWorld.load_scene()
+	MainScene.load_scene(scene)
 
 func _set_effects_for_selected_hero_box() -> void:
 	for hero_box in get_hero_options():

@@ -24,13 +24,12 @@ const HOSTED_GAME = true # In this version of Moomoo this is always true
 static func load_scene() -> void:
 	var scene = load("res://scenes/game_world_scene.tscn").instantiate()
 	GameManager.game_world = scene
-	GameManager.main_scene.load_scene(scene)
+	MainScene.load_scene(scene)
 	MainScene.total_paused_time = 0
 
 func _ready() -> void:
 	current_enemies_in_scene = 0
 	# DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_RESIZE_DISABLED, true)
-	# GameManager.start_game(GameManager.hero_picked_type)
 	MapManager.initialize()
 
 	call_deferred("_init_player_spawner")

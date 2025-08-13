@@ -6,6 +6,7 @@ var music_helper: MusicHelper
 
 var entities: Dictionary[String, Entity] = {}
 var moomoo: Moomoo
+static var GAME_RUNNING := false
 
 var MY_PLAYER: Player
 var MY_PLAYER_ID: int = -1
@@ -125,7 +126,18 @@ func spawn_enemy(_enemy: Enemy) -> void:
 	add_entity(game_world.enemies_spawner.spawn(data))
 
 # region 	SETTERs
+func start_game(hero_picked_type: String) -> void:
+	GAME_RUNNING = true
+	HeroPickerScene.hero_picked_type = hero_picked_type
+	GameWorld.load_scene()
+
+func restart_game() -> void:
+	GAME_RUNNING = false
+	MainScene.set_paused(false)
+	HeroPickerScene.load_scene()
+
 func reset_state() -> void:
+	# if game_world: game_world.queue_free()
 	for entity in get_entities(): remove_entity(entity, null)
 
 func set_my_player(player: Player) -> void:

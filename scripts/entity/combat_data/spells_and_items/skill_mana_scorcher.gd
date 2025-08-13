@@ -19,6 +19,7 @@ static func create_and_add_instance() -> void:
 static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool:
 	if _di.was_reflected or _di.was_a_cleave_damage or _di.temporal_damage: return false
 	if _di.damage_type != DamageType.PHYSICAL: return false
+	if ObjectHelpers.is_null(_attacker): return false
 
 	var _learned_skill := _attacker.get_learned_skill(NAME)
 	if not _learned_skill: return false

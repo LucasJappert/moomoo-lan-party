@@ -116,4 +116,4 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "Restart"
 force_width = 200
-color = Color(1, 1, 0, 1)
+border_color = Color(1, 1, 0, 1)
