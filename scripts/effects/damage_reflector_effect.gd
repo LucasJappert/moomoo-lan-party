@@ -13,11 +13,8 @@ static func attach_to(target: Node, duration: float = -1.0) -> Node2D:
 	wrapper.position = Vector2.ZERO
 	target.add_child(wrapper)
 
-	# Si el target es eliminado del árbol, eliminar el wrapper también
-	target.tree_exited.connect(func():
-		print("wrapper freed from tree")
-		wrapper.queue_free()
-	)
+	# En lugar de lambda, conecta directo al método:
+	target.tree_exited.connect(wrapper.queue_free)
 
 	# Crear updater
 	var updater := DamageReflectorUpdater.new()
@@ -48,12 +45,12 @@ class DamageReflectorUpdater:
 		if time_left > 0.0:
 			time_left -= delta
 			if time_left <= 0.0:
-				wrapper_node.queue_free()
+				if wrapper_node: wrapper_node.queue_free()
 				return
 
 		# Emitir líneas blancas
 		time_accumulator += delta
-		if time_accumulator >= 0.08:
+		if time_accumulator >= 0.06:
 			time_accumulator = 0.0
 			for i in range(2): _emit_line_burst()
 
@@ -68,12 +65,12 @@ class DamageReflectorUpdater:
 		add_child(line)
 
 		var dir = Vector2.RIGHT.rotated(line.rotation)
-		var final_offset = dir * 4
+		var final_offset = dir * 6
 		# var final_scale_y = randf_range(1.5, 2.5)
 
 		const DURATION := 0.4
 		var tween := line.create_tween()
 		tween.tween_property(line, "position", final_offset, DURATION)
-		tween.parallel().tween_property(line, "scale:x", 1.5, DURATION)
+		tween.parallel().tween_property(line, "scale:x", 2, DURATION)
 		tween.parallel().tween_property(line, "modulate:a", 1, DURATION)
 		tween.tween_callback(line.queue_free)

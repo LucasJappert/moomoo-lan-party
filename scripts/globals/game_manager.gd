@@ -31,7 +31,11 @@ func add_my_tree(my_tree: MyTree) -> void:
 
 func add_entity(entity: Entity) -> void:
 	if entity is Enemy:
-		GameWorld.current_enemies_in_scene += 1
+		if not entity.summoned_helper:
+			GameWorld.current_enemies_in_scene += 1
+		if entity.summoned_helper:
+			if entity.summoned_helper.summoned_by_name != GameManager.MY_PLAYER.name:
+				GameWorld.current_enemies_in_scene += 1
 	entities[entity.name] = entity
 
 	if not AM_I_HOST: return
@@ -72,6 +76,21 @@ func get_players() -> Array[Entity]:
 	# TODO: Improve with cache by frame
 	return entities.values().filter(func(e): return ObjectHelpers.get_safe_instance(e) is Player)
 
+func get_player_enemies() -> Array[Entity]:
+	var result: Array[Entity] = []
+	for entity in GameManager.get_entities():
+		if not _is_player_enemy(entity): continue
+		result.append(entity)
+	return result
+
+func get_player_allies(include_player: bool) -> Array[Entity]:
+	var result: Array[Entity] = []
+	for entity in GameManager.get_entities():
+		if not include_player and entity == GameManager.MY_PLAYER: continue
+		if _is_player_enemy(entity): continue
+		result.append(entity)
+	return result
+
 func get_enemies() -> Array[Entity]:
 	return entities.values().filter(func(e): return ObjectHelpers.get_safe_instance(e) is Enemy)
 
@@ -102,9 +121,13 @@ func spawn_player(hero_type: String) -> void:
 	add_entity(new_player)
 
 func spawn_enemy(_enemy: Enemy) -> void:
-	add_entity(game_world.enemies_spawner.spawn(ObjectHelpers.to_dict(_enemy)))
+	var data := ObjectHelpers.to_dict(_enemy)
+	add_entity(game_world.enemies_spawner.spawn(data))
 
 # region 	SETTERs
+func reset_state() -> void:
+	for entity in get_entities(): remove_entity(entity, null)
+
 func set_my_player(player: Player) -> void:
 	MY_PLAYER = player
 	game_world.gui_scene.init_scene(player)
@@ -114,3 +137,12 @@ func set_my_player(player: Player) -> void:
 # region 	GETTERs
 func get_gui_scene() -> Node: return game_world.gui_scene
 # endregion GETTERs
+
+# region 		INTERNAL AUXILIARY METHODS
+static func _is_player_enemy(entity: Entity) -> bool:
+	if not entity or not GameManager.MY_PLAYER: return false
+	if entity == GameManager.MY_PLAYER: return false
+	if entity.summoned_helper and entity.summoned_helper.summoned_by_name == GameManager.MY_PLAYER.name: return false
+	if entity is Moomoo and not Moomoo.static_is_awake(): return false
+	return true
+# endregion 	INTERNAL AUXILIARY METHODS

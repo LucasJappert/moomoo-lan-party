@@ -345,11 +345,13 @@ func _update_auxiliary_labels(_delta: float) -> void:
 	🔹 Total VRAM: %.2f MB
 	🔹 Textures VRAM: %.2f MB
 	🔹 Buffers VRAM: %.2f MB
+	🔹 Entities: %d 
 	""" % [
 		MapManager.world_to_cell(GameManager.MY_PLAYER.global_position),
 		mem_static_mb, frame_time, physics_time,
 		object_count, node_count, resource_count,
-		draw_calls, vertices, video_mem, tex_mem, buf_mem
+		draw_calls, vertices, video_mem, tex_mem, buf_mem,
+		GameManager.entities.size()
 	]
 
 

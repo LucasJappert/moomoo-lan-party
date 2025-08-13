@@ -27,12 +27,12 @@ class WaveInfo:
 
 static var WAVES_INFO = [
 	# TODO: Configurar las stats
-	# WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME], CombatStats.get_instance(1, 1, 1)),
+	WaveInfo.new([EnemyReflector.LONG_NAME], [EnemyCrimsonWarlock.LONG_NAME], CombatStats.get_instance(6, 1, 1)),
+	WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME], CombatStats.get_instance(1, 1, 1)),
 	# WaveInfo.new([EnemyInfernalMinotaur.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME], CombatStats.get_instance(2, 1, 1)),
 	# WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyNightArcher.LONG_NAME], CombatStats.get_instance(3, 1, 1)),
 	# WaveInfo.new([EnemyBoneguard.LONG_NAME], [EnemyFrostboneArcher.LONG_NAME], CombatStats.get_instance(4, 1, 1)),
 	# WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME], CombatStats.get_instance(5, 1, 1)),
-	# WaveInfo.new([EnemyReflector.LONG_NAME], [EnemyCrimsonWarlock.LONG_NAME], CombatStats.get_instance(6, 1, 1)),
 	# WaveInfo.new([EnemyBlowDigger.LONG_NAME], [EnemyRotbull.LONG_NAME], CombatStats.get_instance(7, 1, 1)),
 	# WaveInfo.new([EnemyDeadShield.LONG_NAME], [EnemySilentShuriken.LONG_NAME], CombatStats.get_instance(8, 1, 1)),
 ]
@@ -62,12 +62,13 @@ static func process(_delta: float) -> void:
 	if not process_running: return
 	if not GameManager.MY_PLAYER: return
 	if GameWorld.current_enemies_in_scene > 0: return
-	if GameManager.moomoo.is_awake: return
+	if Moomoo.static_is_awake(): return
 
 	if countdown_active == false: countdown_active = true
 
 	if countdown_active and countdown_time_in_secs <= 0:
 		if current_normal_wave >= WAVES_INFO.size() and current_special_wave >= (WAVES_INFO.size() / WAVES_PER_SPECIAL_WAVE):
+			if ObjectHelpers.is_null(GameManager.moomoo): return print("Moomoo not found")
 			GameManager.moomoo.wake_up()
 			# The Moomoo awakens and reveals itself against the player
 			print("The Moomoo awakens and reveals itself against the player")

@@ -113,5 +113,5 @@ static func _spawn_random_single_drop(parent: Node) -> void:
 	# Desvanecer y eliminar
 	tween.tween_callback(func():
 		spawn_on_bleeding(parent.global_position + Vector2(0, 20), 1.0)
-		sprite.queue_free()
+		if ObjectHelpers.valid_instance(sprite): sprite.queue_free()
 	)

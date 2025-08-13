@@ -63,4 +63,4 @@ static func apply_animation(_target: Entity, _duration_in_seconds: float = 0) ->
 	timer.wait_time = _duration_in_seconds
 	timer.autostart = true
 	sprite.add_child(timer)
-	timer.timeout.connect(func(): sprite.queue_free())
+	timer.timeout.connect(sprite.queue_free)

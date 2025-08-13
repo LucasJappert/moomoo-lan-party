@@ -2,6 +2,7 @@ class_name Entity
 
 extends CombatData
 
+var summoned_helper: SummonedHelper
 var tween_effects := TweenEffects.new()
 var statistics: Statistics
 var extra_info := ExtraInfo.new()
@@ -21,6 +22,7 @@ var movement_helper: MovementHelper
 
 var sprite_height: float = 0
 var can_attack: bool = true
+var is_dying: bool = false
 
 var id: int = 0
 
@@ -58,6 +60,10 @@ func _ready():
 	_client_init()
 	call_deferred("_post_ready")
 	ready_combat_data()
+
+	if summoned_helper:
+		summoned_helper = SummonedHelper.new(self, summoned_helper.summoned_by_name, summoned_helper.lifetime_sec)
+		add_child(summoned_helper, true)
 
 	EventBus.connect_to_freed_entity(Callable(self, "_on_entity_freed"))
 	EventBus.connect_to_paused(func(_paused: bool, _show_menu: bool): EntityState.paused_game(self))
@@ -114,6 +120,17 @@ func _on_entity_freed(entity_name: String) -> void:
 	verify_freed_target_view(entity_name)
 
 # region 	GETTERs
+func get_summoned_entities(unit_names: Array[String] = []) -> Array[Entity]:
+	var result: Array[Entity] = []
+	for entity in GameManager.get_entities():
+		if not entity.summoned_helper: continue
+		if entity.summoned_helper.summoned_by_name != self.name: continue
+		if unit_names.is_empty():
+			result.append(entity)
+			continue
+		if entity.extra_info.key_type in unit_names: result.append(entity)
+	return result
+
 func is_enemy_of_player() -> bool:
 	if not GameManager.MY_PLAYER: return false
 	if GameManager.MY_PLAYER in get_my_enemies(): return true
@@ -124,31 +141,39 @@ func is_in_range(target_cell: Vector2i, distance_in_tiles: int) -> bool:
 func is_my_player() -> bool: return false
 
 func get_my_enemies() -> Array[Entity]:
-	if self is Player:
-		var result: Array[Entity] = []
-		result.append_array(GameManager.get_enemies())
-		if Moomoo.static_is_awake(): result.append(GameManager.get_moomoo())
-		return result
+	if self is Player: return GameManager.get_player_enemies()
 
 	if self is Enemy:
-		var result: Array[Entity] = []
-		result.append_array(GameManager.get_players())
-		if not Moomoo.static_is_awake(): result.append(GameManager.get_moomoo())
-		return result
+		var player_allies_ids := GameManager.get_player_allies(true).map(func(entity: Entity): return entity.id)
+		if self.id in player_allies_ids: return GameManager.get_player_enemies()
+		else: return GameManager.get_player_allies(true)
+
+	if self is Moomoo:
+		if Moomoo.static_is_awake(): return GameManager.get_player_allies(true)
+		else: return GameManager.get_player_enemies()
 		
 	return []
 
 func get_allies(include_me: bool = false) -> Array[Entity]:
 	var result: Array[Entity] = []
-
-	if self is Player or self is Moomoo: result.append_array(GameManager.get_players())
-	if self is Enemy: result.append_array(GameManager.get_enemies())
-	if not include_me: result.erase(self)
+	if self is Player: result = GameManager.get_player_allies(true)
+	if self is Enemy:
+		var player_allies_ids := GameManager.get_player_allies(true).map(func(entity: Entity): return entity.id)
+		if self.id in player_allies_ids: result = GameManager.get_player_allies(true)
+		else: result = GameManager.get_player_enemies()
+	if self is Moomoo:
+		if Moomoo.static_is_awake(): result = GameManager.get_player_enemies()
+		else: result = GameManager.get_player_allies(true)
 		
+	if not include_me: result.erase(self)
 	return result
+		
 # endregion GETTERs
 
 # region 	SETTERs
+func set_summoned_helper(entity_name: String, duration: float) -> void:
+	summoned_helper = SummonedHelper.new(self, entity_name, duration)
+
 func set_direction_according_to_target(target: Entity) -> void:
 	direction = get_direction_according_to_target(target)
 	
@@ -163,7 +188,8 @@ func _set_area_attack_shape_radius() -> void:
 func _client_init() -> void:
 	SpritesHelper.set_entity_sprites(self)
 
-func global_die(_killed_by: Entity) -> void:
+func global_die(_killed_by: Entity, _expired: bool = false) -> void:
+	is_dying = true
 	if _killed_by: _killed_by.statistics.register_kill()
 
 	MapManager.set_cell_blocked(movement_helper.current_cell, false)
@@ -171,7 +197,7 @@ func global_die(_killed_by: Entity) -> void:
 	for registered_skill in SkillBase.REGISTERED_SKILLS:
 		registered_skill.actions_after_die(self, _killed_by)
 
-	SoundsHelper.play_dying()
+	if not _expired: SoundsHelper.play_dying()
 
 	var killed_by_ref = weakref(_killed_by)
 	_apply_effects_after_die(func():
@@ -188,7 +214,6 @@ func _apply_effects_after_die(on_finished: Callable) -> void:
 
 	const TWEEN_DURATION := 1.5
 	var tween := create_tween()
-
 
 	TweenHelper.apply_tween_to_dissolve(tween, body_sprite, TWEEN_DURATION)
 

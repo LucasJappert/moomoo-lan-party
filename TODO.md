@@ -5,6 +5,8 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Ver bug de pausa cuando reiniciamos
+- Ver bug de ataque a mi unidad summoneada
 - 🔵 Generar skill/item que da chances de invocar esqueletos ante cada ataque
 - ✅ Acercar player cuando casteamos un hechizo fuera de rango
 - ✅ Ver stun con mayor duracion sobre otro

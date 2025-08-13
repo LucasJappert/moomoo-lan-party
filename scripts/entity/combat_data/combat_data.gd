@@ -205,6 +205,12 @@ func update_current_mana(value_to_increase: int) -> void:
 	current_mana = clamp(current_mana + value_to_increase, 0, cache_total_stats.get_mana())
 	_my_owner.hud.update_mana_bar()
 
+func get_active_skill(_skill_name: String) -> SkillBase:
+	for active_skill in _active_skills:
+		if active_skill.learned_skill.my_name == _skill_name:
+			return active_skill
+	return null
+
 func update_active_skills(_delta: float) -> void:
 	for i in range(_active_skills.size() - 1, -1, -1):
 		_active_skills[i].process_skill(_my_owner, _delta)
@@ -571,11 +577,12 @@ func is_melee() -> bool:
 # region TRY PHISICAL ATTACK
 func try_physical_attack(_delta: float) -> bool:
 	if not _my_owner.multiplayer.is_server(): return false
+	if _my_owner.is_dying: return false
 	if _my_owner.is_dead(): return false
 	if _my_owner.current_state != EntityState.States.IDLE: return false # Cant attack while moving
 	if _my_owner.is_spawning: return false
 	
-	if target_to_attack == GameManager.moomoo and _my_owner is Enemy:
+	if target_to_attack == GameManager.moomoo and _my_owner.is_enemy_of_player():
 		set_target_to_attack(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
 
 	if target_to_attack == null: return false
@@ -638,7 +645,7 @@ func launch_projectile(final_target: Entity, _extra_projectile: bool) -> bool:
 	# Then we try to launch extra projectiles if it's a direct attack (original projectile)
 	var extra_targets: Array[Entity] = []
 	if _my_owner.cache_total_stats.get_extra_projectiles() > 0:
-		extra_targets.append_array(GlobalsEntityHelpers.get_closest_entities(_my_owner.global_position, _my_owner.get_my_enemies(), cache_total_stats.get_attack_range(), cache_total_stats.get_extra_projectiles(), [final_target]))
+		extra_targets.append_array(GlobalsEntityHelpers.get_closest_entities(_my_owner.global_position, _my_owner.get_my_enemies(), cache_total_stats.get_attack_range_in_tiles(), cache_total_stats.get_extra_projectiles(), [final_target]))
 
 	var percent_damage := cache_total_stats.get_extra_projectile_percent_damage()
 	var new_physical_attack_power := int(max(physical_attack_power * percent_damage, 1))

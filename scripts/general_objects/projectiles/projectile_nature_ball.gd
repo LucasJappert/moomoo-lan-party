@@ -20,7 +20,7 @@ static func try_init(_projectile: Projectile):
 
 static func actions_while_flying(_projectile: Projectile):
 	if NAME != _projectile.type: return
-	for i in range(4):
+	for i in range(1):
 		var spawn_position = Vector2(randf_range(-2, 2), randf_range(-2, 2))
 		var particle_sprite := SpritesHelper.get_sprite_2d(RECT_REGION)
 		particle_sprite.rotation = _projectile.rotation

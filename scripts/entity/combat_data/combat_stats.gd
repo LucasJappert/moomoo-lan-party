@@ -218,8 +218,7 @@ func set_percent_mana_to_burn(value: float) -> void:
 	set_value(PERCENT_MANA_TO_BURN, value)
 func set_chance_to_ignore_evasion(value: float) -> void:
 	set_value(CHANCE_TO_IGNORE_EVASION, value)
-func set_agility(value: int) -> void:
-	set_value_i(AGILITY, value)
+func set_agility(value: int) -> void: set_value_i(AGILITY, value)
 func set_strength(value: int) -> void:
 	set_value_i(STRENGTH, value)
 func set_intelligence(value: int) -> void:
@@ -326,8 +325,8 @@ func get_stun_duration() -> float:
 	return _get_value(STUN_DURATION)
 func get_silence_duration() -> float:
 	return _get_value(SILENCE_DURATION)
-func get_attack_range() -> int:
-	return _get_value_i(ATTACK_RANGE)
+func get_attack_range() -> int: return _get_value_i(ATTACK_RANGE)
+func get_attack_range_in_tiles() -> int: return int(get_attack_range() / MapManager.TILE_SIZE.x)
 func get_physical_attack_power() -> int:
 	return int(_get_value_i(PHYSICAL_ATTACK_POWER) * (1 + _get_value(PHYSICAL_ATTACK_POWER_PERCENT)))
 func get_physical_attack_power_percent() -> float:

@@ -2,6 +2,8 @@ class_name EnemyBase
 const SCENE = preload("res://scenes/entity/enemy_scene.tscn")
 
 static var REGISTERED_CLASSES = [
+	EnemySummonedSkeletonBow,
+	EnemySummonedSkeletonBlade,
 	EnemyRotbull,
 	EnemyBlowDigger,
 	EnemyCrimsonWarlock,

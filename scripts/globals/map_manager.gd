@@ -73,7 +73,7 @@ static func set_cell_blocked_from_world(pos: Vector2, blocked: bool):
 static func is_cell_blocked(cell: Vector2i) -> bool:
 	return _astar_grid.is_point_solid(cell)
 
-static func get_safe_cell(cell: Vector2i):
+static func get_safe_cell(cell: Vector2i) -> Vector2i:
 	const MAX_SEARCH_RADIUS: int = 4 # Maximum number of tiles to search outward
 
 	if not is_cell_blocked(cell):
@@ -108,7 +108,8 @@ static func get_safe_cell(cell: Vector2i):
 
 			queue.append(neighbor) # Keep searching outward
 
-	return null # Fallback, no free cell found within radius
+	print("⚠️ No free cell found within radius")
+	return cell # Fallback, no free cell found within radius
 	
 static func get_grass_cells() -> Array[Vector2i]:
 	var grass_cell_type = Vector2i(0, 3)

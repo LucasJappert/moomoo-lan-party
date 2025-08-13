@@ -54,11 +54,11 @@ static func static_actions_after_effective_hit(_attacker: Entity, _target: Entit
 	var items_in_target := _target.get_items_by_name(NAME)
 	if items_in_target.is_empty(): return false
 
-	var lightning_chance := items_in_target[0].float_dict["lightning_chance"]
-	if not GlobalsEntityHelpers.roll_chance(lightning_chance): return false
-
 	var item := items_in_target[0]
 	if item.get_remaining_cooldown() > 0: return false
+
+	var lightning_chance := items_in_target[0].float_dict["lightning_chance"]
+	if not GlobalsEntityHelpers.roll_chance(lightning_chance): return false
 	
 	for _item in items_in_target: _item.reset_last_used_time()
 	

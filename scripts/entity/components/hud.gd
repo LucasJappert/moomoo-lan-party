@@ -25,6 +25,9 @@ const SHOW_DAMAGES_HEALS = true
 func _post_ready(_entity: Entity):
 	my_owner = _entity
 	_is_moomoo = my_owner is Moomoo
+	
+	if my_owner.summoned_helper:
+		add_lifetime_progress_bar(my_owner.summoned_helper.lifetime_sec)
 
 	_label_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -119,3 +122,15 @@ func add_silence_progress_bar(_lifetime_in_seconds: float) -> void:
 	var progress_bar: MyProgressBarScene = MY_PROGRESS_BAR.instantiate()
 	progress_bars_container.add_child(progress_bar)
 	progress_bar.init(CombatEffect.SILENCE_NAME, _lifetime_in_seconds, Color.from_string("#82008efe", Color.WHITE))
+
+func add_lifetime_progress_bar(_lifetime_in_seconds: float) -> void:
+	const NAME := "LIFETIME"
+	for child in progress_bars_container.get_children():
+		if child is MyProgressBarScene:
+			var current_bar := child as MyProgressBarScene
+			if current_bar.my_name == NAME:
+				return current_bar.update_lifetime(_lifetime_in_seconds)
+
+	var progress_bar: MyProgressBarScene = MY_PROGRESS_BAR.instantiate()
+	progress_bars_container.add_child(progress_bar)
+	progress_bar.init(NAME, _lifetime_in_seconds, Color.from_string("#bababaff", Color.WHITE))

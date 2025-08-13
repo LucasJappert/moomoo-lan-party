@@ -54,7 +54,7 @@ static func spawn_front_animation(
 	sprite.name = anim_name
 	target.front_animations_node.add_child(sprite, true)
 	sprite.play()
-	sprite.animation_finished.connect(func(): sprite.queue_free())
+	sprite.animation_finished.connect(sprite.queue_free)
 	return sprite
 
 static func apply_lightning_animation(target: Entity):

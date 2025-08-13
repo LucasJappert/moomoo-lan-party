@@ -56,8 +56,9 @@ static func to_dict(obj: Object) -> Dictionary:
 		var name = prop.name
 		if name == "script": continue
 
-		# if name == "_items":
+		# if name == "entity_name":
 		# 	print("test de ", name)
+
 		var usage = prop.usage
 		var is_valid = (usage & PROPERTY_USAGE_SCRIPT_VARIABLE) != 0 or FUNDAMENTAL_PROPERTIES.has(name)
 		if not is_valid: continue
@@ -104,16 +105,17 @@ static func from_dict(original_obj: Object, data: Dictionary) -> Object:
 		return original_obj
 
 	var prop_names := original_obj.get_property_list().map(func(p): return p.name)
+	# print(prop_names)
 
 	for key in data:
 		if key == "script" or not prop_names.has(key):
 			continue
-
+		
 		var value = data[key]
 
 		match typeof(value):
 			TYPE_DICTIONARY:
-									# Intentar detectar si es una variante serializada o un objeto complejo
+				# Intentar detectar si es una variante serializada o un objeto complejo
 				if value.has("_type"):
 					original_obj.set(key, _deserialize_variant(value))
 					continue

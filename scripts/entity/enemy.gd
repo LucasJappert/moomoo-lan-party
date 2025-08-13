@@ -34,9 +34,9 @@ func set_enemy_type(_enemy_type: String) -> void:
 	extra_info.key_type = _enemy_type
 
 func _on_every_timer_500ms() -> void:
-	var target: Entity = GameManager.moomoo
-	var nearest_player = get_nearest_enemy_inside_vision()
-	if nearest_player: target = nearest_player
+	var target: Entity = GlobalsEntityHelpers.get_nearest_enemy_inside_vision(self)
+	if not target:
+		if GameManager.moomoo in get_my_enemies(): target = GameManager.moomoo
 	
 	set_target_to_attack(target)
 	movement_helper.set_target_entity(target, MovementHelper.AttackMoveType.PhysicalAttack)

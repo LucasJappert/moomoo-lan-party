@@ -27,10 +27,12 @@ func _ready():
 	_create_timer_500ms()
 
 # region 	GETTERs
-static func static_is_awake() -> bool: return GameManager.moomoo.is_awake
+static func static_is_awake() -> bool:
+	if ObjectHelpers.is_null(GameManager.moomoo): return false
+	return GameManager.moomoo.is_awake
 func get_my_enemies() -> Array[Entity]:
-	if is_awake: return GameManager.get_players()
-	return GameManager.get_enemies()
+	if is_awake: return GameManager.get_player_allies(true)
+	return GameManager.get_player_enemies()
 
 static func get_rect_frames(pos: Vector2i) -> Array[Rect2]:
 	var result: Array[Rect2] = []
@@ -66,20 +68,24 @@ static func get_instance() -> Moomoo:
 	moomoo.global_position = MapManager.cell_to_world(MapManager.get_safe_cell(SPAWN_POSITION))
 	moomoo.combat_stats.set_hp(10000)
 	moomoo.combat_stats.set_move_speed(3)
-	moomoo.combat_stats.set_attack_speed(4)
+	moomoo.combat_stats.set_attack_speed(2)
 	moomoo.combat_stats.set_attack_range(CombatStats.MIN_ATTACK_RANGE)
-	moomoo.combat_stats.set_magic_attack_power(500)
-	moomoo.combat_stats.set_physical_attack_power(500)
+	moomoo.combat_stats.set_magic_attack_power(200)
+	moomoo.combat_stats.set_physical_attack_power(200)
 	moomoo.combat_stats.set_crit_chance(0.8, 3)
-	moomoo.combat_stats.set_agility(500)
+	moomoo.combat_stats.set_agility(300)
 	moomoo.combat_stats.set_strength(500)
 	moomoo.combat_stats.set_intelligence(500)
 	moomoo.combat_stats.set_evasion(0.5)
 	moomoo.combat_stats.set_stun_chance(0.5, 2)
 	moomoo.combat_stats.set_physical_defense_points(300)
 	moomoo.combat_stats.set_magic_defense_points(300)
-	moomoo.combat_stats.set_life_steal_percent(0.4)
+	moomoo.combat_stats.set_life_steal_percent(0.1)
 	
+	# var pain_echo_edited := SkillBase.get_skill(SkillPainEcho.NAME)
+	# for i in SkillBase.AVAILABLE_LEVELS:
+	# 	pain_echo_edited.item_skill_base[i].float_dict["percent_reflected"] = 0.9
+
 	moomoo._skills.append_array([
 		SkillBase.get_new_learned_skill(SkillPainEcho.NAME, 3),
 		SkillBase.get_new_learned_skill(SkillBloodFury.NAME, 1),
