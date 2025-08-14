@@ -14,13 +14,3 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].set_chance_to_ignore_evasion(aux_array[0][i])
 		SKILLS[NAME].item_skill_base[i].en_description = "Grants " + StringHelpers.format_percent(aux_array[0][i]) + " chance to ignore the target's evasion."
 		SKILLS[NAME].item_skill_base[i].es_description = "Otorga un " + StringHelpers.format_percent(aux_array[0][i]) + " de probabilidad de ignorar la evasión del objetivo."
-
-static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
-	if _skill.get_name() != NAME: return false
-	if not _skill.get_learned_skill(): return false
-
-	var skill = SkillTrueStrike.new(_skill.get_learned_skill())
-	skill.permanent_effect = true
-	_owner.add_active_skill(skill)
-
-	return true

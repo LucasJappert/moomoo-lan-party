@@ -41,7 +41,7 @@ static func _spawn_melee_skeleton(_attacker: Entity, _target: Entity, _duration:
 	var enemy: Enemy = EnemyBase.get_new_instance(EnemySummonedSkeletonBlade.LONG_NAME)
 	enemy._skills = [
 		SkillBase.get_new_learned_skill(SkillManaScorcher.NAME, 3),
-		SkillBase.get_new_learned_skill(SkillBloodFury.NAME, 3),
+		# SkillBase.get_new_learned_skill(SkillBloodFury.NAME, 3),
 		SkillBase.get_new_learned_skill(SkillFrozenTouch.NAME, 3),
 		SkillBase.get_new_learned_skill(SkillTrueStrike.NAME, 3),
 	]
@@ -67,7 +67,7 @@ static func _spawn_ranged_skeleton(_attacker: Entity, _target: Entity, _duration
 		SkillBase.get_new_learned_skill(SkillShieldedCore.NAME, 3),
 	]
 	enemy.projectile_type = ProjectileVenomArrow.NAME
-	enemy.combat_stats.set_attack_range(300)
+	enemy.combat_stats.set_attack_range(250)
 	enemy.set_summoned_helper(_attacker.name, _duration)
 	enemy.combat_stats.set_hp(int(_attacker.get_full_health() * 0.3))
 	enemy.combat_stats.set_physical_attack_power(int(_attacker.cache_total_stats.get_physical_attack_power() * randf_range(0.3, 0.5)))

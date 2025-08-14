@@ -16,21 +16,11 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].en_description = "Gives " + StringHelpers.format_percent(aux_array[0][i]) + " extra physical attack power and attack speed per each 10% of lost hp."
 		SKILLS[NAME].item_skill_base[i].es_description = "Otorga un " + StringHelpers.format_percent(aux_array[0][i]) + " adicional de poder de ataque físico y velocidad de ataque por cada 10% de vida perdida."
 
-static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
-	if _skill.get_name() != NAME: return false
-	if not _skill.get_learned_skill(): return false
-
-	var skill := SkillBloodFury.new(_skill.get_learned_skill())
-	skill.permanent_effect = true
-	_owner.add_active_skill(skill)
-
-	return true
-
 func _init(p_learned_skill: ItemSkillBase) -> void:
 	super._init(p_learned_skill, true)
 	permanent_effect = true
 
-func instance_actions_after_current_hp_updated(_increased_value: int, _owner: Entity) -> void:
+static func actions_after_current_hp_updated(_increased_value: int, _owner: Entity) -> void:
 	var _learned_skill := _owner.get_learned_skill(NAME)
 	if not _learned_skill: return
 

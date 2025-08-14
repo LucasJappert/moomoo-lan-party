@@ -5,8 +5,13 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Revisar casteo de hechizo del mago a un enemigo
+- Revisar ataque a unidad propia sumoneada
+- 🔵 Configurar skills moomoo en cada state
+- Burning presence hacer que haga daño en base a la int
+- Ver sword cursor hover moomoo
+- Revisar efecto de lifesteal, no actualiza la descripcion
 - Dibujar zona rango de ataque cuando presionamos ALT
-- COnfigurar skills moomoo en cada state
 - Desarrollar historia y mostrar diálogos en diferentes momentos
 - Agregar item epicos a bosses enemigos
 - Aumentar dificultar de rondas normales y especiales

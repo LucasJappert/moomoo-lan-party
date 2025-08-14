@@ -42,7 +42,7 @@ properties/10/spawn = true
 properties/10/replication_mode = 2
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_wjrb4"]
-radius = 300.0
+radius = 400.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5ixpm"]
 radius = 16.0

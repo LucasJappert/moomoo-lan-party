@@ -18,14 +18,3 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].create_effect = true
 		SKILLS[NAME].item_skill_base[i].en_description = "Increases physical and magic attack power by " + StringHelpers.format_percent(aux_array[0][i])
 		SKILLS[NAME].item_skill_base[i].es_description = "Aumenta el poder de ataque físico y mágico en un " + StringHelpers.format_percent(aux_array[0][i])
-
-static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
-	if _skill.get_name() != NAME: return false
-	if not _skill.get_learned_skill(): return false
-
-	_owner.effects_helper.remove_effect_by_name(NAME)
-
-	var new_effect = CombatEffect.get_permanent_effect_from_skill(_skill)
-	_owner.effects_helper.add_effect(new_effect)
-
-	return true

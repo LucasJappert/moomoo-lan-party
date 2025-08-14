@@ -71,15 +71,7 @@ func post_ready_combat_data() -> void:
 	effects_helper.set_my_owner(_my_owner)
 	
 	# Intentamos agregar skills aprendidos y que son pasivos
-	for skill in _skills:
-		if not skill: continue
-		if not skill.learned_level: continue
-		if skill.get_learned_skill().type != SkillType.PASSIVE: continue
-
-		
-		for registered_class in SkillBase.REGISTERED_SKILLS:
-			registered_class.actions_after_skill_updated(self, skill)
-		# add_active_skill(SkillBase.get_permanent_active_skill(skill.get_learned_skill()))
+	for i in range(_skills.size()): _actions_after_skill_updated(i + 1)
 	
 	for i in range(_items.size()):
 		for registered_item in Item.REGISTERED_ITEMS:
@@ -406,11 +398,28 @@ func uncharge_skill() -> bool:
 	return true
 
 func upgrade_skill(slot_number: int) -> void:
-	_skills[slot_number - 1].try_to_upgrade(_my_owner, slot_number)
-	
-	var learned_skill := _skills[slot_number - 1].get_learned_skill()
-	if learned_skill.type == SkillType.PASSIVE:
-		add_active_skill(SkillBase.get_permanent_active_skill(learned_skill))
+	_skills[slot_number - 1].try_to_upgrade(_my_owner)
+	_actions_after_skill_updated(slot_number)
+
+func update_skill(skill: Skill, slot_number: int) -> void:
+	if _skills.size() != 4:
+		for i in range(4 - _skills.size()): _skills.append(null)
+
+	_skills[slot_number - 1] = skill
+	_actions_after_skill_updated(slot_number)
+
+func _actions_after_skill_updated(slot_number: int) -> void:
+	var skill := _skills[slot_number - 1]
+	EventBus.emit_skill_updated(_my_owner, skill, slot_number)
+
+	if skill:
+		for reg_skill in SkillBase.REGISTERED_SKILLS: reg_skill.actions_after_skill_updated(_my_owner, skill)
+
+		var learned_skill := skill.get_learned_skill()
+		if learned_skill and learned_skill.type == SkillType.PASSIVE:
+			if learned_skill.my_name == SkillBloodFury.NAME:
+				print("Adding passive skill: ", learned_skill.my_name)
+			add_active_skill(SkillBase.get_permanent_active_skill(learned_skill))
 
 	update_cache_total_stats()
 

@@ -15,14 +15,3 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].set_stun_duration(2)
 		SKILLS[NAME].item_skill_base[i].en_description = "Has a " + StringHelpers.format_percent(aux_array[0][i]) + " chance to stun the target for 2 seconds."
 		SKILLS[NAME].item_skill_base[i].es_description = "Tiene un " + StringHelpers.format_percent(aux_array[0][i]) + " de probabilidad de aturdir al objetivo durante 2 segundos."
-
-	
-static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
-	if _skill.get_name() != NAME: return false
-	if not _skill.get_learned_skill(): return false
-
-	var skill = SkillStunningStrike.new(_skill.get_learned_skill())
-	skill.permanent_effect = true
-	_owner.add_active_skill(skill)
-
-	return true

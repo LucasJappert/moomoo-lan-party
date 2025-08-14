@@ -144,14 +144,15 @@ func init_scene(entity: Entity) -> void:
 	if entity is Enemy: _hp_ball.modulate = RED_BALL_COLOR
 	else: _hp_ball.modulate = GREEN_BALL_COLOR
 	_set_my_player_avatar_region(entity)
-	_set_skills()
+	_set_skills(entity)
 	_set_items()
 
-func _set_skills() -> void:
+func _set_skills(entity: Entity) -> void:
 	var _slots := get_skill_slots()
 	for i in range(_slots.size()):
 		var _skill: Skill = _bottom_target._skills[i] if i < _bottom_target._skills.size() else null
-		_slots[i]._skill_updated(_skill, _bottom_target, i + 1)
+		_slots[i].clean_slot(entity)
+		_slots[i].update_skill(_skill, _bottom_target, i + 1)
 
 func _set_items() -> void:
 	var _slots := get_item_slots()

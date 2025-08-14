@@ -13,10 +13,10 @@ static func create_and_add_instance() -> void:
 	_ITEMS[NAME].float_dict["lightning_chance"] = 0.2 # Probabilidad de lanzar rayos al recibir ataque físico
 	_ITEMS[NAME].float_dict["lightning_damage_base"] = 100 # Daño base
 	_ITEMS[NAME].float_dict["lightning_damage_percent"] = 0.5 # Daño extra en base a la inteligencia total
-	_ITEMS[NAME].float_dict["mana_cost_percent"] = 0.1 # Porcentaje de mana consumido
+	_ITEMS[NAME].float_dict["mana_cost_percent"] = 0.5 # Porcentaje de mana consumido
 	_ITEMS[NAME].max_targets = 5 # Cantidad de rayos
 	_ITEMS[NAME].cast_range_in_tiles = 8
-	_ITEMS[NAME].cooldown = 1
+	_ITEMS[NAME].cooldown = 4
 	_ITEMS[NAME].buy_price = 10500
 
 	_ITEMS[NAME].en_description = (

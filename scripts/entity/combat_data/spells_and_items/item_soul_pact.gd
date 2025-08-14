@@ -50,6 +50,8 @@ static func static_actions_after_interval_trigger(_effect: CombatEffect) -> bool
 
 	var _di := DamageInfo.new(15, DamageType.MAGIC, _effect.get_attacker_name())
 	_di.temporal_damage = true
+	if ObjectHelpers.is_null(_effect.get_target()): return false
+	
 	_effect.get_target().server_receive_damage(_di, _effect.get_attacker())
 
 	return true

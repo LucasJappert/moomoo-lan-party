@@ -111,7 +111,7 @@ func use(my_owner: Entity, target_entity: Entity) -> bool:
 
 	return my_owner.uncharge_skill()
 
-func try_to_upgrade(my_owner: Entity, p_slot_number: int) -> void:
+func try_to_upgrade(my_owner: Entity) -> void:
 	if learned_level >= SkillBase.AVAILABLE_LEVELS: return
 
 	# Keep the last used time
@@ -119,11 +119,6 @@ func try_to_upgrade(my_owner: Entity, p_slot_number: int) -> void:
 
 	learned_level += 1
 	my_owner.increment_skill_points_to_assign(-1)
-
-	EventBus.emit_skill_upgraded(my_owner, self, p_slot_number)
-
-	for registered_class in SkillBase.REGISTERED_SKILLS:
-		registered_class.actions_after_skill_updated(my_owner, self)
 
 # endregion ................. SETTERs
 

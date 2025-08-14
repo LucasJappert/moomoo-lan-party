@@ -46,7 +46,7 @@ func _ready():
 			GameManager.MY_PLAYER.upgrade_skill(slot_number)
 	)
 
-	EventBus.connect_to_skill_upgraded(func(_p_owner: Entity, _upgraded_skill: Skill, _slot_number: int): _skill_updated(_upgraded_skill, _p_owner, _slot_number))
+	EventBus.connect_to_skill_updated(func(_p_owner: Entity, _updated_skill: Skill, _slot_number: int): update_skill(_updated_skill, _p_owner, _slot_number))
 	EventBus.connect_to_skill_points_to_assign_changed(func(_p_owner: Entity): _update_controls())
 
 func _try_settings_for_hero_picker():
@@ -87,26 +87,29 @@ func _is_hero_picker_scene() -> bool:
 
 # region 	SETTERS
 
-func _clean_slot():
+func clean_slot(p_owner: Entity):
+	_owner = p_owner
 	skill = null
 	hotkey.text = OS.get_keycode_string(KeyboardHelper.SKILL_HOTKEYS[slot_number - 1])
 	sprite.region_rect = Rect2(0, 0, 0, 0)
 
-func _skill_updated(new_skill: Skill, p_owner: Entity, _slot_number: int):
+func update_skill(new_skill: Skill, p_owner: Entity, _slot_number: int):
 	if not p_owner: return
-	_owner = p_owner
+	if not _owner: _owner = p_owner
+	if _owner != p_owner: return
+		
 	if slot_number == 0: slot_number = _slot_number
 	if slot_number != _slot_number: return
 	
 	hotkey.visible = true
 
-	_set_slot_from_skill(new_skill)
+	_set_slot_from_skill(new_skill, p_owner)
 
 	_update_controls()
 	
-func _set_slot_from_skill(new_skill: Skill):
+func _set_slot_from_skill(new_skill: Skill, p_owner: Entity):
 	skill = new_skill
-	if not skill: return _clean_slot()
+	if not skill: return clean_slot(p_owner)
 
 	hotkey.visible = skill.get_safe_learned_skill().type == SkillType.ACTIVE
 	sprite.region_rect = skill.region_rect

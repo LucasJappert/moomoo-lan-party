@@ -66,7 +66,7 @@ static func get_instance() -> Moomoo:
 	moomoo.name = "Moomoo"
 	moomoo.extra_info = ExtraInfo.new(LONG_NAME, get_rect_frames(Vector2i.ZERO), ALIAS)
 	moomoo.global_position = MapManager.cell_to_world(MapManager.get_safe_cell(SPAWN_POSITION))
-	moomoo.combat_stats.set_hp(10000)
+	moomoo.combat_stats.set_hp(30000)
 	moomoo.combat_stats.set_move_speed(3)
 	moomoo.combat_stats.set_attack_speed(2)
 	moomoo.combat_stats.set_attack_range(CombatStats.MIN_ATTACK_RANGE)
@@ -82,16 +82,15 @@ static func get_instance() -> Moomoo:
 	moomoo.combat_stats.set_magic_defense_points(300)
 	moomoo.combat_stats.set_life_steal_percent(0.1)
 	
-	# var pain_echo_edited := SkillBase.get_skill(SkillPainEcho.NAME)
-	# for i in SkillBase.AVAILABLE_LEVELS:
-	# 	pain_echo_edited.item_skill_base[i].float_dict["percent_reflected"] = 0.9
+	moomoo.update_skill(SkillBase.get_new_learned_skill(SkillFrenziedSilence.NAME, 3), 1)
+	moomoo.update_skill(SkillBase.get_new_learned_skill(SkillPainEcho.NAME, 3), 2)
+	moomoo.update_skill(SkillBase.get_new_learned_skill(SkillShieldedCore.NAME, 3), 3)
+	moomoo.update_skill(SkillBase.get_new_learned_skill(SkillBlessingOfPower.NAME, 3), 4)
 
-	moomoo._skills.append_array([
-		SkillBase.get_new_learned_skill(SkillPainEcho.NAME, 3),
-		SkillBase.get_new_learned_skill(SkillBloodFury.NAME, 1),
-	])
+	moomoo.update_item(Item.get_item(ItemSkywrath.NAME, 1, true), 0)
+	moomoo.update_item(Item.get_item(ItemDeadeye.NAME, 1, true), 1)
 
-	moomoo.add_item(Item.get_item(ItemPowerCore.NAME, 1, true))
+	# moomoo.add_item(Item.get_item(ItemPowerCore.NAME, 1, true))
 
 	moomoo.set_current_hp_and_mana()
 	moomoo.update_base_stats(moomoo.combat_stats.get_info())
@@ -136,11 +135,30 @@ func _state_from_pct(pct: float) -> LifeState:
 func _on_promotion(state: LifeState) -> void:
 	if state == LifeState.WOUNDED:
 		print("WOUNDED")
+		update_skill(SkillBase.get_new_learned_skill(SkillTrueStrike.NAME, 3), 1)
+		update_skill(SkillBase.get_new_learned_skill(SkillShockSpear.NAME, 3), 2)
+		update_skill(SkillBase.get_new_learned_skill(SkillAbsorbAndRelease.NAME, 3), 3)
+		update_skill(SkillBase.get_new_learned_skill(SkillBurningPresence.NAME, 3), 4)
+
+		update_item(Item.get_item(ItemTrinityBoost.NAME, 1, true), 2)
+		update_item(Item.get_item(ItemSoulPact.NAME, 1, true), 3)
 		return
 	if state == LifeState.CRITICAL:
 		print("CRITICAL")
+		update_skill(SkillBase.get_new_learned_skill(SkillStunningStrike.NAME, 3), 1)
+		update_skill(SkillBase.get_new_learned_skill(SkillBloodFury.NAME, 3), 2)
+		update_skill(SkillBase.get_new_learned_skill(SkillCleaveStrike.NAME, 3), 3)
+		update_skill(SkillBase.get_new_learned_skill(SkillEarthshatter.NAME, 3), 4)
+
+		update_item(Item.get_item(ItemCleaveEdge.NAME, 1, true), 4)
+		update_item(Item.get_item(ItemSkeletonSummonersRing.NAME, 1, true), 5)
 		return
 	if state == LifeState.NEAR_DEATH:
+		update_skill(SkillBase.get_new_learned_skill(SkillInfernalTouch.NAME, 3), 1)
+		update_skill(SkillBase.get_new_learned_skill(SkillBloodFury.NAME, 3), 2)
+		update_skill(SkillBase.get_new_learned_skill(SkillSilentAgony.NAME, 3), 3)
+		update_skill(SkillBase.get_new_learned_skill(SkillUnbreakable.NAME, 3), 4)
+		
 		print("NEAR DEATH")
 		return
 

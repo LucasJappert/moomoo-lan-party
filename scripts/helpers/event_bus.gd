@@ -102,9 +102,9 @@ func emit_skill_points_to_assign_changed(p_owner: Entity):
 func connect_to_skill_points_to_assign_changed(p_callback: Callable) -> void:
 	EventBus.connect(SKILL_POINTS_TO_ASSIGN_CHANGED, p_callback)
 
-const SKILL_UPGRADED := "skill_upgraded"
-signal skill_upgraded(p_owner: Entity, p_skill: Skill)
-func emit_skill_upgraded(p_owner: Entity, upgraded_skill: Skill, p_slot_number: int):
-	emit_signal(SKILL_UPGRADED, p_owner, upgraded_skill, p_slot_number)
-func connect_to_skill_upgraded(p_callback: Callable) -> void:
-	EventBus.connect(SKILL_UPGRADED, p_callback)
+const SKILL_UPDATED := "skill_updated"
+signal skill_updated(p_owner: Entity, p_skill: Skill)
+func emit_skill_updated(p_owner: Entity, updated_skill: Skill, p_slot_number: int):
+	emit_signal(SKILL_UPDATED, p_owner, updated_skill, p_slot_number)
+func connect_to_skill_updated(p_callback: Callable) -> void:
+	EventBus.connect(SKILL_UPDATED, p_callback)
