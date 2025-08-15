@@ -12,7 +12,7 @@ var _entity_info: Entity
 func _ready() -> void:
 	clean_effects()
 	EventBus.connect_to_new_target_to_attack_selected(func(_owner: Entity, _target: Entity): _on_new_target_to_attack_selected(_owner, _target))
-	EventBus.connect_to_new_target_view_selected(func(_owner: Entity, _target: Entity): _on_new_target_view_selected(_owner, _target))
+	EventBus.connect_to_new_target_view_selected(_on_new_target_view_selected)
 	EventBus.connect_to_effect_added(func(_owner: Entity, effect: CombatEffect): _try_add_effect(_owner, effect))
 	
 	EventBus.connect_to_effects_removed(Callable(self, "_on_effects_removed"))
@@ -32,7 +32,7 @@ func _on_new_target_to_attack_selected(_owner: Entity, _target: Entity) -> void:
 func _on_new_target_view_selected(_owner: Entity, _target: Entity) -> void:
 	# if not ObjectHelpers.is_my_player(_owner): return
 	_entity_info = _target
-	if _entity_info == null: _entity_info = GameManager.MY_PLAYER
+	if ObjectHelpers.is_null(_entity_info): _entity_info = GameManager.MY_PLAYER
 
 	clean_effects()
 	_add_current_effects()

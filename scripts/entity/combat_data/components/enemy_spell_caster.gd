@@ -58,20 +58,20 @@ func _try_cast_spell_to_an_enemy(skill_to_cast: Skill) -> bool:
 func _try_cast_spell_to_an_ally(skill_to_cast: Skill) -> bool:
 	if skill_to_cast.get_learned_skill().apply_to_enemy: return false
 
-	if _try_cast_offensive_spell_to_an_ally(skill_to_cast): return true
+	if _try_cast_offensive_bonus_to_an_ally(skill_to_cast): return true
 
-	if _try_cast_defensive_spell_to_an_ally(skill_to_cast): return true
+	if _try_cast_defensive_bonus_to_an_ally(skill_to_cast): return true
 
 	return false
 
-func _try_cast_offensive_spell_to_an_ally(skill_to_cast: Skill) -> bool:
+func _try_cast_offensive_bonus_to_an_ally(skill_to_cast: Skill) -> bool:
 	if skill_to_cast.get_learned_skill().grants_attack_bonuses():
 		if not _enemy_owner.effects_helper.get_effect_by_name(skill_to_cast.get_learned_skill().my_name):
 			return skill_to_cast.use(_enemy_owner, _enemy_owner)
 
 	return false
 
-func _try_cast_defensive_spell_to_an_ally(skill_to_cast: Skill) -> bool:
+func _try_cast_defensive_bonus_to_an_ally(skill_to_cast: Skill) -> bool:
 	var near_allies = _enemy_owner.get_allies(true)
 	var closest_allies := GlobalsEntityHelpers.get_closest_entities(_enemy_owner.global_position, near_allies, 6)
 	if closest_allies.is_empty(): return false

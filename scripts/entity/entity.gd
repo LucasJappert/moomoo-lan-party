@@ -132,6 +132,8 @@ func get_summoned_entities(unit_names: Array[String] = []) -> Array[Entity]:
 	return result
 
 func is_enemy_of_player() -> bool:
+	# TODO: Review this function for recursive summons
+	if summoned_helper: return not summoned_helper.summoned_by_name == GameManager.MY_PLAYER_NAME
 	if not GameManager.MY_PLAYER: return false
 	if GameManager.MY_PLAYER in get_my_enemies(): return true
 	return false
@@ -168,6 +170,7 @@ func get_allies(include_me: bool = false) -> Array[Entity]:
 	if not include_me: result.erase(self)
 	return result
 		
+func is_alive() -> bool: return current_hp > 0
 # endregion GETTERs
 
 # region 	SETTERs

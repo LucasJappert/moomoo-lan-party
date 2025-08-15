@@ -104,7 +104,7 @@ func _ready() -> void:
 	_defense_value.connect("mouse_entered", func(): _on_mouse_entered_defense_value())
 	_defense_value.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
 	
-	EventBus.connect_to_new_target_view_selected(func(_owner: Entity, _viewed_target: Entity): _on_new_target_view_selected(_owner, _viewed_target))
+	EventBus.connect_to_new_target_view_selected(_on_new_target_view_selected)
 
 func _on_join_as_player_pressed() -> void:
 	MultiplayerManager.become_client()
@@ -118,6 +118,7 @@ func reset_gui() -> void:
 func _process(_delta: float) -> void:
 	# TODO: we should instance the gui when the game starts (and we can access the player)
 	delta = _delta
+	_update_auxiliary_labels(_delta)
 	if not _bottom_target:
 		if not reseted_gui: reset_gui()
 		return
@@ -126,7 +127,6 @@ func _process(_delta: float) -> void:
 	# _update_panel_top_left()
 	_update_panel_bottom_left() # 3388 a 3427
 	_update_panel_bottom_right() # 3427 a 3453
-	_update_auxiliary_labels(_delta)
 
 
 # region	SETTERS
@@ -140,6 +140,7 @@ func _on_mouse_entered_defense_value() -> void:
 func _on_shop_button_pressed() -> void:
 	print("Shop button pressed")
 func init_scene(entity: Entity) -> void:
+	if not entity: return
 	_bottom_target = entity
 	if entity is Enemy: _hp_ball.modulate = RED_BALL_COLOR
 	else: _hp_ball.modulate = GREEN_BALL_COLOR
@@ -169,7 +170,7 @@ func set_target_avatar_region(region_rect: Rect2) -> void:
 
 func _on_new_target_view_selected(_owner: Entity, _viewed_target: Entity) -> void:
 	_bottom_target = _viewed_target
-	if not _bottom_target: _bottom_target = GameManager.MY_PLAYER
+	if not _bottom_target: _bottom_target = ObjectHelpers.get_safe_instance(GameManager.MY_PLAYER)
 	init_scene(_bottom_target)
 
 	# Actions for the top left panel. TODO: refactor
@@ -334,7 +335,6 @@ func _update_auxiliary_labels(_delta: float) -> void:
 
 	var text := """
 	📊 Debug info:
-	🔹 My position: %s
 	🔹 Memory (static): %.2f MB
 	🔹 Frame Time: %.4fs
 	🔹 Physics Time: %.4fs
@@ -349,7 +349,6 @@ func _update_auxiliary_labels(_delta: float) -> void:
 	🔹 Entities: %d 
 	🔹 Particles in GC: %d 
 	""" % [
-		MapManager.world_to_cell(GameManager.MY_PLAYER.global_position),
 		mem_static_mb, frame_time, physics_time,
 		object_count, node_count, resource_count,
 		draw_calls, vertices, video_mem, tex_mem, buf_mem,

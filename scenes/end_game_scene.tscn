@@ -33,10 +33,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -370.5
-offset_top = -306.0
-offset_right = 370.5
-offset_bottom = 306.0
+offset_left = -303.0
+offset_top = -237.0
+offset_right = 304.0
+offset_bottom = 111.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_gn7wn")
@@ -54,10 +54,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -370.5
-offset_top = -306.0
-offset_right = 370.5
-offset_bottom = -209.0
+offset_left = -303.5
+offset_top = -232.0
+offset_right = 303.5
+offset_bottom = -158.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
@@ -74,21 +74,21 @@ unique_name_in_owner = true
 layout_mode = 2
 offset_left = 9.0
 offset_top = 8.0
-offset_right = 734.0
-offset_bottom = 93.0
+offset_right = 602.0
+offset_bottom = 69.0
 theme_override_colors/font_color = Color(0.623529, 0.627451, 0.133333, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 60
+theme_override_font_sizes/font_size = 40
 text = "YOU WIN"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="CenterContainer" type="VBoxContainer" parent="MainContainer/GridContainer"]
 layout_mode = 0
-offset_left = 212.0
-offset_top = 151.0
-offset_right = 547.0
-offset_bottom = 471.0
+offset_left = 141.0
+offset_top = 16.0
+offset_right = 476.0
+offset_bottom = 272.0
 theme_override_constants/separation = 50
 alignment = 1
 
@@ -97,7 +97,14 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.605274, 0.605274, 0.605274, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 29
+theme_override_font_sizes/font_size = 24
+text = "asdadasd
+adasdas
+dasdasd
+adadsd
+asdasda
+asdasd
+adsadasdasd"
 vertical_alignment = 1
 
 [node name="RetryButton" parent="MainContainer/GridContainer" instance=ExtResource("3_n4w7i")]
@@ -109,9 +116,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -130.0
-offset_top = -139.0
+offset_top = -75.0
 offset_right = 130.0
-offset_bottom = -74.0
+offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Restart"

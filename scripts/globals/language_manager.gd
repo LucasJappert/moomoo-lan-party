@@ -114,7 +114,8 @@ static var _translations := {
 	"Cooldown": {LangTypes.SPANISH: "Tiempo de reutilización"},
 	"Max Targets": {LangTypes.SPANISH: "Objetivos máximos"},
 	"Max Stacks": {LangTypes.SPANISH: "Acumulaciones máximas"},
-	"Damage Type": {LangTypes.SPANISH: "Tipo de daño"}
+	"Damage Type": {LangTypes.SPANISH: "Tipo de daño"},
+	"Can't use this\n skill on allies": {LangTypes.SPANISH: "No puedes usar esta\n habilidad en aliados"},
 }
 
 ## ✅ Traducción basada en clave

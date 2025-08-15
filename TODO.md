@@ -5,8 +5,7 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Revisar casteo de hechizo del mago a un enemigo
-- Revisar ataque a unidad propia sumoneada
+- Crear un item que crea 2 copias de si mismo, con los mismos atributos pero cada copia absorbe un 60% de daño extra
 - 🔵 Configurar skills moomoo en cada state
 - Burning presence hacer que haga daño en base a la int
 - Ver sword cursor hover moomoo

@@ -33,23 +33,22 @@ func get_area2d_under_mouse() -> Area2D:
 	return null
 
 
-func _unhandled_input(event):
-	MyCamera.handle_input(event)
-	
-	if event is InputEventMouseButton and event.pressed:
-		# #### Keep this code for debug 🔍
-		# var area := get_area2d_under_mouse()
-		# if area: print("Clicked on Area2D:", area.name)
-		# else: print("No Area2D under mouse.")
-		if DraggableSlot.verify_global_click(event): return
-		if event.button_index == MOUSE_BUTTON_RIGHT:
-			if AreaHovered.hovered_entity: return
-			rpc_id(1, "_on_try_to_move", MapManager.world_to_cell(MapManager.GLOBAL_MOUSE_POSITION))
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			rpc_id(1, "_on_left_click", _get_hovered_entity_name())
+# func _unhandled_input(event):
+# 	# MyCamera.handle_input(event) Llevado a KeyboardController
+# 	if event is InputEventMouseButton and event.pressed:
+# 		# #### Keep this code for debug 🔍
+# 		# var area := get_area2d_under_mouse()
+# 		# if area: print("Clicked on Area2D:", area.name)
+# 		# else: print("No Area2D under mouse.")
+# 		if DraggableSlot.verify_global_click(event): return
+# 		if event.button_index == MOUSE_BUTTON_RIGHT:
+# 			if AreaHovered.hovered_entity: return
+# 			rpc_id(1, "_on_try_to_move", MapManager.world_to_cell(MapManager.GLOBAL_MOUSE_POSITION))
+# 		if event.button_index == MOUSE_BUTTON_LEFT:
+# 			rpc_id(1, "_on_left_click", _get_hovered_entity_name())
 
-	if event is InputEventKey and event.pressed:
-		KeyboardHelper.key_pressed_server_side(event.keycode, GameManager.MY_PLAYER)
+# 	if event is InputEventKey and event.pressed:
+# 		KeyboardHelper.key_pressed_server_side(event.keycode, GameManager.MY_PLAYER)
 			
 
 # region 	SERVER MESSAGES RECEIVED FROM CLIENT
@@ -63,7 +62,7 @@ func _on_left_click(_target_entity_name: String):
 	# Always run in server
 	var target_entity = GameManager.get_entity(_target_entity_name)
 		
-	ShopInterface.static_close_shop()
+	ShopInterface.close_shop()
 
 	if not GameManager.MY_PLAYER: return
 

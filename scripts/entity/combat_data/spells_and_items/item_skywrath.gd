@@ -10,10 +10,11 @@ static func create_and_add_instance() -> void:
 	_ITEMS[NAME].set_intelligence(100)
 	_ITEMS[NAME].set_hp(2000)
 	_ITEMS[NAME].damage_type = DamageType.MAGIC
+	_ITEMS[NAME].set_mana_regeneration_points(20)
 	_ITEMS[NAME].float_dict["lightning_chance"] = 0.2 # Probabilidad de lanzar rayos al recibir ataque físico
 	_ITEMS[NAME].float_dict["lightning_damage_base"] = 100 # Daño base
 	_ITEMS[NAME].float_dict["lightning_damage_percent"] = 0.5 # Daño extra en base a la inteligencia total
-	_ITEMS[NAME].float_dict["mana_cost_percent"] = 0.5 # Porcentaje de mana consumido
+	_ITEMS[NAME].float_dict["mana_cost_percent"] = 0.05 # Porcentaje de mana consumido
 	_ITEMS[NAME].max_targets = 5 # Cantidad de rayos
 	_ITEMS[NAME].cast_range_in_tiles = 8
 	_ITEMS[NAME].cooldown = 4
@@ -60,12 +61,12 @@ static func static_actions_after_effective_hit(_attacker: Entity, _target: Entit
 	var lightning_chance := items_in_target[0].float_dict["lightning_chance"]
 	if not GlobalsEntityHelpers.roll_chance(lightning_chance): return false
 	
-	for _item in items_in_target: _item.reset_last_used_time()
-	
 	var mana_cost_percent := item.float_dict["mana_cost_percent"]
 	var consumed_mana := int(_target.get_full_mana() * mana_cost_percent)
 	if not _target.current_mana >= consumed_mana: return false
 	_target.update_current_mana(-consumed_mana)
+	
+	for _item in items_in_target: _item.reset_last_used_time()
 
 	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(_target.global_position, _target.get_my_enemies(), item.cast_range_in_tiles, item.max_targets)
 

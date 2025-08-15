@@ -14,7 +14,7 @@ func _ready() -> void:
 	_main_container_items.position.x = ORIGINAL_WIDTH
 	_container_item_by_types_model.visible = false
 
-	close_shop()
+	internal_close_shop()
 	_shop_button.on_pressed = _toggle_shop
 
 	var titles := ["Consumables:", "Equipment:"]
@@ -39,10 +39,10 @@ func _on_main_container_gui_input(event) -> void:
 	if event is InputEventMouseButton and event.pressed: _on_shop_interface_clicked(event)
 
 func _toggle_shop() -> void:
-	if _items_visible: close_shop()
+	if _items_visible: internal_close_shop()
 	else: open_shop()
 const TWEEN_DURATION := 0.2
-func close_shop() -> bool:
+func internal_close_shop() -> bool:
 	if not _items_visible: return false
 	_items_visible = false
 	_shop_button.text = LanguageManager.translate("Shop")
@@ -60,8 +60,9 @@ func open_shop():
 	custom_tween.tween_property(_main_container_items, "position:x", 0, TWEEN_DURATION)
 	custom_tween.start()
 
-static func static_close_shop() -> bool:
-	return GameManager.game_world.gui_scene.shop_interface.close_shop()
+static func close_shop() -> bool:
+	if not GameManager.game_world: return false
+	return GameManager.game_world.gui_scene.shop_interface.internal_close_shop()
 
 static func _on_shop_interface_clicked(_event: InputEventMouseButton) -> void:
 	if not DraggableSlot.ghost: return

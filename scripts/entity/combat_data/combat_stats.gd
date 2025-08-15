@@ -108,7 +108,7 @@ static func get_instance(intellicense: int, agility: int, strength: int) -> Comb
 	instance.set_strength(strength)
 	return instance
 
-const _HP_BY_STRENGTH = 20; const _HP_REGEN_BY_STRENGTH = 0.1; const _PHYSICAL_ATTACK_POWER_BY_STRENGTH = 0.25
+const _HP_BY_STRENGTH = 20; const _HP_REGEN_BY_STRENGTH = 0.1; const _PHYSICAL_ATTACK_POWER_BY_STRENGTH = 0.1
 static var STRENGTH_PROPERTIES = "Gives " + StringHelpers.format_float(_HP_BY_STRENGTH) + " hp, " + \
 	StringHelpers.format_float(_HP_REGEN_BY_STRENGTH) + " hp regen and " + \
 	StringHelpers.format_float(_PHYSICAL_ATTACK_POWER_BY_STRENGTH) + " physical attack power per point of strength"

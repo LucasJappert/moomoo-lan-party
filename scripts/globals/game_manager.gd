@@ -9,6 +9,7 @@ var moomoo: Moomoo
 static var GAME_RUNNING := false
 
 var MY_PLAYER: Player
+var MY_PLAYER_NAME: String
 var MY_PLAYER_ID: int = -1
 var AM_I_HOST = true
 
@@ -31,12 +32,9 @@ func add_my_tree(my_tree: MyTree) -> void:
 	MapManager.set_cell_blocked(MapManager.world_to_cell(my_tree.global_position), true)
 
 func add_entity(entity: Entity) -> void:
-	if entity is Enemy:
-		if not entity.summoned_helper:
-			GameWorld.current_enemies_in_scene += 1
-		if entity.summoned_helper:
-			if entity.summoned_helper.summoned_by_name != GameManager.MY_PLAYER.name:
-				GameWorld.current_enemies_in_scene += 1
+	# if entity is Enemy:
+	# 	if not entity.summoned_helper: GameWorld.current_enemies_in_scene += 1
+	if entity.is_enemy_of_player(): GameWorld.current_enemies_in_scene += 1
 	entities[entity.name] = entity
 
 	if not AM_I_HOST: return
@@ -138,10 +136,12 @@ func restart_game() -> void:
 
 func reset_state() -> void:
 	# if game_world: game_world.queue_free()
+	MY_PLAYER_NAME = ""
 	for entity in get_entities(): remove_entity(entity, null)
 
 func set_my_player(player: Player) -> void:
 	MY_PLAYER = player
+	MY_PLAYER_NAME = player.name
 	game_world.gui_scene.init_scene(player)
 # endregion SETTERs
 
@@ -153,8 +153,8 @@ func get_gui_scene() -> Node: return game_world.gui_scene
 # region 		INTERNAL AUXILIARY METHODS
 static func _is_player_enemy(entity: Entity) -> bool:
 	if not entity or not GameManager.MY_PLAYER: return false
+	if entity.summoned_helper and entity.summoned_helper.summoned_by_name == GameManager.MY_PLAYER_NAME: return false
 	if entity == GameManager.MY_PLAYER: return false
-	if entity.summoned_helper and entity.summoned_helper.summoned_by_name == GameManager.MY_PLAYER.name: return false
 	if entity is Moomoo and not Moomoo.static_is_awake(): return false
 	return true
 # endregion 	INTERNAL AUXILIARY METHODS

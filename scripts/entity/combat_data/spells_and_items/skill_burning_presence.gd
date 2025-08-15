@@ -21,18 +21,21 @@ static func create_and_add_instance() -> void:
 	aux_array[1] = [120, 200, 320] # mana cost
 	aux_array[2] = [14, 10, 6] # cooldown
 	aux_array[3] = [14, 20, 26] # duration
+	aux_array[4] = [0.05, 0.1, 0.15] # extra damage by intelligence percent
 	for i in AVAILABLE_LEVELS:
 		SKILLS[NAME].item_skill_base[i].instant_use = false
 		SKILLS[NAME].item_skill_base[i].create_effect = true
 		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
 		SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 3
 		SKILLS[NAME].item_skill_base[i].float_dict["magic_damage_per_second"] = aux_array[0][i]
-		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
+		SKILLS[NAME].item_skill_base[i].float_dict["extra_damage_by_int_percent"] = aux_array[4][i]
+		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.PURE
 		SKILLS[NAME].item_skill_base[i].mana_cost = aux_array[1][i]
 		SKILLS[NAME].item_skill_base[i].cooldown = aux_array[2][i]
 		SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[3][i]
-		SKILLS[NAME].item_skill_base[i].en_description = "Unleashes a blazing aura that ignites the ground around the owner, burning nearby enemies for " + StringHelpers.format_float(aux_array[0][i]) + " magic damage per second over " + str(aux_array[3][i]) + " seconds."
-		SKILLS[NAME].item_skill_base[i].es_description = "Desata un aura llameante que enciende el suelo alrededor del portador, quemando a los enemigos cercanos con " + StringHelpers.format_float(aux_array[0][i]) + " de daño mágico por segundo durante " + str(aux_array[3][i]) + " segundos."
+		SKILLS[NAME].item_skill_base[i].en_description = "Unleashes a blazing aura that ignites the ground around the owner, burning nearby enemies for " + StringHelpers.format_float(aux_array[0][i]) + " pure damage per second over " + str(aux_array[3][i]) + " seconds. Additionally, it deals extra damage each second equal to " + StringHelpers.format_percent(aux_array[4][i]) + " of the owner's Intelligence."
+
+		SKILLS[NAME].item_skill_base[i].es_description = "Desata un aura llameante que enciende el suelo alrededor del portador, quemando a los enemigos cercanos con " + StringHelpers.format_float(aux_array[0][i]) + " de daño puro por segundo durante " + str(aux_array[3][i]) + " segundos. Además, inflige daño extra cada segundo equivalente al " + StringHelpers.format_percent(aux_array[4][i]) + " de la Inteligencia del portador."
 
 
 static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: Entity) -> bool:
@@ -63,7 +66,9 @@ func process_skill(_owner: Entity, _delta: float) -> void:
 	while time_accumulator >= _damage_interval:
 		time_accumulator -= _damage_interval
 		aux += 1
-		var _float_damage: float = learned_skill.float_dict["magic_damage_per_second"] * _damage_interval + _damage_residue
+		var extra_damage_by_int_percent: float = learned_skill.float_dict["extra_damage_by_int_percent"] * _owner.cache_total_stats.get_intelligence()
+		var total_damage_per_second: float = learned_skill.float_dict["magic_damage_per_second"] + extra_damage_by_int_percent
+		var _float_damage: float = total_damage_per_second * _damage_interval + _damage_residue
 		var integer_damage := int(_float_damage)
 		_damage_residue = _float_damage - integer_damage
 

@@ -49,7 +49,7 @@ func add_effect(p_effect: CombatEffect) -> void:
 		StunEffect.attach_to(_my_owner.front_animations_node, p_effect.duration_in_seconds)
 	if p_effect.get_silence_duration() > 0:
 		_my_owner.hud.add_silence_progress_bar(p_effect.duration_in_seconds)
-		SilenceEffect.attach_to(_my_owner.front_animations_node, p_effect.duration_in_seconds)
+		# SilenceEffect.attach_to(_my_owner.front_animations_node, p_effect.duration_in_seconds)
 	
 	_try_to_add_effect_to_my_gui(p_effect)
 

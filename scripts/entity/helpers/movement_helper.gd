@@ -101,6 +101,11 @@ func _verify_range_from_charged_skill() -> bool:
 	my_owner.use_charged_skill(_target_entity)
 	return true
 
+func _verify_range_from_physical_attack() -> bool:
+	if _attack_move_type != AttackMoveType.PhysicalAttack: return false
+	if not _target_entity: return false
+	return GlobalsEntityHelpers.is_target_in_attack_range(my_owner, _target_entity)
+
 func _try_set_next_current_target_pos() -> void:
 	update_path()
 
@@ -112,8 +117,7 @@ func _try_set_next_current_target_pos() -> void:
 		# Return if the target is in attack range (dont move, just attack)
 		if _verify_range_from_charged_skill(): return _clean_movements()
 
-		var target_in_attack_range = GlobalsEntityHelpers.is_target_in_attack_range(my_owner, my_owner.get_target_entity())
-		if target_in_attack_range: return _clean_movements()
+		if _verify_range_from_physical_attack(): return _clean_movements()
 
 	if MapManager._astar_grid.is_point_solid(current_path[0]): return
 	MapManager.set_cell_blocked(current_cell, false)

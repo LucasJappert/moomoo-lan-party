@@ -81,6 +81,7 @@ func emit_new_target_view_selected(p_owner: Entity, p_target: Entity):
 func connect_to_new_target_view_selected(p_callback: Callable) -> void:
 	EventBus.connect(NEW_TARGET_VIEW_SELECTED, p_callback)
 
+
 const NEW_TARGET_TO_ATTACK_SELECTED := "new_target_to_attack_selected"
 signal new_target_to_attack_selected(p_owner: Entity, p_target: Entity)
 func emit_new_target_to_attack_selected(p_owner: Entity, p_target: Entity):

@@ -1,6 +1,8 @@
 class_name SummonedHelper
 extends Node2D
 
+const GREEN_TO_RED_SHADER := preload("res://shaders/green_to_red.gdshader")
+
 signal expired
 
 var script_path: String
@@ -24,6 +26,10 @@ func _ready() -> void:
 	if lifetime_sec > 0.0:
 		_despawn_at_sec = _spawned_at_sec + lifetime_sec
 
+	if _owner.is_enemy_of_player():
+		_owner.body_sprite.modulate = Color(1, 0.5, 0.5)
+		
+
 func get_age_sec() -> float:
 	var now := MainScene.get_elapsed_time_in_sec()
 	return max(now - _spawned_at_sec, 0.0)
@@ -31,6 +37,7 @@ func get_age_sec() -> float:
 func summoned_by() -> Entity: return GameManager.get_entity(summoned_by_name)
 
 func _process(_delta: float) -> void:
+	if MainScene.PAUSED: return
 	if _despawn_at_sec < 0.0: return
 	var now := MainScene.get_elapsed_time_in_sec()
 	if now < _despawn_at_sec: return

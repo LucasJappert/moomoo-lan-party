@@ -889,6 +889,8 @@ anchor_bottom = 0.0
 grow_vertical = 1
 
 [node name="EndGameScene" parent="." instance=ExtResource("12_rckkk")]
+offset_top = -244.0
+offset_bottom = -244.0
 
 [node name="InGameStatisticsScene" parent="." instance=ExtResource("13_kb6mb")]
 unique_name_in_owner = true

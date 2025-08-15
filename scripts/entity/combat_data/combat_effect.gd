@@ -80,10 +80,10 @@ func get_attacker_name() -> String:
 	return _attacker.name
 
 func get_attacker() -> Entity:
-	return _attacker
+	return ObjectHelpers.get_safe_instance(_attacker)
 
 func get_target() -> Entity:
-	return _target
+	return ObjectHelpers.get_safe_instance(_target)
 # endregion GETTERs
 
 

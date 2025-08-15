@@ -41,7 +41,7 @@ var target_to_attack: Entity
 		
 		EventBus.emit_new_target_to_attack_selected(_my_owner, target_to_attack)
 		if target_to_attack == null: return
-		if target_to_attack.current_hp != 0 and _my_owner.is_my_player():
+		if target_to_attack.is_alive() and _my_owner.is_my_player():
 			ShadersHelper.apply_border_shader(target_to_attack, "target_to_attack", true, Color(1, 0, 0, 0.7))
 
 	get:
@@ -354,6 +354,8 @@ func register_attacker(attacker: Entity) -> void:
 	if attacker and ObjectHelpers.is_my_player(self): attacker.hud.set_last_damage_to_my_player()
 
 func set_target_to_attack(_target: Entity) -> void: # Used only by the server
+	if _my_owner.get_allies().has(_target):
+		return print("Trying to set target to attack for a player that is not an enemy")
 	if _target == target_to_attack: return
 
 	target_to_attack_name = str(_target.name) if _target else ""
@@ -417,8 +419,6 @@ func _actions_after_skill_updated(slot_number: int) -> void:
 
 		var learned_skill := skill.get_learned_skill()
 		if learned_skill and learned_skill.type == SkillType.PASSIVE:
-			if learned_skill.my_name == SkillBloodFury.NAME:
-				print("Adding passive skill: ", learned_skill.my_name)
 			add_active_skill(SkillBase.get_permanent_active_skill(learned_skill))
 
 	update_cache_total_stats()
@@ -432,7 +432,9 @@ func use_charged_skill(_target: Entity) -> void:
 	var learned_skill = charged_skill.get_learned_skill()
 
 	# Do not allow the use of damaging skills on oneself
-	if learned_skill.apply_to_enemy and _target.name == _my_owner.name: return uncharge_skill()
+	if learned_skill.apply_to_enemy and not _target.is_enemy_of_player():
+		_my_owner.hud.show_message_popup(LanguageManager.translate("Can't use this\n skill on allies"), Color(0.7, 0, 0, 0.7))
+		return uncharge_skill()
 
 	# Si el objetivo está fuera de rango entonces intentamos movernos hacia una posición válida más cercana
 	if not _my_owner.is_in_range(_target.movement_helper.current_cell, learned_skill.cast_range_in_tiles):
