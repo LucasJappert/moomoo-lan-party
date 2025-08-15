@@ -136,7 +136,7 @@ static func _try_apply_stun(_attacker: Entity, _target: Entity, _di: DamageInfo)
 		_target.apply_stun(_attacker.cache_total_stats.get_stun_duration())
 
 static func _try_apply_lifesteal(_attacker: Entity, _target: Entity, _di: DamageInfo) -> void:
-	if not _di.is_main_attack() or not _di.is_physical_damage(): return
+	if not _di.is_main_attack(): return
 	if _attacker.cache_total_stats.get_life_steal_percent() <= 0: return
 
 	if _attacker.current_hp == _attacker.get_full_health() or _di.total_damage <= 0: return
@@ -171,9 +171,7 @@ static func _try_apply_cleave(_attacker: Entity, _target: Entity, _di: DamageInf
 
 	for enemy in filtered_enemies:
 		var _cdi := DamageInfo.new(cleave_damage, _di.damage_type, _attacker.name)
-		_cdi.projectile_type = ProjectileBase.NONE
-		_cdi.can_be_evaded = false
-		_cdi.was_a_cleave_damage = true
+		_cdi.set_cleave_damage()
 		enemy.server_receive_damage(_cdi, _attacker)
 	
 # endregion AUXILIARY METHODS

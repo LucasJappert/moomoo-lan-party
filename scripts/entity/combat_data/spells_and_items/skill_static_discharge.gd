@@ -28,6 +28,7 @@ static func _apply_strikes(_owner: Entity, _learned_skill: ItemSkillBase) -> voi
 
 		var total_magic_damage = _owner.cache_total_stats.get_total_magic_damage(magic_damage)
 		var _di := DamageInfo.new(total_magic_damage, _learned_skill.damage_type, _owner.name)
+		_di.set_static_damage()
 		enemy.server_receive_damage(_di, _owner)
 	
 static func create_and_add_instance() -> void:

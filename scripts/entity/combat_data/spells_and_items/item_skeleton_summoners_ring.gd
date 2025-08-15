@@ -57,9 +57,9 @@ static func _spawn_ranged_skeleton(_attacker: Entity, _target: Entity, _duration
 	var enemy: Enemy = EnemyBase.get_new_instance(EnemySummonedSkeletonBow.LONG_NAME)
 	enemy._skills = [
 		SkillBase.get_new_learned_skill(SkillInfernalTouch.NAME, 3),
-		SkillBase.get_new_learned_skill(SkillFrenziedSilence.NAME, 3),
-		SkillBase.get_new_learned_skill(SkillLifesteal.NAME, 3),
 		SkillBase.get_new_learned_skill(SkillShieldedCore.NAME, 3),
+		SkillBase.get_new_learned_skill(SkillLifesteal.NAME, 3),
+		SkillBase.get_new_learned_skill(SkillFrenziedSilence.NAME, 3),
 	]
 	enemy.projectile_type = ProjectileVenomArrow.NAME
 	enemy.combat_stats.set_attack_range(250)

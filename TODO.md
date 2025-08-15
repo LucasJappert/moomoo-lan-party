@@ -5,11 +5,10 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Crear un item que crea 2 copias de si mismo, con los mismos atributos pero cada copia absorbe un 60% de daño extra
-- 🔵 Configurar skills moomoo en cada state
-- Burning presence hacer que haga daño en base a la int
-- Ver sword cursor hover moomoo
+- Guardar registro de los últimos 10 ataques
+- Mejorar sistema de stuns. Permitir forzar a que quede activo el nuevo
 - Revisar efecto de lifesteal, no actualiza la descripcion
+- 🔵 Configurar skills moomoo en cada state
 - Dibujar zona rango de ataque cuando presionamos ALT
 - Desarrollar historia y mostrar diálogos en diferentes momentos
 - Agregar item epicos a bosses enemigos
@@ -22,6 +21,7 @@
 - Agregar algunos items más
 - Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
 - Agregar item que brinda un +30% de ataque mágico y físico y algo mas
+- Crear un item que crea 2 copias de si mismo, con los mismos atributos pero cada copia absorbe un 60% de daño extra
 
 - Crear ronda numero 9, con un enemigo que lanza cuchillas y otro que lanza piedras
 - Agregar un item que brinda daño splash a todo alreadedor del target (es diferente al cleave)

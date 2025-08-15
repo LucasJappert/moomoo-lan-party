@@ -42,7 +42,7 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 	for _enemy in target_enemies:
 		var _di = DamageInfo.new(total_magic_damage, _learned_skill.damage_type, _caster.name)
 		_enemy.server_receive_damage(_di, _caster)
-		_enemy.apply_stun(_learned_skill.float_dict["stun_duration"])
+		_enemy.apply_stun(_learned_skill.float_dict["stun_duration"], true)
 
 	var message := DamageType.MAGIC_EMOTI + " " + str(total_magic_damage) + " " + DamageType.MAGIC_EMOTI
 	_caster.hud.show_message_popup(message.to_upper(), Color(1, 1, 1), 0.4)

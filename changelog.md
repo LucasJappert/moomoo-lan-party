@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Adjust SkillShockSpear stun and apply lifesteal to magical attacks
 - ✅ Create item Deadeye that grants a chance to ignore the target's evasion
 - ✅ Generate a skill/item that gives a chance to summon skeletons with each attack
 - ✅ Move the player to an appropriate position when casting a spell on an enemy that is out of range

@@ -240,7 +240,14 @@ func _try_to_apply_effect(_skill: SkillBase):
 	var new_effect := CombatEffect.get_effect_from_skill_base(_skill)
 	effects_helper.add_effect(new_effect)
 
-func apply_stun(_seconds: float) -> void:
+func apply_stun(_seconds: float, force_update: bool = false) -> void:
+	if force_update:
+		effects_helper.remove_effect_by_name(CombatEffect.STUN_NAME)
+		StunEffect.remove_all_from(_my_owner.front_animations_node)
+
+	var exist_stun = effects_helper.get_effect_by_name(CombatEffect.STUN_NAME)
+	if exist_stun: return # we do this to prevent the player from being stunned multiple times
+
 	var _stats = CombatStats.new()
 	_stats.set_stun_duration(_seconds)
 	var effect = CombatEffect.get_temporal_effect(CombatEffect.STUN_NAME, _seconds, 1, _stats.get_info())
@@ -608,7 +615,7 @@ func try_physical_attack(_delta: float) -> bool:
 func _get_nearest_target_in_range_attack():
 	var max_range = cache_total_stats.get_attack_range()
 	var start_pos = _my_owner.global_position
-	if _my_owner is Player:
+	if _my_owner.is_ally_of_player():
 		return GlobalsEntityHelpers.get_nearest_entity(start_pos, _my_owner.get_my_enemies(), max_range)
 
 	if _my_owner is Enemy:

@@ -137,6 +137,9 @@ func is_enemy_of_player() -> bool:
 	if not GameManager.MY_PLAYER: return false
 	if GameManager.MY_PLAYER in get_my_enemies(): return true
 	return false
+
+func is_ally_of_player() -> bool: return not is_enemy_of_player()
+
 func is_in_range(target_cell: Vector2i, distance_in_tiles: int) -> bool:
 	return (target_cell - movement_helper.current_cell).length() <= distance_in_tiles
 

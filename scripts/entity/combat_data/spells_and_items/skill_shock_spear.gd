@@ -13,7 +13,7 @@ static func create_and_add_instance() -> void:
 	aux_array[0] = [60, 100, 140] # magic_damage
 	aux_array[1] = [120, 200, 320] # mana cost
 	aux_array[2] = [10, 8, 6] # cooldown
-	aux_array[3] = [2, 4, 6] # stun_duration
+	aux_array[3] = [2, 3, 4] # stun_duration
 	for i in AVAILABLE_LEVELS:
 		SKILLS[NAME].item_skill_base[i].instant_use = false
 		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 7
@@ -46,7 +46,7 @@ static func apply_strike(_owner: Entity, _target: Entity, _learned_skill: ItemSk
 
 	var enemies_to_stun := GlobalsEntityHelpers.get_closest_entities(_target.position, _owner.get_my_enemies(), _learned_skill.float_dict["stun_radius"])
 	for _enemy in enemies_to_stun:
-		_enemy.apply_stun(_learned_skill.float_dict["stun_duration"])
+		_enemy.apply_stun(_learned_skill.float_dict["stun_duration"], true)
 
 static func _apply_animation(_target: Entity) -> void:
 	var frames = SpritesHelper.get_sprite_frames(
