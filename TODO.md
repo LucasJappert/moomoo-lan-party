@@ -6,7 +6,6 @@
 📝 [Go to Changelog](./changelog.md)
 
 - Guardar registro de los últimos 10 ataques
-- Mejorar sistema de stuns. Permitir forzar a que quede activo el nuevo
 - Revisar efecto de lifesteal, no actualiza la descripcion
 - 🔵 Configurar skills moomoo en cada state
 - Dibujar zona rango de ataque cuando presionamos ALT

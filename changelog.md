@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Improve stun system. Allow forcing the new one to stay active
 - ✅ Adjust SkillShockSpear stun and apply lifesteal to magical attacks
 - ✅ Create item Deadeye that grants a chance to ignore the target's evasion
 - ✅ Generate a skill/item that gives a chance to summon skeletons with each attack
