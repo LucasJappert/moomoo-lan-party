@@ -3,6 +3,7 @@ extends SkillBase
 
 const NAME = "Earthshatter"
 const ICON_SLOT = Vector2(6, 1)
+const RECT_REGION_EFFECT := Rect2(768, 256, 64, 64)
 
 static func create_and_add_instance() -> void:
 	SKILLS[NAME] = Skill.new(NAME, SkillType.ACTIVE)
@@ -33,6 +34,7 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 	if _learned_skill.my_name != NAME: return false
 
 	if not verify_range(_caster, _target, _learned_skill): return false
+	if not _valid_conditions_before_cast(_caster, _learned_skill): return false
 
 	var target_enemies = GlobalsEntityHelpers.get_closest_entities(_caster.global_position, _caster.get_my_enemies(), _learned_skill.area_of_effect_in_tiles)
 
@@ -48,4 +50,16 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 	_caster.hud.show_message_popup(message.to_upper(), Color(1, 1, 1), 0.4)
 
 	SoundsHelper.play_scream_hero_1()
+	
+	var sprite := SpritesHelper.get_sprite_2d(RECT_REGION_EFFECT)
+	sprite.modulate = Color(0, 1, 1, 1) # Tono amarillo
+	TweenEffects.apply_expanding_fade_px(_caster.back_animations_node, sprite, Vector2(0, 0), 0, _learned_skill.area_of_effect_in_tiles * 2 * MapManager.TILE_SIZE_INT)
+
 	return true
+
+static func _valid_conditions_before_cast(_caster: Entity, _learned_skill: ItemSkillBase) -> bool:
+	# For cases where the caster is a unit on the server, we check if there are any enemies nearby
+	if _caster is Player: return true
+
+	var closest_enemies = GlobalsEntityHelpers.get_closest_entities(_caster.global_position, _caster.get_my_enemies(), _learned_skill.area_of_effect_in_tiles)
+	return closest_enemies.size() > 0

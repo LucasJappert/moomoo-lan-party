@@ -102,9 +102,12 @@ static func apply_spawn_spin_effect(parent: Node, position: Vector2, lifetime: f
 	return apply_spin_flat_3d(parent, position, SpritesHelper.get_sprite_2d(SPAWN_REGION), lifetime, 0.5, 1)
 
 const REFLECT_REGION: Rect2 = Rect2(704, 256, 64, 64)
-static func apply_reflect_spin_effect(parent: Node, position: Vector2, lifetime: float) -> void:
+static func apply_reflect_spin_effect(parent: Node, position: Vector2, lifetime: float, scale: float = 1) -> void:
 	var sprite := SpritesHelper.get_sprite_2d(REFLECT_REGION)
+	sprite.scale = Vector2.ONE * scale
+	var original_scale := sprite.scale
 	apply_spin_flat_3d(parent, position, sprite, lifetime)
+	apply_scale_looped_effect(parent, sprite, original_scale * 0.9, original_scale * 1.1, 0.2)
 
 static func apply_spin_flat_3d(parent: Node, position: Vector2, sprite: Sprite2D,
 	lifetime: float = 1, fade_in: float = 0.25, fade_out: float = 0.25
@@ -123,6 +126,7 @@ static func apply_spin_flat_3d(parent: Node, position: Vector2, sprite: Sprite2D
 	flat.add_child(rot)
 
 	# Sprite desde tu atlas
+	var original_scale := sprite.scale
 	sprite.modulate = Color(0, 0, 0, 0) # fade-in
 	sprite.scale = Vector2.ZERO
 	rot.add_child(sprite)
@@ -130,12 +134,12 @@ static func apply_spin_flat_3d(parent: Node, position: Vector2, sprite: Sprite2D
 	# Parámetros internos (ajustá el "feel" acá)
 	var hold: float = max(lifetime - (fade_in + fade_out), 0.0)
 	var total: float = fade_in + hold + fade_out
-	var ROT_DPS := 360.0 # grados por segundo
+	var ROT_DPS := 360.0 / 4.0 # grados por segundo
 
 	# Fade-in -> hold -> fade-out (todo en un tween)
 	var t := flat.create_tween()
 	t.tween_property(sprite, "modulate", Color(1, 1, 1, 1), max(fade_in, 0.01))
-	t.parallel().tween_property(sprite, "scale", Vector2.ONE, fade_in)
+	t.parallel().tween_property(sprite, "scale", original_scale, fade_in)
 	if hold > 0.0: t.tween_interval(hold)
 	t.tween_property(sprite, "modulate", Color(0, 0, 0, 0), max(fade_out, 0.01))
 	t.parallel().tween_property(sprite, "scale", Vector2.ZERO, fade_out)
@@ -148,30 +152,83 @@ static func apply_spin_flat_3d(parent: Node, position: Vector2, sprite: Sprite2D
 	# Limpieza al terminar (sin lambdas)
 	t.finished.connect(Callable(flat, "queue_free"), CONNECT_ONE_SHOT)
 
-static func apply_scale_looped_effect(parent: Node, sprite: Sprite2D, from: Vector2, to: Vector2, lifetime: float = 1, speed: float = 1) -> void:
-	if not is_instance_valid(parent):
+static func apply_scale_looped_effect(
+	parent: Node,
+	sprite: Sprite2D,
+	from: Vector2,
+	to: Vector2,
+	lifetime: float = 1.0,
+	speed: float = 1.0
+) -> void:
+	if not is_instance_valid(sprite):
 		return
 
-	parent.add_child(sprite)
+	var we_added: bool = false
+	if sprite.get_parent() == null:
+		if not is_instance_valid(parent):
+			return
+		parent.add_child(sprite)
+		we_added = true
 
-	# Guardamos escala original y seteamos punto de partida del pulso.
+	# Guardamos escala original y seteamos punto de partida.
 	var original_scale: Vector2 = sprite.scale
 	sprite.scale = from
 
-	# Duraciones: speed = pulsos por segundo -> periodo = 1/speed.
+	# speed = pulsos/seg -> periodo = 1/speed
 	var safe_speed: float = max(speed, 0.0001)
 	var half_period: float = 0.5 / safe_speed
 	var life: float = max(lifetime, 0.0001)
 
-	# Tween de pulso (loop infinito): from -> to -> from ...
+	# Pulso en loop infinito: from -> to -> from ...
 	var pulse := sprite.create_tween()
 	pulse.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	pulse.set_loops(0) # 0 = infinito en Godot 4
+	pulse.set_loops(0) # infinito
 	pulse.tween_property(sprite, "scale", to, half_period)
 	pulse.tween_property(sprite, "scale", from, half_period)
 
-	# "Temporizador" de vida basado en tween: al terminar, matamos el loop y restauramos escala.
+	# Vida útil: al terminar, matamos el loop y limpiamos según corresponda.
 	var life_tween := sprite.create_tween()
 	life_tween.tween_interval(life)
 	life_tween.finished.connect(Callable(pulse, "kill"), CONNECT_ONE_SHOT)
-	life_tween.finished.connect(Callable(sprite, "set").bind("scale", original_scale), CONNECT_ONE_SHOT)
+
+	if we_added:
+		# Si esta función lo agregó, también lo libera.
+		life_tween.finished.connect(Callable(sprite, "queue_free"), CONNECT_ONE_SHOT)
+	else:
+		# Si ya tenía padre, solo restauramos la escala original.
+		life_tween.finished.connect(Callable(sprite, "set").bind("scale", original_scale), CONNECT_ONE_SHOT)
+
+static func apply_expanding_fade_px(
+	parent: Node,
+	sprite: Sprite2D,
+	global_position: Vector2,
+	from_px: float,
+	to_px: float
+) -> void:
+	if not is_instance_valid(parent) or not is_instance_valid(sprite): return
+	if sprite.texture == null: return
+
+	# Tamaño base (en px) de la textura (AtlasTexture devuelve el tamaño de la región)
+	var base_w: float = max(sprite.texture.get_size().x, 0.0001)
+
+	# Escalas uniformes calculadas a partir de los píxeles deseados
+	var s_from: float = max(from_px, 0.0) / base_w
+	var s_to: float = max(to_px, 0.0) / base_w
+
+	# Estado inicial
+	sprite.global_position = global_position
+	sprite.scale = Vector2(s_from, s_from)
+
+	parent.add_child(sprite)
+
+	# Duración fija para la “onda”
+	var DURATION := 0.45
+
+	# Animación: escalar y desvanecer en paralelo
+	var t := sprite.create_tween()
+	t.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	t.tween_property(sprite, "scale", Vector2(s_to, s_to), DURATION).set_ease(Tween.EASE_OUT)
+	t.parallel().tween_property(sprite, "modulate:a", 0, DURATION).set_ease(Tween.EASE_IN)
+
+	# Limpiar al terminar
+	t.finished.connect(Callable(sprite, "queue_free"), CONNECT_ONE_SHOT)

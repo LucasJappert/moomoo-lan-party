@@ -5,7 +5,7 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Ver de reducir cantidad de Nodos
+- Corregir la venta de consumibles de muchas unidades
 - Eliminar summons de moomoo cuando muere
 - Imposibilitar casteo de hechizos si esta stuneado
 - Guardar registro de los últimos 10 ataques

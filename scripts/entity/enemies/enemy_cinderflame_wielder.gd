@@ -14,4 +14,5 @@ static func try_to_init_from_name(_name: String, _enemy: Enemy) -> void:
 	_enemy._skills.append_array([
 		SkillBase.get_new_learned_skill(SkillSilentAgony.NAME),
 		SkillBase.get_new_learned_skill(SkillBurningPresence.NAME),
+		SkillBase.get_new_learned_skill(SkillEarthshatter.NAME),
 	])

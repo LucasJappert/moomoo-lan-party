@@ -19,3 +19,12 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].set_life_steal_percent(float_array[i])
 		SKILLS[NAME].item_skill_base[i].en_description = "Steals " + StringHelpers.format_percent(float_array[i]) + " of dealt damage as life."
 		SKILLS[NAME].item_skill_base[i].es_description = "Roba un " + StringHelpers.format_percent(float_array[i]) + " del daño infligido como vida."
+		
+static func actions_after_skill_updated(_owner: Entity, _skill: Skill) -> bool:
+	if _skill.get_name() != NAME: return false
+	if _skill.learned_level == 0: return false
+
+	var skill := SkillLifesteal.new(_skill.get_learned_skill())
+	_owner.add_active_skill(skill)
+
+	return true

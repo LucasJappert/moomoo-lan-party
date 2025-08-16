@@ -2,7 +2,7 @@ extends Node2D
 class_name StunEffect
 
 @export var radius: float = 8.0
-@export var num_stars: int = 3
+@export var num_stars: int = 5
 @export var rotation_speed: float = 2
 
 

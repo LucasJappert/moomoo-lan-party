@@ -42,6 +42,7 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 	if _learned_skill.my_name != NAME: return false
 
 	if not verify_range(_caster, _target, _learned_skill): return false
+	if not _valid_conditions_before_cast(_caster, _learned_skill): return false
 
 	return _target.add_active_skill(SkillBurningPresence.new(_caster, _learned_skill))
 
@@ -112,3 +113,10 @@ func _try_to_remove_all_effects() -> void:
 	for effect in _current_effects:
 		FireEffect.stop_effect(effect)
 	_current_effects.clear()
+	
+static func _valid_conditions_before_cast(_caster: Entity, _learned_skill: ItemSkillBase) -> bool:
+	# For cases where the caster is a unit on the server, we check if there are any enemies nearby
+	if _caster is Player: return true
+
+	var closest_enemies = GlobalsEntityHelpers.get_closest_entities(_caster.global_position, _caster.get_my_enemies(), _learned_skill.area_of_effect_in_tiles)
+	return closest_enemies.size() > 0

@@ -109,6 +109,7 @@ func update_skill(new_skill: Skill, p_owner: Entity, _slot_number: int):
 	
 func _set_slot_from_skill(new_skill: Skill, p_owner: Entity):
 	skill = new_skill
+	hotkey.text = OS.get_keycode_string(KeyboardHelper.SKILL_HOTKEYS[slot_number - 1])
 	if not skill: return clean_slot(p_owner)
 
 	hotkey.visible = skill.get_safe_learned_skill().type == SkillType.ACTIVE

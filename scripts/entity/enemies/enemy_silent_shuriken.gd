@@ -23,3 +23,4 @@ static func try_to_init_from_name(_name: String, _enemy: Enemy) -> void:
 		null,
 		SkillBase.get_new_learned_skill(SkillUnbreakable.NAME),
 	])
+	_enemy.update_item(Item.get_item(ItemSkeletonSummonersRing.NAME, 1, true), 0)

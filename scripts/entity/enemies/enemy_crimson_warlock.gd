@@ -12,7 +12,7 @@ static func try_to_init_from_name(_name: String, _enemy: Enemy) -> void:
 	_enemy.extra_info = ExtraInfo.new(LONG_NAME, get_rect_frames(SPRITES_POS_VECTOR), ALIAS)
 
 	_enemy.combat_stats.set_attack_speed(1.2)
-	_enemy.combat_stats.set_evasion(0.2)
+	_enemy.combat_stats.set_evasion(0.6)
 	_enemy.combat_stats.set_attack_range(260)
 	_enemy.projectile_type = ProjectileDemonBolt.NAME
 	
@@ -20,3 +20,5 @@ static func try_to_init_from_name(_name: String, _enemy: Enemy) -> void:
 		SkillBase.get_new_learned_skill(SkillPainEcho.NAME),
 		SkillBase.get_new_learned_skill(SkillInfernalTouch.NAME),
 	])
+
+	_enemy.add_item(Item.get_item(ItemSkywrath.NAME, 1, true))

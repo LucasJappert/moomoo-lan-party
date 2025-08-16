@@ -6,6 +6,7 @@ const SPAWN_POSITION = Vector2i(20, 11)
 const BODY_SCALE: float = 0.7
 const LONG_NAME = "Moomoo"
 const ALIAS = "The Eternal Guardian"
+const EFFECT_SCALE: float = 1.8
 
 const _START_REGION = Vector2i(512, 864)
 const _FRAME_SIZE = Vector2i(128, 128)

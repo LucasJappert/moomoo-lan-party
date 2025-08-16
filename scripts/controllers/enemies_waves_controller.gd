@@ -105,9 +105,11 @@ static func _create_normal_wave() -> void:
 	GameManager.MY_PLAYER.statistics.set_normal_wave(current_normal_wave)
 	print("Wave " + str(current_normal_wave) + " started!")
 
-	extra_stats_by_wave.set_agility(5 * current_normal_wave)
-	extra_stats_by_wave.set_strength(5 * current_normal_wave)
-	extra_stats_by_wave.set_intelligence(5 * current_normal_wave)
+	extra_stats_by_wave.set_agility(randi_range(6, 9) * current_normal_wave)
+	extra_stats_by_wave.set_strength(randi_range(6, 9) * current_normal_wave)
+	extra_stats_by_wave.set_intelligence(randi_range(6, 9) * current_normal_wave)
+	extra_stats_by_wave.set_physical_attack_power(randi_range(6, 11) * current_normal_wave)
+	extra_stats_by_wave.set_magic_attack_power(randi_range(6, 11) * current_normal_wave)
 
 	_current_wave_info = WAVES_INFO[current_normal_wave - 1]
 
@@ -128,25 +130,25 @@ static func _try_create_special_wave() -> bool:
 		available_enemies.append_array(WAVES_INFO[i % WAVES_INFO.size()].common_enemies)
 		available_enemies.append_array(WAVES_INFO[i % WAVES_INFO.size()].boss_enemies)
 
-	for wave_direction in _WAVE_DIRECTIONS:
-		var enemy_type = available_enemies[randi() % available_enemies.size()]
+	for i in range(2):
+		for wave_direction in _WAVE_DIRECTIONS:
+			var enemy_type = available_enemies[randi() % available_enemies.size()]
 
-		var boss_enemy = _get_enemy(enemy_type, wave_direction, true)
-		var extra_stats := CombatStats.new()
-		extra_stats.set_agility(randi_range(20, 50))
-		extra_stats.set_strength(randi_range(20, 50))
-		extra_stats.set_intelligence(randi_range(20, 50))
-		boss_enemy.combat_stats.accumulate_info(extra_stats.get_info())
-		GlobalsEntityHelpers.grants_random_skills(boss_enemy, min(3, current_special_wave))
-		
-		boss_enemy.set_current_hp_and_mana()
+			var boss_enemy = _get_enemy(enemy_type, wave_direction, true)
+			var extra_stats := CombatStats.new()
+			extra_stats.accumulate_info(extra_stats_by_wave.get_info())
+			extra_stats.accumulate_info(extra_stats_by_wave.get_info())
+			boss_enemy.combat_stats.accumulate_info(extra_stats.get_info())
+			GlobalsEntityHelpers.grants_random_skills(boss_enemy, min(3, current_special_wave))
+			
+			boss_enemy.set_current_hp_and_mana()
 
-		# enemy.can_attack = false
-		GameManager.spawn_enemy(boss_enemy)
+			# enemy.can_attack = false
+			GameManager.spawn_enemy(boss_enemy)
 
-		if available_enemies.size() <= 1: continue
+			if available_enemies.size() <= 1: continue
 
-		available_enemies.erase(enemy_type)
+			available_enemies.erase(enemy_type)
 	return true
 
 	

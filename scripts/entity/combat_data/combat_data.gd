@@ -189,12 +189,12 @@ func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void
 	if current_hp <= 0: return
 
 	current_hp += value_to_increase
-	set_current_hp(current_hp)
+	set_current_hp(current_hp, _attacker, value_to_increase)
 
-func set_current_hp(value: int) -> void:
+func set_current_hp(value: int, _attacker: Entity = null, value_to_increase: int = 0) -> void:
 	current_hp = value
 	current_hp = clamp(current_hp, 0, get_full_health())
-	if not _my_owner.is_spawning: _actions_after_current_hp_updated()
+	if not _my_owner.is_spawning: _actions_after_current_hp_updated(value_to_increase, _attacker)
 
 func update_current_mana(value_to_increase: int) -> void:
 	if value_to_increase == 0: return
@@ -337,7 +337,7 @@ func update_cache_total_stats() -> void:
 	cache_total_stats.set_info(_get_total_stats())
 	cache_total_stats_no_effects.set_info(_get_total_stats(false))
 
-	if prev_total_health != get_full_health():
+	if prev_total_health > 0 and prev_total_health != get_full_health():
 		set_current_hp(int(get_full_health() * p_hp))
 
 	if prev_total_mana != get_full_mana():
@@ -453,11 +453,8 @@ func _actions_after_skill_updated(slot_number: int) -> void:
 	EventBus.emit_skill_updated(_my_owner, skill, slot_number)
 
 	if skill:
-		for reg_skill in SkillBase.REGISTERED_SKILLS: reg_skill.actions_after_skill_updated(_my_owner, skill)
-
-		var learned_skill := skill.get_learned_skill()
-		if learned_skill and learned_skill.type == SkillType.PASSIVE:
-			add_active_skill(SkillBase.get_permanent_active_skill(learned_skill))
+		for reg_skill in SkillBase.REGISTERED_SKILLS:
+			if reg_skill.actions_after_skill_updated(_my_owner, skill): break
 
 	update_cache_total_stats()
 

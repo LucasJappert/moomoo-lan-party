@@ -47,8 +47,7 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 	var skill := SkillPainEcho.new(_learned_skill, true)
 	if not _target.add_active_skill(skill): return false
 
-	TweenEffects.apply_reflect_spin_effect(_target.back_animations_node, Vector2.ZERO, _learned_skill.duration_in_seconds)
-	# DamageReflectorEffect.remove_from(_caster.back_animations_node)
-	# DamageReflectorEffect.attach_to(_caster.back_animations_node, _learned_skill.duration_in_seconds)
+	var scale := Moomoo.EFFECT_SCALE if _target is Moomoo else 1.0
+	TweenEffects.apply_reflect_spin_effect(_target.back_animations_node, Vector2.ZERO, _learned_skill.duration_in_seconds, scale)
 
 	return true

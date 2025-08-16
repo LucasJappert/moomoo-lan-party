@@ -4,6 +4,7 @@ extends SkillBase
 
 const NAME := "Absorb And Release"
 const ICON_SLOT := Vector2(7, 0)
+const RECT_REGION_EFFECT := Rect2(768, 256, 64, 64)
 
 var percent_to_release: float = 0
 var radius_in_tiles: float
@@ -36,12 +37,17 @@ func on_damage_received(_attacker: Entity, _damage_received: int) -> void:
 func _apply_release(_attacker: Entity, _target: Entity) -> void:
 	var nearest_enemies = GlobalsEntityHelpers.get_closest_entities(_attacker.global_position, _attacker.get_my_enemies(), radius_in_tiles)
 	var total_damage_to_release := int(damage_accumulated * percent_to_release)
+	if total_damage_to_release <= 0: return
+
 	for enemy in nearest_enemies:
 		enemy.server_receive_damage(DamageInfo.new(total_damage_to_release, DamageType.PHYSICAL, _attacker.name), _attacker)
 
 	var message := DamageType.PHYSICAL_EMOTI + " " + str(total_damage_to_release) + " " + DamageType.PHYSICAL_EMOTI
 	_attacker.hud.show_message_popup(message.to_upper(), Color(1, 1, 1), 0.4)
 	SoundsHelper.play_scream_hero_1()
+
+	var sprite := SpritesHelper.get_sprite_2d(RECT_REGION_EFFECT)
+	TweenEffects.apply_expanding_fade_px(GameManager.game_world.general_container, sprite, _attacker.global_position, 0, radius_in_tiles * 2 * MapManager.TILE_SIZE_INT)
 
 
 static func create_and_add_instance() -> void:
@@ -70,4 +76,11 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 
 	var _percent_to_release: float = _learned_skill.float_dict["percent_to_release"]
 	var skill_base := SkillAbsorbAndRelease.new(_learned_skill, true, _percent_to_release, _learned_skill.area_of_effect_in_tiles)
-	return _target.add_active_skill(skill_base)
+	var result := _target.add_active_skill(skill_base)
+
+	var scale := Moomoo.EFFECT_SCALE if _target is Moomoo else 1.0
+	var sprite := SpritesHelper.get_sprite_2d(RECT_REGION_EFFECT)
+	sprite.scale = sprite.scale * scale
+	TweenEffects.apply_scale_looped_effect(_target.back_animations_node, sprite, sprite.scale, sprite.scale * 1.2, _learned_skill.duration_in_seconds, scale)
+
+	return result

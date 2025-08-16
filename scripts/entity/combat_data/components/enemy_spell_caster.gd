@@ -21,7 +21,9 @@ func _process(delta):
 	cast_timer += delta
 	if cast_timer < next_cast_delay: return
 
-	_try_cast_random_skill()
+	if not _try_cast_random_skill(): return
+
+	# If a spell was cast successfully, reset the timer
 	_set_next_cast_delay()
 	cast_timer = 0.0
 
@@ -51,6 +53,7 @@ func _try_cast_random_skill() -> bool:
 func _try_cast_spell_to_an_enemy(skill_to_cast: Skill) -> bool:
 	var learned_skill = skill_to_cast.get_safe_learned_skill()
 	if not learned_skill.apply_to_enemy: return false
+
 
 	return skill_to_cast.use(_enemy_owner, _enemy_owner.target_to_attack) # Apply to a player
 

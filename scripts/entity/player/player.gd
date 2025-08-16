@@ -2,7 +2,7 @@ class_name Player
 
 extends Entity
 
-const INITIAL_GOLD: int = 80000
+const INITIAL_GOLD: int = 800
 const PLAYER_CELL_SPAWN: Vector2i = Vector2i(20, 12)
 static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 const MAX_LEVEL: int = 30
@@ -27,8 +27,8 @@ const ATTR_PERC_EXTRA_BY_LEVEL = 0.1
 func set_player(data: Dictionary) -> void:
 	player_id = data["player_id"]
 	extra_info.key_type = data["key_type"]
-	skill_points_to_assign = 1
-	level = 1
+	skill_points_to_assign = 11
+	level = 11
 	current_gold = INITIAL_GOLD
 	HeroBase.initialize_from_name(extra_info.key_type, self)
 	EXTRA_INT_BY_LEVEL = round(cache_total_stats.get_intelligence() * ATTR_PERC_EXTRA_BY_LEVEL)
