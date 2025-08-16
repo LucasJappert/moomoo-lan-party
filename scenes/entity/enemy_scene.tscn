@@ -1,12 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://cj8vdyvtjs0ju"]
+[gd_scene load_steps=4 format=3 uid="uid://cj8vdyvtjs0ju"]
 
 [ext_resource type="PackedScene" uid="uid://dh82ovsrtutto" path="res://scenes/entity/entity_scene.tscn" id="1_v8xvt"]
 [ext_resource type="Script" uid="uid://crmmhsx5pjp8f" path="res://scripts/entity/enemy.gd" id="2_4sfg8"]
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_xrr2a"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_l0aop"]
-radius = 258.627
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v8xvt"]
 bg_color = Color(0.866667, 0, 0, 0.65098)
@@ -19,24 +14,10 @@ anti_aliasing = false
 [node name="Enemy" instance=ExtResource("1_v8xvt")]
 script = ExtResource("2_4sfg8")
 
-[node name="EnemySynchronizer" type="MultiplayerSynchronizer" parent="." index="0"]
-replication_config = SubResource("SceneReplicationConfig_xrr2a")
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="AreaVision" index="0"]
-visible = false
-z_index = 2
-z_as_relative = false
-shape = SubResource("CircleShape2D_l0aop")
-debug_color = Color(100, 100, 100, 0)
-
-[node name="AreaVision2" type="Area2D" parent="." index="4"]
-z_index = 2
-z_as_relative = false
-
 [node name="CurrentHpBar" parent="HUD/BarsContainer/MyHealthBarContainer" index="1"]
 theme_override_styles/panel = SubResource("StyleBoxFlat_v8xvt")
 
-[node name="AreaHovered" parent="." index="11"]
+[node name="AreaHovered" parent="." index="8"]
 light_mask = 0
 collision_layer = 524288
 collision_mask = 0

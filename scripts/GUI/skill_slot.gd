@@ -96,7 +96,7 @@ func clean_slot(p_owner: Entity):
 func update_skill(new_skill: Skill, p_owner: Entity, _slot_number: int):
 	if not p_owner: return
 	if not _owner: _owner = p_owner
-	if _owner != p_owner: return
+	if _owner.name != p_owner.name: return
 		
 	if slot_number == 0: slot_number = _slot_number
 	if slot_number != _slot_number: return

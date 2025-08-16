@@ -78,7 +78,7 @@ func _internal_description() -> String:
 		result += "- " + LanguageManager.translate("Max Stacks") + ": " + str(max_stacks) + "\n"
 
 	if damage_type != DamageType.NONE:
-		result += "- " + LanguageManager.translate("Damage Type") + ": " + str(damage_type) + "\n"
+		result += "- " + LanguageManager.translate("Damage Type") + ": " + LanguageManager.translate(damage_type) + "\n"
 
 	if not result.is_empty():
 		result = "\n" + result

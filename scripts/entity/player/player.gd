@@ -2,7 +2,7 @@ class_name Player
 
 extends Entity
 
-const INITIAL_GOLD: int = 50000
+const INITIAL_GOLD: int = 80000
 const PLAYER_CELL_SPAWN: Vector2i = Vector2i(20, 12)
 static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 const MAX_LEVEL: int = 30
@@ -27,8 +27,8 @@ const ATTR_PERC_EXTRA_BY_LEVEL = 0.1
 func set_player(data: Dictionary) -> void:
 	player_id = data["player_id"]
 	extra_info.key_type = data["key_type"]
-	skill_points_to_assign = 15
-	level = 15
+	skill_points_to_assign = 1
+	level = 1
 	current_gold = INITIAL_GOLD
 	HeroBase.initialize_from_name(extra_info.key_type, self)
 	EXTRA_INT_BY_LEVEL = round(cache_total_stats.get_intelligence() * ATTR_PERC_EXTRA_BY_LEVEL)
@@ -77,8 +77,6 @@ func level_up() -> void:
 	increment_skill_points_to_assign(1)
 	if is_my_player(): SoundsHelper.play_level_up()
 	
-	var current_percent_hp := current_hp / float(get_full_health())
-
 	var stats_to_add = CombatStats.new()
 	stats_to_add.set_strength(EXTRA_STR_BY_LEVEL)
 	stats_to_add.set_agility(EXTRA_AGI_BY_LEVEL)
@@ -87,9 +85,6 @@ func level_up() -> void:
 
 	update_base_stats(combat_stats.get_info())
 	AnimationsHelper.apply_animation(self, AnimationsHelper.ANIMATION_NAMES.LEVEL_UP)
-
-	set_current_hp(int(get_full_health() * current_percent_hp))
-	# update_current_mana(get_mana())
 
 func increment_current_gold(value_to_increment: int) -> void:
 	if current_hp <= 0: return

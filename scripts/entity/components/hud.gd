@@ -69,12 +69,14 @@ func _try_update_label():
 	# _label.text = str(GameManager.game_world.gui_scene._skill_slots_container.get_children().size())
 
 func update_health_bar():
+	if not my_owner: return
 	if my_owner.get_full_health() <= 0:
 		_current_hp_bar.size.x = 0
 		return
 	_current_hp_bar.size.x = my_owner.current_hp * BAR_SIZE / my_owner.get_full_health()
 
 func update_mana_bar():
+	if not my_owner: return
 	if my_owner.get_full_mana() <= 0:
 		_current_mana_bar.size.x = 0
 		return

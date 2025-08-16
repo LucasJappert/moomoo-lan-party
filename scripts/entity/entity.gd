@@ -53,7 +53,7 @@ func _ready():
 	movement_helper = MovementHelper.new(self)
 	statistics = Statistics.new(self)
 	tween_effects = TweenEffects.new(self)
-	_test()
+	_apply_spawn_effect()
 	area_attack_shape.shape = area_attack_shape.shape.duplicate() # to avoid changing the original shape
 	for child in front_animations_node.get_children():
 		child.queue_free()
@@ -68,26 +68,13 @@ func _ready():
 	EventBus.connect_to_freed_entity(Callable(self, "_on_entity_freed"))
 	EventBus.connect_to_paused(func(_paused: bool, _show_menu: bool): EntityState.paused_game(self))
 
-func _test():
-	modulate.a = 0
+func _apply_spawn_effect():
 	scale = Vector2.ZERO
 	modulate = Color(0, 0, 0, 0)
 
-	if self is Enemy:
-		for i in 1:
-			_span_line()
-		await get_tree().create_timer(0.2).timeout # 100 ms
-		
-		for i in 3:
-			_span_line()
-		await get_tree().create_timer(0.2).timeout # 100 ms
-
-		for i in 5:
-			_span_line()
-			await get_tree().create_timer(0.05).timeout # 100 ms
-
+	TweenEffects.apply_spawn_spin_effect(GameManager.game_world.over_terrain_layer_layer_1, global_position, 3)
+	await get_tree().create_timer(0.5).timeout
 	tween_effects.apply_spawn_effect()
-	is_spawning = false
 
 func _span_line():
 	const M := 24
@@ -100,6 +87,8 @@ func _span_line():
 func _post_ready():
 	hud._post_ready(self)
 	post_ready_combat_data()
+	hud.update_health_bar()
+	hud.update_mana_bar()
 	
 func _process(_delta: float) -> void:
 	if GameManager.AM_I_HOST: process_combat_data(_delta)
@@ -140,6 +129,10 @@ func is_enemy_of_player() -> bool:
 
 func is_ally_of_player() -> bool: return not is_enemy_of_player()
 
+func is_ally_of_moomoo() -> bool:
+	if Moomoo.is_awake(): return GameManager.get_player_enemies().has(self)
+	return false
+
 func is_in_range(target_cell: Vector2i, distance_in_tiles: int) -> bool:
 	return (target_cell - movement_helper.current_cell).length() <= distance_in_tiles
 
@@ -154,7 +147,7 @@ func get_my_enemies() -> Array[Entity]:
 		else: return GameManager.get_player_allies(true)
 
 	if self is Moomoo:
-		if Moomoo.static_is_awake(): return GameManager.get_player_allies(true)
+		if Moomoo.is_awake(): return GameManager.get_player_allies(true)
 		else: return GameManager.get_player_enemies()
 		
 	return []
@@ -167,7 +160,7 @@ func get_allies(include_me: bool = false) -> Array[Entity]:
 		if self.id in player_allies_ids: result = GameManager.get_player_allies(true)
 		else: result = GameManager.get_player_enemies()
 	if self is Moomoo:
-		if Moomoo.static_is_awake(): result = GameManager.get_player_enemies()
+		if Moomoo.is_awake(): result = GameManager.get_player_enemies()
 		else: result = GameManager.get_player_allies(true)
 		
 	if not include_me: result.erase(self)
@@ -177,6 +170,8 @@ func is_alive() -> bool: return current_hp > 0
 # endregion GETTERs
 
 # region 	SETTERs
+func set_is_spawning(_is_spawning: bool) -> void: is_spawning = _is_spawning
+
 func set_summoned_helper(entity_name: String, duration: float) -> void:
 	summoned_helper = SummonedHelper.new(self, entity_name, duration)
 

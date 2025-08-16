@@ -21,16 +21,13 @@ static func actions_after_die(_owner: Entity, _killed_by: Entity) -> void:
 	if not _owner is Enemy: return
 	if _owner.replicated: return
 
-	var target_tiles = [
-		Vector2(-MapManager.TILE_SIZE.x, -MapManager.TILE_SIZE.y),
-		Vector2(MapManager.TILE_SIZE.x, -MapManager.TILE_SIZE.y),
-		Vector2(MapManager.TILE_SIZE.x, MapManager.TILE_SIZE.y),
-		Vector2(-MapManager.TILE_SIZE.x, MapManager.TILE_SIZE.y)
-	]
+	var target_cells = [Vector2i(-1, -1), Vector2i(1, -1), Vector2i(1, 1), Vector2i(-1, 1)]
 	for i in range(4):
 		var new_enemy = ObjectHelpers.deep_clone(_owner) as Enemy
 		new_enemy.replicated = true
-		new_enemy.global_position = _owner.global_position + target_tiles[i]
+		new_enemy.is_dying = false
+		var safe_cell := MapManager.get_safe_cell(_owner.movement_helper.current_cell + target_cells[i])
+		new_enemy.global_position = MapManager.cell_to_world(safe_cell)
 		new_enemy.combat_stats.set_hp(new_enemy.get_full_health() * 0.5)
 		new_enemy.set_current_hp_and_mana()
 		GameManager.spawn_enemy(new_enemy)

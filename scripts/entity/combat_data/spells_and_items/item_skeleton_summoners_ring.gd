@@ -78,7 +78,6 @@ static func _aux_spawn_skeletons(enemy: Entity, _attacker: Entity, _target: Enti
 	enemy.combat_stats.set_intelligence(int(_attacker.cache_total_stats.get_intelligence() * randf_range(0.1, 0.2)))
 
 	enemy.set_current_hp_and_mana()
-	enemy.update_cache_total_stats()
 
 	var direction := _attacker.direction
 	var front_cell := _attacker.movement_helper.current_cell + Vector2i(int(direction.x), int(direction.y))

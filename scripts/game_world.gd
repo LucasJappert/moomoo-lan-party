@@ -69,7 +69,7 @@ func _spawn_custom_player(data: Dictionary) -> Node:
 func _init_moomoo_spawner():
 	moomoo_spawner.spawn_function = Callable(self, "_spawn_custom_moomoo")
 func _spawn_custom_moomoo(_data: Dictionary) -> Node:
-	return Moomoo.get_instance()
+	return Moomoo.get_new_instance()
 
 func _init_enemies_spawner():
 	enemies_spawner.spawn_function = Callable(self, "_spawn_custom_enemy")

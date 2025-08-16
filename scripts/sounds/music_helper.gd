@@ -40,8 +40,7 @@ func _load_playlist() -> void:
 			push_warning("Could not load music file: " + path)
 
 func _play_next() -> void:
-	if _playlist.is_empty():
-		return
+	if _playlist.is_empty(): return
 
 	_player.stream = _playlist[_current_track_index]
 	_player.play()

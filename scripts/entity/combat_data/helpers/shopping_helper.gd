@@ -10,12 +10,12 @@ func _init(p_owner: Entity):
 
 func try_shop_item(_item: Item) -> bool:
 	if _owner.current_gold < _item.buy_price:
-		print("not enough gold")
+		_owner.hud.show_message_popup(LanguageManager.translate("Not enough gold"), Color(1, 0, 0))
 		return false
 
 	var can_add_item = _try_add_equipable_item(_item) or _try_add_consumable_item(_item)
 	if not can_add_item:
-		print("not enough space")
+		_owner.hud.show_message_popup(LanguageManager.translate("Not enough space"), Color(1, 0, 0))
 		return false
 		
 	_owner.current_gold -= _item.buy_price

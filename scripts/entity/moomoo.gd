@@ -13,7 +13,8 @@ const _FRAMES := 2
 
 signal life_state_promoted(previous: LifeState, current: LifeState)
 
-var is_awake := false
+static var instance: Moomoo
+var _is_awake := false
 enum LifeState {
     HEALTHY = 1, # 75–100%
     WOUNDED = 2, # 50–75%
@@ -27,11 +28,11 @@ func _ready():
 	_create_timer_500ms()
 
 # region 	GETTERs
-static func static_is_awake() -> bool:
-	if ObjectHelpers.is_null(GameManager.moomoo): return false
-	return GameManager.moomoo.is_awake
+static func is_awake() -> bool:
+	if not get_instance(): return false
+	return get_instance()._is_awake
 func get_my_enemies() -> Array[Entity]:
-	if is_awake: return GameManager.get_player_allies(true)
+	if is_awake(): return GameManager.get_player_allies(true)
 	return GameManager.get_player_enemies()
 
 static func get_rect_frames(pos: Vector2i) -> Array[Rect2]:
@@ -39,10 +40,25 @@ static func get_rect_frames(pos: Vector2i) -> Array[Rect2]:
 	result.append(Rect2(_START_REGION.x + (pos.x * _FRAMES) * _FRAME_SIZE.x, _START_REGION.y + pos.y * _FRAME_SIZE.y, _FRAME_SIZE.x, _FRAME_SIZE.y))
 	result.append(Rect2(_START_REGION.x + (pos.x * _FRAMES + 1) * _FRAME_SIZE.x, _START_REGION.y + pos.y * _FRAME_SIZE.y, _FRAME_SIZE.x, _FRAME_SIZE.y))
 	return result
+
+static func get_instance() -> Moomoo: return ObjectHelpers.get_safe_instance(instance)
 # endregion GETTERs
 
 # region 	SETTERs
-func wake_up() -> void: is_awake = true
+func wake_up() -> void:
+	_is_awake = true
+	
+	update_skill(SkillBase.get_new_learned_skill(SkillBurningPresence.NAME, 3), 1)
+	update_skill(SkillBase.get_new_learned_skill(SkillPainEcho.NAME, 3), 2)
+	update_skill(SkillBase.get_new_learned_skill(SkillShieldedCore.NAME, 3), 3)
+	update_skill(SkillBase.get_new_learned_skill(SkillBlessingOfPower.NAME, 3), 4)
+
+	update_item(Item.get_item(ItemSkywrath.NAME, 1, true), 0)
+	# update_item(Item.get_item(ItemSkeletonSummonersRing.NAME, 1, true), 0)
+	update_item(Item.get_item(ItemCleaveEdge.NAME, 1, true), 1)
+
+	set_current_hp_and_mana()
+	update_base_stats(combat_stats.get_info())
 
 func _create_timer_500ms() -> void:
 	var timer_500ms = Timer.new()
@@ -53,7 +69,7 @@ func _create_timer_500ms() -> void:
 	add_child(timer_500ms)
 
 func _on_every_500ms() -> void:
-	if not is_awake: return
+	if not is_awake(): return
 
 	var nearest_enemy = GlobalsEntityHelpers.get_nearest_enemy_inside_vision(self)
 	set_target_to_attack(nearest_enemy)
@@ -61,7 +77,7 @@ func _on_every_500ms() -> void:
 # endregion SETTERs
 
 
-static func get_instance() -> Moomoo:
+static func get_new_instance() -> Moomoo:
 	var moomoo: Moomoo = load("res://scenes/entity/moomoo_scene.tscn").instantiate()
 	moomoo.name = "Moomoo"
 	moomoo.extra_info = ExtraInfo.new(LONG_NAME, get_rect_frames(Vector2i.ZERO), ALIAS)
@@ -81,17 +97,6 @@ static func get_instance() -> Moomoo:
 	moomoo.combat_stats.set_physical_defense_points(200)
 	moomoo.combat_stats.set_magic_defense_points(200)
 	moomoo.combat_stats.set_life_steal_percent(0.1)
-	
-	moomoo.update_skill(SkillBase.get_new_learned_skill(SkillBurningPresence.NAME, 3), 1)
-	moomoo.update_skill(SkillBase.get_new_learned_skill(SkillPainEcho.NAME, 3), 2)
-	moomoo.update_skill(SkillBase.get_new_learned_skill(SkillShieldedCore.NAME, 3), 3)
-	moomoo.update_skill(SkillBase.get_new_learned_skill(SkillBlessingOfPower.NAME, 3), 4)
-
-	moomoo.update_item(Item.get_item(ItemSkywrath.NAME, 1, true), 0)
-	# moomoo.update_item(Item.get_item(ItemSkeletonSummonersRing.NAME, 1, true), 0)
-	moomoo.update_item(Item.get_item(ItemCleaveEdge.NAME, 1, true), 1)
-
-	# moomoo.add_item(Item.get_item(ItemPowerCore.NAME, 1, true))
 
 	moomoo.set_current_hp_and_mana()
 	moomoo.update_base_stats(moomoo.combat_stats.get_info())

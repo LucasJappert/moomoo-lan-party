@@ -116,6 +116,11 @@ static var _translations := {
 	"Max Stacks": {LangTypes.SPANISH: "Acumulaciones máximas"},
 	"Damage Type": {LangTypes.SPANISH: "Tipo de daño"},
 	"Can't use this\n skill on allies": {LangTypes.SPANISH: "No puedes usar esta\n habilidad en aliados"},
+	"pure": {LangTypes.SPANISH: "puro"},
+	"physical": {LangTypes.SPANISH: "físico"},
+	"magic": {LangTypes.SPANISH: "mágico"},
+	"Not enough gold": {LangTypes.SPANISH: "No tienes suficiente oro"},
+	"Not enough space": {LangTypes.SPANISH: "No tienes suficiente espacio"},
 }
 
 ## ✅ Traducción basada en clave

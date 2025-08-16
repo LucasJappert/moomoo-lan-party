@@ -10,6 +10,23 @@ var _info: Dictionary[String, float] = {}
 var _debuffs: Dictionary[String, float] = {}
 var _debuffs_keys: Dictionary[String, bool] = {}
 
+static var _PERCENT_KEYS := [
+	CRIT_CHANCE,
+	STUN_CHANCE,
+	PHYSICAL_ATTACK_POWER_PERCENT,
+	MAGIC_ATTACK_POWER_PERCENT,
+	ATTACK_SPEED_PERCENT,
+	MOVE_SPEED_PERCENT,
+	HP_REGENERATION_POINTS_PERCENT,
+	MANA_REGENERATION_POINTS_PERCENT,
+	LIFE_STEAL_PERCENT,
+	PERCENT_MANA_TO_BURN,
+	CHANCE_TO_IGNORE_EVASION,
+	EXTRA_PROJECTILES_PERCENT_DAMAGE,
+	CLEAVE_PERCENT
+]
+
+
 const EXTRA_PROJECTILES_PERCENT_DAMAGE = "extra_projectiles_percent_damage"
 const EXTRA_PROJECTILES = "extra_projectiles"
 const LEVEL = "level"
@@ -108,7 +125,7 @@ static func get_instance(intellicense: int, agility: int, strength: int) -> Comb
 	instance.set_strength(strength)
 	return instance
 
-const _HP_BY_STRENGTH = 20; const _HP_REGEN_BY_STRENGTH = 0.1; const _PHYSICAL_ATTACK_POWER_BY_STRENGTH = 0.1
+const _HP_BY_STRENGTH = 20; const _HP_REGEN_BY_STRENGTH = 0.1; const _PHYSICAL_ATTACK_POWER_BY_STRENGTH = 0.25
 static var STRENGTH_PROPERTIES = "Gives " + StringHelpers.format_float(_HP_BY_STRENGTH) + " hp, " + \
 	StringHelpers.format_float(_HP_REGEN_BY_STRENGTH) + " hp regen and " + \
 	StringHelpers.format_float(_PHYSICAL_ATTACK_POWER_BY_STRENGTH) + " physical attack power per point of strength"
@@ -304,7 +321,11 @@ func get_new_description() -> String:
 	var result := ""
 	for key in _info:
 		if _info[key] != 0:
-			result += _aux_formatted_description_by_key(key) + StringHelpers.format_float(_info[key]) + "\n"
+			var perc_value := _PERCENT_KEYS.has(key)
+			var formatted_value := ""
+			if perc_value: formatted_value = StringHelpers.format_percent(_info[key])
+			else: formatted_value = StringHelpers.format_float(_info[key])
+			result += _aux_formatted_description_by_key(key) + formatted_value + "\n"
 	return result
 
 func get_extra_projectile_percent_damage() -> float: return _get_value(EXTRA_PROJECTILES_PERCENT_DAMAGE)

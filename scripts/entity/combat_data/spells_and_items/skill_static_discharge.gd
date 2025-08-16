@@ -24,7 +24,7 @@ static func actions_after_cast_skill(_owner: Entity, _skill_used: ItemSkillBase)
 static func _apply_strikes(_owner: Entity, _learned_skill: ItemSkillBase) -> void:
 	var nearest_enemies := GlobalsEntityHelpers.get_closest_entities(_owner.global_position, _owner.get_my_enemies(), _learned_skill.area_of_effect_in_tiles)
 	for enemy in nearest_enemies:
-		var magic_damage := int(enemy.get_full_health() * _learned_skill.float_dict["percent_damage_from_max_hp"])
+		var magic_damage := int(enemy.current_hp * _learned_skill.float_dict["percent_damage_from_current_hp"])
 
 		var total_magic_damage = _owner.cache_total_stats.get_total_magic_damage(magic_damage)
 		var _di := DamageInfo.new(total_magic_damage, _learned_skill.damage_type, _owner.name)
@@ -35,11 +35,12 @@ static func create_and_add_instance() -> void:
 	SKILLS[NAME] = Skill.new(NAME, SkillType.PASSIVE)
 	SKILLS[NAME].region_rect = Rect2(ATLAS_START_POS.x + FRAME_SIZE * 10, ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
 	
-	aux_array[0] = [0.05, 0.06, 0.07]
+	aux_array[0] = [0.02, 0.03, 0.04]
 	for i in AVAILABLE_LEVELS:
 		SKILLS[NAME].item_skill_base[i].instant_use = true
 		SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 7
-		SKILLS[NAME].item_skill_base[i].float_dict["percent_damage_from_max_hp"] = 0.05
+		SKILLS[NAME].item_skill_base[i].float_dict["percent_damage_from_current_hp"] = aux_array[0][i]
 		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC
-		SKILLS[NAME].item_skill_base[i].en_description = "Each time the hero casts a skill, nearby enemies are electrified, taking magic damage equal to " + StringHelpers.format_percent(aux_array[0][i]) + " of their max HP."
-		SKILLS[NAME].item_skill_base[i].es_description = "Cada vez que el héroe lanza una habilidad, los enemigos cercanos son electrificados, recibiendo daño mágico equivalente al " + StringHelpers.format_percent(aux_array[0][i]) + " de su vida máxima."
+		SKILLS[NAME].item_skill_base[i].en_description = "Each time the hero casts a skill, all nearby enemies are electrified, taking magic damage equal to " + StringHelpers.format_percent(aux_array[0][i]) + " of their current Health.";
+
+		SKILLS[NAME].item_skill_base[i].es_description = "Cada vez que el héroe lanza una habilidad, todos los enemigos cercanos quedan electrificados y reciben daño mágico equivalente al " + StringHelpers.format_percent(aux_array[0][i]) + " de su salud actual.";

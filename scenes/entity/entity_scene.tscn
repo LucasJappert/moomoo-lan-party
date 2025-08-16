@@ -1,45 +1,9 @@
-[gd_scene load_steps=21 format=3 uid="uid://dh82ovsrtutto"]
+[gd_scene load_steps=19 format=3 uid="uid://dh82ovsrtutto"]
 
 [ext_resource type="Script" uid="uid://ki4w4rg4wu1r" path="res://scripts/entity/entity.gd" id="1_0bgvt"]
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="3_8707b"]
 [ext_resource type="Script" uid="uid://d3sm32sl44mdm" path="res://scripts/entity/components/hud.gd" id="3_wjrb4"]
-[ext_resource type="PackedScene" uid="uid://dbk2teavpilfv" path="res://scenes/entity/my_progress_bar_scene.tscn" id="4_wjrb4"]
 [ext_resource type="Script" uid="uid://gdkfgib81pvd" path="res://scripts/entity/components/area_hovered.gd" id="6_8707b"]
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_odnte"]
-properties/0/path = NodePath(".:position")
-properties/0/spawn = true
-properties/0/replication_mode = 2
-properties/1/path = NodePath(".:direction")
-properties/1/spawn = true
-properties/1/replication_mode = 2
-properties/2/path = NodePath(".:current_state")
-properties/2/spawn = true
-properties/2/replication_mode = 2
-properties/3/path = NodePath(".:_boss_level")
-properties/3/spawn = true
-properties/3/replication_mode = 2
-properties/4/path = NodePath(".:level")
-properties/4/spawn = true
-properties/4/replication_mode = 2
-properties/5/path = NodePath(".:current_hp")
-properties/5/spawn = true
-properties/5/replication_mode = 2
-properties/6/path = NodePath(".:current_mana")
-properties/6/spawn = true
-properties/6/replication_mode = 2
-properties/7/path = NodePath(".:projectile_type")
-properties/7/spawn = true
-properties/7/replication_mode = 2
-properties/8/path = NodePath(".:is_stunned")
-properties/8/spawn = true
-properties/8/replication_mode = 2
-properties/9/path = NodePath(".:target_to_attack_name")
-properties/9/spawn = true
-properties/9/replication_mode = 2
-properties/10/path = NodePath(".:target_view_name")
-properties/10/spawn = true
-properties/10/replication_mode = 2
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_wjrb4"]
 radius = 400.0
@@ -133,9 +97,6 @@ height = 44.0
 [node name="Entity" type="CharacterBody2D"]
 script = ExtResource("1_0bgvt")
 
-[node name="EntitySynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_odnte")
-
 [node name="BackAnimationsNode" type="Node2D" parent="."]
 unique_name_in_owner = true
 
@@ -216,18 +177,6 @@ grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
 theme_override_constants/separation = 1
-
-[node name="MyProgressBar" parent="HUD/BarsContainer/Node/ProgressBarsContainer" instance=ExtResource("4_wjrb4")]
-visible = false
-layout_mode = 2
-progress_value_percent = 20.0
-progress_color = Color(0.34298, 0.349006, 0.371669, 1)
-
-[node name="MyProgressBar2" parent="HUD/BarsContainer/Node/ProgressBarsContainer" instance=ExtResource("4_wjrb4")]
-visible = false
-layout_mode = 2
-progress_value_percent = 20.0
-progress_color = Color(0.657121, 0.663813, 0.688771, 1)
 
 [node name="MyHealthBarContainer" type="Control" parent="HUD/BarsContainer"]
 custom_minimum_size = Vector2(42, 3)

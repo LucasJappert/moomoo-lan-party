@@ -5,8 +5,10 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Ver de reducir cantidad de Nodos
+- Eliminar summons de moomoo cuando muere
+- Imposibilitar casteo de hechizos si esta stuneado
 - Guardar registro de los últimos 10 ataques
-- Revisar efecto de lifesteal, no actualiza la descripcion
 - 🔵 Configurar skills moomoo en cada state
 - Dibujar zona rango de ataque cuando presionamos ALT
 - Desarrollar historia y mostrar diálogos en diferentes momentos

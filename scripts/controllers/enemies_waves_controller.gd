@@ -27,14 +27,14 @@ class WaveInfo:
 
 static var WAVES_INFO = [
 	# TODO: Configurar las stats
-	# WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME], CombatStats.get_instance(1, 1, 1)),
-	# WaveInfo.new([EnemyInfernalMinotaur.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME], CombatStats.get_instance(2, 1, 1)),
-	# WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyNightArcher.LONG_NAME], CombatStats.get_instance(3, 1, 1)),
-	# WaveInfo.new([EnemyBoneguard.LONG_NAME], [EnemyFrostboneArcher.LONG_NAME], CombatStats.get_instance(4, 1, 1)),
-	# WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME], CombatStats.get_instance(5, 1, 1)),
-	# WaveInfo.new([EnemyReflector.LONG_NAME], [EnemyCrimsonWarlock.LONG_NAME], CombatStats.get_instance(6, 1, 1)),
-	# WaveInfo.new([EnemyBlowDigger.LONG_NAME], [EnemyRotbull.LONG_NAME], CombatStats.get_instance(7, 1, 1)),
-	# WaveInfo.new([EnemyDeadShield.LONG_NAME], [EnemySilentShuriken.LONG_NAME], CombatStats.get_instance(8, 1, 1)),
+	WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME], CombatStats.get_instance(1, 1, 1)),
+	WaveInfo.new([EnemyInfernalMinotaur.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME], CombatStats.get_instance(2, 1, 1)),
+	WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyNightArcher.LONG_NAME], CombatStats.get_instance(3, 1, 1)),
+	WaveInfo.new([EnemyBoneguard.LONG_NAME], [EnemyFrostboneArcher.LONG_NAME], CombatStats.get_instance(4, 1, 1)),
+	WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME], CombatStats.get_instance(5, 1, 1)),
+	WaveInfo.new([EnemyReflector.LONG_NAME], [EnemyCrimsonWarlock.LONG_NAME], CombatStats.get_instance(6, 1, 1)),
+	WaveInfo.new([EnemyBlowDigger.LONG_NAME], [EnemyRotbull.LONG_NAME], CombatStats.get_instance(7, 1, 1)),
+	WaveInfo.new([EnemyDeadShield.LONG_NAME], [EnemySilentShuriken.LONG_NAME], CombatStats.get_instance(8, 1, 1)),
 ]
 
 static func start_wave_process() -> void:
@@ -61,15 +61,15 @@ static func process(_delta: float) -> void:
 	if not GameManager.AM_I_HOST: return
 	if not process_running: return
 	if not GameManager.MY_PLAYER: return
-	if GameWorld.current_enemies_in_scene > 0: return
-	if Moomoo.static_is_awake(): return
+	if GameManager.get_player_enemies().size() > 0: return
+	if Moomoo.is_awake(): return
 
 	if countdown_active == false: countdown_active = true
 
 	if countdown_active and countdown_time_in_secs <= 0:
 		if current_normal_wave >= WAVES_INFO.size() and current_special_wave >= (WAVES_INFO.size() / WAVES_PER_SPECIAL_WAVE):
-			if ObjectHelpers.is_null(GameManager.moomoo): return print("Moomoo not found")
-			GameManager.moomoo.wake_up()
+			if not Moomoo.get_instance(): return print("Moomoo not found")
+			Moomoo.get_instance().wake_up()
 			# The Moomoo awakens and reveals itself against the player
 			print("The Moomoo awakens and reveals itself against the player")
 			return
@@ -140,7 +140,6 @@ static func _try_create_special_wave() -> bool:
 		GlobalsEntityHelpers.grants_random_skills(boss_enemy, min(3, current_special_wave))
 		
 		boss_enemy.set_current_hp_and_mana()
-		boss_enemy.update_cache_total_stats()
 
 		# enemy.can_attack = false
 		GameManager.spawn_enemy(boss_enemy)
@@ -176,7 +175,7 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 	var enemy: Enemy = EnemyBase.get_new_instance(enemy_type)
 
 	var random_noise = Vector2(randi_range(-64, 64), randi_range(-64, 64))
-	var position = GameManager.moomoo.global_position + wave_direction * TILES_DISTANCE_TO_MOOMOO * 64 + random_noise
+	var position = Moomoo.get_instance().global_position + wave_direction * TILES_DISTANCE_TO_MOOMOO * 64 + random_noise
 	var cell = MapManager.world_to_cell(position)
 	cell = MapManager.get_safe_cell(cell)
 	enemy.global_position = MapManager.cell_to_world(cell)
@@ -196,7 +195,6 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 	enemy.combat_stats.set_attack_speed(round(enemy.combat_stats.get_attack_speed() * (1.0 + randf_range(-0.05, 0.05)) * 100.0) / 100.0)
 
 	enemy.set_current_hp_and_mana()
-	enemy.update_cache_total_stats()
 
 	return enemy
 

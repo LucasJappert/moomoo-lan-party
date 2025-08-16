@@ -8,8 +8,8 @@ var _my_owner: Entity = self
 var shopping_helper := ShoppingHelper.new(self)
 var _active_skills: Array[SkillBase] = []
 var effects_helper := EffectsHelper.new()
-@export var current_hp: int = 0
-@export var current_mana: int = 0
+@export var current_hp: int = 1
+@export var current_mana: int = 1
 @export var projectile_type: String = ProjectileBase.NONE
 @export var is_stunned: bool = false
 var is_silenced: bool = false
@@ -68,6 +68,7 @@ func ready_combat_data() -> void:
 	update_cache_total_stats()
 
 func post_ready_combat_data() -> void:
+	_my_owner = self
 	effects_helper.set_my_owner(_my_owner)
 	
 	# Intentamos agregar skills aprendidos y que son pasivos
@@ -188,14 +189,23 @@ func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void
 	if current_hp <= 0: return
 
 	current_hp += value_to_increase
-	current_hp = clamp(current_hp, 0, get_full_health())
+	set_current_hp(current_hp)
 
-	_actions_after_current_hp_updated(value_to_increase, _attacker)
+func set_current_hp(value: int) -> void:
+	current_hp = value
+	current_hp = clamp(current_hp, 0, get_full_health())
+	if not _my_owner.is_spawning: _actions_after_current_hp_updated()
 
 func update_current_mana(value_to_increase: int) -> void:
 	if value_to_increase == 0: return
-	current_mana = clamp(current_mana + value_to_increase, 0, cache_total_stats.get_mana())
-	_my_owner.hud.update_mana_bar()
+
+	current_mana += value_to_increase
+	set_current_mana(current_mana)
+func set_current_mana(value: int) -> void:
+	current_mana = value
+	current_mana = clamp(current_mana, 0, get_full_mana())
+
+	if _my_owner.hud: _my_owner.hud.update_mana_bar()
 
 func get_active_skill(_skill_name: String) -> SkillBase:
 	for active_skill in _active_skills:
@@ -218,7 +228,9 @@ func remove_active_skill_by_name(_skill_name: String) -> void:
 			_remove_active_skill(_active_skills[i], i)
 
 func add_active_skill(_skill: SkillBase) -> bool:
-	if _stacks_reached(_skill): return false
+	if _stacks_reached(_skill):
+		if _skill.learned_skill.max_stacks > 1: return false
+		remove_active_skill_by_name(_skill.learned_skill.my_name)
 
 	_active_skills.append(_skill)
 	_try_to_apply_effect(_skill)
@@ -271,17 +283,14 @@ func _verify_combat_states_after_stats_change() -> void:
 	if not is_stunned:
 		StunEffect.remove_all_from(_my_owner.front_animations_node)
 
-func set_current_hp(value: int) -> void:
-	current_hp = value
-	_actions_after_current_hp_updated()
-
 func _actions_after_current_hp_updated(value_to_increase: int = 0, _attacker: Entity = null) -> void:
-	for registered_skill in SkillBase.REGISTERED_SKILLS:
-		registered_skill.actions_after_current_hp_updated(value_to_increase, _my_owner)
-	for active_skill in _active_skills:
-		active_skill.instance_actions_after_current_hp_updated(value_to_increase, self)
+	if _my_owner.is_alive():
+		for registered_skill in SkillBase.REGISTERED_SKILLS:
+			registered_skill.actions_after_current_hp_updated(value_to_increase, _my_owner)
+		for active_skill in _active_skills:
+			active_skill.instance_actions_after_current_hp_updated(value_to_increase, self)
 
-	_my_owner.hud.update_health_bar()
+	if _my_owner.hud: _my_owner.hud.update_health_bar()
 	
 	_server_verify_death(_attacker)
 
@@ -296,12 +305,12 @@ func _server_verify_death(_killed_by: Entity) -> void:
 
 	current_hp = 0
 
-	if ObjectHelpers.valid_instance(_killed_by) and _killed_by.target_to_attack_name == _my_owner.name:
-		_killed_by.reset_target_to_attack_from_nearest_enemy()
-
 	_try_to_give_experience_to_players(Enemy.get_enemy_exp_when_dead()) # Give experience when an enemy dies
 	_my_owner.global_die(_killed_by)
 	_try_to_add_gold_to_players_on_enemy_die(_killed_by)
+
+	if ObjectHelpers.valid_instance(_killed_by) and _killed_by.target_to_attack_name == _my_owner.name:
+		_killed_by.reset_target_to_attack_from_nearest_enemy()
 
 func _try_to_give_experience_to_players(_exp: int) -> void:
 	_exp *= EXP_MULTIPLIER
@@ -317,6 +326,27 @@ func _try_to_add_gold_to_players_on_enemy_die(_attacker: Entity) -> void:
 	var earned_gold := randi_range(int(base_earned * 0.8), int(base_earned * 1.2))
 	for player in GameManager.get_players():
 		player.increment_current_gold(earned_gold)
+
+var cache_total_stats := CombatStats.new()
+var cache_total_stats_no_effects := CombatStats.new()
+func update_cache_total_stats() -> void:
+	var prev_total_health := get_full_health()
+	var prev_total_mana := get_full_mana()
+	var p_hp: float = _safe_percent(current_hp, get_full_health())
+	var p_mana: float = _safe_percent(current_mana, get_full_mana())
+	cache_total_stats.set_info(_get_total_stats())
+	cache_total_stats_no_effects.set_info(_get_total_stats(false))
+
+	if prev_total_health != get_full_health():
+		set_current_hp(int(get_full_health() * p_hp))
+
+	if prev_total_mana != get_full_mana():
+		set_current_mana(int(get_full_mana() * p_mana))
+
+	_verify_combat_states_after_stats_change()
+
+func _safe_percent(current: int, total: int) -> float:
+	return 0.0 if total <= 0 else clamp(float(current) / float(total), 0.0, 1.0)
 
 func update_base_stats(new_info: Dictionary[String, float]) -> void:
 	_my_owner.combat_stats.set_info(new_info)
@@ -368,6 +398,7 @@ func set_target_to_attack(_target: Entity) -> void: # Used only by the server
 	target_to_attack_name = str(_target.name) if _target else ""
 
 func reset_target_to_attack_from_nearest_enemy() -> void:
+	set_target_to_attack(null)
 	set_target_to_attack(_get_nearest_target_in_range_attack())
 
 func verify_freed_target_to_attack(entity_name: String) -> void:
@@ -543,15 +574,6 @@ func try_critical_hit(base_value: int) -> int:
 		return int(base_value * cache_total_stats.get_crit_multiplier())
 	return 0
 
-var cache_total_stats := CombatStats.new()
-var cache_total_stats_no_effects := CombatStats.new()
-func update_cache_total_stats() -> void:
-	cache_total_stats.set_info(_get_total_stats())
-	cache_total_stats_no_effects.set_info(_get_total_stats(false))
-
-	_verify_combat_states_after_stats_change()
-
-
 func get_skills() -> Array[Skill]:
 	return _skills
 
@@ -594,13 +616,13 @@ func is_melee() -> bool:
 # region TRY PHISICAL ATTACK
 func try_physical_attack(_delta: float) -> bool:
 	if not _my_owner.multiplayer.is_server(): return false
+	if _my_owner is Moomoo and not Moomoo.is_awake(): return false
 	if _my_owner.is_dying: return false
 	if _my_owner.is_dead(): return false
 	if _my_owner.current_state != EntityState.States.IDLE: return false # Cant attack while moving
 	if _my_owner.is_spawning: return false
 	
-	if target_to_attack == GameManager.moomoo and _my_owner.is_enemy_of_player():
-		set_target_to_attack(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
+	if target_to_attack == null: set_target_to_attack(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
 
 	if target_to_attack == null: return false
 	if target_to_attack.is_dead(): return false
@@ -612,20 +634,19 @@ func try_physical_attack(_delta: float) -> bool:
 
 	return true
 
-func _get_nearest_target_in_range_attack():
+func _get_nearest_target_in_range_attack() -> Entity:
 	var max_range = cache_total_stats.get_attack_range()
 	var start_pos = _my_owner.global_position
-	if _my_owner.is_ally_of_player():
+
+	# Si el moomoo está despierto, todas las unidades priorizan ataques a lo mas cercano
+	if Moomoo.is_awake() or _my_owner.is_ally_of_player():
 		return GlobalsEntityHelpers.get_nearest_entity(start_pos, _my_owner.get_my_enemies(), max_range)
 
-	if _my_owner is Enemy:
-		# First we check if there is a player nearby, then if the moomoo is in attack range
-		var nearest_player = GlobalsEntityHelpers.get_nearest_entity(start_pos, GameManager.get_players(), max_range)
-		if nearest_player: return nearest_player
-
-		if GlobalsEntityHelpers.is_target_in_attack_range(_my_owner, GameManager.moomoo): return GameManager.moomoo
-
-	return null
+	# Si moomoo esta dormido y _my_owner es un enemigo del jugador, priorizamos ataques a jugadores/summons de el
+	var players_and_summons: Array[Entity] = _my_owner.get_my_enemies().filter(func(entity: Entity): return not entity is Moomoo)
+	var nearest_unit = GlobalsEntityHelpers.get_nearest_entity(start_pos, players_and_summons, max_range)
+	if nearest_unit: return nearest_unit
+	return Moomoo.get_instance()
 
 func execute_physical_attack(apply_extra_actions: bool = true, _custom_target: Entity = null) -> void:
 	EntityState.change_to_attack(_my_owner)

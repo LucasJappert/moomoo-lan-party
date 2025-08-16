@@ -5,7 +5,6 @@ var game_world: GameWorld
 var music_helper: MusicHelper
 
 var entities: Dictionary[String, Entity] = {}
-var moomoo: Moomoo
 static var GAME_RUNNING := false
 
 var MY_PLAYER: Player
@@ -93,7 +92,6 @@ func get_player_allies(include_player: bool) -> Array[Entity]:
 func get_enemies() -> Array[Entity]:
 	return entities.values().filter(func(e): return ObjectHelpers.get_safe_instance(e) is Enemy)
 
-func get_moomoo() -> Entity: return moomoo
 
 func get_entities() -> Array[Entity]: return entities.values()
 
@@ -107,8 +105,8 @@ func add_decoration(sprite: Sprite2D) -> void:
 	game_world.decorations_node.add_child(sprite, true)
 
 func spawn_moomoo() -> void:
-	moomoo = game_world.moomoo_spawner.spawn({})
-	add_entity(moomoo)
+	Moomoo.instance = game_world.moomoo_spawner.spawn({})
+	add_entity(Moomoo.instance)
 
 func spawn_player(hero_type: String) -> void:
 	GameManager.MY_PLAYER_ID = 1
@@ -155,6 +153,6 @@ static func _is_player_enemy(entity: Entity) -> bool:
 	if not entity or not GameManager.MY_PLAYER: return false
 	if entity.summoned_helper and entity.summoned_helper.summoned_by_name == GameManager.MY_PLAYER_NAME: return false
 	if entity == GameManager.MY_PLAYER: return false
-	if entity is Moomoo and not Moomoo.static_is_awake(): return false
+	if entity is Moomoo and not Moomoo.is_awake(): return false
 	return true
 # endregion 	INTERNAL AUXILIARY METHODS
