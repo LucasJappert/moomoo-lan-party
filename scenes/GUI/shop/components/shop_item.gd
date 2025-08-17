@@ -27,7 +27,6 @@ func _ready() -> void:
 	atlas_texture.region = item.region_rect
 	texture_rect.texture = atlas_texture
 
-
 func _on_mouse_entered():
 	MyTooltip.show_tooltip(item.my_name, item.get_description(true, true), 20)
 

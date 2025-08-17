@@ -18,6 +18,9 @@ static func key_pressed_server_side(_keycode: int, player: Entity) -> void:
 
 	# OTHER HOTKEYs
 	if _keycode == KEY_T:
+		var random_pos := GameManager.MY_PLAYER.global_position + Vector2(randi_range(-256, 256), randi_range(-256, 256))
+		SmokeHelper.spawn_smoke(GameManager.game_world.over_terrain_layer_layer_2, random_pos, 5)
+		SmokeHelper._attach_sulfur_layer(GameManager.game_world.over_terrain_layer_layer_2, random_pos)
 		pass
 
 	if _keycode == KEY_Q:

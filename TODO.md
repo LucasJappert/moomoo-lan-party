@@ -5,19 +5,15 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Revisar el uso de muchas instancias del item Skywrath
-- Revisar cast de Storm Strike en enemigos
-- Ver golpe disprado al player y al moomoo, paso con el enemigo de doble bola
-- Corregir la venta de consumibles de muchas unidades
+- Agregar efectos de humo que sale desde el suelo
+- Cambiar de color al moomoo en sus estados
+- Hacer al moomoo de rango cuando tiene menos de 50% y que tenga el item de multiple shot
 - Mostrar un diálogo cada vez que el moomoo entra en un nuevo estado
 - Seguir ajustando items de rondas especiales
 - Eliminar summons de moomoo cuando muere
 - Guardar registro de los últimos 10 ataques
 - 🔵 Configurar skills moomoo en cada state
-- Dibujar zona rango de ataque cuando presionamos ALT
 - Desarrollar historia y mostrar diálogos en diferentes momentos
-- Agregar item epicos a bosses enemigos
-- Aumentar dificultar de rondas normales y especiales
 - Efecto de sangrado de acuerdo al daño causado
 - Al finalizar las rondas, el moomoo se revela en contra del jugador. Agregar efectos en el suelo como rajaduras con lava. Hacer caer meteoritos desde el cielo, etc.
 - Agregar afecto de nubes
@@ -34,9 +30,7 @@
 - Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)
 - Sonidos limitarlos a la vista en pantalla
 - Agregar barra de vida del moomoo y del pj fijas en algun lugar comodo
-- Modificar particulas en la explosión de proyectil natura ball
 
-- Ver sonidos que entran en loop indebidamente
 - Agregar bordes rojos/animación cuando tenemos poca vida
 - Agregar skill, la cual puede activarse o desactivarse, que brindaría chances de matar al enemigo al instante (no aplica a bosses). Consume 20 de mana en cada ataque.
 - Agregar skill pasiva que luego de matar un enemigo lo transforma en 3 esqueletos que lucharán para él.
@@ -46,16 +40,13 @@
 - Agregar quinta skill al nivel 20
 - Implementar sistema de asignación de puntos en lugar de skills level
 - Refactorizar escena GUI (dividir en escenas separadas la parte top-left, bottom-right, etc.)
-- Capear stats como defensas y evasion.
 - Agregar un item/skill que al activarlo te hace inmune a los hechizos y a ciertos debuffs como silencios.
 - Refactor the GUI by dividing it into panels (TOP-LEFT, BOTTOM-LEFT, BOTTOM-RIGHT)
 - Agregar otros efectos de sonidos para el ambiente
-- Configure enemy types for wave 2
 - Sistema de rondas de enemigos aumentando las dificultades en cada oleada, cada 3 oleadas podríamos hacer una de solamente 4 boses
 - Sistema de puntos
 - Agregar info de Cleave attack a la gui
 - Agregar panel debugger con opciones para matar todos los enemigos, etc.
-- Agregar sistema de selección de Héroe
 - Agregar un score que tenga en cuenta la velocidad con que se avanza a cada oleada
 - Sistema de daños/curas en el tiempo
 - Revisar target hovered cuando hay muchos enemigos
@@ -66,7 +57,6 @@
 - Crear escena para crear y unirse a salas.
 - Implementar animaciones varias como congelamiento, sangrado, sobre entidades
 - Implementar animaciones sobre tiles, como fuego, sanacion, congelamiento.
-- Configurar daños, hp, defensas, etc según el número de wave
 - Comenzar la escena para crear y unirse a salas
 - Agregar objetos mobiles sobre el terreno como plantas, bichos, nubes, etc.
 - Pruebas de multiclientes por el navegador

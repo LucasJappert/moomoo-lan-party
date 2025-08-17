@@ -9,70 +9,135 @@ const SCALE: float = 1
 const VOLUME: float = -15
 const PARTICLE_RECT := Rect2(272, 272, 16, 16)
 
-static func try_init(_projectile: Projectile):
-	if _projectile.type != NAME: return
+static func try_init(p: Projectile) -> void:
+	if p.type != NAME:
+		return
 
-	_projectile.speed = SPEED
-	_projectile.sprite.visible = false
-	_projectile.set_meta("oscillating_balls", [])
-	_projectile.set_meta("oscillation_time", 0.0)
+	p.speed = SPEED
+	p.sprite.visible = false
+
+	p.set_meta("osc_t", 0.0)
 
 	var balls_container := Node2D.new()
-	var radius := 8
+	p.general_objects_container.add_child(balls_container)
+	p.set_meta("osc_container", balls_container)
 
-	var balls_array = _projectile.get_meta("oscillating_balls")
+	var balls: Array = []
 	for i in range(2):
-		var sprite := SpritesHelper.get_sprite_2d(BALL_RECT)
-		sprite.scale = Vector2.ONE * 0.5
-		sprite.position = Vector2(0, 0) # posición inicial
-		sprite.modulate = Color(1, 1, 1, 1)
+		var node := Node2D.new()
+		balls_container.add_child(node)
 
-		# Movimiento senoidal en direcciones opuestas
-		var direction := 1 if i == 0 else -1
-		var tween := sprite.create_tween()
-		var amplitude := radius
-		var duration := 0.5
-		sprite.z_index = 20 + direction
+		var spr := SpritesHelper.get_sprite_2d(BALL_RECT)
+		spr.scale = Vector2(0.5, 0.5)
+		# opcional: asegurar que queden por encima si hace falta
+		spr.z_index = p.sprite.z_index + 1
+		node.add_child(spr)
 
-		tween.set_loops()
-		tween.tween_method(func(t):
-			var offset := sin(t * TAU) * amplitude * direction
-			sprite.position = Vector2(0, offset)
-		, 0.0, 1.0, duration)
+		var tail := _make_tail_emitter(_get_random_color())
+		tail.local_coords = false # estela queda “pegada” al mundo
+		node.add_child(tail)
+		tail.emitting = true
 
-		balls_container.add_child(sprite)
-		balls_array.append({"sprite": sprite, "dir": 1 if i == 0 else -1})
+		var dir := 1
+		if i == 0: dir = 1
+		else: dir = -1
 
-	# Agregamos las bolas al contenedor principal
-	_projectile.general_objects_container.add_child(balls_container)
+		balls.append({
+			"node": node,
+			"sprite": spr,
+			"dir": dir,
+			"tail": tail,
+		})
+
+	p.set_meta("osc_balls", balls)
+
+	# sonido al iniciar (como tenías)
 	SoundsHelper.play_sfx("res://sounds/hits/demon_bolt_start.wav", VOLUME, 2)
-	
-static func actions_while_flying(_projectile: Projectile):
-	if NAME != _projectile.type: return
-	const TAIL_RADIUS := 3.0
+
+static func actions_while_flying(p: Projectile) -> void:
+	if p.type != NAME:
+		return
+	if not p.has_meta("osc_balls"):
+		return
+
 	const AMPLITUDE := 8.0
+	const FREQ := 2.0 # Hz
 
-	var time: float = _projectile.get_meta("oscillation_time")
-	time += GameManager.get_process_delta_time()
-	_projectile.set_meta("oscillation_time", time)
+	var t := float(p.get_meta("osc_t"))
+	t += GameManager.get_process_delta_time()
+	p.set_meta("osc_t", t)
 
-	if not _projectile.has_meta("oscillating_balls"): return
+	var base_offset := sin(t * TAU * FREQ) * AMPLITUDE
 
-	for data in _projectile.get_meta("oscillating_balls"):
-		var sprite = data["sprite"]
-		var dir = data["dir"]
-		var offset_y = sin(time * TAU * 2) * AMPLITUDE * dir
-		sprite.position = Vector2(0, offset_y)
+	var balls = p.get_meta("osc_balls")
+	for data in balls:
+		var node: Node2D = data["node"]
+		var dir: int = data["dir"]
+		node.position = Vector2(0, base_offset * dir)
 
-		for i in range(10):
-			var spawn_position = Vector2(randf_range(-TAIL_RADIUS, TAIL_RADIUS), randf_range(-TAIL_RADIUS, TAIL_RADIUS))
-			ParticleEffects.spawn(
-				sprite.global_position + spawn_position,
-				GameManager.game_world.general_container,
-				0.2,
-				_get_random_color(),
-				0.3
-			)
+static func cleanup(p: Projectile) -> void:
+	# Detener emisión y liberar contenedor si existe
+	if p.has_meta("osc_balls"):
+		var balls = p.get_meta("osc_balls")
+		for data in balls:
+			var tail: GPUParticles2D = data.get("tail")
+			if is_instance_valid(tail):
+				tail.emitting = false
+
+	if p.has_meta("osc_container"):
+		var cont: Node = p.get_meta("osc_container")
+		if is_instance_valid(cont):
+			cont.queue_free()
+
+	p.set_meta("osc_balls", null)
+	p.set_meta("osc_container", null)
+	p.set_meta("osc_t", 0.0)
+
+static func _make_tail_emitter(base_color: Color) -> GPUParticles2D:
+	var ps := GPUParticles2D.new()
+	ps.amount = 48
+	ps.lifetime = 0.15
+	ps.one_shot = false
+	ps.local_coords = false
+
+	# IMPORTANTE: textura visible (usá una bolita suave de tu atlas; BALL_RECT si te sirve)
+	ps.texture = SpritesHelper.get_texture_from_region(BALL_RECT)
+	# Rect de visibilidad generoso (porque local_coords=false deja “pintadas” en el mundo)
+	ps.visibility_rect = Rect2(Vector2(-96, -96), Vector2(192, 192))
+	# Opcional: asegurar arriba/debajo de otros
+	# ps.z_index = 100
+
+	var mat := ParticleProcessMaterial.new()
+	# En Godot 4: Vector3 aunque sea 2D
+	mat.gravity = Vector3(0, 0, 0)
+	mat.direction = Vector3(1, 0, 0)
+	mat.spread = 360.0
+
+	mat.initial_velocity_min = 10.0
+	mat.initial_velocity_max = 40.0
+	# Damping en Godot 4
+	mat.damping_min = 20.0
+	mat.damping_max = 20.0
+
+	# Con textura, subí el tamaño para que se note
+	mat.scale_min = 0.15
+	mat.scale_max = 0.25
+
+	# Desvanecido a transparente
+	var grad := Gradient.new()
+	grad.colors = PackedColorArray([
+		base_color,
+		Color(base_color.r, base_color.g, base_color.b, 0.0)
+	])
+	var ramp := GradientTexture1D.new()
+	ramp.gradient = grad
+	mat.color_ramp = ramp
+
+	# “Cola” ya nacida al comienzo (opcional)
+	ps.preprocess = ps.lifetime * 0.9
+
+	ps.process_material = mat
+	return ps
 
 
 static func actions_on_reaching_target(_projectile: Projectile) -> void:
@@ -91,7 +156,7 @@ static func _get_random_color() -> Color:
 static func _spawn_explosion(position: Vector2, parent: Node2D) -> void:
 	var speed_range: Vector2 = Vector2(4, 32)
 	var lifetime: float = 0.5
-	for i in 20:
+	for i in 5:
 		var particle := SpritesHelper.get_sprite_2d(PARTICLE_RECT)
 		particle.position = position
 		particle.modulate = _get_random_color()
