@@ -25,6 +25,8 @@ static func load_scene(scene: Node):
 # region 	GETTERs
 static func get_elapsed_time_in_sec() -> float:
 	return (Time.get_ticks_msec() - total_paused_time) / 1000.0
+static func get_elapsed_time_in_ms() -> int:
+	return (Time.get_ticks_msec() - total_paused_time)
 # endregion GETTERs
 
 # region 	SETTERs

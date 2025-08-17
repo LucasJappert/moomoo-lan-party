@@ -9,7 +9,7 @@ static func create_and_add_instance() -> void:
 	SKILLS[NAME].region_rect = Rect2(ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
 	
 	for i in AVAILABLE_LEVELS:
-		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
+		SKILLS[NAME].item_skill_base[i].target_to_enemy = false
 		SKILLS[NAME].item_skill_base[i].en_description = "Upon death, splits into " + str((i + 1) * 2) + " copies with half the original HP."
 		SKILLS[NAME].item_skill_base[i].es_description = "Al morir, se divide en " + str((i + 1) * 2) + " copias con la mitad de la vida original."
 

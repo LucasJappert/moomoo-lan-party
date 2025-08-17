@@ -60,6 +60,7 @@ static func create_and_add_instance() -> void:
 	for i in AVAILABLE_LEVELS:
 		var seconds_to_release: float = 7.0; var effect_radius: int = 3
 		SKILLS[NAME].item_skill_base[i].instant_use = true
+		SKILLS[NAME].item_skill_base[i].target_to_enemy = false
 		SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = effect_radius
 		SKILLS[NAME].item_skill_base[i].float_dict["percent_to_release"] = float_array[i]
 		SKILLS[NAME].item_skill_base[i].duration_in_seconds = seconds_to_release
@@ -84,3 +85,9 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 	TweenEffects.apply_scale_looped_effect(_target.back_animations_node, sprite, sprite.scale, sprite.scale * 1.2, _learned_skill.duration_in_seconds, scale)
 
 	return result
+
+static func try_use_skill_efficiently(_caster: Entity, _target: Entity, _skill: Skill) -> bool:
+	if _skill.get_name() != NAME: return false
+	if MainScene.get_elapsed_time_in_ms() - _caster.last_damage_received_time_in_ms > 2000: return false
+
+	return _skill.use(_caster, _caster)

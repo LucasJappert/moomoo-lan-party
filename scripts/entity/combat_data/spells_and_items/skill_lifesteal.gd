@@ -14,7 +14,7 @@ static func create_and_add_instance() -> void:
 
 	float_array = [0.15, 0.2, 0.25]
 	for i in AVAILABLE_LEVELS:
-		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
+		SKILLS[NAME].item_skill_base[i].target_to_enemy = false
 		SKILLS[NAME].item_skill_base[i].create_effect = true
 		SKILLS[NAME].item_skill_base[i].set_life_steal_percent(float_array[i])
 		SKILLS[NAME].item_skill_base[i].en_description = "Steals " + StringHelpers.format_percent(float_array[i]) + " of dealt damage as life."

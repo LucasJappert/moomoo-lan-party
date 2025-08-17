@@ -124,7 +124,16 @@ static func print_description_skills(entity: Entity) -> void:
 
 static func grants_random_skills(entity: Entity, learned_level: int = 1) -> void:
 	entity._skills = []
-	var available_skills: Array[Skill] = SkillBase.SKILLS.values()
+	var available_skills: Array[Skill] = []
+	for skill in SkillBase.SKILLS.values() as Array[Skill]:
+		if entity.is_ranged():
+			if skill.get_safe_learned_skill().get_cleave_percent() > 0: continue
+		
+		if entity.is_melee():
+			if skill.get_name() == SkillMultipleStrike.NAME: continue
+
+		available_skills.append(skill)
+
 	for i in range(1, 5):
 		var random_skill := available_skills[randi_range(0, available_skills.size() - 1)]
 		

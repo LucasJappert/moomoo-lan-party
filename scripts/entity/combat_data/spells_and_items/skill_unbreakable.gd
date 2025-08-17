@@ -19,7 +19,7 @@ static func create_and_add_instance() -> void:
 	float_array = [20, 18, 16]
 	float_array1 = [6, 7, 8]
 	for i in AVAILABLE_LEVELS:
-		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
+		SKILLS[NAME].item_skill_base[i].target_to_enemy = false
 		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 7
 		SKILLS[NAME].item_skill_base[i].create_effect = true
 		SKILLS[NAME].item_skill_base[i].instant_use = true

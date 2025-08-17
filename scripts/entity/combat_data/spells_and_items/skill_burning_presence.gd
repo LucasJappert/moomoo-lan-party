@@ -25,7 +25,7 @@ static func create_and_add_instance() -> void:
 	for i in AVAILABLE_LEVELS:
 		SKILLS[NAME].item_skill_base[i].instant_use = false
 		SKILLS[NAME].item_skill_base[i].create_effect = true
-		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
+		SKILLS[NAME].item_skill_base[i].target_to_enemy = false
 		SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 3
 		SKILLS[NAME].item_skill_base[i].float_dict["magic_damage_per_second"] = aux_array[0][i]
 		SKILLS[NAME].item_skill_base[i].float_dict["extra_damage_by_int_percent"] = aux_array[4][i]

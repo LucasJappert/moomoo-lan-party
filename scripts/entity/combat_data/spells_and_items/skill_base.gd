@@ -134,3 +134,6 @@ static func actions_after_current_hp_updated(_increased_value: int, _owner: Enti
 
 # Must be overriden
 static func actions_before_receive_damage(_attacker: Entity, _target: Entity, _di: DamageInfo) -> bool: return false
+
+# Must be overriden
+static func try_use_skill_efficiently(_caster: Entity, _target: Entity, _skill: Skill) -> bool: return false

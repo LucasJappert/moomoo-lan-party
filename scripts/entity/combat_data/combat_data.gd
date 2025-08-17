@@ -51,7 +51,7 @@ var _target_to_attack_name: String = ""
 var last_physical_hit_time: int = 0 # In milliseconds
 var nearest_enemy_focused: Entity
 
-var last_damage_received_time: int = -1000000 # In milliseconds
+var last_damage_received_time_in_ms: int = -1000000 # In milliseconds
 var latest_attacker: Entity
 
 var charged_skill: Skill
@@ -388,7 +388,7 @@ func remove_effect_by_name(effect_name: String) -> void:
 
 func register_attacker(attacker: Entity) -> void:
 	latest_attacker = attacker
-	last_damage_received_time = Time.get_ticks_msec()
+	last_damage_received_time_in_ms = MainScene.get_elapsed_time_in_ms()
 	if attacker and ObjectHelpers.is_my_player(self): attacker.hud.set_last_damage_to_my_player()
 
 func set_target_to_attack(_target: Entity) -> void: # Used only by the server
@@ -468,7 +468,7 @@ func use_charged_skill(_target: Entity) -> void:
 	var learned_skill = charged_skill.get_learned_skill()
 
 	# Do not allow the use of damaging skills on oneself
-	if learned_skill.apply_to_enemy and not _target.is_enemy_of_player():
+	if learned_skill.target_to_enemy and not _target.is_enemy_of_player():
 		_my_owner.hud.show_message_popup(LanguageManager.translate("Can't use this\n skill on allies"), Color(0.7, 0, 0, 0.7))
 		return uncharge_skill()
 
@@ -607,8 +607,8 @@ func get_items_by_name(p_name: String) -> Array[Item]:
 		if _item.my_name == p_name: result.append(_item)
 	return result
 
-func is_melee() -> bool:
-	return projectile_type == ProjectileBase.NONE
+func is_melee() -> bool: return projectile_type == ProjectileBase.NONE
+func is_ranged() -> bool: return not is_melee()
 # endregion GETTERs
 
 # region TRY PHISICAL ATTACK

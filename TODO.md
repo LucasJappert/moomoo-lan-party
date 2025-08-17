@@ -5,9 +5,12 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Seguir ajustando items de rondas especiales
+- Revisar el uso de muchas instancias del item Skywrath
+- Revisar cast de Storm Strike en enemigos
 - Ver golpe disprado al player y al moomoo, paso con el enemigo de doble bola
 - Corregir la venta de consumibles de muchas unidades
+- Mostrar un diálogo cada vez que el moomoo entra en un nuevo estado
+- Seguir ajustando items de rondas especiales
 - Eliminar summons de moomoo cuando muere
 - Guardar registro de los últimos 10 ataques
 - 🔵 Configurar skills moomoo en cada state

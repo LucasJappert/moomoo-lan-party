@@ -7,7 +7,7 @@ const CAN_USE_COLOR = Color.WHITE
 const CANT_USE_COLOR = Color(0.5, 0.5, 0.5)
 
 var is_consumable: bool = false
-var apply_to_enemy: bool = true
+var target_to_enemy: bool = true
 var cast_range_in_tiles: int = 0
 var area_of_effect_in_tiles: int = 0
 var instant_use: bool = false

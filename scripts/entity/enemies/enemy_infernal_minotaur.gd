@@ -16,6 +16,7 @@ static func try_to_init_from_name(_name: String, _enemy: Enemy) -> void:
 	_enemy.combat_stats.set_physical_attack_power(10)
 
 	_enemy._skills.append_array([
-		SkillBase.get_new_learned_skill(SkillLifesteal.NAME), null, null,
+		SkillBase.get_new_learned_skill(SkillLifesteal.NAME),
+		SkillBase.get_new_learned_skill(SkillAbsorbAndRelease.NAME),
 		SkillBase.get_new_learned_skill(SkillBloodFury.NAME),
 	])

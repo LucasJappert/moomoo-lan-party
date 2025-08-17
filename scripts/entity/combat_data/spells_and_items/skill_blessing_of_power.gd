@@ -18,7 +18,7 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].set_physical_attack_power_percent(aux_array[0][i])
 		SKILLS[NAME].item_skill_base[i].set_magic_attack_power_percent(aux_array[0][i])
 		SKILLS[NAME].item_skill_base[i].max_stacks = 1
-		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
+		SKILLS[NAME].item_skill_base[i].target_to_enemy = false
 		SKILLS[NAME].item_skill_base[i].create_effect = true
 		SKILLS[NAME].item_skill_base[i].en_description = "Increases physical and magic attack power by " + StringHelpers.format_percent(aux_array[0][i])
 		SKILLS[NAME].item_skill_base[i].es_description = "Aumenta el poder de ataque físico y mágico en un " + StringHelpers.format_percent(aux_array[0][i])

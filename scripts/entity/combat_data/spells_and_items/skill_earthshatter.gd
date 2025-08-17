@@ -13,7 +13,7 @@ static func create_and_add_instance() -> void:
 	aux_array[1] = [100, 150, 200]
 	aux_array[2] = [0.5, 1, 1.5]
 	for i in AVAILABLE_LEVELS:
-		SKILLS[NAME].item_skill_base[i].apply_to_enemy = true
+		SKILLS[NAME].item_skill_base[i].target_to_enemy = true
 		SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 2
 		SKILLS[NAME].item_skill_base[i].instant_use = true
 		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.MAGIC

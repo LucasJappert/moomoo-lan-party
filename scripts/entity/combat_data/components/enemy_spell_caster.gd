@@ -44,6 +44,12 @@ func _try_cast_random_skill() -> bool:
 	if available_skills.size() == 0: return false
 
 	var skill_to_cast: Skill = available_skills[randi() % available_skills.size()]
+	var learned_skill = skill_to_cast.get_learned_skill()
+
+	if learned_skill.instant_use:
+		for reg_skill in SkillBase.REGISTERED_SKILLS:
+			if reg_skill.try_use_skill_efficiently(_enemy_owner, _enemy_owner.target_to_attack, skill_to_cast): return true
+		return false
 
 	if _try_cast_spell_to_an_ally(skill_to_cast): return true
 
@@ -52,14 +58,13 @@ func _try_cast_random_skill() -> bool:
 
 func _try_cast_spell_to_an_enemy(skill_to_cast: Skill) -> bool:
 	var learned_skill = skill_to_cast.get_safe_learned_skill()
-	if not learned_skill.apply_to_enemy: return false
-
+	if not learned_skill.target_to_enemy: return false
 
 	return skill_to_cast.use(_enemy_owner, _enemy_owner.target_to_attack) # Apply to a player
 
 
 func _try_cast_spell_to_an_ally(skill_to_cast: Skill) -> bool:
-	if skill_to_cast.get_learned_skill().apply_to_enemy: return false
+	if skill_to_cast.get_learned_skill().target_to_enemy: return false
 
 	if _try_cast_offensive_bonus_to_an_ally(skill_to_cast): return true
 
@@ -80,13 +85,13 @@ func _try_cast_defensive_bonus_to_an_ally(skill_to_cast: Skill) -> bool:
 	if closest_allies.is_empty(): return false
 
 	# Filtramos los que no recibieron daño hace mas de 5 segundos
-	closest_allies = closest_allies.filter(func(ally): return ally.last_damage_received_time > 5.0)
+	closest_allies = closest_allies.filter(func(ally: Entity): return ally.last_damage_received_time_in_ms > 5.0)
 	if closest_allies.is_empty(): return false
 
 	# Ordena los aliados por el más reciente daño recibido (valor más alto)
-	closest_allies.sort_custom(func(a, b):
-		if a.last_damage_received_time != b.last_damage_received_time:
-			return a.last_damage_received_time > b.last_damage_received_time
+	closest_allies.sort_custom(func(a: Entity, b: Entity):
+		if a.last_damage_received_time_in_ms != b.last_damage_received_time_in_ms:
+			return a.last_damage_received_time_in_ms > b.last_damage_received_time_in_ms
 
 		return false
 	)

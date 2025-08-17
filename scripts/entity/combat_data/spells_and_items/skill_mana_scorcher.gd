@@ -10,7 +10,7 @@ static func create_and_add_instance() -> void:
 
 	aux_array[0] = [0.5, 0.75, 1] # Percentage of mana to burn regarding physical damage dealt
 	for i in AVAILABLE_LEVELS:
-		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
+		SKILLS[NAME].item_skill_base[i].target_to_enemy = false
 		SKILLS[NAME].item_skill_base[i].float_dict[CombatStats.PERCENT_MANA_TO_BURN] = aux_array[0][i]
 		SKILLS[NAME].item_skill_base[i].en_description = "Burns mana from the target equal to " + StringHelpers.format_percent(aux_array[0][i]) + " of the physical damage dealt, and deals physical damage equivalent to the mana burned."
 		SKILLS[NAME].item_skill_base[i].es_description = "Quema una cantidad de maná del objetivo igual al " + StringHelpers.format_percent(aux_array[0][i]) + " del daño físico infligido, y luego inflige daño físico equivalente al maná quemado."

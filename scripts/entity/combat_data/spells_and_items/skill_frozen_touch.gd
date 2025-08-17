@@ -11,7 +11,7 @@ static func create_and_add_instance() -> void:
 	aux_array[0] = [3, 4, 5]
 	aux_array[1] = [0.1]
 	for i in AVAILABLE_LEVELS:
-		SKILLS[NAME].item_skill_base[i].apply_to_enemy = true
+		SKILLS[NAME].item_skill_base[i].target_to_enemy = true
 		SKILLS[NAME].item_skill_base[i].set_attack_speed_percent(-aux_array[1][0])
 		SKILLS[NAME].item_skill_base[i].set_move_speed_percent(-aux_array[1][0])
 		SKILLS[NAME].item_skill_base[i].set_freeze_duration(4)

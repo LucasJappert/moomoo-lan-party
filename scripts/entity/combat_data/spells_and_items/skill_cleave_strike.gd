@@ -11,7 +11,7 @@ static func create_and_add_instance() -> void:
 	aux_array[0] = [0.4, 0.5, 0.5]
 	aux_array[1] = [1, 1, 2]
 	for i in AVAILABLE_LEVELS:
-		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
+		SKILLS[NAME].item_skill_base[i].target_to_enemy = false
 		SKILLS[NAME].item_skill_base[i].set_cleave_percent(aux_array[0][i])
 		SKILLS[NAME].item_skill_base[i].set_cleave_range(aux_array[1][i])
 		SKILLS[NAME].item_skill_base[i].en_description = "Deals " + StringHelpers.format_percent(aux_array[0][i]) + " of the damage as a cleave effect to enemies behind the target for " + str(aux_array[1][i]) + " tiles."

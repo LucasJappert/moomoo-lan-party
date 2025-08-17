@@ -10,7 +10,7 @@ static func create_and_add_instance() -> void:
 
 	aux_array[0] = [0.4, 0.7, 1]
 	for i in AVAILABLE_LEVELS:
-		SKILLS[NAME].item_skill_base[i].apply_to_enemy = false
+		SKILLS[NAME].item_skill_base[i].target_to_enemy = false
 		SKILLS[NAME].item_skill_base[i].set_chance_to_ignore_evasion(aux_array[0][i])
 		SKILLS[NAME].item_skill_base[i].en_description = "Grants " + StringHelpers.format_percent(aux_array[0][i]) + " chance to ignore the target's evasion."
 		SKILLS[NAME].item_skill_base[i].es_description = "Otorga un " + StringHelpers.format_percent(aux_array[0][i]) + " de probabilidad de ignorar la evasión del objetivo."

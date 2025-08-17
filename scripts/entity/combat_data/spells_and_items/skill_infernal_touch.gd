@@ -18,7 +18,7 @@ static func create_and_add_instance() -> void:
 	aux_array[3] = [3, 4, 5] # duration
 	for i in AVAILABLE_LEVELS:
 		SKILLS[NAME].item_skill_base[i].create_effect = false
-		SKILLS[NAME].item_skill_base[i].apply_to_enemy = true
+		SKILLS[NAME].item_skill_base[i].target_to_enemy = true
 		SKILLS[NAME].item_skill_base[i].max_stacks = aux_array[1][i]
 		SKILLS[NAME].item_skill_base[i].duration_in_seconds = aux_array[3][i]
 		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.PHYSICAL
