@@ -108,7 +108,8 @@ func set_life_state(_state: LifeState) -> void: _life_state = _state
 
 func _process(_delta: float) -> void:
 	super._process(_delta)
-
+	if not is_awake(): return
+	
 	_update_life_state()
 	
 	# if state == LifeState.WOUNDED:

@@ -2,6 +2,8 @@ class_name Entity
 
 extends CombatData
 
+var vision_helper: VisionHelper
+var range_attack_helper: VisionHelper
 var summoned_helper: SummonedHelper
 var tween_effects := TweenEffects.new()
 var statistics: Statistics
@@ -9,11 +11,6 @@ var extra_info := ExtraInfo.new()
 var movement_helper: MovementHelper
 
 @onready var hud: HUD = $HUD
-@onready var collision_shape: CollisionShape2D = $CollisionShape2D
-@onready var area_attack: Area2D = $AreaAttack
-@onready var area_attack_shape: CollisionShape2D = $AreaAttack/CollisionShape2D
-@onready var area_vision: Area2D = $AreaVision
-@onready var area_vision_shape: CollisionShape2D = $AreaVision/CollisionShape2D
 @onready var projectile_zone: CollisionShape2D = %ProjectileZone
 @onready var body_sprite: AnimatedSprite2D = %BodySprite
 @onready var body_shadow: Sprite2D = %BodyShadow
@@ -50,11 +47,13 @@ func _init() -> void:
 func _ready():
 	collision_layer = 1
 	collision_mask = 1
+	vision_helper = VisionHelper.new(self)
+	range_attack_helper = VisionHelper.new(self, 0, Color.RED)
+	# vision.set_color(Color(0.2, 0.9, 0.3, 0.22)) # opcional
 	movement_helper = MovementHelper.new(self)
 	statistics = Statistics.new(self)
 	tween_effects = TweenEffects.new(self)
 	_apply_spawn_effect()
-	area_attack_shape.shape = area_attack_shape.shape.duplicate() # to avoid changing the original shape
 	for child in front_animations_node.get_children():
 		child.queue_free()
 	_client_init()
@@ -94,6 +93,8 @@ func _process(_delta: float) -> void:
 	if GameManager.AM_I_HOST: process_combat_data(_delta)
 	EntityState.server_process(self)
 	statistics._process(_delta)
+	vision_helper.process()
+	range_attack_helper.process()
 
 func _physics_process(_delta):
 	movement_helper._physics_process(_delta) # we need this because movement_helper is not a child node
@@ -182,9 +183,6 @@ func get_direction_according_to_target(target: Entity) -> Vector2: return Object
 
 func set_boss_level(_level: int) -> void:
 	_boss_level = _level
-
-func _set_area_attack_shape_radius() -> void:
-	area_attack_shape.shape.radius = cache_total_stats.get_attack_range()
 
 func _client_init() -> void:
 	SpritesHelper.set_entity_sprites(self)

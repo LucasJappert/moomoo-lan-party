@@ -138,7 +138,7 @@ func _try_to_update_target_from_latest_attacker():
 		if GlobalsEntityHelpers.is_target_in_attack_range(my_owner, my_owner.get_target_entity()): return
 
 	var nearest_enemy: Entity
-	nearest_enemy = GlobalsEntityHelpers.get_nearest_entity(my_owner.global_position, GameManager.get_enemies(), my_owner.area_vision_shape.shape.radius)
+	nearest_enemy = GlobalsEntityHelpers.get_nearest_entity(my_owner.global_position, GameManager.get_enemies(), my_owner.vision_helper.radius)
 
 	set_target_entity(nearest_enemy, AttackMoveType.PhysicalAttack)
 	my_owner.set_target_to_attack(nearest_enemy)

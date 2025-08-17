@@ -1,5 +1,12 @@
 extends Node
 
+const HOVERED_ENTITY_CHANGED := "hovered_entity_changed"
+signal hovered_entity_changed(new_entity: Entity, prev_entity: Entity)
+func emit_hovered_entity_changed(new_entity: Entity, prev_entity: Entity) -> void:
+	emit_signal(HOVERED_ENTITY_CHANGED, new_entity, prev_entity)
+func connect_to_hovered_entity_changed(callback: Callable) -> void:
+	hovered_entity_changed.connect(callback)
+
 const LANG_CHANGED := "lang_changed"
 signal lang_changed()
 func emit_lang_changed(): emit_signal(LANG_CHANGED)

@@ -76,6 +76,7 @@ func get_description(include_stats_description: bool = true) -> String:
 func can_use(my_owner: Entity) -> bool:
 	if not learned_level: return false
 	if my_owner.is_silenced: return false
+	if my_owner.is_stunned: return false
 
 	return item_skill_base[learned_level - 1].can_use(my_owner)
 

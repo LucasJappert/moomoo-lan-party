@@ -2,7 +2,7 @@ class_name Player
 
 extends Entity
 
-const INITIAL_GOLD: int = 800
+const INITIAL_GOLD: int = 80000
 const PLAYER_CELL_SPAWN: Vector2i = Vector2i(20, 12)
 static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 const MAX_LEVEL: int = 30
@@ -40,9 +40,6 @@ func get_client_inputs(): return %ClientInputs
 func _ready():
 	global_position = MapManager.cell_to_world(PLAYER_CELL_SPAWN)
 	super._ready()
-
-	# We need to update the radius of the attack area node here as it enters the scene
-	_set_area_attack_shape_radius()
 
 	if player_id == multiplayer.get_unique_id():
 		MyCamera.update_camera_position(global_position)

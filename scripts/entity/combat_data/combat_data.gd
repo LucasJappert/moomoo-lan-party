@@ -344,6 +344,7 @@ func update_cache_total_stats() -> void:
 		set_current_mana(int(get_full_mana() * p_mana))
 
 	_verify_combat_states_after_stats_change()
+	if _my_owner.range_attack_helper: _my_owner.range_attack_helper.set_radius(cache_total_stats.get_attack_range())
 
 func _safe_percent(current: int, total: int) -> float:
 	return 0.0 if total <= 0 else clamp(float(current) / float(total), 0.0, 1.0)

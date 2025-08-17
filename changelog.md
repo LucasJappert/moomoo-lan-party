@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Visualize attack and visibility range when pressing ALT and hovering over any unit
 - ✅ Avoid usage of spells without necessity from server units, like area damage spells when there are no enemies nearby
 - ✅ Improve stun system. Allow forcing the new one to stay active
 - ✅ Adjust SkillShockSpear stun and apply lifesteal to magical attacks

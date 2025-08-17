@@ -116,6 +116,16 @@ static func _create_normal_wave() -> void:
 	# Ejecutar lo demás de forma asíncrona
 	_run_wave_spawn_async()
 
+static var ITEMS_BY_SPECIAL_WAVE := [ # Apply after special wave 1
+	ItemSkywrath.NAME,
+	ItemDeadeye.NAME,
+	ItemPhantomEdge.NAME,
+	ItemPowerCore.NAME,
+	ItemSkeletonSummonersRing.NAME,
+	ItemSoulPact.NAME,
+	ItemTitanGuard.NAME,
+	ItemTrinityBoost.NAME
+]
 static var current_special_wave := 0
 const WAVES_PER_SPECIAL_WAVE := 2.0
 static func _try_create_special_wave() -> bool:
@@ -142,6 +152,13 @@ static func _try_create_special_wave() -> bool:
 			GlobalsEntityHelpers.grants_random_skills(boss_enemy, min(3, current_special_wave))
 			
 			boss_enemy.set_current_hp_and_mana()
+
+			# Adding items in certain special waves
+			if current_special_wave > 3:
+				boss_enemy.update_item(Item.get_item(ITEMS_BY_SPECIAL_WAVE[randi() % ITEMS_BY_SPECIAL_WAVE.size()], 1, true), 4)
+				boss_enemy.update_item(Item.get_item(ITEMS_BY_SPECIAL_WAVE[randi() % ITEMS_BY_SPECIAL_WAVE.size()], 1, true), 5)
+			elif current_special_wave > 1:
+				boss_enemy.update_item(Item.get_item(ITEMS_BY_SPECIAL_WAVE[randi() % ITEMS_BY_SPECIAL_WAVE.size()], 1, true), 5)
 
 			# enemy.can_attack = false
 			GameManager.spawn_enemy(boss_enemy)

@@ -10,9 +10,6 @@ var timer_500ms: Timer
 
 func _ready():
 	super._ready()
-			
-	# We need to update the radius of the attack area node here as it enters the scene
-	_set_area_attack_shape_radius()
 
 	_ready_for_server()
 	
@@ -66,8 +63,8 @@ func get_nearest_enemy_inside_vision() -> Entity:
 	var closest_distance := INF
 
 	for player in GameManager.get_players():
-		var dist = global_position.distance_to(player.global_position)
-		if dist > area_vision_shape.shape.radius:
+		var dist := global_position.distance_to(player.global_position)
+		if dist > vision_helper.radius:
 			continue
 
 		if dist < closest_distance:

@@ -7,7 +7,7 @@ static func get_nearest_enemy_inside_vision(_owner: Entity) -> Entity:
 	for enemy in _owner.get_my_enemies():
 		if enemy.is_dying: continue
 		var dist = _owner.global_position.distance_to(enemy.global_position)
-		if dist > _owner.area_vision_shape.shape.radius: continue
+		if dist > _owner.vision_helper.radius: continue
 		if dist >= closest_distance: continue
 
 		closest_distance = dist
