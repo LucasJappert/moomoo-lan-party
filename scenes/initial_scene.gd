@@ -56,7 +56,6 @@ static func load_scene() -> void:
 
 func _start_scene() -> void:
 	LanguageManager.set_from_OS()
-	LanguageManager.set_spanish()
 
 	# Hacemos aparecer el logo y luego la animacion tanto del logo como del texto de la historia
 	var _appear_tween = create_tween()
