@@ -60,6 +60,9 @@ func wake_up() -> void:
 	_is_awake = true
 	_effects_per_second += _EFFECTS_EXTRA_PER_STATE
 	_NOISE = _NOISE_WHEN_AWAKE
+
+
+	InGameDialogsManager.show(InGameDialogsManager.moomoo_wake_up())
 	
 	update_skill(SkillBase.get_new_learned_skill(SkillBurningPresence.NAME, 3), 1)
 	update_skill(SkillBase.get_new_learned_skill(SkillPainEcho.NAME, 3), 2)
@@ -151,6 +154,7 @@ func _state_from_pct(pct: float) -> LifeState:
 func _on_promotion(state: LifeState) -> void:
 	_effects_per_second += _EFFECTS_EXTRA_PER_STATE
 	if state == LifeState.WOUNDED:
+		InGameDialogsManager.show(InGameDialogsManager.boss_hp_75())
 		print("WOUNDED")
 		update_skill(SkillBase.get_new_learned_skill(SkillTrueStrike.NAME, 3), 1)
 		update_skill(SkillBase.get_new_learned_skill(SkillShockSpear.NAME, 3), 2)
@@ -161,6 +165,7 @@ func _on_promotion(state: LifeState) -> void:
 		update_item(Item.get_item(ItemSoulPact.NAME, 1, true), 3)
 		return
 	if state == LifeState.CRITICAL:
+		InGameDialogsManager.show(InGameDialogsManager.boss_hp_50())
 		print("CRITICAL")
 		update_skill(SkillBase.get_new_learned_skill(SkillStunningStrike.NAME, 3), 1)
 		update_skill(SkillBase.get_new_learned_skill(SkillBloodFury.NAME, 3), 2)
@@ -171,6 +176,7 @@ func _on_promotion(state: LifeState) -> void:
 		update_item(Item.get_item(ItemSkeletonSummonersRing.NAME, 1, true), 5)
 		return
 	if state == LifeState.NEAR_DEATH:
+		InGameDialogsManager.show(InGameDialogsManager.boss_hp_25())
 		update_skill(SkillBase.get_new_learned_skill(SkillInfernalTouch.NAME, 3), 1)
 		update_skill(SkillBase.get_new_learned_skill(SkillPainEcho.NAME, 3), 2)
 		update_skill(SkillBase.get_new_learned_skill(SkillSilentAgony.NAME, 3), 3)

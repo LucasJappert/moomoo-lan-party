@@ -2,6 +2,7 @@
 
 📆 xx/07/2025
 
+- ✅ Generate dialogues from the start of the game until the end, including victory/defeat messages and thanks.
 - ✅ Prevent cleave strike skill from being used on ranged units and multiple shot skill from being used on melee units
 - ✅ Visualize attack and visibility range when pressing ALT and hovering over any unit
 - ✅ Avoid usage of spells without necessity from server units, like area damage spells when there are no enemies nearby

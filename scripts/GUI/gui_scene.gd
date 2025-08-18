@@ -15,6 +15,7 @@ var _top_left_target: Entity
 var _bottom_target: Entity
 @onready var in_game_statistics: InGameStatistics = %InGameStatisticsScene
 @onready var draggable_slots_container: Node = %DraggableSlotsContainer
+@onready var chat_label: Label = %ChatLabel
 
 # region Panel TOP LEFT
 const _RECT_TARGET_MAX_HP = Rect2(81, 27, 189, 21)
@@ -71,6 +72,7 @@ static var RED_BALL_COLOR := Color.from_string("#cd0000ff", Color.WHITE)
 var delta: float
 
 func _ready() -> void:
+	reset_gui()
 	GUIStatsHelper._ready(self)
 	text_ip.text = "127.0.0.1"
 	# tailscale IP = 100.99.208.97
@@ -111,6 +113,7 @@ func _on_join_as_player_pressed() -> void:
 
 
 func reset_gui() -> void:
+	chat_label.text = ""
 	_hp_label.text = str(0)
 	_mana_label.text = str(0)
 	reseted_gui = true

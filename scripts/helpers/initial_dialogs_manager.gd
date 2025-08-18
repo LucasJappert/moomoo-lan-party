@@ -1,4 +1,4 @@
-class_name DialogsManager
+class_name InitialDialogsManager
 
 # region 	INITIAL DIALOGS
 const ENGLISH_INITIAL_DIALOGS: Array[String] = [

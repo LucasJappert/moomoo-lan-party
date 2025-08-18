@@ -14,7 +14,8 @@ var _hovered: bool = false
 var _last_visible: bool = false
 var _tex_w: float = 0.0
 
-func _init(p_owner: Entity, p_radius: int = DEFAULT_RADIUS_IN_PIXEL, p_color: Color = Color.WHITE) -> void:
+func _init(p_owner: Entity = null, p_radius: int = DEFAULT_RADIUS_IN_PIXEL, p_color: Color = Color.WHITE) -> void:
+	super._init()
 	_owner_entity = p_owner
 	radius_in_pixel = p_radius
 	redius_in_tiles = int(radius_in_pixel / MapManager.TILE_SIZE_FLOAT)

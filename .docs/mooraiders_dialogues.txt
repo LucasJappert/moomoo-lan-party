@@ -1,0 +1,126 @@
+
+📜 Diálogos MooRaiders (Español)
+================================
+
+Prólogo (antes de Ronda 1)
+- ???: El aire vibra... mi corazón late otra vez.
+
+Ronda 1
+- ???: Forasteros... vienen a interrumpir mi sueño.
+
+Ronda 2 (Boss)
+- ???: Ya siento la corrupción acercándose... como si me buscara.
+
+Ronda 3
+- ???: ¿Por qué defienden lo que no entienden?
+
+Ronda 4 (Boss)
+- ???: El eco del Corazón Primordial... retumba en las entrañas de esta tierra.
+
+Ronda 5
+- ???: Sus cuerpos caen, pero su energía... vuelve a mí.
+
+Ronda 6 (Boss)
+- ???: Nada puede contener este despertar... ni siquiera ustedes.
+
+Ronda 7
+- ???: Cada golpe que dan, cada enemigo que derrotan... todo me fortalece.
+
+Ronda 8 (Boss)
+- ???: La máscara caerá pronto... y verán quién protege realmente el corazón.
+
+Ronda 9
+- ???: Ya no distingo si me ayudan... o me apresuran.
+
+Ronda 10
+- ???: El velo se rasga... la realidad tiembla.
+
+Ronda 11
+- ???: Ustedes creen que luchan contra el caos... pero lo alimentan.
+
+Ronda 12 (última horda)
+- ???: La última prueba... y el sello se romperá.
+
+Revelación (después de Ronda 12)
+- MooMoo: Gracias... me han defendido bien.
+- MooMoo: Pero ya no los necesito.
+
+Combate final contra MooMoo
+75% vida
+- MooMoo: Siento el poder fluir... ¡más allá de este mundo!
+
+50% vida
+- MooMoo: No me resistan... únanse a mí en la eternidad.
+
+25% vida
+- MooMoo: ¡El corazón late con furia! ¡El velo se abrirá!
+
+Epilogo - Victoria
+- MooMoo: He visto más allá del velo... él viene... pronto...
+
+Epilogo - Derrota
+- MooMoo: El mundo será mío... y nada lo detendrá.
+
+
+
+📜 MooRaiders Dialogues (English)
+================================
+
+Prologue (before Round 1)
+- ???: The air trembles... my heart beats once more.
+
+Round 1
+- ???: Strangers... you come to disturb my slumber.
+
+Round 2 (Boss)
+- ???: I can already feel the corruption drawing near... as if it seeks me.
+
+Round 3
+- ???: Why do you defend what you do not understand?
+
+Round 4 (Boss)
+- ???: The echo of the Primordial Heart... resounds in the depths of this land.
+
+Round 5
+- ???: Their bodies fall, but their energy... returns to me.
+
+Round 6 (Boss)
+- ???: Nothing can contain this awakening... not even you.
+
+Round 7
+- ???: Every strike you make, every foe you slay... strengthens me.
+
+Round 8 (Boss)
+- ???: The mask will soon fall... and you will see who truly guards the heart.
+
+Round 9
+- ???: I no longer know if you aid me... or hasten me.
+
+Round 10
+- ???: The veil tears... reality trembles.
+
+Round 11
+- ???: You think you fight chaos... but you feed it.
+
+Round 12 (final horde)
+- ???: The last trial... and the seal shall break.
+
+Revelation (after Round 12)
+- MooMoo: Thank you... you have defended me well.
+- MooMoo: But I no longer need you.
+
+Final Battle vs MooMoo
+75% HP
+- MooMoo: I feel the power flowing... beyond this world!
+
+50% HP
+- MooMoo: Do not resist me... join me in eternity.
+
+25% HP
+- MooMoo: The Heart beats with fury! The veil shall open!
+
+Epilogue - Victory
+- MooMoo: I have seen beyond the veil... he is coming... soon...
+
+Epilogue - Defeat
+- MooMoo: This world is mine... and nothing will stop me.

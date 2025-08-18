@@ -8,7 +8,7 @@ static func create_and_add_instance() -> void:
 	_ITEMS[NAME] = Item.new(NAME)
 	_ITEMS[NAME].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, _ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
 	_ITEMS[NAME].float_dict["chance"] = 0.1
-	_ITEMS[NAME].float_dict["max_summons"] = 10
+	_ITEMS[NAME].float_dict["max_summons"] = 4
 	_ITEMS[NAME].float_dict["summons_duration_in_seconds"] = 40
 	_ITEMS[NAME].cooldown = 2
 	_ITEMS[NAME].buy_price = 4800

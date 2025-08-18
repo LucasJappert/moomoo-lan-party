@@ -11,9 +11,9 @@ static func create_and_add_instance() -> void:
 	_ITEMS[NAME].set_hp(2000)
 	_ITEMS[NAME].damage_type = DamageType.MAGIC
 	_ITEMS[NAME].set_mana_regeneration_points(20)
-	_ITEMS[NAME].float_dict["lightning_chance"] = 0.2 # Probabilidad de lanzar rayos al recibir ataque físico
-	_ITEMS[NAME].float_dict["lightning_damage_base"] = 100 # Daño base
-	_ITEMS[NAME].float_dict["lightning_damage_percent"] = 0.5 # Daño extra en base a la inteligencia total
+	_ITEMS[NAME].float_dict["lightning_chance"] = 0.1 # Probabilidad de lanzar rayos al recibir ataque físico
+	_ITEMS[NAME].float_dict["lightning_damage_base"] = 50 # Daño base
+	_ITEMS[NAME].float_dict["lightning_damage_percent"] = 2 # Daño extra en base a la inteligencia total
 	_ITEMS[NAME].float_dict["mana_cost_percent"] = 0.05 # Porcentaje de mana consumido
 	_ITEMS[NAME].max_targets = 5 # Cantidad de rayos
 	_ITEMS[NAME].cast_range_in_tiles = 8

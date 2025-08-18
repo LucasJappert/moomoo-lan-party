@@ -24,9 +24,9 @@ class WaveInfo:
 		boss_enemies = p_boss_enemies
 
 static var WAVES_INFO = [
+	# WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyNightArcher.LONG_NAME]), # 3
 	# WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME]), # 1
 	# WaveInfo.new([EnemyInfernalMinotaur.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME]), # 2
-	# WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyNightArcher.LONG_NAME]), # 3
 	# WaveInfo.new([EnemyBoneguard.LONG_NAME], [EnemyFrostboneArcher.LONG_NAME]), # 4
 	# WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME]), # 5
 	# WaveInfo.new([EnemyReflector.LONG_NAME, EnemyCrimsonWarlock.LONG_NAME], [EnemyCrimsonWarlock.LONG_NAME]), # 6
@@ -53,6 +53,8 @@ static func _get_final_message() -> String:
 	if LanguageManager.is_english(): return "Wave " + str(current_normal_wave + 1) + " is coming!\nLet's fight!"
 	return "¡Se aproxima la oleada " + str(current_normal_wave + 1) + "!\n¡Es hora de luchar!"
 
+static func _stop_wave_process() -> void:
+	process_running = false
 
 static func process(_delta: float) -> void:
 	if not GameManager.AM_I_HOST: return
@@ -65,7 +67,7 @@ static func process(_delta: float) -> void:
 
 	if countdown_active and countdown_time_in_secs <= 0:
 		if current_normal_wave >= WAVES_INFO.size() and current_special_wave >= (WAVES_INFO.size() / WAVES_PER_SPECIAL_WAVE):
-			if not Moomoo.get_instance(): return print("Moomoo not found")
+			if not Moomoo.get_instance(): return _stop_wave_process()
 			Moomoo.get_instance().wake_up()
 			# The Moomoo awakens and reveals itself against the player
 			print("The Moomoo awakens and reveals itself against the player")
@@ -89,9 +91,9 @@ static func skip_countdown() -> void:
 	countdown_time_to_show = 1 # ✅ fuerza el cambio a 0 en el siguiente frame
 
 static func create_next_wave() -> void:
-	if _try_create_special_wave(): return
+	if not _try_create_special_wave(): _create_normal_wave()
 
-	_create_normal_wave()
+	InGameDialogsManager.show(InGameDialogsManager.wave(current_normal_wave + current_special_wave - 1))
 
 
 static func _create_normal_wave() -> void:

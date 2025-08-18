@@ -5,8 +5,8 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Optimizar efectos de escudos que giran, colas de flechas (usar sistema de aprticulas)
 - Hacer al moomoo de rango cuando tiene menos de 50% y que tenga el item de multiple shot
-- Mostrar un diálogo cada vez que el moomoo entra en un nuevo estado
 - Seguir ajustando items de rondas especiales
 - Eliminar summons de moomoo cuando muere
 - Guardar registro de los últimos 10 ataques

@@ -194,6 +194,8 @@ static func _resolve_script_from_dict(data: Dictionary) -> Script:
 static func _get_expected_script(data: Dictionary) -> Script:
 	for key in ["script", "script_path"]:
 		if data.has(key) and typeof(data[key]) == TYPE_STRING:
+			if data[key] == "":
+				print("shouldnt happens, script: " + data[key], data)
 			return load(data[key])
 	return null
 
