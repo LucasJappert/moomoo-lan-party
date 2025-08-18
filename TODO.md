@@ -5,8 +5,6 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Agregar efectos de humo que sale desde el suelo
-- Cambiar de color al moomoo en sus estados
 - Hacer al moomoo de rango cuando tiene menos de 50% y que tenga el item de multiple shot
 - Mostrar un diálogo cada vez que el moomoo entra en un nuevo estado
 - Seguir ajustando items de rondas especiales
@@ -24,6 +22,8 @@
 - Agregar item que brinda un +30% de ataque mágico y físico y algo mas
 - Crear un item que crea 2 copias de si mismo, con los mismos atributos pero cada copia absorbe un 60% de daño extra
 
+- Agregar efecto al moomoo en sus estados
+- Quitar el funcionamiento del borde reemplazando por alguna flecha. Esto para poder aplicar cambios de colores con shaders
 - Crear ronda numero 9, con un enemigo que lanza cuchillas y otro que lanza piedras
 - Agregar un item que brinda daño splash a todo alreadedor del target (es diferente al cleave)
 - Implementar sistema de craft de items

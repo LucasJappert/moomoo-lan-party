@@ -394,6 +394,9 @@ func register_attacker(attacker: Entity) -> void:
 func set_target_to_attack(_target: Entity) -> void: # Used only by the server
 	if _my_owner.get_allies().has(_target):
 		return print("Trying to set target to attack for a player that is not an enemy")
+	
+	_my_owner.movement_helper.set_target_entity(_target, MovementHelper.AttackMoveType.PhysicalAttack)
+
 	if _target == target_to_attack: return
 
 	target_to_attack_name = str(_target.name) if _target else ""
@@ -620,6 +623,11 @@ func try_physical_attack(_delta: float) -> bool:
 	if _my_owner.current_state != EntityState.States.IDLE: return false # Cant attack while moving
 	if _my_owner.is_spawning: return false
 	
+	# Solo para unidades del server cuando el moomoo esta dormido
+	if Moomoo.get_instance() and not Moomoo.is_awake() and _my_owner.is_enemy_of_player():
+		var player_enemies := GlobalsEntityHelpers.get_closest_entities(_my_owner.global_position, _my_owner.get_my_enemies(), _my_owner.vision_helper.redius_in_tiles, 10, [Moomoo.get_instance()])
+		if player_enemies.size() > 0: set_target_to_attack(player_enemies[0])
+
 	if target_to_attack == null: set_target_to_attack(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
 
 	if target_to_attack == null: return false

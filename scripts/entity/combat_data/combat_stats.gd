@@ -347,7 +347,7 @@ func get_stun_duration() -> float:
 func get_silence_duration() -> float:
 	return _get_value(SILENCE_DURATION)
 func get_attack_range() -> int: return _get_value_i(ATTACK_RANGE)
-func get_attack_range_in_tiles() -> int: return int(get_attack_range() / MapManager.TILE_SIZE.x)
+func get_attack_range_in_tiles() -> int: return int(get_attack_range() / MapManager.TILE_SIZE_FLOAT)
 func get_physical_attack_power() -> int:
 	return int(_get_value_i(PHYSICAL_ATTACK_POWER) * (1 + _get_value(PHYSICAL_ATTACK_POWER_PERCENT)))
 func get_physical_attack_power_percent() -> float:

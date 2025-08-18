@@ -12,6 +12,14 @@ const _START_REGION = Vector2i(512, 864)
 const _FRAME_SIZE = Vector2i(128, 128)
 const _FRAMES := 2
 
+const _NOISE_WHEN_AWAKE := MapManager.TILE_SIZE_INT * 7
+var _NOISE := MapManager.TILE_SIZE_INT * 10
+var _effects_per_second: float = 0.2
+const _EFFECTS_EXTRA_PER_STATE: float = 0.5
+const _EFFECT_LIFETIME: float = 10.0
+const _NOISE_RADIUS: int = MapManager.TILE_SIZE_INT * 10
+var _spawn_budget: float = 0.0 # única variable de estado
+
 signal life_state_promoted(previous: LifeState, current: LifeState)
 
 static var instance: Moomoo
@@ -27,6 +35,8 @@ var _life_state: LifeState = LifeState.HEALTHY
 func _ready():
 	super._ready()
 	_create_timer_500ms()
+
+	# for i in range(5): _create_effect()
 
 # region 	GETTERs
 static func is_awake() -> bool:
@@ -48,6 +58,8 @@ static func get_instance() -> Moomoo: return ObjectHelpers.get_safe_instance(ins
 # region 	SETTERs
 func wake_up() -> void:
 	_is_awake = true
+	_effects_per_second += _EFFECTS_EXTRA_PER_STATE
+	_NOISE = _NOISE_WHEN_AWAKE
 	
 	update_skill(SkillBase.get_new_learned_skill(SkillBurningPresence.NAME, 3), 1)
 	update_skill(SkillBase.get_new_learned_skill(SkillPainEcho.NAME, 3), 2)
@@ -74,7 +86,6 @@ func _on_every_500ms() -> void:
 
 	var nearest_enemy = GlobalsEntityHelpers.get_nearest_enemy_inside_vision(self)
 	set_target_to_attack(nearest_enemy)
-	movement_helper.set_target_entity(nearest_enemy, MovementHelper.AttackMoveType.PhysicalAttack)
 # endregion SETTERs
 
 
@@ -84,6 +95,8 @@ static func get_new_instance() -> Moomoo:
 	moomoo.extra_info = ExtraInfo.new(LONG_NAME, get_rect_frames(Vector2i.ZERO), ALIAS)
 	moomoo.global_position = MapManager.cell_to_world(MapManager.get_safe_cell(SPAWN_POSITION))
 	moomoo.combat_stats.set_hp(50000)
+	moomoo.combat_stats.set_hp_regeneration_points(50)
+	moomoo.combat_stats.set_mana_regeneration_points(500)
 	moomoo.combat_stats.set_move_speed(2)
 	moomoo.combat_stats.set_attack_speed(1.2)
 	moomoo.combat_stats.set_attack_range(CombatStats.MIN_ATTACK_RANGE)
@@ -92,7 +105,7 @@ static func get_new_instance() -> Moomoo:
 	moomoo.combat_stats.set_crit_chance(0.2, 4)
 	moomoo.combat_stats.set_agility(100)
 	moomoo.combat_stats.set_strength(200)
-	moomoo.combat_stats.set_intelligence(150)
+	moomoo.combat_stats.set_intelligence(350)
 	moomoo.combat_stats.set_evasion(0.2)
 	moomoo.combat_stats.set_stun_chance(0.25, 2)
 	moomoo.combat_stats.set_physical_defense_points(200)
@@ -108,16 +121,11 @@ func set_life_state(_state: LifeState) -> void: _life_state = _state
 
 func _process(_delta: float) -> void:
 	super._process(_delta)
+	_try_spawn_floor_effects(_delta)
+
 	if not is_awake(): return
 	
 	_update_life_state()
-	
-	# if state == LifeState.WOUNDED:
-	# 	print("WOUNDED")
-	# if state == LifeState.CRITICAL:
-	# 	print("CRITICAL")
-	# if state == LifeState.NEAR_DEATH:
-	# 	print("NEAR DEATH")
 	
 func _update_life_state() -> void:
 	var max_hp := maxf(get_full_health(), 1.0)
@@ -141,6 +149,7 @@ func _state_from_pct(pct: float) -> LifeState:
 	return LifeState.HEALTHY
 
 func _on_promotion(state: LifeState) -> void:
+	_effects_per_second += _EFFECTS_EXTRA_PER_STATE
 	if state == LifeState.WOUNDED:
 		print("WOUNDED")
 		update_skill(SkillBase.get_new_learned_skill(SkillTrueStrike.NAME, 3), 1)
@@ -180,3 +189,31 @@ func actionsForHealth25To50() -> void:
 	pass
 func actionsForHealthBelow25() -> void:
 	pass
+
+# region 	FLOOR EFFECTS SPAWNER
+func _try_spawn_floor_effects(delta: float) -> void:
+	_spawn_budget += _effects_per_second * max(delta, 0.0)
+
+	# spawnea la parte entera del presupuesto
+	var to_spawn := int(_spawn_budget)
+	if to_spawn <= 0:
+		return
+
+	_spawn_budget -= float(to_spawn)
+	for i in to_spawn:
+		_create_effect()
+
+func _create_effect() -> void:
+	var random_pos := global_position + Vector2(randi_range(-_NOISE, _NOISE), randi_range(-_NOISE, _NOISE))
+	var cell := MapManager.world_to_cell(random_pos)
+	TileHazardManager.add_hazard(cell, _EFFECT_LIFETIME, 0.5, func(): TileHazardManager.on_hazard_tick_apply_damage_to_allies_of_player(cell))
+
+	# SmokeHelper.attach_sulfur_layer(GameManager.game_world.over_terrain_layer_layer_2, random_pos, _EFFECT_LIFETIME)
+	# SmokeHelper.spawn_smoke(GameManager.game_world.over_terrain_layer_layer_2, random_pos, _EFFECT_LIFETIME)
+
+	# random_pos = global_position + Vector2(randi_range(-_NOISE, _NOISE), randi_range(-_NOISE, _NOISE))
+	# SmokeHelper.spawn_volcanic_layer(GameManager.game_world.over_terrain_layer_layer_2, random_pos, _EFFECT_LIFETIME)
+	# SmokeHelper.spawn_smoke(GameManager.game_world.over_terrain_layer_layer_2, random_pos, _EFFECT_LIFETIME)
+	
+
+# endregion 	FLOOR EFFECTS SPAWNER

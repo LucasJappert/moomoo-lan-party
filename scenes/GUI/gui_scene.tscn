@@ -865,6 +865,23 @@ layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "asdasd"
 
+[node name="VBoxContainer2" type="VBoxContainer" parent="."]
+offset_left = 1.0
+offset_top = 543.0
+offset_right = 682.0
+offset_bottom = 737.0
+alignment = 2
+
+[node name="ChatLabel" type="Label" parent="VBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 21
+text = "asdasd ads asdasda dada dasdasd asdad asdasdas dasadasdasd asd asd adas ds
+adadadasdasdasd"
+autowrap_mode = 2
+
 [node name="DraggableSlotsContainer" type="Node" parent="."]
 unique_name_in_owner = true
 

@@ -36,7 +36,6 @@ func _on_every_timer_500ms() -> void:
 		if Moomoo.get_instance() in get_my_enemies(): target = Moomoo.get_instance()
 	
 	set_target_to_attack(target)
-	movement_helper.set_target_entity(target, MovementHelper.AttackMoveType.PhysicalAttack)
 
 # region 	GETTERs
 func get_physical_attack_power() -> int:
@@ -64,7 +63,7 @@ func get_nearest_enemy_inside_vision() -> Entity:
 
 	for player in GameManager.get_players():
 		var dist := global_position.distance_to(player.global_position)
-		if dist > vision_helper.radius:
+		if dist > vision_helper.radius_in_pixel:
 			continue
 
 		if dist < closest_distance:

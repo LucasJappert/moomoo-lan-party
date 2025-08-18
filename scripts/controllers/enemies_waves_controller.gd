@@ -19,22 +19,19 @@ static var extra_stats_by_wave: CombatStats
 class WaveInfo:
 	var common_enemies: Array[String]
 	var boss_enemies: Array[String]
-	var stats: CombatStats
-	func _init(p_common_enemies: Array[String], p_boss_enemies: Array[String], p_stats: CombatStats):
+	func _init(p_common_enemies: Array[String], p_boss_enemies: Array[String]):
 		common_enemies = p_common_enemies
 		boss_enemies = p_boss_enemies
-		stats = p_stats
 
 static var WAVES_INFO = [
-	# TODO: Configurar las stats
-	WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME], CombatStats.get_instance(1, 1, 1)),
-	WaveInfo.new([EnemyInfernalMinotaur.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME], CombatStats.get_instance(2, 1, 1)),
-	WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyNightArcher.LONG_NAME], CombatStats.get_instance(3, 1, 1)),
-	WaveInfo.new([EnemyBoneguard.LONG_NAME], [EnemyFrostboneArcher.LONG_NAME], CombatStats.get_instance(4, 1, 1)),
-	WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME], CombatStats.get_instance(5, 1, 1)),
-	WaveInfo.new([EnemyReflector.LONG_NAME, EnemyCrimsonWarlock.LONG_NAME], [EnemyCrimsonWarlock.LONG_NAME], CombatStats.get_instance(6, 1, 1)),
-	WaveInfo.new([EnemyBlowDigger.LONG_NAME], [EnemyRotbull.LONG_NAME], CombatStats.get_instance(7, 1, 1)),
-	WaveInfo.new([EnemyDeadShield.LONG_NAME], [EnemySilentShuriken.LONG_NAME], CombatStats.get_instance(8, 1, 1)),
+	# WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME]), # 1
+	# WaveInfo.new([EnemyInfernalMinotaur.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME]), # 2
+	# WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyNightArcher.LONG_NAME]), # 3
+	# WaveInfo.new([EnemyBoneguard.LONG_NAME], [EnemyFrostboneArcher.LONG_NAME]), # 4
+	# WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME]), # 5
+	# WaveInfo.new([EnemyReflector.LONG_NAME, EnemyCrimsonWarlock.LONG_NAME], [EnemyCrimsonWarlock.LONG_NAME]), # 6
+	# WaveInfo.new([EnemyBlowDigger.LONG_NAME], [EnemyRotbull.LONG_NAME]), # 7
+	# WaveInfo.new([EnemyDeadShield.LONG_NAME], [EnemySilentShuriken.LONG_NAME]), # 8
 ]
 
 static func start_wave_process() -> void:
@@ -205,7 +202,6 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 
 	enemy.combat_stats.accumulate_info(extra_stats_by_wave.get_info())
 	if enemy._boss_level: enemy.combat_stats.accumulate_info(extra_stats_by_wave.get_info())
-	enemy.combat_stats.accumulate_info(_current_wave_info.stats.get_info())
 
 	for skill in enemy._skills:
 		if not skill: continue

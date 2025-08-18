@@ -25,6 +25,8 @@ func _process(delta: float) -> void:
 	CursorManager._static_process(delta)
 	WindowFocusWatcher._process(delta)
 	EnemiesWavesController.process(delta)
+	TileHazardManager.process(delta)
+	
 
 func add_my_tree(my_tree: MyTree) -> void:
 	game_world.my_trees_node.add_child(my_tree, true)
@@ -131,6 +133,7 @@ func restart_game() -> void:
 	GAME_RUNNING = false
 	MainScene.set_paused(false)
 	HeroPickerScene.load_scene()
+	TileHazardManager.clear()
 
 func reset_state() -> void:
 	# if game_world: game_world.queue_free()

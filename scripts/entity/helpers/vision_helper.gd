@@ -2,9 +2,10 @@
 class_name VisionHelper
 extends MyInitAuxiliary
 
-var DEFAULT_RADIUS_IN_PIXEL: int = MapManager.TILE_SIZE_INT * 10
+var DEFAULT_RADIUS_IN_PIXEL: int = MapManager.TILE_SIZE_INT * 12
 const RECT_REGION := Rect2(0, 1216, 96, 96)
-var radius: int = DEFAULT_RADIUS_IN_PIXEL
+var radius_in_pixel: int = DEFAULT_RADIUS_IN_PIXEL
+var redius_in_tiles: int = int(radius_in_pixel / MapManager.TILE_SIZE_FLOAT)
 var color := Color.WHITE
 
 var _owner_entity: Entity = null
@@ -15,7 +16,8 @@ var _tex_w: float = 0.0
 
 func _init(p_owner: Entity, p_radius: int = DEFAULT_RADIUS_IN_PIXEL, p_color: Color = Color.WHITE) -> void:
 	_owner_entity = p_owner
-	radius = p_radius
+	radius_in_pixel = p_radius
+	redius_in_tiles = int(radius_in_pixel / MapManager.TILE_SIZE_FLOAT)
 	color = p_color
 	if not p_owner: return
 
@@ -38,9 +40,10 @@ func _init(p_owner: Entity, p_radius: int = DEFAULT_RADIUS_IN_PIXEL, p_color: Co
 	_last_visible = should_show
 
 func set_radius(p_radius: int) -> void:
-	if float(radius) == float(p_radius):
+	if float(radius_in_pixel) == float(p_radius):
 		return
-	radius = p_radius
+	radius_in_pixel = p_radius
+	redius_in_tiles = int(radius_in_pixel / MapManager.TILE_SIZE_FLOAT)
 	_apply_radius_scale()
 
 func set_color(p_color: Color) -> void:
@@ -84,7 +87,7 @@ func _build_sprite() -> void:
 func _apply_radius_scale() -> void:
 	if not is_instance_valid(_sprite) or _tex_w <= 0.0:
 		return
-	var uniform := (2.0 * float(radius)) / _tex_w # diámetro = 2*radius
+	var uniform := (2.0 * float(radius_in_pixel)) / _tex_w # diámetro = 2*radius_in_pixel
 	_sprite.scale = Vector2(uniform, uniform)
 
 func _clear_sprite() -> void:
