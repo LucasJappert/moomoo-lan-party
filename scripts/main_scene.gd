@@ -6,6 +6,7 @@ class_name MainScene
 @onready var audio_node: Node = $Audio
 
 static var PAUSED = false
+static var game_start_time := 0
 static var pause_start_time := 0
 static var total_paused_time := 0
 
@@ -18,15 +19,20 @@ func _ready():
 	InitialScene.load_scene()
 	pass
 
+static func reset_state_game():
+	game_start_time = Time.get_ticks_msec()
+	pause_start_time = 0
+	total_paused_time = 0
+
 static func load_scene(scene: Node):
 	_clear_scenes()
 	GameManager.main_scene.layer_1.add_child(scene)
 
 # region 	GETTERs
 static func get_elapsed_time_in_sec() -> float:
-	return (Time.get_ticks_msec() - total_paused_time) / 1000.0
+	return get_elapsed_time_in_ms() / 1000.0
 static func get_elapsed_time_in_ms() -> int:
-	return (Time.get_ticks_msec() - total_paused_time)
+	return (Time.get_ticks_msec() - game_start_time - total_paused_time)
 # endregion GETTERs
 
 # region 	SETTERs

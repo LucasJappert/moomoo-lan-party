@@ -16,6 +16,7 @@ static func process(delta: float) -> void:
 	# compactar eliminando terminados
 	_tile_hazards = _tile_hazards.filter(func(x): return not x.is_finished())
 
+
 static func clear() -> void: _tile_hazards.clear()
 
 # Helpers opcionales y livianos
@@ -76,8 +77,7 @@ class TileHazard:
 		# Emitir todos los ticks pendientes (soporta picos de delta)
 		while _elapsed_interval >= interval_in_seconds and not _finished:
 			_elapsed_interval -= interval_in_seconds
-			if on_tick.is_valid():
-				on_tick.call() # ← antes pasabas self
+			if on_tick.is_valid(): on_tick.call() # ← antes pasabas self
 
 		if _age >= lifetime: _finished = true
 

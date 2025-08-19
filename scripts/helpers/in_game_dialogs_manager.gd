@@ -75,8 +75,8 @@ const EN_BOSS_25: String = "- MooMoo: The Heart beats with fury! The veil shall 
 const EN_FINAL_WIN: String = "- MooMoo: I have seen beyond the veil... and what lurks there does not belong to this world. He is coming... and this victory only delays his arrival."
 const EN_FINAL_LOSE: String = "- MooMoo: The Heart beats unbound... and with every pulse the corruption spreads. The world shall bow before me... and nothing can prevent the dawn of darkness."
 
-const ES_THANKS: String = "🙏 Gracias por jugar a MooRaiders. Tu aventura nos inspira a seguir mejorando. ¡Cualquier sugerencia será muy bienvenida!"
-const EN_THANKS: String = "🙏 Thank you for playing MooRaiders. Your adventure inspires us to keep improving. Any suggestions are most welcome!"
+const ES_THANKS: String = "Gracias por jugar a MooRaiders. Tu aventura nos inspira a seguir mejorando. ¡Cualquier sugerencia será muy bienvenida!"
+const EN_THANKS: String = "Thank you for playing MooRaiders. Your adventure inspires us to keep improving. Any suggestions are most welcome!"
 
 # --- Diccionario raíz (por si querés inspeccionarlo/serializarlo) ---
 const DB: Dictionary = {

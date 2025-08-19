@@ -30,7 +30,7 @@ func add_new_label(message: String, _final_message: bool = false):
 	start_now_button.visible = not _final_message
 	
 	if _final_message: SoundsHelper.play_fight()
-	else: SoundsHelper.play_beep()
+	else: SoundsHelper.play_beep(-20)
 	
 	var new_label: Label = label_number_model.duplicate()
 	new_label.visible = true

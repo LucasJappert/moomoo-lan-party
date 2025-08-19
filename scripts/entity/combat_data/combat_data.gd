@@ -652,6 +652,7 @@ func _get_nearest_target_in_range_attack() -> Entity:
 	var players_and_summons: Array[Entity] = _my_owner.get_my_enemies().filter(func(entity: Entity): return not entity is Moomoo)
 	var nearest_unit = GlobalsEntityHelpers.get_nearest_entity(start_pos, players_and_summons, max_range)
 	if nearest_unit: return nearest_unit
+	
 	return Moomoo.get_instance()
 
 func execute_physical_attack(apply_extra_actions: bool = true, _custom_target: Entity = null) -> void:

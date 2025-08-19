@@ -121,6 +121,8 @@ static var _translations := {
 	"magic": {LangTypes.SPANISH: "mágico"},
 	"Not enough gold": {LangTypes.SPANISH: "No tienes suficiente oro"},
 	"Not enough space": {LangTypes.SPANISH: "No tienes suficiente espacio"},
+	"You Win": {LangTypes.SPANISH: "Has ganado"},
+	"You Lose": {LangTypes.SPANISH: "Has perdido"},
 }
 
 ## ✅ Traducción basada en clave

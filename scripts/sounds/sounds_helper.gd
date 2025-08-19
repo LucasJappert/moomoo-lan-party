@@ -28,7 +28,7 @@ static func initialize(audio_node: Node):
 	print("✅ SoundsHelper initialized with %d players" % MAX_PLAYERS)
 
 static var _audio_cache: Dictionary = {}
-static func _internal_play(path: String, volume: float, is_looping: bool, max_simultaneous: int = 1) -> void:
+static func _internal_play(path: String, volume: float, is_looping: bool, max_simultaneous: int = 1, on_finished: Callable = Callable()) -> void:
 	if FORCE_MUTED or _MUTED or not _initialized:
 		if not _initialized: push_error("⚠️ SoundsHelper not initialized.")
 		return
@@ -42,7 +42,13 @@ static func _internal_play(path: String, volume: float, is_looping: bool, max_si
 	if not player: return
 
 	_setup_player(player, stream, volume, is_looping, path)
+
+	# Si se pasó un callback válido, lo conectamos a finished
+	if on_finished.is_valid():
+		player.finished.connect(on_finished, CONNECT_ONE_SHOT)
+
 	player.play()
+	
 static func _can_play(path: String, is_looping: bool, max_simultaneous: int) -> bool:
 	if not is_looping and max_simultaneous > 0:
 		if _playing_counts.get(path, 0) >= max_simultaneous:
@@ -96,8 +102,8 @@ static func _setup_player(player: AudioStreamPlayer, stream: AudioStream, volume
 static func is_playing(path: String) -> bool:
 	return _playing_counts.get(path, 0) > 0
 
-static func play_sfx(path: String, volume: float = 0.0, max_simultaneous: int = 2):
-	_internal_play(path, volume, false, max_simultaneous)
+static func play_sfx(path: String, volume: float = 0.0, max_simultaneous: int = 2, on_finished: Callable = Callable()):
+	_internal_play(path, volume, false, max_simultaneous, on_finished)
 
 static func play_looping_sfx(path: String, volume: float = 0.0):
 	_internal_play(path, volume, true)

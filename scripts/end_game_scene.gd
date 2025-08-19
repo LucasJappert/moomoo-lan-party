@@ -28,34 +28,42 @@ func _verify_end_game(_entity_died: Entity, _killed_by: Entity) -> void:
 
 	if _entity_died.is_my_player(): return _show_me(false)
 
-
 func _show_me(did_win: bool) -> void:
+	GameManager.PLAYER_WIN = did_win
+	if did_win: _effects_on_win()
+	
+	SoundsHelper.play_sfx("res://sounds/moomoo/laugh1.wav", 0, 1)
+	SoundsHelper.play_sfx("res://sounds/moomoo/steps.wav", 0, 1)
+
 	_statistic_label.text = GameManager.MY_PLAYER.statistics.get_summary()
 
 	var final_chat := InGameDialogsManager.final_message(did_win) \
-	+"\n\n ####################### & #######################" \
+	+"\n\n --------------------------------------------------- " \
 	+"\n" + InGameDialogsManager.thanks() \
-	+"\n ####################### & #######################"
+	+"\n --------------------------------------------------- "
 
 	InGameDialogsManager.show(final_chat, 60 * 60) # Mantenemos por 1 hora
-	_defeat_label.text = "YOUWIN" if did_win else "YOULOSE"
+	_defeat_label.text = LanguageManager.translate("You Win" if did_win else "You Lose")
 	visible = true
 	apply_tween_when_appear()
-	_defeat_label.modulate = LOSE_COLOR
-	MainScene.set_paused(true, false)
+	_defeat_label.modulate = WIN_COLOR if did_win else LOSE_COLOR
+	# MainScene.set_paused(true, false)
 
 func apply_tween_when_appear():
-	# _main_container.scale = Vector2.ZERO
-	_main_container.rotation = 0
-	_main_container.modulate.a = 0
+	_main_container.rotation = 0.0
+	_main_container.modulate.a = 0.0
 
 	var tween := _main_container.create_tween()
-	tween.set_trans(Tween.TRANS_SINE)
-	tween.set_ease(Tween.EASE_OUT)
+	# Lo ideal: setear transición/ease sobre el tweener que retorna tween_property
+	var tw := tween.tween_property(_main_container, "modulate:a", 1.0, 0.4)
+	tw.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
-	# Escalado
-	# tween.tween_property(_main_container, "scale", Vector2.ONE, 0.8)
+func _effects_on_win() -> void:
+	# En tu EndGame / GameManager cuando detectás victoria:
+	var pos := MapManager.cell_to_world(MapManager.world_to_cell(GameManager.MY_PLAYER.global_position))
+	SmokeHelper.attach_victory_aura(GameManager.game_world.over_terrain_layer_layer_2, pos, 1.5, 1.2)
 
-	# Rotación en paralelo
-	# tween.parallel().tween_property(_main_container, "rotation", 3 * TAU, 0.8)
-	tween.parallel().tween_property(_main_container, "modulate: a", 1, 0.4)
+	# Si querés salpicar varios “pools” alrededor:
+	for i in 4:
+		var offset := Vector2(randf_range(-64, 64), randf_range(-48, 48))
+		SmokeHelper.attach_victory_aura(GameManager.game_world.over_terrain_layer_layer_2, pos + offset, 1.2, randf_range(0.8, 1.4))

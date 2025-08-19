@@ -5,6 +5,7 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Aplicar efecto al moomoo cuando despierta
 - Guardar registro de los últimos 10 ataques
 - Optimizar efectos de escudos que giran, colas de flechas (usar sistema de aprticulas)
 - Hacer al moomoo de rango cuando tiene menos de 50% y que tenga el item de multiple shot

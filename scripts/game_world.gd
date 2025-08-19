@@ -46,6 +46,11 @@ func _ready() -> void:
 	DamagePopupPool.preload_popups()
 	NightAmbienceHelper.start(get_tree())
 
+func _exit_tree() -> void:
+	over_terrain_layer_layer_1.queue_free()
+	over_terrain_layer_layer_2.queue_free()
+	print("EXITING GAME WORLD")
+
 func _process(_delta: float) -> void:
 	MapManager.GLOBAL_MOUSE_POSITION = get_global_mouse_position()
 	MapManager.VIEWPORT_MOUSE_POSITION = get_viewport().get_mouse_position()

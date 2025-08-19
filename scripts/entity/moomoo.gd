@@ -12,9 +12,14 @@ const _START_REGION = Vector2i(512, 864)
 const _FRAME_SIZE = Vector2i(128, 128)
 const _FRAMES := 2
 
+const MOOMOO_PROMOTION_WAV := "res://sounds/moomoo/promotion.wav"
+const MOOMOO_BREATH_WAV := "res://sounds/moomoo/breath.wav"
+
 const _NOISE_WHEN_AWAKE := MapManager.TILE_SIZE_INT * 7
 var _NOISE := MapManager.TILE_SIZE_INT * 10
 var _effects_per_second: float = 0.2
+const _EFFECTS_PER_SECONDS_WHEN_PLAYER_LOSES: float = 20
+var _NOISE_WHEN_PLAYER_LOSES := _NOISE * 2
 const _EFFECTS_EXTRA_PER_STATE: float = 0.5
 const _EFFECT_LIFETIME: float = 10.0
 const _NOISE_RADIUS: int = MapManager.TILE_SIZE_INT * 10
@@ -35,8 +40,7 @@ var _life_state: LifeState = LifeState.HEALTHY
 func _ready():
 	super._ready()
 	_create_timer_500ms()
-
-	# for i in range(5): _create_effect()
+	EventBus.connect_to_entity_died(_verify_moomoo_died)
 
 # region 	GETTERs
 static func is_awake() -> bool:
@@ -53,6 +57,8 @@ static func get_rect_frames(pos: Vector2i) -> Array[Rect2]:
 	return result
 
 static func get_instance() -> Moomoo: return ObjectHelpers.get_safe_instance(instance)
+
+static func apply_breath_sound() -> void: SoundsHelper.play_sfx(MOOMOO_BREATH_WAV)
 # endregion GETTERs
 
 # region 	SETTERs
@@ -60,7 +66,11 @@ func wake_up() -> void:
 	_is_awake = true
 	_effects_per_second += _EFFECTS_EXTRA_PER_STATE
 	_NOISE = _NOISE_WHEN_AWAKE
-
+	
+	for i in range(20):
+		var noise := MapManager.TILE_SIZE_INT * 3
+		var pos := Vector2(randi_range(-noise, noise), randi_range(-noise, noise))
+		SmokeHelper.spawn_awaken_smoke_burst(GameManager.game_world.over_terrain_layer_layer_2, global_position + pos, 1)
 
 	InGameDialogsManager.show(InGameDialogsManager.moomoo_wake_up())
 	
@@ -89,6 +99,13 @@ func _on_every_500ms() -> void:
 
 	var nearest_enemy = GlobalsEntityHelpers.get_nearest_enemy_inside_vision(self)
 	set_target_to_attack(nearest_enemy)
+
+func _verify_moomoo_died(_entitiy_died: Entity, _killed_by: Entity) -> void:
+	if not _entitiy_died is Player: return
+
+	_effects_per_second = _EFFECTS_PER_SECONDS_WHEN_PLAYER_LOSES
+
+
 # endregion SETTERs
 
 
@@ -153,6 +170,7 @@ func _state_from_pct(pct: float) -> LifeState:
 
 func _on_promotion(state: LifeState) -> void:
 	_effects_per_second += _EFFECTS_EXTRA_PER_STATE
+	SoundsHelper.play_sfx(MOOMOO_PROMOTION_WAV, 0, 2)
 	if state == LifeState.WOUNDED:
 		InGameDialogsManager.show(InGameDialogsManager.boss_hp_75())
 		print("WOUNDED")
@@ -206,20 +224,13 @@ func _try_spawn_floor_effects(delta: float) -> void:
 		return
 
 	_spawn_budget -= float(to_spawn)
-	for i in to_spawn:
-		_create_effect()
+	for i in to_spawn: _create_effect()
 
 func _create_effect() -> void:
-	var random_pos := global_position + Vector2(randi_range(-_NOISE, _NOISE), randi_range(-_NOISE, _NOISE))
+	var _noise := _NOISE if GameManager.PLAYER_WIN else _NOISE_WHEN_PLAYER_LOSES
+	var random_pos := global_position + Vector2(randi_range(-_noise, _noise), randi_range(-_noise, _noise))
 	var cell := MapManager.world_to_cell(random_pos)
 	TileHazardManager.add_hazard(cell, _EFFECT_LIFETIME, 0.5, func(): TileHazardManager.on_hazard_tick_apply_damage_to_allies_of_player(cell))
-
-	# SmokeHelper.attach_sulfur_layer(GameManager.game_world.over_terrain_layer_layer_2, random_pos, _EFFECT_LIFETIME)
-	# SmokeHelper.spawn_smoke(GameManager.game_world.over_terrain_layer_layer_2, random_pos, _EFFECT_LIFETIME)
-
-	# random_pos = global_position + Vector2(randi_range(-_NOISE, _NOISE), randi_range(-_NOISE, _NOISE))
-	# SmokeHelper.spawn_volcanic_layer(GameManager.game_world.over_terrain_layer_layer_2, random_pos, _EFFECT_LIFETIME)
-	# SmokeHelper.spawn_smoke(GameManager.game_world.over_terrain_layer_layer_2, random_pos, _EFFECT_LIFETIME)
 	
 
 # endregion 	FLOOR EFFECTS SPAWNER

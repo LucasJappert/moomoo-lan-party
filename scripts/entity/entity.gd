@@ -2,6 +2,7 @@ class_name Entity
 
 extends CombatData
 
+var _victory_auras: VictoryAuraEmitter
 var vision_helper: VisionHelper
 var range_attack_helper: VisionHelper
 var summoned_helper: SummonedHelper
@@ -45,6 +46,7 @@ func _init() -> void:
 	super._init()
 
 func _ready():
+	_victory_auras = VictoryAuraEmitter.new(func() -> Vector2: return global_position)
 	collision_layer = 1
 	collision_mask = 1
 	vision_helper = VisionHelper.new(self)
@@ -90,6 +92,7 @@ func _post_ready():
 	hud.update_mana_bar()
 	
 func _process(_delta: float) -> void:
+	_victory_auras.process(_delta)
 	if GameManager.AM_I_HOST: process_combat_data(_delta)
 	EntityState.server_process(self)
 	statistics._process(_delta)

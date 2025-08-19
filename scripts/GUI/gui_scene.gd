@@ -123,7 +123,7 @@ func _process(_delta: float) -> void:
 	delta = _delta
 	_update_auxiliary_labels(_delta)
 	if not _bottom_target:
-		if not reseted_gui: reset_gui()
+		# if not reseted_gui: reset_gui()
 		return
 	if reseted_gui: reseted_gui = false
 
@@ -242,17 +242,12 @@ func _new_lerped_size(max_value: int, current_value: int, full_size: int, curren
 	return lerp(current_size, target_size, delta * 10.0)
 
 func _update_panel_bottom_left() -> void:
-	if not GameManager.MY_PLAYER: return
+	if ObjectHelpers.is_null(_bottom_target): return
 	var current_hp = StringHelpers.format_float_compact(_bottom_target.current_hp)
 	var max_hp = StringHelpers.format_float_compact(_bottom_target.get_full_health())
 	_hp_label.text = "%s / %s" % [current_hp, max_hp]
 
-	var current_exp = StringHelpers.format_float_compact(GameManager.MY_PLAYER.current_exp)
-	var max_exp = StringHelpers.format_float_compact(Player.get_exp_per_level(GameManager.MY_PLAYER.level))
-	_label_exp.text = "%s / %s" % [current_exp, max_exp]
-
 	_update_hp_ball_sprite()
-	_update_exp_bar()
 
 	# _hero_type.text = LanguageManager.translate(_bottom_target.extra_info.key_type)
 	# _hero_alias.text = LanguageManager.translate(_bottom_target.extra_info.alias)
@@ -275,6 +270,13 @@ func _update_panel_bottom_left() -> void:
 	_evasion_value.text = StringHelpers.format_percent(total_stats.get_evasion())
 	_stun_value.text = StringHelpers.format_percent(total_stats.get_stun_chance())
 	_critic_value.text = total_stats.get_critic_description()
+
+	# My player stats
+	if ObjectHelpers.is_null(GameManager.MY_PLAYER): return
+	var current_exp = StringHelpers.format_float_compact(GameManager.MY_PLAYER.current_exp)
+	var max_exp = StringHelpers.format_float_compact(Player.get_exp_per_level(GameManager.MY_PLAYER.level))
+	_label_exp.text = "%s / %s" % [current_exp, max_exp]
+	_update_exp_bar()
 
 func _update_panel_bottom_right() -> void:
 	if _bottom_target is Player: _current_gold.text = _bottom_target.current_gold_string

@@ -45,7 +45,7 @@ static func _commons_initialize(_enemy: Enemy) -> void:
 	_enemy.combat_stats.set_move_speed(2)
 	_enemy.combat_stats.set_attack_range(CombatStats.MIN_ATTACK_RANGE)
 	_enemy.combat_stats.set_magic_attack_power(0)
-	_enemy.combat_stats.set_physical_attack_power(1)
+	_enemy.combat_stats.set_physical_attack_power(100)
 	_enemy.combat_stats.set_crit_multiplier(1.5)
 	_enemy.combat_stats.set_attack_speed(0.5)
 	_enemy.combat_stats.set_agility(10)

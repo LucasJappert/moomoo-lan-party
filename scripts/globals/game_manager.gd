@@ -6,6 +6,7 @@ var music_helper: MusicHelper
 
 var entities: Dictionary[String, Entity] = {}
 static var GAME_RUNNING := false
+static var PLAYER_WIN := false
 
 var MY_PLAYER: Player
 var MY_PLAYER_NAME: String
@@ -126,6 +127,8 @@ func spawn_enemy(_enemy: Enemy) -> void:
 # region 	SETTERs
 func start_game(hero_picked_type: String) -> void:
 	GAME_RUNNING = true
+	PLAYER_WIN = false
+	MainScene.reset_state_game()
 	HeroPickerScene.hero_picked_type = hero_picked_type
 	GameWorld.load_scene()
 
@@ -153,7 +156,10 @@ func get_gui_scene() -> Node: return game_world.gui_scene
 
 # region 		INTERNAL AUXILIARY METHODS
 static func _is_player_enemy(entity: Entity) -> bool:
-	if not entity or not GameManager.MY_PLAYER: return false
+	if not entity: return false
+	if not GameManager.MY_PLAYER:
+		if not entity.summoned_helper: return true
+		if entity.summoned_helper.summoned_by_name == GameManager.MY_PLAYER_NAME: return false
 	if entity.summoned_helper and entity.summoned_helper.summoned_by_name == GameManager.MY_PLAYER_NAME: return false
 	if entity == GameManager.MY_PLAYER: return false
 	if entity is Moomoo and not Moomoo.is_awake(): return false
