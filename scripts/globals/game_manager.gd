@@ -137,6 +137,7 @@ func restart_game() -> void:
 	MainScene.set_paused(false)
 	HeroPickerScene.load_scene()
 	TileHazardManager.clear()
+	SoundsHelper.stop_all_sfx(1)
 
 func reset_state() -> void:
 	# if game_world: game_world.queue_free()

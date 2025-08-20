@@ -11,6 +11,9 @@ static var _looping_players: Array[AudioStreamPlayer] = []
 static var _active_players: Array[AudioStreamPlayer] = []
 static var _original_volumes := {}
 
+# ✨ NUEVO: quién está reproduciendo qué
+static var _player_path: Dictionary = {} # player -> path
+
 static func initialize(audio_node: Node):
 	if _initialized: return
 
@@ -117,6 +120,19 @@ static func stop_all_loops():
 		
 	_looping_players.clear()
 
+static func stop_all_sfx(fade_duration: float = 0.0) -> void:
+	# hacemos copia porque vamos a modificar la lista
+	var to_check := _active_players.duplicate()
+	for player in to_check:
+		if not is_instance_valid(player):
+			continue
+		# ignoramos loops (se manejan aparte)
+		if _looping_players.has(player):
+			continue
+
+		var path: String = _player_path.get(player, "")
+		_stop_player_now(player, path, fade_duration)
+
 static func stop_loop_by_path(path: String, fade_duration: float = 1.0):
 	for i in range(_looping_players.size() - 1, -1, -1):
 		var player = _looping_players[i]
@@ -134,7 +150,53 @@ static func stop_loop_by_path(path: String, fade_duration: float = 1.0):
 				_active_players.erase(player)
 				_original_volumes.erase(player)
 			)
-			
+
+# ✅ Limpieza centralizada (sirve para finished y para stop manual)
+static func _handle_player_finished(player: AudioStreamPlayer, path: String) -> void:
+	if _playing_counts.has(path):
+		_playing_counts[path] = max(_playing_counts[path] - 1, 0)
+	_active_players.erase(player)
+	_original_volumes.erase(player)
+	_player_path.erase(player)
+
+# ✨ NUEVO: detener cualquier SFX (no-loop) por path/name
+static func stop_sfx_by_path(path: String, stop_all: bool = true, fade_duration: float = 0.0) -> void:
+	# Recorremos copia porque vamos a modificar _active_players
+	var to_check := _active_players.duplicate()
+	for player in to_check:
+		if not is_instance_valid(player): continue
+		# Sólo SFX: ignoramos los en loop (están en _looping_players)
+		if _looping_players.has(player): continue
+
+		var p: String = _player_path.get(player, "")
+		if p != path: continue
+
+		_stop_player_now(player, path, fade_duration)
+		if not stop_all:
+			break
+
+# ✨ NUEVO: detener por path (sirve tanto para loops como sfx)
+static func stop_any_by_path(path: String, fade_duration: float = 0.0) -> void:
+	# Primero loops
+	stop_loop_by_path(path, fade_duration)
+	# Luego sfx
+	stop_sfx_by_path(path, true, fade_duration)
+
+static func _stop_player_now(player: AudioStreamPlayer, path: String, fade_duration: float) -> void:
+	if not is_instance_valid(player): return
+	_disconnect_all_finished_connections(player)
+
+	if fade_duration > 0.0:
+		var tween := player.create_tween()
+		tween.tween_property(player, "volume_db", -80.0, fade_duration).set_trans(Tween.TRANS_LINEAR)
+		tween.tween_callback(func():
+			player.stop()
+			_handle_player_finished(player, path)
+		)
+	else:
+		player.stop()
+		_handle_player_finished(player, path)
+
 static func _on_looping_player_finished(player: AudioStreamPlayer, path: String) -> void:
 	if is_instance_valid(player):
 		print("🔁 Looping sound: ", path)

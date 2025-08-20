@@ -33,7 +33,7 @@ func _show_me(did_win: bool) -> void:
 	if did_win: _effects_on_win()
 	
 	SoundsHelper.play_sfx("res://sounds/moomoo/laugh1.wav", 0, 1)
-	SoundsHelper.play_sfx("res://sounds/moomoo/steps.wav", 0, 1)
+	SoundsHelper.play_sfx("res://sounds/moomoo/steps.wav", 0, 1, func(): SoundsHelper.play_sfx("res://sounds/moomoo/laugh1.wav", 0, 1))
 
 	_statistic_label.text = GameManager.MY_PLAYER.statistics.get_summary()
 

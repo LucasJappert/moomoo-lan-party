@@ -68,7 +68,6 @@ func _handle_actions_each_second(_delta: float) -> void:
 	
 	# do stuff
 	_try_add_gold_to_player()
-
 func _try_add_gold_to_player() -> void:
 	if not GameManager.GAME_RUNNING: return
 	if ObjectHelpers.is_null(GameManager.MY_PLAYER): return

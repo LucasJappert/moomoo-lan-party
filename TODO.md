@@ -5,7 +5,6 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Give players some gold per second
 - Optimizar efectos de escudos que giran, fuego, colas de flechas (usar sistema de aprticulas)
 - Guardar registro de los últimos 10 ataques
 - Hacer al moomoo de rango cuando tiene menos de 50% y que tenga el item de multiple shot

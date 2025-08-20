@@ -83,7 +83,6 @@ func wake_up() -> void:
 	update_skill(SkillBase.get_new_learned_skill(SkillBlessingOfPower.NAME, 3), 4)
 
 	update_item(Item.get_item(ItemSkywrath.NAME, 1, true), 0)
-	# update_item(Item.get_item(ItemSkeletonSummonersRing.NAME, 1, true), 0)
 	update_item(Item.get_item(ItemCleaveEdge.NAME, 1, true), 1)
 
 	set_current_hp_and_mana()

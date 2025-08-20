@@ -2,6 +2,7 @@
 
 📆 18/08/2025
 
+- ✅ Stop all sounds when resetting the game
 - ✅ Give players some gold per second
 - ✅ Generate dialogues from the start of the game until the end, including victory/defeat messages and thanks.
 - ✅ Prevent cleave strike skill from being used on ranged units and multiple shot skill from being used on melee units
