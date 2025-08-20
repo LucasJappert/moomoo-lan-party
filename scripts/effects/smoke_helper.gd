@@ -12,22 +12,41 @@ static func _spawn_ps(parent: Node, pos: Vector2, duration: float, setup: Callab
 	ps.local_coords = false
 	ps.texture = SpritesHelper.get_texture_from_region(SMOKE_RECT)
 
-	# Permite que cada efecto configure amount/lifetime/material/visibility_rect/etc.
-	if setup.is_valid(): setup.call(ps)
+	if setup.is_valid():
+		setup.call(ps)
 
 	parent.add_child(ps)
 	ps.emitting = true
 
-	# Limpieza normal y “seguro” (por si finished no dispara)
 	ps.finished.connect(Callable(ps, "queue_free"), CONNECT_ONE_SHOT)
 
-	var stt := parent.get_tree().create_timer(max(duration, 0.05), true) # process_always = true
-	stt.timeout.connect(func():
+	# Timer 1 como hijo de ps (si ps muere, el timer también)
+	var t1 := Timer.new()
+	t1.one_shot = true
+	t1.ignore_time_scale = true
+	t1.process_mode = Node.PROCESS_MODE_ALWAYS
+	t1.wait_time = max(duration, 0.05)
+	ps.add_child(t1)
+
+	t1.timeout.connect(func(): # esta lambda NO captura parent; sólo usa ps vía "this" scope
+		if not is_instance_valid(ps): return
 		ps.emitting = false
-		parent.get_tree().create_timer(ps.lifetime + 0.2, true).timeout.connect(func():
-			if is_instance_valid(ps): ps.queue_free()
+
+		var t2 := Timer.new()
+		t2.one_shot = true
+		t2.ignore_time_scale = true
+		t2.process_mode = Node.PROCESS_MODE_ALWAYS
+		t2.wait_time = ps.lifetime + 0.2
+		ps.add_child(t2)
+
+		t2.timeout.connect(func():
+			if is_instance_valid(ps):
+				ps.queue_free()
 		)
+		t2.start()
 	)
+	t1.start()
+
 
 # --- Efecto 1: Smoke ascendente suave ---
 static func spawn_smoke(parent: Node, pos: Vector2, duration: float, updraft: float = 3.0) -> void:
@@ -476,39 +495,50 @@ static func spawn_volcanic_layer(parent: Node, pos: Vector2, duration: float = 0
 	)
 	t.start()
 
+# Burst doble para despertar (billow + wisps), con ancho controlado
 static func spawn_awaken_smoke_burst(
 	parent: Node,
 	pos: Vector2,
-	lifetime: float = 1.6, # duración base
+	lifetime: float = 1.6,
 	scale_factor: float = 1.0,
-	intensity: float = 1.0
+	intensity: float = 1.0,
+	width_pixels: float = 64.0
 ) -> void:
 	lifetime = clamp(lifetime, 0.5, 5.0)
 	scale_factor = clamp(scale_factor, 0.6, 2.5)
 	intensity = clamp(intensity, 0.5, 3.0)
+	width_pixels = max(8.0, width_pixels)
 
-	_spawn_ps(parent, pos, scale_factor, func(ps: GPUParticles2D) -> void:
-		_config_awaken_billow(ps, lifetime, scale_factor, intensity)
+	_spawn_ps(parent, pos, 1.8, func(ps: GPUParticles2D) -> void:
+		_config_awaken_billow(ps, lifetime, scale_factor, intensity, width_pixels)
 	)
 
-	_spawn_ps(parent, pos, scale_factor, func(ps: GPUParticles2D) -> void:
-		_config_awaken_wisps(ps, lifetime, scale_factor, intensity)
+	_spawn_ps(parent, pos, 1.6, func(ps: GPUParticles2D) -> void:
+		_config_awaken_wisps(ps, lifetime, scale_factor, intensity, width_pixels)
 	)
+
 
 # ---------------- helpers de configuración ----------------
 
-# Humo base (billow denso) del despertar
-static func _config_awaken_billow(ps: GPUParticles2D, lifetime: float, scale_factor: float, intensity: float) -> void:
+# Humo base (billow denso) del despertar — franja controlada por width_pixels
+static func _config_awaken_billow(
+	ps: GPUParticles2D,
+	lifetime: float,
+	scale_factor: float,
+	intensity: float,
+	width_pixels: float = 64.0
+) -> void:
 	scale_factor = clamp(scale_factor, 0.6, 2.5)
 	intensity = clamp(intensity, 0.5, 3.0)
 
 	ps.one_shot = true
 	ps.lifetime = max(lifetime, 0.1)
-	ps.amount = int(280 * intensity)
-	ps.visibility_rect = Rect2(
-		Vector2(-320, -240) * scale_factor,
-		Vector2(640, 480) * scale_factor
-	)
+	ps.amount = int(220 * intensity) # un poco menos para banda fina
+
+	# Visibilidad: algo más ancha que el emisor + margen vertical
+	var vis_w := width_pixels * 1.6 * scale_factor
+	var vis_h := 320.0 * scale_factor
+	ps.visibility_rect = Rect2(Vector2(-vis_w * 0.5, -vis_h * 0.5), Vector2(vis_w, vis_h))
 
 	var cim := CanvasItemMaterial.new()
 	cim.blend_mode = CanvasItemMaterial.BLEND_MODE_MIX
@@ -517,30 +547,35 @@ static func _config_awaken_billow(ps: GPUParticles2D, lifetime: float, scale_fac
 	var mat := ParticleProcessMaterial.new()
 	mat.gravity = Vector3(0, -10.0, 0)
 	mat.direction = Vector3(0, -1, 0)
-	mat.spread = 80.0
 
-	# Emisión ancha (podés volver a SPHERE si preferís)
+	# Menor apertura para que no se desborde del ancho
+	mat.spread = 35.0
+
+	# Emisión en franja: half-extents X = width/2
 	mat.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
-	mat.emission_box_extents = Vector3(120.0 * scale_factor, 24.0 * scale_factor, 0.0)
+	mat.emission_box_extents = Vector3(width_pixels * 0.5 * scale_factor, 18.0 * scale_factor, 0.0)
 
-	mat.initial_velocity_min = 80.0 * scale_factor
-	mat.initial_velocity_max = 140.0 * scale_factor
-	mat.damping_min = 18.0
-	mat.damping_max = 26.0
+	# Velocidades más contenidas, frenado rápido
+	mat.initial_velocity_min = 70.0 * scale_factor
+	mat.initial_velocity_max = 110.0 * scale_factor
+	mat.damping_min = 20.0
+	mat.damping_max = 28.0
 
-	mat.radial_accel_min = -12.0
-	mat.radial_accel_max = 12.0
-	mat.tangential_accel_min = -18.0
-	mat.tangential_accel_max = 18.0
-	mat.angular_velocity_min = -20.0
-	mat.angular_velocity_max = 20.0
+	# Turbulencias bajitas para no “engordar” la franja
+	mat.radial_accel_min = -8.0
+	mat.radial_accel_max = 8.0
+	mat.tangential_accel_min = -12.0
+	mat.tangential_accel_max = 12.0
+	mat.angular_velocity_min = -12.0
+	mat.angular_velocity_max = 12.0
 
-	mat.scale_min = 0.65 * scale_factor
-	mat.scale_max = 1.15 * scale_factor
+	# Tamaño de partícula
+	mat.scale_min = 0.55 * scale_factor
+	mat.scale_max = 0.95 * scale_factor
 
 	var sc := Curve.new()
-	sc.add_point(Vector2(0.00, 0.15))
-	sc.add_point(Vector2(0.18, 1.00))
+	sc.add_point(Vector2(0.00, 0.20))
+	sc.add_point(Vector2(0.16, 1.00))
 	sc.add_point(Vector2(1.00, 0.00))
 	var sc_tex := CurveTexture.new()
 	sc_tex.curve = sc
@@ -548,29 +583,35 @@ static func _config_awaken_billow(ps: GPUParticles2D, lifetime: float, scale_fac
 
 	var grad := Gradient.new()
 	grad.colors = PackedColorArray([
-		Color(0.05, 0.05, 0.05, 0.45 * intensity),
-		Color(0.08, 0.08, 0.08, 0.32 * intensity),
-		Color(0.08, 0.08, 0.08, 0.00)
+		Color(0.06, 0.06, 0.06, 0.42 * intensity),
+		Color(0.09, 0.09, 0.09, 0.28 * intensity),
+		Color(0.09, 0.09, 0.09, 0.00)
 	])
-	grad.offsets = PackedFloat32Array([0.0, 0.35, 1.0])
+	grad.offsets = PackedFloat32Array([0.0, 0.36, 1.0])
 	var ramp := GradientTexture1D.new()
 	ramp.gradient = grad
 	mat.color_ramp = ramp
 
 	ps.process_material = mat
 
-# Hebras finas (wisps) del despertar
-static func _config_awaken_wisps(ps: GPUParticles2D, lifetime: float, scale_factor: float, intensity: float) -> void:
+# Hebras finas (wisps) — siguen la misma franja
+static func _config_awaken_wisps(
+	ps: GPUParticles2D,
+	lifetime: float,
+	scale_factor: float,
+	intensity: float,
+	width_pixels: float = 64.0
+) -> void:
 	scale_factor = clamp(scale_factor, 0.6, 2.5)
 	intensity = clamp(intensity, 0.5, 3.0)
 
 	ps.one_shot = true
-	ps.lifetime = max(lifetime * 0.8, 0.1) # un poco más breve que el billow
-	ps.amount = int(140 * intensity)
-	ps.visibility_rect = Rect2(
-		Vector2(-340, -240) * scale_factor,
-		Vector2(680, 480) * scale_factor
-	)
+	ps.lifetime = max(lifetime * 0.85, 0.1)
+	ps.amount = int(120 * intensity)
+
+	var vis_w := width_pixels * 1.6 * scale_factor
+	var vis_h := 280.0 * scale_factor
+	ps.visibility_rect = Rect2(Vector2(-vis_w * 0.5, -vis_h * 0.5), Vector2(vis_w, vis_h))
 
 	var cim := CanvasItemMaterial.new()
 	cim.blend_mode = CanvasItemMaterial.BLEND_MODE_MIX
@@ -579,29 +620,29 @@ static func _config_awaken_wisps(ps: GPUParticles2D, lifetime: float, scale_fact
 	var mat := ParticleProcessMaterial.new()
 	mat.gravity = Vector3(0, -8.0, 0)
 	mat.direction = Vector3(0, -1, 0)
-	mat.spread = 65.0
+	mat.spread = 25.0
 
 	mat.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
-	mat.emission_box_extents = Vector3(100.0 * scale_factor, 18.0 * scale_factor, 0.0)
+	mat.emission_box_extents = Vector3(width_pixels * 0.5 * scale_factor, 12.0 * scale_factor, 0.0)
 
-	mat.initial_velocity_min = 60.0 * scale_factor
-	mat.initial_velocity_max = 110.0 * scale_factor
-	mat.damping_min = 14.0
-	mat.damping_max = 22.0
+	mat.initial_velocity_min = 55.0 * scale_factor
+	mat.initial_velocity_max = 95.0 * scale_factor
+	mat.damping_min = 16.0
+	mat.damping_max = 24.0
 
-	mat.radial_accel_min = -10.0
-	mat.radial_accel_max = 10.0
-	mat.tangential_accel_min = -16.0
-	mat.tangential_accel_max = 16.0
-	mat.angular_velocity_min = -14.0
-	mat.angular_velocity_max = 14.0
+	mat.radial_accel_min = -6.0
+	mat.radial_accel_max = 6.0
+	mat.tangential_accel_min = -10.0
+	mat.tangential_accel_max = 10.0
+	mat.angular_velocity_min = -10.0
+	mat.angular_velocity_max = 10.0
 
-	mat.scale_min = 0.40 * scale_factor
-	mat.scale_max = 0.75 * scale_factor
+	mat.scale_min = 0.38 * scale_factor
+	mat.scale_max = 0.68 * scale_factor
 
 	var sc := Curve.new()
-	sc.add_point(Vector2(0.00, 0.10))
-	sc.add_point(Vector2(0.16, 0.95))
+	sc.add_point(Vector2(0.00, 0.12))
+	sc.add_point(Vector2(0.14, 0.95))
 	sc.add_point(Vector2(1.00, 0.00))
 	var sc_tex := CurveTexture.new()
 	sc_tex.curve = sc
@@ -609,11 +650,11 @@ static func _config_awaken_wisps(ps: GPUParticles2D, lifetime: float, scale_fact
 
 	var grad := Gradient.new()
 	grad.colors = PackedColorArray([
-		Color(0.12, 0.12, 0.12, 0.38 * intensity),
-		Color(0.12, 0.12, 0.12, 0.22 * intensity),
+		Color(0.12, 0.12, 0.12, 0.34 * intensity),
+		Color(0.12, 0.12, 0.12, 0.20 * intensity),
 		Color(0.12, 0.12, 0.12, 0.00)
 	])
-	grad.offsets = PackedFloat32Array([0.0, 0.42, 1.0])
+	grad.offsets = PackedFloat32Array([0.0, 0.40, 1.0])
 	var ramp := GradientTexture1D.new()
 	ramp.gradient = grad
 	mat.color_ramp = ramp

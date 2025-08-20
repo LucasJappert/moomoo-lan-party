@@ -62,17 +62,23 @@ static func apply_breath_sound() -> void: SoundsHelper.play_sfx(MOOMOO_BREATH_WA
 # endregion GETTERs
 
 # region 	SETTERs
+var _is_awaking: bool = false
 func wake_up() -> void:
+	if _is_awaking: return
+	_is_awaking = true
+
+	for i in range(10):
+		var noise := MapManager.TILE_SIZE_INT * 1
+		var pos := Vector2(randi_range(-noise, noise), randi_range(-noise, noise))
+		SmokeHelper.spawn_awaken_smoke_burst(GameManager.game_world.over_terrain_layer_layer_2, global_position + pos)
+
+	InGameDialogsManager.show(InGameDialogsManager.moomoo_wake_up())
+
+	# Esperar 2 segundos antes de marcar como despierto
+	await get_tree().create_timer(2.0).timeout
 	_is_awake = true
 	_effects_per_second += _EFFECTS_EXTRA_PER_STATE
 	_NOISE = _NOISE_WHEN_AWAKE
-	
-	for i in range(20):
-		var noise := MapManager.TILE_SIZE_INT * 3
-		var pos := Vector2(randi_range(-noise, noise), randi_range(-noise, noise))
-		SmokeHelper.spawn_awaken_smoke_burst(GameManager.game_world.over_terrain_layer_layer_2, global_position + pos, 1)
-
-	InGameDialogsManager.show(InGameDialogsManager.moomoo_wake_up())
 	
 	update_skill(SkillBase.get_new_learned_skill(SkillBurningPresence.NAME, 3), 1)
 	update_skill(SkillBase.get_new_learned_skill(SkillPainEcho.NAME, 3), 2)
