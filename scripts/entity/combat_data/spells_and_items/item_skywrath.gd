@@ -86,3 +86,6 @@ static func verify_existing(_owner: Entity) -> void:
 	if has_item: return SkywrathEffect.attach_to(_owner.front_animations_node, 0)
 
 	return SkywrathEffect.remove_all_from(_owner.front_animations_node)
+
+static func static_actions_after_update_item(_owner: Entity, _item: Item, _slot_number: int) -> void:
+	verify_existing(_owner)

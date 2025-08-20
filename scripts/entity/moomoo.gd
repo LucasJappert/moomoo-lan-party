@@ -67,10 +67,7 @@ func wake_up() -> void:
 	if _is_awaking: return
 	_is_awaking = true
 
-	for i in range(10):
-		var noise := MapManager.TILE_SIZE_INT * 1
-		var pos := Vector2(randi_range(-noise, noise), randi_range(-noise, noise))
-		SmokeHelper.spawn_awaken_smoke_burst(GameManager.game_world.over_terrain_layer_layer_2, global_position + pos)
+	_spawn_wave_up_effects()
 
 	InGameDialogsManager.show(InGameDialogsManager.moomoo_wake_up())
 
@@ -91,6 +88,16 @@ func wake_up() -> void:
 
 	set_current_hp_and_mana()
 	update_base_stats(combat_stats.get_info())
+
+func _spawn_wave_up_effects() -> void:
+	for i in range(10):
+		var noise := MapManager.TILE_SIZE_INT * 1
+		var pos := Vector2(randi_range(-noise, noise), randi_range(-noise, noise))
+		SmokeHelper.spawn_awaken_smoke_burst(GameManager.game_world.over_terrain_layer_layer_2, global_position + pos)
+		
+		for t in range(6):
+			pos = Vector2(randi_range(-noise, noise), randi_range(-noise, noise))
+			SmokeHelper.spawn_volcanic_sparks(GameManager.game_world.over_terrain_layer_layer_2, global_position + pos)
 
 func _create_timer_500ms() -> void:
 	var timer_500ms = Timer.new()

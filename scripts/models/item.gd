@@ -60,7 +60,7 @@ static func initialize_items() -> void:
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 0, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
 	_item.set_hp(500)
 	_item.cooldown = 0.5
-	_item.buy_price = 10
+	_item.buy_price = 5
 	_item.is_consumable = true
 	_item.en_description = "Restores " + StringHelpers.format_float_compact(500) + " HP."
 	_item.es_description = "Restaura " + StringHelpers.format_float_compact(500) + " HP."
@@ -73,7 +73,7 @@ static func initialize_items() -> void:
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 1, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
 	_item.set_hp(2000)
 	_item.cooldown = 0.5
-	_item.buy_price = 20
+	_item.buy_price = 10
 	_item.is_consumable = true
 	_item.en_description = "Restores " + StringHelpers.format_float_compact(2000) + " HP."
 	_item.es_description = "Restaura " + StringHelpers.format_float_compact(2000) + " HP."
@@ -86,7 +86,7 @@ static func initialize_items() -> void:
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 2, _ATLAS_START_POS.y, FRAME_SIZE, FRAME_SIZE)
 	_item.set_hp(10000)
 	_item.cooldown = 0.5
-	_item.buy_price = 50
+	_item.buy_price = 30
 	_item.is_consumable = true
 	_item.en_description = "Restores " + StringHelpers.format_float_compact(10000) + " HP."
 	_item.es_description = "Restaura " + StringHelpers.format_float_compact(10000) + " HP."
@@ -100,7 +100,7 @@ static func initialize_items() -> void:
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 0, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
 	_item.set_mana(500)
 	_item.cooldown = 0.5
-	_item.buy_price = 10
+	_item.buy_price = 5
 	_item.is_consumable = true
 	_item.en_description = "Restores " + StringHelpers.format_float_compact(500) + " mana."
 	_item.es_description = "Restaura " + StringHelpers.format_float_compact(500) + " mana."
@@ -113,7 +113,7 @@ static func initialize_items() -> void:
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 1, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
 	_item.set_mana(2000)
 	_item.cooldown = 0.5
-	_item.buy_price = 20
+	_item.buy_price = 10
 	_item.is_consumable = true
 	_item.en_description = "Restores " + StringHelpers.format_float_compact(2000) + " mana."
 	_item.es_description = "Restaura " + StringHelpers.format_float_compact(2000) + " mana."
@@ -126,7 +126,7 @@ static func initialize_items() -> void:
 	_item.region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * 2, _ATLAS_START_POS.y + FRAME_SIZE * 1, FRAME_SIZE, FRAME_SIZE)
 	_item.set_mana(10000)
 	_item.cooldown = 0.5
-	_item.buy_price = 50
+	_item.buy_price = 30
 	_item.is_consumable = true
 	_item.en_description = "Restores " + StringHelpers.format_float_compact(10000) + " mana."
 	_item.es_description = "Restaura " + StringHelpers.format_float_compact(10000) + " mana."

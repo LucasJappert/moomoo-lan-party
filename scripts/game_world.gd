@@ -56,6 +56,24 @@ func _process(_delta: float) -> void:
 	MapManager.VIEWPORT_MOUSE_POSITION = get_viewport().get_mouse_position()
 	ambient_sounds_helper.update_fire_sound()
 	SCREEN_SIZE = get_viewport().get_visible_rect().size
+	_handle_actions_each_second(_delta)
+
+var _timer_accum: float = 0.0
+func _handle_actions_each_second(_delta: float) -> void:
+	_timer_accum += _delta
+	
+	if _timer_accum < 1.0: return
+	
+	_timer_accum = 0.0
+	
+	# do stuff
+	_try_add_gold_to_player()
+
+func _try_add_gold_to_player() -> void:
+	if not GameManager.GAME_RUNNING: return
+	if ObjectHelpers.is_null(GameManager.MY_PLAYER): return
+
+	GameManager.MY_PLAYER.increment_current_gold(1, false)
 
 func _spawn_player_moomoo_and_enemies() -> void:
 	GameManager.spawn_player(HeroPickerScene.hero_picked_type)

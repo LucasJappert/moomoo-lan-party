@@ -2,7 +2,7 @@ class_name Player
 
 extends Entity
 
-const INITIAL_GOLD: int = 80000
+const INITIAL_GOLD: int = 800
 const PLAYER_CELL_SPAWN: Vector2i = Vector2i(20, 12)
 static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 const MAX_LEVEL: int = 30
@@ -13,7 +13,6 @@ const MAX_LEVEL: int = 30
 		current_gold = _value
 		if current_gold > 9999: current_gold_string = StringHelpers.format_float_compact(current_gold)
 		else: current_gold_string = StringHelpers.format_float(current_gold)
-		if is_my_player(): SoundsHelper.play_coins()
 var current_gold_string: String = ""
 @export var skill_points_to_assign: int:
 	set(_value):
@@ -83,10 +82,11 @@ func level_up() -> void:
 	update_base_stats(combat_stats.get_info())
 	AnimationsHelper.apply_animation(self, AnimationsHelper.ANIMATION_NAMES.LEVEL_UP)
 
-func increment_current_gold(value_to_increment: int) -> void:
+func increment_current_gold(value_to_increment: int, play_sound: bool = true) -> void:
 	if current_hp <= 0: return
 	current_gold += value_to_increment
 	statistics.add_gold(value_to_increment)
+	if is_my_player() and play_sound: SoundsHelper.play_coins()
 # endregion SETTERs
 
 static func get_exp_per_level(_level: int) -> int:
