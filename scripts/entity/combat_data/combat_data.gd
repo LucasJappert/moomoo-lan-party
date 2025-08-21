@@ -99,9 +99,9 @@ func process_combat_data(_delta: float): # Run only when it is the host
 	_process_on_server(_delta)
 
 func _process_on_server(_delta: float):
-	if not GameManager.AM_I_HOST: return
+	if not GameManager.GAME_RUNNING or not GameManager.MY_PLAYER: return
 
-	try_physical_attack(_delta)
+	_actions_each_500_ms(_delta)
 
 	_actions_after_1_second(_delta)
 
@@ -325,7 +325,7 @@ func _try_to_add_gold_to_players_on_enemy_die(_attacker: Entity) -> void:
 	var base_earned := EnemiesWavesController.get_gold_earned_by_enemy() * (_my_owner._boss_level + 1)
 	var earned_gold := randi_range(int(base_earned * 0.8), int(base_earned * 1.2))
 	for player in GameManager.get_players():
-		player.increment_current_gold(earned_gold)
+		player.increment_current_gold(earned_gold, true, true)
 
 var cache_total_stats := CombatStats.new()
 var cache_total_stats_no_effects := CombatStats.new()
@@ -392,6 +392,7 @@ func register_attacker(attacker: Entity) -> void:
 	if attacker and ObjectHelpers.is_my_player(self): attacker.hud.set_last_damage_to_my_player()
 
 func set_target_to_attack(_target: Entity) -> void: # Used only by the server
+	if ObjectHelpers.is_null(GameManager.MY_PLAYER): return
 	if _my_owner.get_allies().has(_target):
 		return print("Trying to set target to attack for a player that is not an enemy")
 	
@@ -726,6 +727,14 @@ func global_receive_damage_or_heal(_di: DamageInfo):
 		_my_owner.hud.show_message_popup(str(abs(_di.total_damage)), Color(0, 1, 0))
 	
 	register_attacker(_di.get_attacker())
+
+var _actions_each_500_ms_timer: float = 0
+func _actions_each_500_ms(_delta: float) -> void:
+	_actions_each_500_ms_timer += _delta
+	if _actions_each_500_ms_timer < 0.5: return
+
+	_actions_each_500_ms_timer = 0.0
+	try_physical_attack(_delta)
 
 func _actions_after_1_second(_delta: float) -> void:
 	_1_second_timer += _delta

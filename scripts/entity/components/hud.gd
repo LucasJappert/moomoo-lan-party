@@ -56,8 +56,10 @@ func _try_update_bars_visibility():
 	# var show_by_last_damage_to_my_player = Time.get_ticks_msec() - _last_damage_to_my_player < HIDE_BARS_AFTER_MILLISECONDS
 	# if show_by_last_damage_to_my_player: bars_container.visible = true; return
 
-	var show_by_last_damage_received = Time.get_ticks_msec() - my_owner.last_damage_received_time_in_ms < HIDE_BARS_AFTER_MILLISECONDS
-	if show_by_last_damage_received: bars_container.visible = true; return
+	var show_by_last_damage_received = MainScene.get_elapsed_time_in_ms() - my_owner.last_damage_received_time_in_ms < HIDE_BARS_AFTER_MILLISECONDS
+	if show_by_last_damage_received:
+		bars_container.visible = true
+		return
 
 	bars_container.visible = false
 

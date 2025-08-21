@@ -24,13 +24,13 @@ class WaveInfo:
 		boss_enemies = p_boss_enemies
 
 static var WAVES_INFO = [
-	WaveInfo.new([EnemyRotbull.LONG_NAME], [EnemyRotbull.LONG_NAME]), # 7
 	WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME]), # 1
 	WaveInfo.new([EnemyInfernalMinotaur.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME]), # 2
 	WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyNightArcher.LONG_NAME]), # 3
 	WaveInfo.new([EnemyBoneguard.LONG_NAME], [EnemyFrostboneArcher.LONG_NAME]), # 4
 	WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME]), # 5
 	WaveInfo.new([EnemyReflector.LONG_NAME, EnemyCrimsonWarlock.LONG_NAME], [EnemyCrimsonWarlock.LONG_NAME]), # 6
+	WaveInfo.new([EnemyBlowDigger.LONG_NAME], [EnemyRotbull.LONG_NAME]), # 7
 	WaveInfo.new([EnemyDeadShield.LONG_NAME], [EnemySilentShuriken.LONG_NAME]), # 8
 ]
 
@@ -96,20 +96,22 @@ static func create_next_wave() -> void:
 	Moomoo.apply_breath_sound()
 	InGameDialogsManager.show(InGameDialogsManager.wave(current_normal_wave + current_special_wave - 1))
 
+static func _get_extra_stats(multiplier: int) -> CombatStats:
+	var result := CombatStats.new()
+	result.set_agility(randi_range(6, 9) * multiplier)
+	result.set_strength(randi_range(6, 9) * multiplier)
+	result.set_intelligence(randi_range(6, 9) * multiplier)
+	result.set_physical_attack_power(randi_range(6, 11) * multiplier)
+	result.set_magic_attack_power(randi_range(6, 11) * multiplier)
+	return result
 
 static func _create_normal_wave() -> void:
 	if current_normal_wave + 1 > WAVES_INFO.size():
 		return print("All waves finished!")
-		
+
 	current_normal_wave += 1
 	GameManager.MY_PLAYER.statistics.set_normal_wave(current_normal_wave)
 	print("Wave " + str(current_normal_wave) + " started!")
-
-	extra_stats_by_wave.set_agility(randi_range(6, 9) * current_normal_wave)
-	extra_stats_by_wave.set_strength(randi_range(6, 9) * current_normal_wave)
-	extra_stats_by_wave.set_intelligence(randi_range(6, 9) * current_normal_wave)
-	extra_stats_by_wave.set_physical_attack_power(randi_range(6, 11) * current_normal_wave)
-	extra_stats_by_wave.set_magic_attack_power(randi_range(6, 11) * current_normal_wave)
 
 	_current_wave_info = WAVES_INFO[current_normal_wave - 1]
 
@@ -172,6 +174,8 @@ static func _try_create_special_wave() -> bool:
 static func _run_wave_spawn_async() -> void:
 	await _spawn_wave_enemies()
 
+	extra_stats_by_wave.accumulate_info(_get_extra_stats(1).get_info())
+
 
 static func _spawn_wave_enemies() -> void:
 	for i in range(ENEMIES_BY_ZONE):
@@ -204,14 +208,12 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 	enemy._boss_level = current_normal_wave if is_boss else 0
 
 	enemy.combat_stats.accumulate_info(extra_stats_by_wave.get_info())
-	if enemy._boss_level: enemy.combat_stats.accumulate_info(extra_stats_by_wave.get_info())
+	if enemy._boss_level: enemy.combat_stats.accumulate_info(_get_extra_stats(1).get_info())
 
 	for skill in enemy._skills:
 		if not skill: continue
 		skill.learned_level = min(int(((current_normal_wave - 1) / float(4))) + 1, 3)
 		# skill.learned_level = min(int(((current_normal_wave - 1) / float(WAVES_INFO.size()))) + 1, 3)
-
-	enemy.combat_stats.set_attack_speed(round(enemy.combat_stats.get_attack_speed() * (1.0 + randf_range(-0.05, 0.05)) * 100.0) / 100.0)
 
 	enemy.set_current_hp_and_mana()
 
@@ -219,7 +221,7 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 
 static func _wave_finilized() -> void:
 	for player in GameManager.get_players():
-		player.increment_current_gold(get_gold_earned_by_wave())
+		player.increment_current_gold(get_gold_earned_by_wave(), true, true)
 
 static func get_gold_earned_by_wave() -> int:
 	return current_normal_wave * Player.INITIAL_GOLD

@@ -29,6 +29,13 @@ var id: int = 0
 var combat_stats := CombatStats.new()
 var replicated: bool = false
 
+@export var current_gold: int:
+	set(_value):
+		current_gold = _value
+		if current_gold > 9999: current_gold_string = StringHelpers.format_float_compact(current_gold)
+		else: current_gold_string = StringHelpers.format_float(current_gold)
+var current_gold_string: String = ""
+
 @export var current_state: String:
 	set(value):
 		if _current_state == value: return
@@ -169,6 +176,12 @@ func is_alive() -> bool: return current_hp > 0
 # endregion GETTERs
 
 # region 	SETTERs
+func increment_current_gold(value_to_increment: int, add_to_stats: bool = true, play_sound: bool = true) -> void:
+	if current_hp <= 0: return
+	current_gold += value_to_increment
+	if add_to_stats: statistics.add_gold(value_to_increment)
+	if is_my_player() and play_sound: SoundsHelper.play_coins()
+
 func set_is_spawning(_is_spawning: bool) -> void: is_spawning = _is_spawning
 
 func set_summoned_helper(entity_name: String, duration: float) -> void:
@@ -186,6 +199,7 @@ func _client_init() -> void:
 	SpritesHelper.set_entity_sprites(self)
 
 func global_die(_killed_by: Entity, _expired: bool = false) -> void:
+	if self is Player: GlobalsEntityHelpers.set_group_by_value(Moomoo.instance, GlobalsEntityHelpers.GROUP_ENEMY)
 	is_dying = true
 	if _killed_by: _killed_by.statistics.register_kill()
 

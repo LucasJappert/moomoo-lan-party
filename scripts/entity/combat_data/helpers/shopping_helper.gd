@@ -18,7 +18,7 @@ func try_shop_item(_item: Item) -> bool:
 		_owner.hud.show_message_popup(LanguageManager.translate("Not enough space"), Color(1, 0, 0))
 		return false
 		
-	_owner.current_gold -= _item.buy_price
+	_owner.increment_current_gold(-_item.buy_price, false, true)
 
 	return true
 

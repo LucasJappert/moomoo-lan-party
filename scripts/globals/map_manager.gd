@@ -54,8 +54,10 @@ static func find_path(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
 	if current_time - _last_find_path_time_in_sec > 1.0: # 1 segundo
 		_last_find_path_time_in_sec = current_time
 		_find_path_counter = 0
+	if _find_path_counter > 200:
+		print("find_path se estaba ejecutando demasiado rapido!", _find_path_counter)
 	if _find_path_counter > 500:
-		print("find_path se está ejecutando demasiado rápido!")
+		print("find_path se está ejecutando demasiado rápido!", _find_path_counter)
 	
 	var path: Array[Vector2i] = _astar_grid.get_id_path(start, end, true)
 	if path.is_empty(): return []

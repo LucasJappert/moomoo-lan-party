@@ -8,7 +8,7 @@ static func create_and_add_instance() -> void:
 	_ITEMS[NAME] = Item.new(NAME)
 	_ITEMS[NAME].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, _ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
 	_ITEMS[NAME].set_chance_to_ignore_evasion(1)
-	_ITEMS[NAME].set_attack_speed(1)
+	_ITEMS[NAME].set_attack_speed_percent(1)
 	_ITEMS[NAME].set_intelligence(100)
 	_ITEMS[NAME].set_physical_attack_power(60)
 	_ITEMS[NAME].buy_price = 8500

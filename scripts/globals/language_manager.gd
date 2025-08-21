@@ -123,6 +123,10 @@ static var _translations := {
 	"Not enough space": {LangTypes.SPANISH: "No tienes suficiente espacio"},
 	"You Win": {LangTypes.SPANISH: "Has ganado"},
 	"You Lose": {LangTypes.SPANISH: "Has perdido"},
+	"Consumables": {LangTypes.SPANISH: "Consumibles"},
+	"Equipment Level 1": {LangTypes.SPANISH: "Equipos Nivel 1"},
+	"Equipment Level 2": {LangTypes.SPANISH: "Equipos Nivel 2"},
+	"Equipment Level 3": {LangTypes.SPANISH: "Equipos Nivel 3"},
 }
 
 ## ✅ Traducción basada en clave

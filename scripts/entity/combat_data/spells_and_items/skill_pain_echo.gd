@@ -10,7 +10,7 @@ static func create_and_add_instance() -> void:
 	
 	aux_array[0] = [0.3, 0.4, 0.5] # precent reflected
 	aux_array[1] = [100, 200, 300] # mana cost
-	aux_array[2] = [8, 10, 12] # duration
+	aux_array[2] = [6, 6, 6] # duration
 	aux_array[3] = [18, 16, 14] # cooldown
 	for i in AVAILABLE_LEVELS:
 		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 7

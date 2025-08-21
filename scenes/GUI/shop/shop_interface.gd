@@ -17,13 +17,18 @@ func _ready() -> void:
 	internal_close_shop()
 	_shop_button.on_pressed = _toggle_shop
 
-	var titles := ["Consumables:", "Equipment:"]
-	var filtered_items := [Item.get_items_by_consumable(true), Item.get_items_by_consumable(false)]
+	var titles := ["Consumables", "Equipment Level 1", "Equipment Level 2", "Equipment Level 3"]
+	var filtered_items := [
+		Item.get_items_by_consumable(true),
+		Item.get_items_no_consumables_by_level(0, 1400),
+		Item.get_items_no_consumables_by_level(1400, 4800),
+		Item.get_items_no_consumables_by_level(4800, 990000)
+	]
 	for i in range(titles.size()):
 		var container_item_by_types_clone := _container_item_by_types_model.duplicate()
 		container_item_by_types_clone.visible = true
 		var label_title = container_item_by_types_clone.get_node("LabelTitle") as Label
-		label_title.text = titles[i]
+		label_title.text = LanguageManager.translate(titles[i]) + ":"
 		var items_container = container_item_by_types_clone.get_node("ItemsContainer") as GridContainer
 		for child in items_container.get_children():
 			items_container.remove_child(child)
@@ -68,7 +73,7 @@ static func _on_shop_interface_clicked(_event: InputEventMouseButton) -> void:
 	if not DraggableSlot.ghost: return
 	if not GameManager.MY_PLAYER: return
 
-	GameManager.MY_PLAYER.increment_current_gold(int(DraggableSlot.ghost.item.get_sell_price()))
+	GameManager.MY_PLAYER.increment_current_gold(int(DraggableSlot.ghost.item.get_sell_price()), false, true)
 	GameManager.MY_PLAYER.update_item(null, DraggableSlot.ghost.slot_number - 1)
 
 	DraggableSlot.ghost.emit_drop(false)

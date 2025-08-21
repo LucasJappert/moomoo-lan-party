@@ -72,7 +72,7 @@ func _try_add_gold_to_player() -> void:
 	if not GameManager.GAME_RUNNING: return
 	if ObjectHelpers.is_null(GameManager.MY_PLAYER): return
 
-	GameManager.MY_PLAYER.increment_current_gold(1, false)
+	GameManager.MY_PLAYER.increment_current_gold(1, true, false)
 
 func _spawn_player_moomoo_and_enemies() -> void:
 	GameManager.spawn_player(HeroPickerScene.hero_picked_type)

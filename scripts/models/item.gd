@@ -179,6 +179,21 @@ static func get_items_by_consumable(_is_consumable: bool) -> Array[Item]:
 	
 	return filtered_items
 
+static func get_items_no_consumables_by_level(min_price: int = 0, max_price: int = 2000) -> Array[Item]:
+	var equipment_items := get_items_by_consumable(false)
+
+	var filtered_items := equipment_items.filter(
+		func(item: Item): return item.buy_price >= min_price and item.buy_price < max_price
+	)
+	
+	filtered_items.sort_custom(func(a: Item, b: Item):
+		if a.buy_price == b.buy_price: return a.my_name < b.my_name
+		return a.buy_price < b.buy_price
+	)
+	
+	return filtered_items
+
+
 static func get_item(_item_name: String, p_quantity: int = 1, new_copy: bool = true) -> Item:
 	if _ITEMS.is_empty(): initialize_items()
 	

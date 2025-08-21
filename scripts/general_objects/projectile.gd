@@ -19,16 +19,6 @@ var type: String
 
 static var projectile_frames: Dictionary[String, SpriteFrames] = {}
 
-# Trail params (editables en el inspector o por código)
-var trail_enabled: bool = false
-var trail_lifetime: float = 0.3
-var trail_amplitude: float = 12.0
-var trail_emission_rate: float = 35.0
-var trail_scale: float = 0.3
-var trail_forward_offset: float = 12.0
-var trail_start_color: Color = Color(1, 1, 1, 0.8)
-var trail_texture: Texture2D
-
 var _tick_acc: float = 0.0
 const FLY_TICK := 1.0 / 30.0 # 30 Hz
 var _fly_action: Callable = Callable()
@@ -52,8 +42,8 @@ func _ready() -> void:
 	for registered_class in ProjectileBase.REGISTERED_CLASSES:
 		registered_class.try_init(self)
 
-func _process(delta: float) -> void:
-	if trail_enabled: ParticleTrailHelper.process_one(self, delta)
+func _process(_delta: float) -> void:
+	pass
 
 # Nuevo: enlazás referencias directas (y mantenés los nombres por compatibilidad/red)
 func bind_refs(origin: Entity, target: Entity) -> void:

@@ -15,8 +15,9 @@ func _unhandled_input(event: InputEvent):
 
 		if event.keycode == KEY_I:
 			GUIScene.SHOW_DEBUG_DATA = not GUIScene.SHOW_DEBUG_DATA
-		if CONTROL_PRESSED and event.keycode == KEY_P:
-			AdminHelper.kill_all_enemies()
+		if CONTROL_PRESSED and event.keycode == KEY_P: AdminHelper.kill_all_enemies()
+		if CONTROL_PRESSED and event.keycode == KEY_O:
+			if Player.get_my_player(): Player.get_my_player().increment_current_exp(1000000)
 	
 
 	if event is InputEventMouseButton and event.pressed:

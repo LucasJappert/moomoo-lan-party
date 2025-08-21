@@ -8,12 +8,6 @@ static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 const MAX_LEVEL: int = 30
 @export var player_id: int = 0
 @export var current_exp: int = 0
-@export var current_gold: int:
-	set(_value):
-		current_gold = _value
-		if current_gold > 9999: current_gold_string = StringHelpers.format_float_compact(current_gold)
-		else: current_gold_string = StringHelpers.format_float(current_gold)
-var current_gold_string: String = ""
 @export var skill_points_to_assign: int:
 	set(_value):
 		skill_points_to_assign = _value
@@ -47,6 +41,8 @@ func _ready():
 # region 	GETTERs
 func is_my_player() -> bool:
 	return player_id == GameManager.MY_PLAYER_ID
+
+static func get_my_player() -> Player: return ObjectHelpers.get_safe_instance(GameManager.MY_PLAYER)
 # endregion GETTERs
 
 # region 	SETTERs
@@ -82,11 +78,6 @@ func level_up() -> void:
 	update_base_stats(combat_stats.get_info())
 	AnimationsHelper.apply_animation(self, AnimationsHelper.ANIMATION_NAMES.LEVEL_UP)
 
-func increment_current_gold(value_to_increment: int, play_sound: bool = true) -> void:
-	if current_hp <= 0: return
-	current_gold += value_to_increment
-	statistics.add_gold(value_to_increment)
-	if is_my_player() and play_sound: SoundsHelper.play_coins()
 # endregion SETTERs
 
 static func get_exp_per_level(_level: int) -> int:

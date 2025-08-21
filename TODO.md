@@ -5,9 +5,8 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Agregar barra de moomoo y jugador
-- Optimizar efectos de escudos que giran, fuego, colas de flechas (usar sistema de aprticulas)
 - Guardar registro de los últimos 10 ataques
+- Guardar partida desde la última ronda completada (sistema de archivos para poder luego restaurarlos)
 - Hacer al moomoo de rango cuando tiene menos de 50% y que tenga el item de multiple shot
 - Seguir ajustando items de rondas especiales
 - Eliminar summons de moomoo cuando muere
@@ -23,6 +22,7 @@
 - Agregar item que brinda un +30% de ataque mágico y físico y algo mas
 - Crear un item que crea 2 copias de si mismo, con los mismos atributos pero cada copia absorbe un 60% de daño extra
 
+- Agregar barra de moomoo y jugador
 - Agregar efecto al moomoo en sus estados
 - Quitar el funcionamiento del borde reemplazando por alguna flecha. Esto para poder aplicar cambios de colores con shaders
 - Crear ronda numero 9, con un enemigo que lanza cuchillas y otro que lanza piedras

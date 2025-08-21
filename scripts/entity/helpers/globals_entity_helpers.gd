@@ -157,3 +157,9 @@ static func set_group(entity: Entity) -> void:
 	if entity is Moomoo and not entity._is_awake: return entity.add_to_group(GROUP_ALLY)
 
 	entity.add_to_group(GROUP_ENEMY)
+	
+static func set_group_by_value(entity: Entity, value: StringName) -> void:
+	entity.remove_from_group(GROUP_ENEMY)
+	entity.remove_from_group(GROUP_ALLY)
+
+	entity.add_to_group(value)

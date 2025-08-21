@@ -87,6 +87,7 @@ func wake_up() -> void:
 
 	set_current_hp_and_mana()
 	update_base_stats(combat_stats.get_info())
+	GlobalsEntityHelpers.set_group(self)
 
 func _spawn_wave_up_effects() -> void:
 	for i in range(10):
@@ -95,6 +96,16 @@ func _spawn_wave_up_effects() -> void:
 		SmokeHelper.spawn_awaken_smoke_burst(GameManager.game_world.over_terrain_layer_layer_2, global_position + pos)
 		
 		for t in range(6):
+			pos = Vector2(randi_range(-noise, noise), randi_range(-noise, noise))
+			SmokeHelper.spawn_volcanic_sparks(GameManager.game_world.over_terrain_layer_layer_2, global_position + pos)
+			
+func _spawn_on_promotion_effects() -> void:
+	for i in range(5):
+		var noise := MapManager.TILE_SIZE_INT * 1
+		var pos := Vector2(randi_range(-noise, noise), randi_range(-noise, noise))
+		SmokeHelper.spawn_awaken_smoke_burst(GameManager.game_world.over_terrain_layer_layer_2, global_position + pos)
+		
+		for t in range(3):
 			pos = Vector2(randi_range(-noise, noise), randi_range(-noise, noise))
 			SmokeHelper.spawn_volcanic_sparks(GameManager.game_world.over_terrain_layer_layer_2, global_position + pos)
 
@@ -128,7 +139,7 @@ static func get_new_instance() -> Moomoo:
 	moomoo.global_position = MapManager.cell_to_world(MapManager.get_safe_cell(SPAWN_POSITION))
 	moomoo.combat_stats.set_hp(50000)
 	moomoo.combat_stats.set_hp_regeneration_points(50)
-	moomoo.combat_stats.set_mana_regeneration_points(500)
+	moomoo.combat_stats.set_mana_regeneration_points(200)
 	moomoo.combat_stats.set_move_speed(2)
 	moomoo.combat_stats.set_attack_speed(1.2)
 	moomoo.combat_stats.set_attack_range(CombatStats.MIN_ATTACK_RANGE)
@@ -181,6 +192,7 @@ func _state_from_pct(pct: float) -> LifeState:
 	return LifeState.HEALTHY
 
 func _on_promotion(state: LifeState) -> void:
+	_spawn_on_promotion_effects()
 	_effects_per_second += _EFFECTS_EXTRA_PER_STATE
 	SoundsHelper.play_sfx(MOOMOO_PROMOTION_WAV, 0, 2)
 	if state == LifeState.WOUNDED:

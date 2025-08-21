@@ -23,7 +23,6 @@ static func initialize_from_name(_name: String, player: Player) -> void:
 	player.update_base_stats(stats.get_info())
 
 static func _commons_initialize(player: Player, stats: CombatStats) -> void:
-	stats.set_hp(100000)
 	stats.set_physical_attack_power(10)
 	stats.set_crit_chance(0.05)
 	stats.set_crit_multiplier(1.5)
@@ -40,6 +39,9 @@ static func _commons_initialize(player: Player, stats: CombatStats) -> void:
 	# player.add_item(Item.get_item(ItemMultiShot.NAME, 1, true))
 	# player.add_item(Item.get_item(ItemTrinityBoost.NAME, 1, true))
 	# player.add_item(Item.get_item(ItemDeadeye.NAME, 1, true))
+	# stats.set_hp(100000)
+	# stats.set_physical_attack_power(10000)
+	# stats.set_attack_speed(5)
 
 
 static func get_rect_frames(pos: Vector2i) -> Array[Rect2]:
