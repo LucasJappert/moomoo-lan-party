@@ -141,3 +141,19 @@ static func grants_random_skills(entity: Entity, learned_level: int = 1) -> void
 
 		if available_skills.size() <= 0: continue
 		available_skills.erase(random_skill)
+
+
+const GROUP_ENEMY: StringName = &"player_enemy"
+const GROUP_ALLY: StringName = &"player_ally"
+static func set_group(entity: Entity) -> void:
+	entity.remove_from_group(GROUP_ENEMY)
+	entity.remove_from_group(GROUP_ALLY)
+
+	if entity is Player: return entity.add_to_group(GROUP_ALLY)
+
+	if entity.summoned_helper:
+		if entity.summoned_helper.summoned_by_name == GameManager.MY_PLAYER_NAME: return entity.add_to_group(GROUP_ALLY)
+	
+	if entity is Moomoo and not entity._is_awake: return entity.add_to_group(GROUP_ALLY)
+
+	entity.add_to_group(GROUP_ENEMY)

@@ -80,15 +80,15 @@ func get_players() -> Array[Entity]:
 func get_player_enemies() -> Array[Entity]:
 	var result: Array[Entity] = []
 	for entity in GameManager.get_entities():
-		if not _is_player_enemy(entity): continue
+		if entity.is_ally_of_player(): continue
 		result.append(entity)
 	return result
 
 func get_player_allies(include_player: bool) -> Array[Entity]:
 	var result: Array[Entity] = []
 	for entity in GameManager.get_entities():
-		if not include_player and entity == GameManager.MY_PLAYER: continue
-		if _is_player_enemy(entity): continue
+		if entity.is_enemy_of_player(): continue
+		if not include_player and entity.is_my_player(): continue
 		result.append(entity)
 	return result
 
@@ -156,13 +156,4 @@ func get_gui_scene() -> Node: return game_world.gui_scene
 # endregion GETTERs
 
 # region 		INTERNAL AUXILIARY METHODS
-static func _is_player_enemy(entity: Entity) -> bool:
-	if not entity: return false
-	if not GameManager.MY_PLAYER:
-		if not entity.summoned_helper: return true
-		if entity.summoned_helper.summoned_by_name == GameManager.MY_PLAYER_NAME: return false
-	if entity.summoned_helper and entity.summoned_helper.summoned_by_name == GameManager.MY_PLAYER_NAME: return false
-	if entity == GameManager.MY_PLAYER: return false
-	if entity is Moomoo and not Moomoo.is_awake(): return false
-	return true
 # endregion 	INTERNAL AUXILIARY METHODS

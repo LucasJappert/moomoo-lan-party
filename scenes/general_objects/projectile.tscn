@@ -14,7 +14,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_5icix")
 }],
 "loop": true,
-"name": &"test",
+"name": &"default",
 "speed": 5.0
 }]
 
@@ -28,4 +28,3 @@ unique_name_in_owner = true
 texture_filter = 3
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_6oe5n")
-animation = &"test"

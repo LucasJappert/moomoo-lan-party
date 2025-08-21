@@ -16,19 +16,40 @@ static func try_init(_projectile: Projectile):
 	set_frames(_projectile, RECTS)
 	_projectile.sprite.play("default")
 	_projectile.sprite.scale = Vector2(0.6, 0.7)
+	# _projectile.trail_texture = SpritesHelper.get_texture_from_region(SMOKE_RECT)
 	SoundsHelper.play_projectile_hit(ProjectileArrow.NAME, VOLUME)
 
+	# ParticleTrailHelper.attach_to_projectile(_projectile, make_random_green_supplier(0.8))
+
+
+# static func make_random_green_supplier(alpha: float = 0.8, dark_probability: float = 0.6) -> Callable:
+# 	return func(_p: Projectile) -> Color:
+# 		var h := randf_range(0.28, 0.36) # green band
+# 		var is_dark: bool = randf() < clamp(dark_probability, 0.0, 1.0)
+
+# 		var s: float
+# 		var v: float
+# 		if is_dark:
+# 			# darker greens
+# 			s = randf_range(0.65, 0.95)
+# 			v = randf_range(0.45, 0.65)
+# 		else:
+# 			# bright greens
+# 			s = randf_range(0.70, 1.00)
+# 			v = randf_range(0.85, 1.00)
+
+# 		return Color.from_hsv(h, s, v, alpha)
 
 static func actions_while_flying(_projectile: Projectile):
 	if NAME != _projectile.type: return
 
 	const LIFETIME := 0.2
-	const AMPLITUDE := 15
+	const AMPLITUDE := 8
 	var forward := Vector2(1, 0).rotated(_projectile.rotation)
 	var lateral := Vector2(0, 1).rotated(_projectile.rotation)
 	var forward_offset := forward * 6
 
-	for i in 5:
+	for i in 2:
 		var offset := lateral * randf_range(-AMPLITUDE, AMPLITUDE)
 		# var spawn := Vector2(randf_range(-4, 4), randf_range(-2, 2))
 		var pos := _projectile.global_position + forward_offset

@@ -11,6 +11,7 @@ var statistics: Statistics
 var extra_info := ExtraInfo.new()
 var movement_helper: MovementHelper
 
+
 @onready var hud: HUD = $HUD
 @onready var projectile_zone: CollisionShape2D = %ProjectileZone
 @onready var body_sprite: AnimatedSprite2D = %BodySprite
@@ -61,6 +62,9 @@ func _ready():
 	_client_init()
 	call_deferred("_post_ready")
 	ready_combat_data()
+
+	# Revisar el find_path para cuando tenemos un target attack y estamos a rango
+	GlobalsEntityHelpers.set_group(self)
 
 	if summoned_helper:
 		summoned_helper = SummonedHelper.new(self, summoned_helper.summoned_by_name, summoned_helper.lifetime_sec)
@@ -124,18 +128,9 @@ func get_summoned_entities(unit_names: Array[String] = []) -> Array[Entity]:
 		if entity.extra_info.key_type in unit_names: result.append(entity)
 	return result
 
-func is_enemy_of_player() -> bool:
-	# TODO: Review this function for recursive summons
-	if summoned_helper: return not summoned_helper.summoned_by_name == GameManager.MY_PLAYER_NAME
-	if not GameManager.MY_PLAYER: return false
-	if GameManager.MY_PLAYER in get_my_enemies(): return true
-	return false
+func is_enemy_of_player() -> bool: return is_in_group(GlobalsEntityHelpers.GROUP_ENEMY)
 
 func is_ally_of_player() -> bool: return not is_enemy_of_player()
-
-func is_ally_of_moomoo() -> bool:
-	if Moomoo.is_awake(): return GameManager.get_player_enemies().has(self)
-	return false
 
 func is_in_range(target_cell: Vector2i, distance_in_tiles: int) -> bool:
 	return (target_cell - movement_helper.current_cell).length() <= distance_in_tiles

@@ -616,12 +616,18 @@ func is_ranged() -> bool: return not is_melee()
 
 # region TRY PHISICAL ATTACK
 func try_physical_attack(_delta: float) -> bool:
-	if not _my_owner.multiplayer.is_server(): return false
-	if _my_owner is Moomoo and not Moomoo.is_awake(): return false
-	if _my_owner.is_dying: return false
-	if _my_owner.is_dead(): return false
-	if _my_owner.current_state != EntityState.States.IDLE: return false # Cant attack while moving
 	if _my_owner.is_spawning: return false
+	if _my_owner.current_state != EntityState.States.IDLE: return false # Cant attack while moving
+	if _my_owner.is_dead(): return false
+	if _my_owner is Moomoo and not Moomoo.is_awake(): return false
+
+	if not _my_owner.can_attack: return false
+	if _my_owner.velocity != Vector2.ZERO: return false # If moving, can't attack
+	if is_stunned: return false # If stunned, can't attack
+
+	var now = Time.get_ticks_msec()
+	var interval_ms = 1000.0 / cache_total_stats.get_total_attack_speed()
+	if now - last_physical_hit_time < interval_ms: return false # If enough time has passed, can attack
 	
 	# Solo para unidades del server cuando el moomoo esta dormido
 	if Moomoo.get_instance() and not Moomoo.is_awake() and _my_owner.is_enemy_of_player():
@@ -633,7 +639,7 @@ func try_physical_attack(_delta: float) -> bool:
 	if target_to_attack == null: return false
 	if target_to_attack.is_dead(): return false
 
-	if not can_physical_attack(): return false
+	if not GlobalsEntityHelpers.is_target_in_attack_range(_my_owner, target_to_attack): return false
 
 	execute_physical_attack()
 	last_physical_hit_time = Time.get_ticks_msec()
@@ -702,18 +708,6 @@ func launch_projectile(final_target: Entity, _extra_projectile: bool) -> bool:
 
 	return executed_shot
 
-func can_physical_attack() -> bool:
-	if not _my_owner.can_attack: return false
-	if _my_owner.velocity != Vector2.ZERO: return false # If moving, can't attack
-	if is_stunned: return false # If stunned, can't attack
-
-	var now = Time.get_ticks_msec()
-	var interval_ms = 1000.0 / cache_total_stats.get_total_attack_speed()
-	if now - last_physical_hit_time < interval_ms: return false # If enough time has passed, can attack
-
-	if not GlobalsEntityHelpers.is_target_in_attack_range(_my_owner, target_to_attack): return false
-
-	return true
 # endregion TRY PHISICAL ATTACK
 
 # region 	SERVER METHODS

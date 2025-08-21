@@ -4,6 +4,8 @@ extends Node2D
 
 const PROJECTILE_SCENE = preload("res://scenes/general_objects/projectile.tscn")
 
+var _origin_ref: Entity
+var _target_ref: Entity
 @onready var general_objects_container = %GeneralObjectsContainer
 var is_extra_projectile := false
 var speed: float = 400.0
@@ -17,8 +19,48 @@ var type: String
 
 static var projectile_frames: Dictionary[String, SpriteFrames] = {}
 
-func _ready():
-	for registered_class in ProjectileBase.REGISTERED_CLASSES: registered_class.try_init(self)
+# Trail params (editables en el inspector o por código)
+var trail_enabled: bool = false
+var trail_lifetime: float = 0.3
+var trail_amplitude: float = 12.0
+var trail_emission_rate: float = 35.0
+var trail_scale: float = 0.3
+var trail_forward_offset: float = 12.0
+var trail_start_color: Color = Color(1, 1, 1, 0.8)
+var trail_texture: Texture2D
+
+var _tick_acc: float = 0.0
+const FLY_TICK := 1.0 / 30.0 # 30 Hz
+var _fly_action: Callable = Callable()
+
+func _ready() -> void:
+	var sf: SpriteFrames = sprite.sprite_frames # <- correcto en Godot 4
+	if sf.has_animation("default") and sf.get_frame_count("default") <= 1:
+		# Animación de 1 frame: dejalo estático (ahorra CPU)
+		sprite.stop()
+		sprite.animation = "default"
+		sprite.frame = 0
+	else: sprite.play("default")
+
+	# Resolvemos 1 sola vez qué clase maneja este tipo
+	for klass in ProjectileBase.REGISTERED_CLASSES:
+		if klass.NAME == type:
+			_fly_action = Callable(klass, "actions_while_flying")
+			break
+
+	# try_init de la clase concreta (si lo usás)
+	for registered_class in ProjectileBase.REGISTERED_CLASSES:
+		registered_class.try_init(self)
+
+func _process(delta: float) -> void:
+	if trail_enabled: ParticleTrailHelper.process_one(self, delta)
+
+# Nuevo: enlazás referencias directas (y mantenés los nombres por compatibilidad/red)
+func bind_refs(origin: Entity, target: Entity) -> void:
+	_origin_ref = origin
+	_target_ref = target
+	origin_entity_name = origin.name
+	target_entity_name = target.name
 
 func get_target_entity() -> Entity:
 	return GameManager.get_entity(target_entity_name)
@@ -29,21 +71,35 @@ func _get_origin_entity() -> Entity:
 func _physics_process(delta: float) -> void:
 	if MainScene.PAUSED: return
 	_server_move(delta)
-	for registered_class in ProjectileBase.REGISTERED_CLASSES: registered_class.actions_while_flying(self)
+
+	_tick_acc += delta
+	if _tick_acc >= FLY_TICK:
+		_tick_acc = 0.0
+		_update_rotation_and_fx() # se llama ~30 veces/seg
+
+func _update_rotation_and_fx() -> void:
+	if direction != Vector2.ZERO:
+		rotation = direction.angle()
+	# Llamamos SOLO a la clase que corresponde (ver 2b)
+	if _fly_action.is_valid():
+		_fly_action.call(self)
 
 func _server_move(delta: float):
-	if not multiplayer.is_server():
-		return
+	if not multiplayer.is_server(): return
 
-	if get_target_entity() != null:
-		target_position = get_target_entity().projectile_zone.global_position
+	if _target_ref == null and target_entity_name != "":
+		_target_ref = GameManager.get_entity(target_entity_name)
+
+	if _target_ref != null:
+		target_position = _target_ref.projectile_zone.global_position
 		direction = (target_position - position)
-		rotation = direction.angle()
-
+		# (rotación la pasamos a un tick más bajo, ver punto 2)
+	
 	if direction != Vector2.ZERO:
 		position += direction.normalized() * speed * delta
 
-	if position.distance_to(target_position) < 10: _projectile_reached_target()
+	if position.distance_to(target_position) < 10:
+		_projectile_reached_target()
 
 func _projectile_reached_target():
 	if get_target_entity() != null && _get_origin_entity() != null:
@@ -57,6 +113,7 @@ static func get_instance_from_dict(dict: Dictionary) -> Projectile:
 	return instance
 
 static func launch(_origin: Entity, _target: Entity, _damage: int, _extra_projectile: bool = false):
+	# Seguir viendo la baja de FPS, al parecer puede que sea por los fors para las clases/items registradas
 	var projectile = PROJECTILE_SCENE.instantiate()
 	projectile.is_extra_projectile = _extra_projectile
 	projectile.type = _origin.projectile_type
@@ -67,5 +124,9 @@ static func launch(_origin: Entity, _target: Entity, _damage: int, _extra_projec
 	projectile.target_position = _target.projectile_zone.global_position
 	projectile.direction = (projectile.target_position - projectile.position).normalized()
 	projectile.rotation = projectile.direction.angle()
+
+	# 👇 cache refs locales para evitar GameManager.get_entity() por frame
+	projectile.bind_refs(_origin, _target)
+
 	GameManager.add_projectile(projectile)
 	projectile.queue_free()

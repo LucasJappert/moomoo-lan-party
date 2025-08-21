@@ -53,10 +53,8 @@ func set_color(p_color: Color) -> void:
 		_sprite.modulate = color
 
 func process() -> void:
-	if not is_instance_valid(_sprite):
-		return
-	if not is_instance_valid(_owner_entity):
-		_hovered = false
+	if not is_instance_valid(_sprite): return
+	if not is_instance_valid(_owner_entity): _hovered = false
 
 	# Mostrar solo si hay hover + ALT presionada
 	var should_show := _hovered and KeyboardController.ALT_PRESSED
