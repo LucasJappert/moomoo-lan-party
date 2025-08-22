@@ -13,6 +13,7 @@ var effects_helper := EffectsHelper.new()
 @export var projectile_type: String = ProjectileBase.NONE
 @export var is_stunned: bool = false
 var is_silenced: bool = false
+var is_invulnerable: bool = false
 var _skills: Array[Skill] = []
 var _items: Array[Item] = []
 
@@ -109,6 +110,10 @@ func _process_on_server(_delta: float):
 
 	update_active_skills(_delta)
 
+	is_invulnerable = false
+	if get_active_skill(SkillUnbreakable.NAME):
+		is_invulnerable = true
+
 func server_execute_physical_damage(_target: Entity, _extra_projectile: bool) -> void:
 	if _my_owner.multiplayer.is_server() == false: return
 	if _target == null: return
@@ -133,6 +138,7 @@ func server_execute_physical_damage(_target: Entity, _extra_projectile: bool) ->
 	_target.server_receive_damage(_di, _my_owner)
 
 func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
+	if is_invulnerable: return
 	if _di.total_damage == 0: return
 	if _my_owner.multiplayer.is_server() == false: return
 	if _my_owner.is_spawning: return
@@ -181,6 +187,11 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 		active_skill.on_damage_received(_attacker, _di.total_damage)
 
 # region SETTERs
+func set_invulnerability(value: bool) -> void: is_invulnerable = value
+func verify_invulnerability() -> void:
+	is_invulnerable = false
+	if get_active_skill(SkillUnbreakable.NAME): return set_invulnerability(true)
+
 func update_current_hp(value_to_increase: int, _attacker: Entity = null) -> void:
 	if value_to_increase == 0: return
 	if current_hp <= 0: return
@@ -215,7 +226,7 @@ func update_active_skills(_delta: float) -> void:
 		_active_skills[i].process_skill(_my_owner, _delta)
 		if not _active_skills[i].active:
 			_remove_active_skill(_active_skills[i], i)
-
+	
 func _remove_active_skill(_skill: SkillBase, index: int) -> void:
 	_active_skills.remove_at(index)
 
@@ -250,6 +261,7 @@ func _try_to_apply_effect(_skill: SkillBase):
 	effects_helper.add_effect(new_effect)
 
 func apply_stun(_seconds: float, force_update: bool = false) -> void:
+	if is_invulnerable: return
 	if force_update:
 		effects_helper.remove_effect_by_name(CombatEffect.STUN_NAME)
 		StunEffect.remove_all_from(_my_owner.front_animations_node)

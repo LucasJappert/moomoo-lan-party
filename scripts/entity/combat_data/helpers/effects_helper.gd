@@ -39,6 +39,7 @@ func add_effect(p_effect: CombatEffect) -> void:
 	notify_changes_to_subscribers()
 
 	if p_effect.hostile_freeze():
+		print("Applying frost hit animation")
 		AnimationsHelper.apply_frost_hit_animation(_my_owner)
 	if p_effect.hostile_stun():
 		_my_owner.hud.add_stun_progress_bar(p_effect.duration_in_seconds)

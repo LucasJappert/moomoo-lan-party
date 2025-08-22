@@ -3,7 +3,7 @@ class_name SoundsHelper
 
 const FORCE_MUTED := false
 static var _MUTED := false
-const MAX_PLAYERS := 30
+const MAX_PLAYERS := 50
 static var _players: Array[AudioStreamPlayer] = []
 static var _initialized := false
 static var _playing_counts: Dictionary = {} # ← sonido_path : cantidad

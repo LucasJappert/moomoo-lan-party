@@ -12,8 +12,8 @@ static func create_and_add_instance() -> void:
 
 	aux_array[0] = [60, 100, 140] # magic_damage
 	aux_array[1] = [120, 200, 320] # mana cost
-	aux_array[2] = [10, 8, 6] # cooldown
-	aux_array[3] = [1, 2, 3] # stun_duration
+	aux_array[2] = [8, 7, 6] # cooldown
+	aux_array[3] = [2, 2, 2] # stun_duration
 	for i in AVAILABLE_LEVELS:
 		SKILLS[NAME].item_skill_base[i].instant_use = false
 		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 7
@@ -37,8 +37,8 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 	return true
 	
 static func apply_strike(_owner: Entity, _target: Entity, _learned_skill: ItemSkillBase) -> void:
-	_apply_animation(_target)
 	SoundsHelper.play_electric_1()
+	_apply_animation(_target)
 
 	var total_magic_damage = _owner.cache_total_stats.get_total_magic_damage(int(_learned_skill.float_dict["magic_damage"]))
 	var _di := DamageInfo.new(total_magic_damage, _learned_skill.damage_type, _owner)

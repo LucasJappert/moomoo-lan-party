@@ -91,7 +91,7 @@ static func aux_accumulate(current: Dictionary[String, float], info_to_add: Dict
 			continue
 			
 		if key == CRIT_MULTIPLIER:
-			current[key] = min(current[key], info_to_add[key])
+			current[key] = max(current[key], info_to_add[key])
 			continue
 			
 		if key == STUN_DURATION:
@@ -220,8 +220,7 @@ func set_move_speed(value: float) -> void:
 	set_value(MOVE_SPEED, value)
 func set_move_speed_percent(value: float) -> void:
 	set_value(MOVE_SPEED_PERCENT, value)
-func set_freeze_duration(value: float) -> void:
-	set_value(FREEZE_DURATION, value)
+func set_freeze_duration(value: float) -> void: set_value(FREEZE_DURATION, value)
 func set_life_steal_percent(value: float) -> void:
 	set_value(LIFE_STEAL_PERCENT, value)
 func set_hp_regeneration_points(value: int) -> void:
@@ -307,8 +306,7 @@ func hostile_stun() -> bool:
 	return get_stun_duration() > 0 && get_stun_chance() == 0
 func hostile_silence() -> bool:
 	return get_silence_duration() > 0
-func hostile_freeze() -> bool:
-	return get_freeze_duration() > 0
+func hostile_freeze() -> bool: return get_freeze_duration() > 0
 
 func _aux_formatted_description_by_key(key: String) -> String:
 	var words := key.split("_")
@@ -365,8 +363,7 @@ func get_move_speed() -> float:
 	return _get_value(MOVE_SPEED)
 func get_move_speed_percent() -> float:
 	return _get_value(MOVE_SPEED_PERCENT)
-func get_freeze_duration() -> float:
-	return _get_value(FREEZE_DURATION)
+func get_freeze_duration() -> float: return _get_value(FREEZE_DURATION)
 func get_life_steal_percent() -> float:
 	return _get_value(LIFE_STEAL_PERCENT)
 func get_hp_regeneration_points() -> int:

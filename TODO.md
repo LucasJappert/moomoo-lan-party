@@ -5,13 +5,7 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Llevar a richtext a los mensajes del chat para poder imprimir YOU WIN o LOST con colores. La escena de endgame no haria falta, la opcion del menu lo reemplazamos por un Restart Game
-- Dar algo de chances
-- Prohibir ataques cuando se usa unbreakable
-- Ultimos daños considerar reflejos sin owner. Acomodarlo en la ventana de endgame conun tooltip
-- AUmentar cantidad de streamplayers
-- Mejorar absorb and release. Bajar earthshatter. Agregar item groso de critico y algo mas. Oko con skill shock y stun eterno
-- Guardar registro de los últimos 10 ataques
+- Revisar ataque speed del archer
 - Guardar partida desde la última ronda completada (sistema de archivos para poder luego restaurarlos)
 - Seguir ajustando items de rondas especiales
 - 🔵 Configurar skills moomoo en cada state

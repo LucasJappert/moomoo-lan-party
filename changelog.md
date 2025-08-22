@@ -2,6 +2,8 @@
 
 📆 18/08/2025
 
+- ✅ Add Cryo blade item, gives critical attributes, frost attacks
+- ✅ Carry richtext to chat messages to print YOU WIN or LOST with colors. The endgame scene wouldn't be needed, the menu option would be replaced by a Restart Game
 - ✅ Stop all sounds when resetting the game
 - ✅ Give players some gold per second
 - ✅ Generate dialogues from the start of the game until the end, including victory/defeat messages and thanks.

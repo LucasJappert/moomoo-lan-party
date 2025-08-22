@@ -40,7 +40,7 @@ static func _commons_initialize(player: Player, stats: CombatStats) -> void:
 	# player.add_item(Item.get_item(ItemTrinityBoost.NAME, 1, true))
 	# player.add_item(Item.get_item(ItemDeadeye.NAME, 1, true))
 	stats.set_hp(1000)
-	stats.set_physical_attack_power(10000)
+	stats.set_physical_attack_power(10)
 	stats.set_attack_speed(5)
 
 

@@ -20,9 +20,9 @@ func _ready() -> void:
 	var titles := ["Consumables", "Equipment Level 1", "Equipment Level 2", "Equipment Level 3"]
 	var filtered_items := [
 		Item.get_items_by_consumable(true),
-		Item.get_items_no_consumables_by_level(0, 1400),
-		Item.get_items_no_consumables_by_level(1400, 4800),
-		Item.get_items_no_consumables_by_level(4800, 990000)
+		Item.get_items_no_consumables_by_level(0, 1800),
+		Item.get_items_no_consumables_by_level(1800, 5000),
+		Item.get_items_no_consumables_by_level(5000, 990000)
 	]
 	for i in range(titles.size()):
 		var container_item_by_types_clone := _container_item_by_types_model.duplicate()
