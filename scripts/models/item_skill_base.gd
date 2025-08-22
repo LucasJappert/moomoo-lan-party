@@ -144,8 +144,7 @@ static func _try_apply_lifesteal(_attacker: Entity, _target: Entity, _di: Damage
 	var total_heal = int(max(1, _di.total_damage * _attacker.cache_total_stats.get_life_steal_percent()))
 	if total_heal <= 0: return
 
-	var new_di = DamageInfo.get_instance()
-	new_di.total_damage = - total_heal
+	var new_di = DamageInfo.new(-total_heal)
 	_attacker.global_receive_damage_or_heal(new_di)
 	_attacker.update_current_hp(total_heal)
 
@@ -170,7 +169,7 @@ static func _try_apply_cleave(_attacker: Entity, _target: Entity, _di: DamageInf
 	var cleave_damage: int = int(_di.total_damage * _cleave_percent)
 
 	for enemy in filtered_enemies:
-		var _cdi := DamageInfo.new(cleave_damage, _di.damage_type, _attacker.name)
+		var _cdi := DamageInfo.new(cleave_damage, _di.damage_type, _attacker)
 		_cdi.set_cleave_damage()
 		enemy.server_receive_damage(_cdi, _attacker)
 	

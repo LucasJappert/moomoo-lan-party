@@ -10,12 +10,13 @@ var _ORIGINAL_BALL_RECT_POS_Y: float
 var reseted_gui := false
 @onready var text_ip = %TextIP
 @onready var countdown_scene: CountdownScene = %CountdownScene
+@onready var _restart_button: MyButton = %RestartButton
 
 var _top_left_target: Entity
 var _bottom_target: Entity
 @onready var in_game_statistics: InGameStatistics = %InGameStatisticsScene
 @onready var draggable_slots_container: Node = %DraggableSlotsContainer
-@onready var chat_label: Label = %ChatLabel
+@onready var rich_chat: RichTextLabel = %RichChat
 
 # region Panel TOP LEFT
 const _RECT_TARGET_MAX_HP = Rect2(81, 27, 189, 21)
@@ -72,7 +73,6 @@ static var RED_BALL_COLOR := Color.from_string("#cd0000ff", Color.WHITE)
 var delta: float
 
 func _ready() -> void:
-	reset_gui()
 	GUIStatsHelper._ready(self)
 	text_ip.text = "127.0.0.1"
 	# tailscale IP = 100.99.208.97
@@ -85,10 +85,18 @@ func _ready() -> void:
 	_ORIGINAL_BALL_POS_Y = _hp_ball.position.y
 	_ORIGINAL_BALL_RECT_POS_Y = _hp_ball.region_rect.position.y
 
+	
+	rich_chat.bbcode_enabled = true
+	rich_chat.autowrap_mode = TextServer.AUTOWRAP_WORD
+
 	_current_exp_rect.size.y = EXP_BAR_FULL_SIZE.y
 	_current_gold.text = ""
 	
 	_panel_tl.visible = false
+
+	EventBus.connect_to_game_ended(func(): _restart_button.visible = true)
+	_restart_button.visible = false
+	_restart_button.on_pressed = GameManager.restart_game
 
 	%HpBallCircle.connect("mouse_entered", func():
 		if not _bottom_target: return
@@ -107,13 +115,16 @@ func _ready() -> void:
 	_defense_value.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
 	
 	EventBus.connect_to_new_target_view_selected(_on_new_target_view_selected)
+	EventBus.connect_to_game_ended(_on_game_ended)
+	
+	reset_gui()
 
 func _on_join_as_player_pressed() -> void:
 	MultiplayerManager.become_client()
 
 
 func reset_gui() -> void:
-	chat_label.text = ""
+	rich_chat.clear()
 	_hp_label.text = str(0)
 	_mana_label.text = str(0)
 	reseted_gui = true
@@ -183,6 +194,9 @@ func _on_new_target_view_selected(_owner: Entity, _viewed_target: Entity) -> voi
 	if not _viewed_target: return
 	var region_rect = SpritesHelper.get_region_rect_of_sprite(_viewed_target.body_sprite)
 	set_target_avatar_region(region_rect)
+
+func _on_game_ended() -> void:
+	in_game_statistics.visible = true
 # endregion SETTERS
 
 # region	GETTERs

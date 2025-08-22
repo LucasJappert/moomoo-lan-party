@@ -37,7 +37,7 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 	var targets := GlobalsEntityHelpers.get_closest_entities(_target.global_position, _caster.get_my_enemies(), 6, _learned_skill.max_targets - 1, [_target])
 
 	for target in targets:
-		var _di := DamageInfo.new(total_damage, _learned_skill.damage_type)
+		var _di := DamageInfo.new(total_damage, _learned_skill.damage_type, null)
 		var critical_damage = _caster.try_critical_hit(total_damage)
 		var total_damage_and_crit = total_damage + critical_damage
 

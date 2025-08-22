@@ -5,14 +5,16 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
+- Llevar a richtext a los mensajes del chat para poder imprimir YOU WIN o LOST con colores. La escena de endgame no haria falta, la opcion del menu lo reemplazamos por un Restart Game
+- Dar algo de chances
+- Prohibir ataques cuando se usa unbreakable
+- Ultimos daños considerar reflejos sin owner. Acomodarlo en la ventana de endgame conun tooltip
+- AUmentar cantidad de streamplayers
+- Mejorar absorb and release. Bajar earthshatter. Agregar item groso de critico y algo mas. Oko con skill shock y stun eterno
 - Guardar registro de los últimos 10 ataques
 - Guardar partida desde la última ronda completada (sistema de archivos para poder luego restaurarlos)
-- Hacer al moomoo de rango cuando tiene menos de 50% y que tenga el item de multiple shot
 - Seguir ajustando items de rondas especiales
-- Eliminar summons de moomoo cuando muere
 - 🔵 Configurar skills moomoo en cada state
-- Desarrollar historia y mostrar diálogos en diferentes momentos
-- Efecto de sangrado de acuerdo al daño causado
 - Al finalizar las rondas, el moomoo se revela en contra del jugador. Agregar efectos en el suelo como rajaduras con lava. Hacer caer meteoritos desde el cielo, etc.
 - Agregar afecto de nubes
 - Agregar efecto de lluvia y rayos
@@ -22,6 +24,9 @@
 - Agregar item que brinda un +30% de ataque mágico y físico y algo mas
 - Crear un item que crea 2 copias de si mismo, con los mismos atributos pero cada copia absorbe un 60% de daño extra
 
+- Efecto de sangrado de acuerdo al daño causado
+- Eliminar summons de moomoo cuando muere
+- Hacer al moomoo de rango cuando tiene menos de 50% y que tenga el item de multiple shot
 - Agregar barra de moomoo y jugador
 - Agregar efecto al moomoo en sus estados
 - Quitar el funcionamiento del borde reemplazando por alguna flecha. Esto para poder aplicar cambios de colores con shaders

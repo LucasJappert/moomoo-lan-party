@@ -255,6 +255,9 @@ func _create_effect() -> void:
 	var random_pos := global_position + Vector2(randi_range(-_noise, _noise), randi_range(-_noise, _noise))
 	var cell := MapManager.world_to_cell(random_pos)
 	TileHazardManager.add_hazard(cell, _EFFECT_LIFETIME, 0.5, func(): TileHazardManager.on_hazard_tick_apply_damage_to_allies_of_player(cell))
+
+	random_pos = global_position + Vector2(randi_range(-_noise, _noise), randi_range(-_noise, _noise))
+	SmokeHelper.spawn_volcanic_sparks(GameManager.game_world.over_terrain_layer_layer_2, random_pos)
 	
 
 # endregion 	FLOOR EFFECTS SPAWNER

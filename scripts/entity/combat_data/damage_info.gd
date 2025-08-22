@@ -6,16 +6,20 @@ var projectile_type: String = ProjectileBase.NONE
 var is_extra_projectile: bool = false
 var damage_type: String = DamageType.PHYSICAL
 var attacker_name: String
+var attacker_key_type: String
 var can_be_evaded: bool = true
 var was_reflected: bool = false
 var temporal_damage: bool = false
 var was_a_cleave_damage: bool = false
 var is_static_damage: bool = false
 
-func _init(p_total_damage: int = 0, _damage_type: String = DamageType.PHYSICAL, _attacker_name: String = ""):
+func _init(p_total_damage: int = 0, _damage_type: String = DamageType.PHYSICAL, _attacker: Entity = null):
 	total_damage = p_total_damage
 	damage_type = _damage_type
-	attacker_name = _attacker_name
+	if ObjectHelpers.get_safe_instance(_attacker):
+		attacker_name = _attacker.name
+		attacker_key_type = _attacker.extra_info.key_type
+
 
 func set_cleave_damage() -> void:
 	was_a_cleave_damage = true
@@ -44,6 +48,14 @@ func is_physical_damage() -> bool:
 
 func is_zero_damage() -> bool:
 	return total_damage == 0 or total_damage == critical
+
+func get_safe_attacker_type() -> String:
+	if attacker_key_type: return attacker_key_type
+	if was_a_cleave_damage: return LanguageManager.translate("Cleave")
+	if was_reflected: return LanguageManager.translate("Reflect")
+	if is_static_damage: return LanguageManager.translate("Static")
+	if temporal_damage: return LanguageManager.translate("Temporal")
+	return LanguageManager.translate("Unknown")
 
 static func get_instance() -> DamageInfo:
 	return DamageInfo.new()

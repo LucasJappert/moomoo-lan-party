@@ -11,7 +11,7 @@ static func create_and_add_instance() -> void:
 
 	aux_array[0] = [2, 3, 4]
 	aux_array[1] = [100, 150, 200]
-	aux_array[2] = [0.5, 1, 1.5]
+	aux_array[2] = [0.4, 0.8, 1.2]
 	for i in AVAILABLE_LEVELS:
 		SKILLS[NAME].item_skill_base[i].target_to_enemy = true
 		SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = 2
@@ -42,7 +42,7 @@ static func try_to_use(_caster: Entity, _learned_skill: ItemSkillBase, _target: 
 	var total_magic_damage = _caster.cache_total_stats.get_total_magic_damage(magic_damage)
 
 	for _enemy in target_enemies:
-		var _di = DamageInfo.new(total_magic_damage, _learned_skill.damage_type, _caster.name)
+		var _di = DamageInfo.new(total_magic_damage, _learned_skill.damage_type, _caster)
 		_enemy.server_receive_damage(_di, _caster)
 		_enemy.apply_stun(_learned_skill.float_dict["stun_duration"], true)
 

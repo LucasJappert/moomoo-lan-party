@@ -47,7 +47,7 @@ func apply_strike(_owner: Entity) -> bool:
 	_set_last_target_impacted(next_target)
 
 	var total_magic_damage = _owner.cache_total_stats.get_total_magic_damage(int(learned_skill.float_dict["damage_per_target"]))
-	var _di := DamageInfo.new(total_magic_damage, learned_skill.damage_type, _owner.name)
+	var _di := DamageInfo.new(total_magic_damage, learned_skill.damage_type, _owner)
 	next_target.server_receive_damage(_di, _owner)
 	next_target.apply_stun(learned_skill.float_dict["ministun_in_seconds"])
 	

@@ -2,6 +2,7 @@ class_name Player
 
 extends Entity
 
+static var last_damages_received: Array[DamageInfo] = []
 const INITIAL_GOLD: int = 800
 const PLAYER_CELL_SPAWN: Vector2i = Vector2i(20, 12)
 static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
@@ -31,6 +32,7 @@ func set_player(data: Dictionary) -> void:
 func get_client_inputs(): return %ClientInputs
 
 func _ready():
+	last_damages_received.clear()
 	global_position = MapManager.cell_to_world(PLAYER_CELL_SPAWN)
 	super._ready()
 
@@ -42,9 +44,25 @@ func _ready():
 func is_my_player() -> bool:
 	return player_id == GameManager.MY_PLAYER_ID
 
-static func get_my_player() -> Player: return ObjectHelpers.get_safe_instance(GameManager.MY_PLAYER)
-# endregion GETTERs
+static func get_my_player() -> Entity: return ObjectHelpers.get_safe_instance(GameManager.MY_PLAYER)
 
+static func get_last_damages_message() -> String:
+	var result: String = ""
+	result += "----------------------------------------------------- \n"
+	result += LanguageManager.translate("Last received damages") + ":\n"
+	for damage_info in last_damages_received:
+		result += damage_info.get_safe_attacker_type()
+		if damage_info.was_a_cleave_damage: result += " (" + LanguageManager.translate("Cleave") + ")"
+		if damage_info.was_reflected: result += " (" + LanguageManager.translate("Reflect") + ")"
+		if damage_info.temporal_damage: result += " (" + LanguageManager.translate("Temporal") + ")"
+		result += ": " + StringHelpers.format_float(damage_info.total_damage)
+		result += " (" + damage_info.damage_type + ")"
+		if damage_info.critical > 0:
+			result += " - " + LanguageManager.translate("Critical") + ": " + StringHelpers.format_float(damage_info.critical)
+		result += "\n"
+	result += "-----------------------------------------------------"
+	return result
+# endregion GETTERs
 # region 	SETTERs
 func increment_current_exp(value: int) -> void:
 	if current_hp <= 0: return

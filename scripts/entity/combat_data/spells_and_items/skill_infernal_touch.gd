@@ -42,10 +42,7 @@ func process_skill(_owner: Entity, _delta: float) -> void:
 	time_accumulator = time_accumulator - time_interval
 
 	if ObjectHelpers.is_null(my_owner): return
-	var _di = DamageInfo.get_instance()
-	_di.total_damage = learned_skill.float_dict["damage_per_second"]
-	_di.attacker_name = str(caster.name) if caster else ""
-	_di.damage_type = learned_skill.damage_type
+	var _di = DamageInfo.new(int(learned_skill.float_dict["damage_per_second"]), learned_skill.damage_type, caster)
 	_di.temporal_damage = true
 
 	my_owner.server_receive_damage(_di, caster)

@@ -1,5 +1,11 @@
 extends Node
 
+const GAME_ENDED := "game_ended"
+signal game_ended()
+func emit_game_ended(): emit_signal(GAME_ENDED)
+func connect_to_game_ended(p_callback: Callable) -> void:
+	EventBus.connect(GAME_ENDED, p_callback)
+
 const HOVERED_ENTITY_CHANGED := "hovered_entity_changed"
 signal hovered_entity_changed(new_entity: Entity, prev_entity: Entity)
 func emit_hovered_entity_changed(new_entity: Entity, prev_entity: Entity) -> void:

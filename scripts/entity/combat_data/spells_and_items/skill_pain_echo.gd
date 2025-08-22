@@ -33,7 +33,7 @@ static func actions_after_effective_hit(_attacker: Entity, _target: Entity, _di:
 	if not skill_base: return false
 
 	var damage_to_reflect = maxi(1, roundi(_di.total_damage * skill_base.learned_skill.float_dict["percent_reflected"]))
-	var _dtf := DamageInfo.new(damage_to_reflect, DamageType.PURE, _target.name)
+	var _dtf := DamageInfo.new(damage_to_reflect, DamageType.PURE, _target)
 	_dtf.was_reflected = true
 	_attacker.server_receive_damage(_dtf, _target)
 

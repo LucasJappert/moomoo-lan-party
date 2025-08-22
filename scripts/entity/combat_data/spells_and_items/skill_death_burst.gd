@@ -29,7 +29,7 @@ static func actions_after_die(_owner: Entity, _killed_by: Entity) -> void:
 	var total_damage: int = int(_owner.get_full_health() * _learned_skill.float_dict["percentage_of_life_to_deal"])
 	if total_damage < 0: return
 
-	var _di := DamageInfo.new(total_damage, DamageType.MAGIC, _owner.name)
+	var _di := DamageInfo.new(total_damage, DamageType.MAGIC, _owner)
 	var nearest_enemies = GlobalsEntityHelpers.get_closest_entities(_owner.global_position, _owner.get_my_enemies(), _learned_skill.area_of_effect_in_tiles)
 	for enemy in nearest_enemies:
 		enemy.server_receive_damage(_di, _owner)

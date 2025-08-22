@@ -106,3 +106,4 @@ offset_right = 429.0
 offset_bottom = 619.0
 text = "Hide"
 force_width = 80
+border_color = Color(1, 1, 1, 1)

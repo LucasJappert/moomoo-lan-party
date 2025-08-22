@@ -78,10 +78,7 @@ func process_skill(_owner: Entity, _delta: float) -> void:
 
 func _apply_damage_to_enemies(damage: int) -> void:
 	if ObjectHelpers.is_null(_my_owner): return
-	var _di = DamageInfo.get_instance()
-	_di.total_damage = damage
-	_di.attacker_name = _my_owner.name
-	_di.damage_type = learned_skill.damage_type
+	var _di = DamageInfo.new(damage, learned_skill.damage_type, _my_owner)
 
 	var radius = learned_skill.area_of_effect_in_tiles
 	var targets = GlobalsEntityHelpers.get_closest_entities(_my_owner.global_position, _my_owner.get_my_enemies(), radius)

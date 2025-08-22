@@ -127,6 +127,13 @@ static var _translations := {
 	"Equipment Level 1": {LangTypes.SPANISH: "Equipos Nivel 1"},
 	"Equipment Level 2": {LangTypes.SPANISH: "Equipos Nivel 2"},
 	"Equipment Level 3": {LangTypes.SPANISH: "Equipos Nivel 3"},
+	"Critical": {LangTypes.SPANISH: "Crítico"},
+	"Last received damages": {LangTypes.SPANISH: "Últimos daños recibidos"},
+	"Cleave": {LangTypes.SPANISH: "Cleave"},
+	"Reflect": {LangTypes.SPANISH: "Reflect"},
+	"Static": {LangTypes.SPANISH: "Static"},
+	"Temporal": {LangTypes.SPANISH: "Temporal"},
+	"Unknown": {LangTypes.SPANISH: "Desconocido"},
 }
 
 ## ✅ Traducción basada en clave

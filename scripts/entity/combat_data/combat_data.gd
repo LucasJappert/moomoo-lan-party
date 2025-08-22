@@ -119,13 +119,10 @@ func server_execute_physical_damage(_target: Entity, _extra_projectile: bool) ->
 	var critical_damage = try_critical_hit(base_damage)
 	var total_damage = base_damage + critical_damage
 
-	var _di = DamageInfo.get_instance()
+	var _di = DamageInfo.new(total_damage, DamageType.PHYSICAL, _my_owner)
 	_di.is_extra_projectile = _extra_projectile
-	_di.total_damage = total_damage
 	_di.critical = critical_damage
 	_di.projectile_type = projectile_type
-	_di.damage_type = DamageType.PHYSICAL
-	_di.attacker_name = _my_owner.name
 	
 	for active_skill in _active_skills:
 		active_skill.actions_after_execute_physical_attack(_my_owner, _target, _di)
@@ -727,6 +724,12 @@ func global_receive_damage_or_heal(_di: DamageInfo):
 		_my_owner.hud.show_message_popup(str(abs(_di.total_damage)), Color(0, 1, 0))
 	
 	register_attacker(_di.get_attacker())
+
+	if _my_owner.is_my_player() and _di.total_damage > 0:
+		Player.last_damages_received.append(_di)
+		if Player.last_damages_received.size() > 5:
+			Player.last_damages_received.remove_at(0)
+
 
 var _actions_each_500_ms_timer: float = 0
 func _actions_each_500_ms(_delta: float) -> void:

@@ -27,7 +27,7 @@ static func _apply_strikes(_owner: Entity, _learned_skill: ItemSkillBase) -> voi
 		var magic_damage := int(enemy.current_hp * _learned_skill.float_dict["percent_damage_from_current_hp"])
 
 		var total_magic_damage = _owner.cache_total_stats.get_total_magic_damage(magic_damage)
-		var _di := DamageInfo.new(total_magic_damage, _learned_skill.damage_type, _owner.name)
+		var _di := DamageInfo.new(total_magic_damage, _learned_skill.damage_type, _owner)
 		_di.set_static_damage()
 		enemy.server_receive_damage(_di, _owner)
 	

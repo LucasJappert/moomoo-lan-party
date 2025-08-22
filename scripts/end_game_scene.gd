@@ -4,7 +4,7 @@ class_name EndGameScene
 @onready var _main_container: Control = %MainContainer
 @onready var _retry_button: MyButton = %RetryButton
 @onready var _statistic_label: Label = %StatisticLabel
-@onready var _defeat_label: Label = %DefeatLabel
+# @onready var _defeat_label: Label = %DefeatLabel
 
 const WIN_COLOR: Color = Color(0.5, 1.0, 0.5)
 const LOSE_COLOR: Color = Color(1.0, 0.5, 0.5)
@@ -21,6 +21,7 @@ func _verify_end_game(_entity_died: Entity, _killed_by: Entity) -> void:
 	if not GameManager.GAME_RUNNING: return
 	if not (_entity_died.is_my_player() or _entity_died is Moomoo): return
 
+	EventBus.emit_game_ended()
 	# Moomoo is enemy of player and is dead
 	if _entity_died is Moomoo:
 		if Moomoo.is_awake(): return _show_me(true)
@@ -37,17 +38,21 @@ func _show_me(did_win: bool) -> void:
 
 	_statistic_label.text = GameManager.MY_PLAYER.statistics.get_summary()
 
-	var final_chat := InGameDialogsManager.final_message(did_win) \
-	+"\n\n --------------------------------------------------- " \
-	+"\n" + InGameDialogsManager.thanks() \
-	+"\n --------------------------------------------------- "
+	var final_chat: String = ""
+	final_chat += "\n[font_size=20]%s[/font_size]" % Player.get_last_damages_message()
+	
+	var hex := "#038e36ff" if did_win else "#b52c2cff"
+	final_chat += "\n[color=%s]%s[/color]" % [hex, InGameDialogsManager.final_message(did_win)]
+	
+	final_chat += "\n---------------------------------------------------"
+	final_chat += "\n[font_size=20]%s[/font_size]" % InGameDialogsManager.thanks()
+	final_chat += "\n---------------------------------------------------"
 
 	InGameDialogsManager.show(final_chat, 60 * 60) # Mantenemos por 1 hora
-	_defeat_label.text = LanguageManager.translate("You Win" if did_win else "You Lose")
-	visible = true
-	apply_tween_when_appear()
-	_defeat_label.modulate = WIN_COLOR if did_win else LOSE_COLOR
-	# MainScene.set_paused(true, false)
+	# _defeat_label.text = LanguageManager.translate("You Win" if did_win else "You Lose")
+	# visible = true
+	# apply_tween_when_appear()
+	# _defeat_label.modulate = WIN_COLOR if did_win else LOSE_COLOR
 
 func apply_tween_when_appear():
 	_main_container.rotation = 0.0

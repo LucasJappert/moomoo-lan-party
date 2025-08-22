@@ -1,26 +1,30 @@
 class_name InGameDialogsManager
 
-static var _chat_label: Label
+static var _rich_chat: RichTextLabel
 static var _fade_tween: Tween
 
-static func get_chat_label() -> Label:
-	return GameManager.get_gui_scene().chat_label
+static func get_chat_label() -> RichTextLabel:
+	return GameManager.get_gui_scene().rich_chat
 
 static func show(text: String, visible_time_in_seconds: float = 5) -> void:
-	if not _chat_label: _chat_label = get_chat_label()
+	if not _rich_chat: _rich_chat = get_chat_label()
 
+	
+	_rich_chat.clear()
 	# Start fully visible and set new text
-	_chat_label.modulate.a = 1.0
-	_chat_label.text = text
+	_rich_chat.modulate.a = 1.0
+	_rich_chat.append_text(text)
+	# var chat_height = _rich_chat.get_content_height()
+	# _rich_chat.set_size(Vector2(_rich_chat.size.x, chat_height))
 
 	# Kill previous tween (if any) to avoid overlapping animations
 	if is_instance_valid(_fade_tween): _fade_tween.kill()
 
 	# Create a new tween: wait 5s, then fade out over 4s
-	_fade_tween = _chat_label.create_tween()
+	_fade_tween = _rich_chat.create_tween()
 	_fade_tween.set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
 	_fade_tween.tween_interval(visible_time_in_seconds) # <-- hold visible 5s
-	_fade_tween.tween_property(_chat_label, "modulate:a", 0.0, 4.0) # <-- fade to 0 in 4s
+	_fade_tween.tween_property(_rich_chat, "modulate:a", 0.0, 4.0) # <-- fade to 0 in 4s
 
 
 # --- Datos ES tipados ---

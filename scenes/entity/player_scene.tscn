@@ -8,7 +8,6 @@
 script = ExtResource("2_ylf3p")
 player_id = 0
 current_exp = 0
-current_gold = 0
 skill_points_to_assign = 0
 
 [node name="ClientInputs" type="Node2D" parent="." index="0"]

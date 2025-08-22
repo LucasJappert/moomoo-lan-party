@@ -48,7 +48,7 @@ static func static_actions_after_interval_trigger(_effect: CombatEffect) -> bool
 	if _effect.effect_name != NAME: return false
 	if ObjectHelpers.is_null(_effect.get_target()): return false
 
-	var _di := DamageInfo.new(15, DamageType.MAGIC, _effect.get_attacker_name())
+	var _di := DamageInfo.new(15, DamageType.MAGIC, _effect.get_attacker())
 	_di.temporal_damage = true
 	
 	_effect.get_target().server_receive_damage(_di, _effect.get_attacker())

@@ -40,7 +40,7 @@ func _apply_release(_attacker: Entity, _target: Entity) -> void:
 	if total_damage_to_release <= 0: return
 
 	for enemy in nearest_enemies:
-		enemy.server_receive_damage(DamageInfo.new(total_damage_to_release, DamageType.PHYSICAL, _attacker.name), _attacker)
+		enemy.server_receive_damage(DamageInfo.new(total_damage_to_release, DamageType.PHYSICAL, _attacker), _attacker)
 
 	var message := DamageType.PHYSICAL_EMOTI + " " + str(total_damage_to_release) + " " + DamageType.PHYSICAL_EMOTI
 	_attacker.hud.show_message_popup(message.to_upper(), Color(1, 1, 1), 0.4)
@@ -64,7 +64,7 @@ static func create_and_add_instance() -> void:
 		SKILLS[NAME].item_skill_base[i].area_of_effect_in_tiles = effect_radius
 		SKILLS[NAME].item_skill_base[i].float_dict["percent_to_release"] = float_array[i]
 		SKILLS[NAME].item_skill_base[i].duration_in_seconds = seconds_to_release
-		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.PHYSICAL
+		SKILLS[NAME].item_skill_base[i].damage_type = DamageType.PURE
 		SKILLS[NAME].item_skill_base[i].mana_cost = int_array1[i]
 		SKILLS[NAME].item_skill_base[i].cooldown = int_array[i]
 		SKILLS[NAME].item_skill_base[i].en_description = "Accumulates all damage received over " + StringHelpers.format_float(seconds_to_release) + " seconds. Then releases " + StringHelpers.format_percent(float_array[i]) + " of the accumulated damage as physical damage to all enemies within " + str(effect_radius) + " tiles."

@@ -43,7 +43,7 @@ static func on_hazard_tick_apply_damage_to_allies_of_player(_cell: Vector2i) -> 
 		var damage := int(entity.get_full_health() * _PERC_HEALTH_DAMAGE)
 		if damage < 1: continue
 
-		var _di := DamageInfo.new(damage, DamageType.PURE, "")
+		var _di := DamageInfo.new(damage, DamageType.PURE, null)
 		entity.server_receive_damage(_di, null)
 
 # ---------------------------

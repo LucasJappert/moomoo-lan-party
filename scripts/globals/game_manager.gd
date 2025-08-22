@@ -152,7 +152,7 @@ func set_my_player(player: Player) -> void:
 
 
 # region 	GETTERs
-func get_gui_scene() -> Node: return game_world.gui_scene
+func get_gui_scene() -> GUIScene: return game_world.gui_scene
 # endregion GETTERs
 
 # region 		INTERNAL AUXILIARY METHODS

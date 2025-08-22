@@ -19,9 +19,13 @@ func _ready():
 		if _paused and _show_menu: _show_me()
 		if not _paused: _hide_me()
 	)
+	EventBus.connect_to_game_ended(_on_game_ended)
 	_resume_button.on_pressed = func(): MainScene.set_paused(false)
 	_restart_button.on_pressed = GameManager.restart_game
 	_exit_button.on_pressed = func(): get_tree().quit()
+
+func _on_game_ended() -> void:
+	visible = false
 
 func _show_me() -> void:
 	SoundsHelper.play_sfx("res://sounds/generals/chains.wav", CHAIN_VOLUME, 2)

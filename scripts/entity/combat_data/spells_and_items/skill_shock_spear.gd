@@ -13,7 +13,7 @@ static func create_and_add_instance() -> void:
 	aux_array[0] = [60, 100, 140] # magic_damage
 	aux_array[1] = [120, 200, 320] # mana cost
 	aux_array[2] = [10, 8, 6] # cooldown
-	aux_array[3] = [2, 3, 4] # stun_duration
+	aux_array[3] = [1, 2, 3] # stun_duration
 	for i in AVAILABLE_LEVELS:
 		SKILLS[NAME].item_skill_base[i].instant_use = false
 		SKILLS[NAME].item_skill_base[i].cast_range_in_tiles = 7
@@ -41,7 +41,7 @@ static func apply_strike(_owner: Entity, _target: Entity, _learned_skill: ItemSk
 	SoundsHelper.play_electric_1()
 
 	var total_magic_damage = _owner.cache_total_stats.get_total_magic_damage(int(_learned_skill.float_dict["magic_damage"]))
-	var _di := DamageInfo.new(total_magic_damage, _learned_skill.damage_type, _owner.name)
+	var _di := DamageInfo.new(total_magic_damage, _learned_skill.damage_type, _owner)
 	_target.server_receive_damage(_di, _owner)
 
 	var enemies_to_stun := GlobalsEntityHelpers.get_closest_entities(_target.position, _owner.get_my_enemies(), _learned_skill.float_dict["stun_radius"])

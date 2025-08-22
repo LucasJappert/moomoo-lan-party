@@ -74,7 +74,7 @@ static func static_actions_after_effective_hit(_attacker: Entity, _target: Entit
 	var lightning_damage_percent := item.float_dict["lightning_damage_percent"]
 	var total_intelligence := _target.cache_total_stats.get_intelligence()
 	var lightning_damage := int(lightning_damage_base + lightning_damage_percent * total_intelligence)
-	var _ldi := DamageInfo.new(lightning_damage, DamageType.MAGIC, _target.name)
+	var _ldi := DamageInfo.new(lightning_damage, DamageType.MAGIC, _target)
 	for enemy in nearest_enemies:
 		AnimationsHelper.apply_lightning_animation(enemy)
 		enemy.server_receive_damage(_ldi, _target)
