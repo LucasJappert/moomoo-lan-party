@@ -56,7 +56,7 @@ func _try_set_next_current_target_pos() -> void:
 	if MapManager._astar_grid.is_point_solid(current_path[0]):
 		# Esto pasa cuando el siguiente tile ya fue ocupado, entonces hay que actualizar el path
 		if my_owner.is_my_player(): update_path()
-		else: controlled_update_path()
+		elif controlled_update_path() == false: return _clean_movements()
 		if current_path.is_empty(): return _clean_movements()
 
 	MapManager.set_cell_blocked(current_cell, false)
@@ -104,16 +104,18 @@ func set_target_cell(target_cell: Vector2i) -> void:
 	my_owner.register_attacker(null)
 	my_owner.set_target_to_attack(null)
 
-func controlled_update_path() -> void:
-	if _target_cell == null && _target_entity == null: return
+func controlled_update_path() -> bool:
+	if _target_cell == null && _target_entity == null: return false
 
 	# We do the following to update the current_path (useful for refreshing the path when an enemy has a tile blocked in the current path)
 	# if current_path.size() > 0:
 	var diff_time = Time.get_ticks_msec() - _last_current_path_update_time
-	if diff_time < _NEXT_PATH_RECALC_MS: return
+	if diff_time < _NEXT_PATH_RECALC_MS: return false
+
 	_last_current_path_update_time = Time.get_ticks_msec()
 
 	update_path()
+	return true
 
 func update_path() -> void:
 	var from_pos = current_target_pos if current_target_pos else my_owner.global_position
@@ -152,7 +154,7 @@ func _try_to_update_target_to_attack_of_my_player():
 
 	var nearest_enemy: Entity
 	var max_range := my_owner.vision_helper.radius_in_pixel
-	if my_owner.hold_terrain: max_range = my_owner.vision_helper.radius_in_pixel
+	if my_owner.hold_terrain: max_range = my_owner.range_attack_helper.radius_in_pixel
 	nearest_enemy = GlobalsEntityHelpers.get_nearest_entity(my_owner.global_position, my_owner.get_my_enemies(), max_range)
 
 	if nearest_enemy:

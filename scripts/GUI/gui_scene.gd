@@ -153,7 +153,9 @@ func _process(_delta: float) -> void:
 # region	SETTERS
 func _on_mouse_entered_hold_terrain_button() -> void:
 	if not _bottom_target: return
-	MyTooltip.show_tooltip("Hold terrain (Q)", "The hero will not be able to move")
+	MyTooltip.show_tooltip(
+		LanguageManager.translate("Hold terrain (Q)"),
+		LanguageManager.translate("The hero will not be able to move"))
 func _on_hold_terrain_button_pressed() -> void:
 	if not GameManager.MY_PLAYER: return
 	GameManager.MY_PLAYER.toogle_hold_terrain()

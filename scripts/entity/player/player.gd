@@ -3,7 +3,7 @@ class_name Player
 extends Entity
 
 static var last_damages_received: Array[DamageInfo] = []
-const INITIAL_GOLD: int = 88800
+const INITIAL_GOLD: int = 800
 const PLAYER_CELL_SPAWN: Vector2i = Vector2i(20, 12)
 static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 const MAX_LEVEL: int = 30
@@ -50,7 +50,8 @@ static func get_last_damages_message() -> String:
 	var result: String = ""
 	result += "----------------------------------------------------- \n"
 	result += LanguageManager.translate("Last received damages") + ":\n"
-	for damage_info in last_damages_received:
+	for i in range(min(5, last_damages_received.size())):
+		var damage_info: DamageInfo = last_damages_received[last_damages_received.size() - 1 - i]
 		result += damage_info.get_safe_attacker_type()
 		if damage_info.was_a_cleave_damage: result += " (" + LanguageManager.translate("Cleave") + ")"
 		if damage_info.was_reflected: result += " (" + LanguageManager.translate("Reflect") + ")"

@@ -8,7 +8,7 @@ const MY_PROGRESS_BAR := preload("res://scenes/entity/my_progress_bar_scene.tscn
 # @onready var _health_bar: ProgressBar = $HealthBar
 @onready var _label_container: PanelContainer = $PanelContainer
 @onready var _label: Label = $PanelContainer/Label
-const BAR_SIZE = 40.0
+const BAR_SIZE = 30.0
 const HIDE_BARS_AFTER_MILLISECONDS = 3000
 
 @onready var bars_container: VBoxContainer = $BarsContainer

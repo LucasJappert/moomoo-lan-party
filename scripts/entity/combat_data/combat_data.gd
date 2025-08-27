@@ -636,7 +636,7 @@ func _try_update_target_to_attack():
 
 	if _my_owner is Moomoo and not Moomoo.is_awake(): return
 
-	if _my_owner.is_ally_of_player():
+	if _my_owner.is_ally_of_player(): # Summoned units by the player
 		var targets := GlobalsEntityHelpers.get_closest_entities(_my_owner.global_position, _my_owner.get_my_enemies(), _my_owner.vision_helper.redius_in_tiles, 10)
 		if targets.size() > 0: set_target_to_attack(targets[0])
 		return
@@ -758,8 +758,7 @@ func global_receive_damage_or_heal(_di: DamageInfo):
 
 	if _my_owner.is_my_player() and _di.total_damage > 0:
 		Player.last_damages_received.append(_di)
-		if Player.last_damages_received.size() > 5:
-			Player.last_damages_received.remove_at(0)
+		if Player.last_damages_received.size() > 20: Player.last_damages_received.remove_at(0)
 
 
 var _actions_each_500_ms_timer: float = 0

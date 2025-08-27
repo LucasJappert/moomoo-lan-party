@@ -5,8 +5,9 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Ver no movimiento player cuando hay target en area de vision (igual para summons)
-- Ver superposición de enemigos
+- Grito de Moomoo cuando despierta
+- Aumentar hp de enemigos por oleada
+- Ver problema de sonido de flechas y escarcha
 - Save game from the last completed round (filesystem-based saves to restore later).
 - Keep tuning items for special rounds.
 - Add cloud effect.
