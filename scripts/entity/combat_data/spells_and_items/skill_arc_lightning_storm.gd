@@ -65,7 +65,7 @@ static func create_and_add_instance() -> void:
 	SKILLS[NAME] = Skill.new(NAME, SkillType.ACTIVE)
 	SKILLS[NAME].region_rect = Rect2(ATLAS_START_POS.x + FRAME_SIZE * 9, ATLAS_START_POS.y + FRAME_SIZE * 0, FRAME_SIZE, FRAME_SIZE)
 
-	int_array = [40, 50, 60]
+	int_array = [10, 25, 50]
 	float_array1 = [0.2, 0.4, 0.6]
 	aux_array[0] = [5, 7, 9] # max targets
 	int_array1 = [120, 180, 240] # mana cost

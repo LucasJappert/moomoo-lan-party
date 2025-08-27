@@ -55,7 +55,7 @@ static func create_and_add_instance() -> void:
 	SKILLS[NAME].region_rect = Rect2(ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
 
 	int_array1 = [60, 120, 180]
-	float_array = [0.1, 0.15, 0.2]
+	float_array = [0.2, 0.3, 0.4]
 	int_array = [12, 10, 8]
 	for i in AVAILABLE_LEVELS:
 		var seconds_to_release: float = 7.0; var effect_radius: int = 3

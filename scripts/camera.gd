@@ -43,9 +43,9 @@ static func update_camera_position(pos: Vector2):
 	camera.position = pos
 	
 static func update_camera_position_to_my_player():
-	if GameManager.MY_PLAYER == null: return
+	if not Player.get_my_player(): return
 
-	update_camera_position(GameManager.MY_PLAYER.global_position)
+	update_camera_position(Player.get_my_player().global_position)
 
 static func try_update_zoom(event: InputEvent):
 	if camera == null:

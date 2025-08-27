@@ -2,6 +2,8 @@ class_name Entity
 
 extends CombatData
 
+var exp_when_dead: int = 0
+const EXP_MODIFIER: float = 1
 var _victory_auras: VictoryAuraEmitter
 var vision_helper: VisionHelper
 var range_attack_helper: VisionHelper
@@ -45,7 +47,7 @@ var current_gold_string: String = ""
 		return _current_state
 var _current_state: String = ""
 
-@export var _boss_level: int = 0
+@export var boss_level: int = 0
 @export var level: int = 1
 
 var is_spawning: bool = true
@@ -70,7 +72,6 @@ func _ready():
 	call_deferred("_post_ready")
 	ready_combat_data()
 
-	# Revisar el find_path para cuando tenemos un target attack y estamos a rango
 	GlobalsEntityHelpers.set_group(self)
 
 	if summoned_helper:
@@ -124,6 +125,8 @@ func _on_entity_freed(entity_name: String) -> void:
 	verify_freed_target_view(entity_name)
 
 # region 	GETTERs
+func is_moving() -> bool: return velocity != Vector2.ZERO
+
 func get_summoned_entities(unit_names: Array[String] = []) -> Array[Entity]:
 	var result: Array[Entity] = []
 	for entity in GameManager.get_entities():
@@ -173,6 +176,24 @@ func get_allies(include_me: bool = false) -> Array[Entity]:
 	return result
 		
 func is_alive() -> bool: return current_hp > 0
+
+func get_enemy_exp_when_dead() -> int:
+	if replicated: return 0
+	if not is_enemy_of_player(): return 0
+	if exp_when_dead > 0: return exp_when_dead
+
+	var current_wave := level # level has the normal and special wave
+	var total_exp_of_next_3_player_levels := 0
+	for i in 3:
+		total_exp_of_next_3_player_levels += Player.get_exp_per_level((current_wave - 1) * 3 + i + 1)
+
+	var exp_per_unit = total_exp_of_next_3_player_levels / float(EnemiesWavesController.ENEMIES_BY_ZONE * EnemiesWavesController.WAVE_DIRECTIONS.size())
+
+	exp_per_unit *= 0.5 # We do this to balance the creation of 4 bosses per wave
+	exp_per_unit = int(exp_per_unit * 0.5) # We do this because we also provide experience when the player deals damage
+	exp_when_dead = int(exp_per_unit * EXP_MODIFIER)
+	if boss_level > 0: exp_when_dead *= boss_level
+	return exp_when_dead
 # endregion GETTERs
 
 # region 	SETTERs
@@ -193,7 +214,7 @@ func set_direction_according_to_target(target: Entity) -> void:
 func get_direction_according_to_target(target: Entity) -> Vector2: return ObjectHelpers.get_snapped_8_direction(target.global_position - global_position)
 
 func set_boss_level(_level: int) -> void:
-	_boss_level = _level
+	boss_level = _level
 
 func _client_init() -> void:
 	SpritesHelper.set_entity_sprites(self)

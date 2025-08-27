@@ -46,18 +46,18 @@ static func initialize():
 
 # 	return closest_point
 
-static var _find_path_counter: int = 0
-static var _last_find_path_time_in_sec: float = 0.0
-static func find_path(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
-	_find_path_counter += 1
+static var find_path_counter: int = 0
+static var last_find_path_time_in_sec: float = 0.0
+static func find_path(start: Vector2i, end: Vector2i, _owner: Entity) -> Array[Vector2i]:
+	find_path_counter += 1
 	var current_time: float = MainScene.get_elapsed_time_in_sec()
-	if current_time - _last_find_path_time_in_sec > 1.0: # 1 segundo
-		_last_find_path_time_in_sec = current_time
-		_find_path_counter = 0
-	if _find_path_counter > 200:
-		print("find_path se estaba ejecutando demasiado rapido!", _find_path_counter)
-	if _find_path_counter > 500:
-		print("find_path se está ejecutando demasiado rápido!", _find_path_counter)
+	if current_time - last_find_path_time_in_sec > 1.0: # 1 segundo
+		last_find_path_time_in_sec = current_time
+		find_path_counter = 0
+	if find_path_counter > 200:
+		print("find_path se estaba ejecutando demasiado rapido!", find_path_counter, ". owner name: ", _owner.name)
+	if find_path_counter > 500:
+		print("find_path se está ejecutando demasiado rápido!", find_path_counter, ". owner name: ", _owner.name)
 	
 	var path: Array[Vector2i] = _astar_grid.get_id_path(start, end, true)
 	if path.is_empty(): return []

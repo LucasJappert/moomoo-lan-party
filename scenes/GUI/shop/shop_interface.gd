@@ -18,11 +18,12 @@ func _ready() -> void:
 	_shop_button.on_pressed = _toggle_shop
 
 	var titles := ["Consumables", "Equipment Level 1", "Equipment Level 2", "Equipment Level 3"]
+	var break_points := [1900, 5000, 999999]
 	var filtered_items := [
 		Item.get_items_by_consumable(true),
-		Item.get_items_no_consumables_by_level(0, 1800),
-		Item.get_items_no_consumables_by_level(1800, 5000),
-		Item.get_items_no_consumables_by_level(5000, 990000)
+		Item.get_items_no_consumables_by_level(0, break_points[0]),
+		Item.get_items_no_consumables_by_level(break_points[0], break_points[1]),
+		Item.get_items_no_consumables_by_level(break_points[1], break_points[2]),
 	]
 	for i in range(titles.size()):
 		var container_item_by_types_clone := _container_item_by_types_model.duplicate()
@@ -71,9 +72,9 @@ static func close_shop() -> bool:
 
 static func _on_shop_interface_clicked(_event: InputEventMouseButton) -> void:
 	if not DraggableSlot.ghost: return
-	if not GameManager.MY_PLAYER: return
+	if not Player.get_my_player(): return
 
-	GameManager.MY_PLAYER.increment_current_gold(int(DraggableSlot.ghost.item.get_sell_price()), false, true)
-	GameManager.MY_PLAYER.update_item(null, DraggableSlot.ghost.slot_number - 1)
+	Player.get_my_player().increment_current_gold(int(DraggableSlot.ghost.item.get_sell_price()), false, true)
+	Player.get_my_player().update_item(null, DraggableSlot.ghost.slot_number - 1)
 
 	DraggableSlot.ghost.emit_drop(false)

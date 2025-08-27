@@ -1,79 +1,77 @@
-# ✅ TODO List – MooMoo LAN Party - 🔵In Progress🟡Paused✅Done
+# ✅ TODO List – MooMoo LAN Party – 🔵 In Progress 🟡 Paused ✅ Done
 
-⚠️ Keep multiplayer in mind, but for now focus on the game part as a prototype ⚠️
+⚠️ Keep multiplayer in mind, but for now focus on the game as a prototype. ⚠️
 
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Revisar ataque speed del archer
-- Guardar partida desde la última ronda completada (sistema de archivos para poder luego restaurarlos)
-- Seguir ajustando items de rondas especiales
-- 🔵 Configurar skills moomoo en cada state
-- Al finalizar las rondas, el moomoo se revela en contra del jugador. Agregar efectos en el suelo como rajaduras con lava. Hacer caer meteoritos desde el cielo, etc.
-- Agregar afecto de nubes
-- Agregar efecto de lluvia y rayos
-- Agregar boton para mutear el juego
-- Agregar algunos items más
-- Crear skill que brinda un 20% de stunear al enemigo ante cada ataque recibido
-- Agregar item que brinda un +30% de ataque mágico y físico y algo mas
-- Crear un item que crea 2 copias de si mismo, con los mismos atributos pero cada copia absorbe un 60% de daño extra
+- Barras de summoners aliados en verde
+- Seguir viendo muchas pegadas a find_path al reiniciar game
+- Ver caso de que el moomoo se despierta cuando muere el pj en oleada especial con summons
+- Save game from the last completed round (filesystem-based saves to restore later).
+- Keep tuning items for special rounds.
+- Add cloud effect.
+- Add rain and lightning effects.
+- Add a button to mute/unmute the game.
+- Add a few more items.
+- Create a skill with a 20% chance to stun the attacker each time the hero is hit.
+- Add an item that grants +30% Physical and Magical Attack, plus an extra effect.
+- Create an item that spawns 2 clones of the wearer, with the same stats, where each clone takes +60% extra damage.
 
-- Efecto de sangrado de acuerdo al daño causado
-- Eliminar summons de moomoo cuando muere
-- Hacer al moomoo de rango cuando tiene menos de 50% y que tenga el item de multiple shot
-- Agregar barra de moomoo y jugador
-- Agregar efecto al moomoo en sus estados
-- Quitar el funcionamiento del borde reemplazando por alguna flecha. Esto para poder aplicar cambios de colores con shaders
-- Crear ronda numero 9, con un enemigo que lanza cuchillas y otro que lanza piedras
-- Agregar un item que brinda daño splash a todo alreadedor del target (es diferente al cleave)
-- Implementar sistema de craft de items
-- Regular exp por ronda (deberiamos permitir avanzar 2 niveles por ronda aprox)
-- Sonidos limitarlos a la vista en pantalla
-- Agregar barra de vida del moomoo y del pj fijas en algun lugar comodo
+- Implement a bleed effect proportional to damage dealt.
+- Remove MooMoo’s summons when MooMoo dies.
+- Make MooMoo switch to **ranged** attacks under 50% HP and equip a **Multishot**-style item.
+- Add health bars for MooMoo and the player.
+- Add visual effects to MooMoo based on its states.
+- Replace the border indicator with an arrow (so we can recolor via shaders).
+- Create Round 9 with one enemy that throws blades and another that throws rocks.
+- Add an item that deals **splash** damage around the target (different from cleave).
+- Implement an **item crafting** system.
+- Rebalance round XP (aim for ~2 levels per round).
+- Limit sounds to what’s visible on screen.
+- Add fixed (“pinned”) HP bars for MooMoo and the player in a convenient UI spot.
 
-- Agregar bordes rojos/animación cuando tenemos poca vida
-- Agregar skill, la cual puede activarse o desactivarse, que brindaría chances de matar al enemigo al instante (no aplica a bosses). Consume 20 de mana en cada ataque.
-- Agregar skill pasiva que luego de matar un enemigo lo transforma en 3 esqueletos que lucharán para él.
-- Aumentar nivel de habilidad aprendida en enemgios
-- Agregar skill que brinda chances de crear copias de sí mismo ante cada ataque físico.
-- Crear tooltip con descripcion del target
-- Agregar quinta skill al nivel 20
-- Implementar sistema de asignación de puntos en lugar de skills level
-- Refactorizar escena GUI (dividir en escenas separadas la parte top-left, bottom-right, etc.)
-- Agregar un item/skill que al activarlo te hace inmune a los hechizos y a ciertos debuffs como silencios.
-- Refactor the GUI by dividing it into panels (TOP-LEFT, BOTTOM-LEFT, BOTTOM-RIGHT)
-- Agregar otros efectos de sonidos para el ambiente
-- Sistema de rondas de enemigos aumentando las dificultades en cada oleada, cada 3 oleadas podríamos hacer una de solamente 4 boses
-- Sistema de puntos
-- Agregar info de Cleave attack a la gui
-- Agregar panel debugger con opciones para matar todos los enemigos, etc.
-- Agregar un score que tenga en cuenta la velocidad con que se avanza a cada oleada
-- Sistema de daños/curas en el tiempo
-- Revisar target hovered cuando hay muchos enemigos
-- Agregar skill que invoca esqueletos luego de matar a un enemigo
-- Agregar skill de velocidad de ataque de un 25%
-- Agregar skill que causa un x2 cuando el ataque es por la espalda del enemigo.
-- Agregar skill que cada 5 ataques regenera el 5% de la vida total a todos los aliados
-- Crear escena para crear y unirse a salas.
-- Implementar animaciones varias como congelamiento, sangrado, sobre entidades
-- Implementar animaciones sobre tiles, como fuego, sanacion, congelamiento.
-- Comenzar la escena para crear y unirse a salas
-- Agregar objetos mobiles sobre el terreno como plantas, bichos, nubes, etc.
-- Pruebas de multiclientes por el navegador
-- Agregar mas tipos de enemigos. El moomoo tendra unas 30 oleadas, cada oleada con 2 tipos de enemigos, entonces necesitariamos unos 60 tipos. Cada enemigo tendra 1 habilidad especial, pasiva o activa, por lo cual necesitaremos tambien unas 60 habilidades.
-  Otra opción es crear unas 3 habilidades, y que los enemigos tendrían 3 de ellas asignadas aleatoriamente. De esta manera se podría crear una amplia variabilidad de combinaciones. Sumado a que cada enemigo tiene su tipo de ataque, su rango de ataque, velocidad de ataque, etc.
-- Agregar efectos de sangrado cada vez que una entidad recibo un daño
-- Agregar mas tipos de héroes. En esta primera etapa bastaría con 10 diferentes tipos con sus respectivas 4 habilidades y una ulti.
-- Encapsular lógica de get/set
-- Corregir movimiento cuando se quiere atacar un enemigo fuera de rango, el jugador se mueve a la posicion inicial del target, pero si este se mueve no se actualiza tal destino en el path.
+- Add red screen edges/animation when low on health.
+- Add a toggleable skill that gives a chance to instantly kill non-boss enemies; costs 20 mana per attack.
+- Add a passive skill: after killing an enemy, turn it into 3 skeletons that fight for the player.
+- Increase learned skill levels for enemies.
+- Add a skill with a chance to create clones on each physical attack.
+- Create a tooltip with details for the hovered target.
+- Add a fifth skill unlocked at level 20.
+- Replace “skill levels” with a **point-allocation system**.
+- Refactor the GUI by splitting it into panels (TOP-LEFT, BOTTOM-LEFT, BOTTOM-RIGHT).
+- Add an item/skill that, when activated, grants immunity to spells and certain debuffs (e.g., silence).
+- Add more ambient SFX.
+- Enemy wave system: increasing difficulty each wave; every 3 waves consider a “boss-only” wave with 4 bosses.
+- Point/score system.
+- Show cleave attack info in the GUI.
+- Add a **debug panel** with options like “kill all enemies,” etc.
+- Add a score that factors **how fast** each wave is cleared.
+- Implement damage/heal-over-time systems.
+- Review hovered-target behavior when many enemies overlap.
+- Add a skill that summons skeletons after killing an enemy.
+- Add a +25% attack speed skill.
+- Add a skill that deals **2× damage when attacking from behind**.
+- Add a skill that, every 5 attacks, heals 5% max HP to all allies.
+- Create a lobby scene to **create/join rooms**.
+- Implement various status animations on entities (freeze, bleed, etc.).
+- Implement tile-based animations (fire, healing, freezing, etc.).
+- Start the lobby flow for creating/joining rooms.
+- Add small moving objects in the world (plants, critters, clouds, etc.).
+- Multi-client testing via the browser.
+- Add more enemy types. MooMoo will have ~30 waves, each with 2 enemy types (≈60 total). Each enemy should have 1 special ability (passive or active) → ~60 abilities.
+  - Alternative: Design ~3 abilities and assign 3 random abilities to each enemy to create a wide variety of combinations—on top of unique attack type, range, attack speed, etc.
+- Add bleeding VFX whenever an entity takes damage.
+- Add more hero types. For the first phase, ~10 different heroes with 4 skills each and an ultimate.
+- Encapsulate get/set logic.
+- Fix movement when attacking an out-of-range enemy: the player moves to the target’s **initial** position but doesn’t update the path if the target keeps moving.
 
 # #################################### 🧠 PATHFINDING STRATEGY – HIGH PRIORITY
 
-We must **improve the pathfinding logic** so that movement feels more natural and polished, similar to games like _Dota_.
-
-Currently, some path decisions feel rigid or too direct. We want to aim for smoother movement behavior, intelligent avoidance, and better collision handling when units crowd together.
+We must **improve pathfinding** so movement feels more natural and polished, similar to _Dota_.  
+Some decisions currently feel rigid or too direct. We want smoother steering, smarter avoidance, and better collision handling when units swarm.
 
 📌 **Reference Guide:**  
 [Pathfinding Guide for 2D Top-View Tiles in Godot 4.3 (by casraf.dev)](https://casraf.dev/2024/09/pathfinding-guide-for-2d-top-view-tiles-in-godot-4-3/)
 
-This guide provides advanced techniques such as flow fields, dynamic obstacle adjustments, and practical examples for top-down games.
+This guide covers advanced techniques such as flow fields, dynamic obstacle updates, and practical patterns for top-down games.

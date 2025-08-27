@@ -11,7 +11,7 @@ func _ready():
 	EventBus.connect_to_my_player_statistics_changed(func(): _update_text())
 
 func _update_text() -> void:
-	if not GameManager.MY_PLAYER:
+	if not Player.get_my_player():
 		return
 
 	var is_english := LanguageManager.is_english()

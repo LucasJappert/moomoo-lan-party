@@ -98,12 +98,12 @@ func level_up() -> void:
 
 # endregion SETTERs
 
+const EXP_PER_KILLED_UNIT = 120
 static func get_exp_per_level(_level: int) -> int:
-	if not _EXP_PER_LEVEL.is_empty(): return _EXP_PER_LEVEL[_level]
+	if not _EXP_PER_LEVEL.is_empty(): return _EXP_PER_LEVEL[max(1, min(MAX_LEVEL - 1, _level))]
 
 	for i in range(1, MAX_LEVEL + 1):
 		_EXP_PER_LEVEL[i] = int(floor(100 * pow(i, 1.5)))
-	print("EXP_PER_LEVEL: ", _EXP_PER_LEVEL)
 
 	return _EXP_PER_LEVEL[_level]
 

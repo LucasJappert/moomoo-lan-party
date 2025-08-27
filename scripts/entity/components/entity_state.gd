@@ -27,8 +27,7 @@ static func _verify_state_and_animation(entity: Entity) -> void:
 
 	if _is_playing_attack_animation(entity): return
 	
-	var is_moving: bool = entity.velocity != Vector2.ZERO
-	if is_moving: return _update_state(entity, States.WALK)
+	if entity.is_moving(): return _update_state(entity, States.WALK)
 
 	_update_state(entity, States.IDLE)
 

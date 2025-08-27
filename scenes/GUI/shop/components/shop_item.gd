@@ -40,6 +40,6 @@ func _gui_input(event):
 
 func _try_apply_shop() -> void:
 	if not item: return
-	if not GameManager.MY_PLAYER: return
+	if not Player.get_my_player(): return
 
-	return GameManager.MY_PLAYER.shopping_helper.try_shop_item(item)
+	return Player.get_my_player().shopping_helper.try_shop_item(item)

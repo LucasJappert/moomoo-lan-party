@@ -61,6 +61,7 @@ static var RED_BALL_COLOR := Color.from_string("#cd0000ff", Color.WHITE)
 # endregion
 
 # region Panel BOTTOM RIGHT
+@onready var _hold_terrain_button: Button = %HoldTerrainButton
 @onready var shop_interface: ShopInterface = %ShopInterface
 @onready var tutorial_button = %TutorialButton
 @onready var _mana_ball = $PanelBR/ManaBall
@@ -114,8 +115,14 @@ func _ready() -> void:
 	_defense_value.connect("mouse_entered", func(): _on_mouse_entered_defense_value())
 	_defense_value.connect("mouse_exited", func(): MyTooltip.hide_tooltip())
 	
+	_hold_terrain_button.connect("pressed", _on_hold_terrain_button_pressed)
+	_hold_terrain_button.connect("mouse_entered", _on_mouse_entered_hold_terrain_button)
+	_hold_terrain_button.connect("mouse_exited", MyTooltip.hide_tooltip)
+	_hold_terrain_button.modulate = Color.GRAY
+
 	EventBus.connect_to_new_target_view_selected(_on_new_target_view_selected)
 	EventBus.connect_to_game_ended(_on_game_ended)
+	EventBus.connect_to_my_player_updated_hold_terrain(_on_my_player_updated_hold_terrain)
 	
 	reset_gui()
 
@@ -144,6 +151,15 @@ func _process(_delta: float) -> void:
 
 
 # region	SETTERS
+func _on_mouse_entered_hold_terrain_button() -> void:
+	if not _bottom_target: return
+	MyTooltip.show_tooltip("Hold terrain (Q)", "The hero will not be able to move")
+func _on_hold_terrain_button_pressed() -> void:
+	if not GameManager.MY_PLAYER: return
+	GameManager.MY_PLAYER.toogle_hold_terrain()
+func _on_my_player_updated_hold_terrain(new_value: bool) -> void:
+	_hold_terrain_button.modulate = Color.WHITE if new_value else Color.GRAY
+
 func _on_mouse_entered_defense_value() -> void:
 	if not _bottom_target: return
 	var _total_physical_defense_points = _bottom_target.cache_total_stats.get_physical_defense_points() + DefensesHelper.defense_points_from_agility(_bottom_target.cache_total_stats.get_agility())

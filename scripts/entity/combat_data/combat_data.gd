@@ -2,8 +2,6 @@ class_name CombatData
 
 extends CharacterBody2D
 
-const EXP_MULTIPLIER: int = 1
-
 var _my_owner: Entity = self
 var shopping_helper := ShoppingHelper.new(self)
 var _active_skills: Array[SkillBase] = []
@@ -56,7 +54,7 @@ var last_damage_received_time_in_ms: int = -1000000 # In milliseconds
 var latest_attacker: Entity
 
 var charged_skill: Skill
-var keep_ground: bool = false
+var hold_terrain: bool = false
 var enemy_spell_caster: EnemySpellCaster
 
 func _init():
@@ -100,9 +98,12 @@ func process_combat_data(_delta: float): # Run only when it is the host
 	_process_on_server(_delta)
 
 func _process_on_server(_delta: float):
-	if not GameManager.GAME_RUNNING or not GameManager.MY_PLAYER: return
+	if not GameManager.GAME_RUNNING: return
+	# if not GameManager.MY_PLAYER: return
 
 	_actions_each_500_ms(_delta)
+	
+	try_physical_attack(_delta)
 
 	_actions_after_1_second(_delta)
 
@@ -306,7 +307,7 @@ func _actions_after_current_hp_updated(value_to_increase: int = 0, _attacker: En
 	if ObjectHelpers.is_null(_attacker): return
 
 	var percent_hp_lost = abs(value_to_increase) / float(get_full_health())
-	var exp_by_damage = Enemy.get_enemy_exp_when_dead() * percent_hp_lost
+	var exp_by_damage = _my_owner.get_enemy_exp_when_dead() * percent_hp_lost
 	if _attacker: _try_to_give_experience_to_players(exp_by_damage) # Give experience when an enemy takes damage
 
 func _server_verify_death(_killed_by: Entity) -> void:
@@ -314,7 +315,7 @@ func _server_verify_death(_killed_by: Entity) -> void:
 
 	current_hp = 0
 
-	_try_to_give_experience_to_players(Enemy.get_enemy_exp_when_dead()) # Give experience when an enemy dies
+	_try_to_give_experience_to_players(_my_owner.get_enemy_exp_when_dead()) # Give experience when an enemy dies
 	_my_owner.global_die(_killed_by)
 	_try_to_add_gold_to_players_on_enemy_die(_killed_by)
 
@@ -322,7 +323,7 @@ func _server_verify_death(_killed_by: Entity) -> void:
 		_killed_by.reset_target_to_attack_from_nearest_enemy()
 
 func _try_to_give_experience_to_players(_exp: int) -> void:
-	_exp *= EXP_MULTIPLIER
+	if _exp == 0: return
 	if not _my_owner is Enemy: return
 
 	for player in GameManager.get_players():
@@ -331,7 +332,7 @@ func _try_to_give_experience_to_players(_exp: int) -> void:
 func _try_to_add_gold_to_players_on_enemy_die(_attacker: Entity) -> void:
 	if _attacker is Player == false: return
 	
-	var base_earned := EnemiesWavesController.get_gold_earned_by_enemy() * (_my_owner._boss_level + 1)
+	var base_earned := EnemiesWavesController.get_gold_earned_by_enemy() * (_my_owner.boss_level + 1)
 	var earned_gold := randi_range(int(base_earned * 0.8), int(base_earned * 1.2))
 	for player in GameManager.get_players():
 		player.increment_current_gold(earned_gold, true, true)
@@ -401,11 +402,14 @@ func register_attacker(attacker: Entity) -> void:
 	if attacker and ObjectHelpers.is_my_player(self): attacker.hud.set_last_damage_to_my_player()
 
 func set_target_to_attack(_target: Entity) -> void: # Used only by the server
-	if ObjectHelpers.is_null(GameManager.MY_PLAYER): return
+	if not Player.get_my_player(): return
 	if _my_owner.get_allies().has(_target):
 		return print("Trying to set target to attack for a player that is not an enemy")
-	
-	_my_owner.movement_helper.set_target_entity(_target, MovementHelper.AttackMoveType.PhysicalAttack)
+	# if _target and _target.name == "Moomoo":
+	# 	print("Trying to set target to attack for Moomoo")
+
+	if not GlobalsEntityHelpers.is_target_in_attack_range(_my_owner, _target):
+		_my_owner.movement_helper.set_target_entity(_target, MovementHelper.AttackMoveType.PhysicalAttack)
 
 	if _target == target_to_attack: return
 
@@ -497,8 +501,9 @@ func use_charged_skill(_target: Entity) -> void:
 
 	uncharge_skill()
 
-func toogle_keep_ground() -> void:
-	keep_ground = not keep_ground
+func toogle_hold_terrain() -> void:
+	hold_terrain = not hold_terrain
+	if _my_owner.is_my_player(): EventBus.emit_my_player_updated_hold_terrain(hold_terrain)
 # endregion SETTERs
 
 # region 	PRIVATE GETTERs
@@ -608,7 +613,7 @@ func get_full_health() -> int:
 func get_full_mana() -> int:
 	return cache_total_stats.get_mana()
 
-func get_target_entity() -> Entity:
+func get_target_to_attack() -> Entity:
 	return GameManager.get_entity(target_to_attack_name)
 
 func get_items() -> Array[Item]:
@@ -625,34 +630,40 @@ func is_ranged() -> bool: return not is_melee()
 # endregion GETTERs
 
 # region TRY PHISICAL ATTACK
+func _try_update_target_to_attack():
+	if _my_owner.is_my_player(): return
+	# if _my_owner.is_moving(): return
+	# if _my_owner.is_my_player(): return 
+	# Solo para unidades del server cuando el moomoo esta dormido
+	if Moomoo.get_instance() and not Moomoo.is_awake() and _my_owner.is_enemy_of_player():
+		var player_enemies := GlobalsEntityHelpers.get_closest_entities(_my_owner.global_position, _my_owner.get_my_enemies(), _my_owner.vision_helper.redius_in_tiles, 10, [Moomoo.get_instance()])
+		if player_enemies.size() > 0:
+			set_target_to_attack(player_enemies[0])
+		else:
+			set_target_to_attack(Moomoo.get_instance())
+
+	if target_to_attack == null: set_target_to_attack(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
+
 func try_physical_attack(_delta: float) -> bool:
 	if _my_owner.is_spawning: return false
 	if _my_owner.current_state != EntityState.States.IDLE: return false # Cant attack while moving
 	if _my_owner.is_dead(): return false
-	if _my_owner is Moomoo and not Moomoo.is_awake(): return false
-
 	if not _my_owner.can_attack: return false
 	if _my_owner.velocity != Vector2.ZERO: return false # If moving, can't attack
 	if is_stunned: return false # If stunned, can't attack
-
-	var now = Time.get_ticks_msec()
-	var interval_ms = 1000.0 / cache_total_stats.get_total_attack_speed()
-	if now - last_physical_hit_time < interval_ms: return false # If enough time has passed, can attack
-	
-	# Solo para unidades del server cuando el moomoo esta dormido
-	if Moomoo.get_instance() and not Moomoo.is_awake() and _my_owner.is_enemy_of_player():
-		var player_enemies := GlobalsEntityHelpers.get_closest_entities(_my_owner.global_position, _my_owner.get_my_enemies(), _my_owner.vision_helper.redius_in_tiles, 10, [Moomoo.get_instance()])
-		if player_enemies.size() > 0: set_target_to_attack(player_enemies[0])
-
-	if target_to_attack == null: set_target_to_attack(_get_nearest_target_in_range_attack()) # Priorize players over moomoo (only for enemies)
+	if _my_owner is Moomoo and not Moomoo.is_awake(): return false
 
 	if target_to_attack == null: return false
 	if target_to_attack.is_dead(): return false
+	if target_to_attack.is_spawning: return false
+
+	var interval_ms = 1000.0 / cache_total_stats.get_total_attack_speed()
+	if MainScene.get_elapsed_time_in_ms() - last_physical_hit_time < interval_ms: return false # If enough time has passed, can attack
 
 	if not GlobalsEntityHelpers.is_target_in_attack_range(_my_owner, target_to_attack): return false
 
 	execute_physical_attack()
-	last_physical_hit_time = Time.get_ticks_msec()
+	last_physical_hit_time = MainScene.get_elapsed_time_in_ms()
 
 	return true
 
@@ -669,7 +680,8 @@ func _get_nearest_target_in_range_attack() -> Entity:
 	var nearest_unit = GlobalsEntityHelpers.get_nearest_entity(start_pos, players_and_summons, max_range)
 	if nearest_unit: return nearest_unit
 	
-	return Moomoo.get_instance()
+	# return Moomoo.get_instance()
+	return null
 
 func execute_physical_attack(apply_extra_actions: bool = true, _custom_target: Entity = null) -> void:
 	EntityState.change_to_attack(_my_owner)
@@ -749,7 +761,7 @@ func _actions_each_500_ms(_delta: float) -> void:
 	if _actions_each_500_ms_timer < 0.5: return
 
 	_actions_each_500_ms_timer = 0.0
-	try_physical_attack(_delta)
+	_try_update_target_to_attack()
 
 func _actions_after_1_second(_delta: float) -> void:
 	_1_second_timer += _delta

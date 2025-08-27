@@ -1,5 +1,11 @@
 extends Node
 
+const MY_PLAYER_UPDATED_HOLD_TERRAIN := "my_player_updated_hold_terrain"
+signal my_player_updated_hold_terrain(value: bool)
+func emit_my_player_updated_hold_terrain(value: bool): emit_signal(MY_PLAYER_UPDATED_HOLD_TERRAIN, value)
+func connect_to_my_player_updated_hold_terrain(p_callback: Callable) -> void:
+	EventBus.connect(MY_PLAYER_UPDATED_HOLD_TERRAIN, p_callback)
+
 const GAME_ENDED := "game_ended"
 signal game_ended()
 func emit_game_ended(): emit_signal(GAME_ENDED)

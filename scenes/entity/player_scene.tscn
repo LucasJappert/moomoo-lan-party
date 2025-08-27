@@ -1,8 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://bs7blwah20esy"]
+[gd_scene load_steps=5 format=3 uid="uid://bs7blwah20esy"]
 
 [ext_resource type="PackedScene" uid="uid://dh82ovsrtutto" path="res://scenes/entity/entity_scene.tscn" id="1_wbrma"]
 [ext_resource type="Script" uid="uid://q3chynnhllhm" path="res://scripts/entity/player/player.gd" id="2_ylf3p"]
 [ext_resource type="Script" uid="uid://dgo10xmu82ida" path="res://scripts/entity/player/client_inputs.gd" id="3_uyepr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_actuf"]
+bg_color = Color(0, 0.514293, 0.163191, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+anti_aliasing = false
 
 [node name="Player" instance=ExtResource("1_wbrma")]
 script = ExtResource("2_ylf3p")
@@ -13,3 +21,6 @@ skill_points_to_assign = 0
 [node name="ClientInputs" type="Node2D" parent="." index="0"]
 unique_name_in_owner = true
 script = ExtResource("3_uyepr")
+
+[node name="CurrentHpBar" parent="HUD/BarsContainer/MyHealthBarContainer" index="1"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_actuf")

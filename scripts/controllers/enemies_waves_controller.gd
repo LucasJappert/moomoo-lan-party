@@ -2,8 +2,8 @@ class_name EnemiesWavesController
 
 const ENEMIES_BY_ZONE = 7
 const TILES_DISTANCE_TO_MOOMOO = 9 # TODO: Set spawn points
-const _WAVE_DIRECTIONS = [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]
-static var TOTAL_ENEMIES_TO_CREATE: int = 8 * ENEMIES_BY_ZONE * _WAVE_DIRECTIONS.size()
+const WAVE_DIRECTIONS = [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]
+const _BOSSES_PER_SPECIAL_WAVE_PER_DIRECTION = 1
 
 static var current_normal_wave: int = 0
 static var _current_wave_info: WaveInfo
@@ -24,15 +24,16 @@ class WaveInfo:
 		boss_enemies = p_boss_enemies
 
 static var WAVES_INFO = [
-	# WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME]), # 1
-	# WaveInfo.new([EnemyInfernalMinotaur.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME]), # 2
-	# WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyNightArcher.LONG_NAME]), # 3
-	# WaveInfo.new([EnemyBoneguard.LONG_NAME], [EnemyFrostboneArcher.LONG_NAME]), # 4
-	# WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME]), # 5
-	# WaveInfo.new([EnemyReflector.LONG_NAME, EnemyCrimsonWarlock.LONG_NAME], [EnemyCrimsonWarlock.LONG_NAME]), # 6
-	# WaveInfo.new([EnemyBlowDigger.LONG_NAME], [EnemyRotbull.LONG_NAME]), # 7
-	# WaveInfo.new([EnemyDeadShield.LONG_NAME], [EnemySilentShuriken.LONG_NAME]), # 8
+	WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME]), # 1
+	WaveInfo.new([EnemyInfernalMinotaur.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME]), # 2
+	WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyNightArcher.LONG_NAME]), # 3
+	WaveInfo.new([EnemyBoneguard.LONG_NAME], [EnemyFrostboneArcher.LONG_NAME]), # 4
+	WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME]), # 5
+	WaveInfo.new([EnemyReflector.LONG_NAME, EnemyCrimsonWarlock.LONG_NAME], [EnemyCrimsonWarlock.LONG_NAME]), # 6
+	WaveInfo.new([EnemyBlowDigger.LONG_NAME], [EnemyRotbull.LONG_NAME]), # 7
+	WaveInfo.new([EnemyDeadShield.LONG_NAME], [EnemySilentShuriken.LONG_NAME]), # 8
 ]
+static var TOTAL_ENEMIES_TO_CREATE: int = WAVES_INFO.size() * ENEMIES_BY_ZONE * WAVE_DIRECTIONS.size() + (4 * _BOSSES_PER_SPECIAL_WAVE_PER_DIRECTION)
 
 static func start_wave_process() -> void:
 	_reset_wave_process()
@@ -59,7 +60,7 @@ static func _stop_wave_process() -> void:
 static func process(_delta: float) -> void:
 	if not GameManager.AM_I_HOST: return
 	if not process_running: return
-	if not GameManager.MY_PLAYER: return
+	if not Player.get_my_player(): return
 	if GameManager.get_player_enemies().size() > 0: return
 	if Moomoo.is_awake(): return
 
@@ -110,7 +111,7 @@ static func _create_normal_wave() -> void:
 		return print("All waves finished!")
 
 	current_normal_wave += 1
-	GameManager.MY_PLAYER.statistics.set_normal_wave(current_normal_wave)
+	Player.get_my_player().statistics.set_normal_wave(current_normal_wave)
 	print("Wave " + str(current_normal_wave) + " started!")
 
 	_current_wave_info = WAVES_INFO[current_normal_wave - 1]
@@ -123,7 +124,6 @@ static var ITEMS_BY_SPECIAL_WAVE := [ # Apply after special wave 1
 	ItemDeadeye.NAME,
 	ItemPhantomEdge.NAME,
 	ItemPowerCore.NAME,
-	ItemSkeletonSummonersRing.NAME,
 	ItemSoulPact.NAME,
 	ItemTitanGuard.NAME,
 	ItemTrinityBoost.NAME
@@ -134,7 +134,7 @@ static func _try_create_special_wave() -> bool:
 	if current_normal_wave < (current_special_wave + 1) * WAVES_PER_SPECIAL_WAVE: return false
 	
 	current_special_wave += 1
-	GameManager.MY_PLAYER.statistics.set_special_wave(current_special_wave)
+	Player.get_my_player().statistics.set_special_wave(current_special_wave)
 	print("🎉 Special wave " + str(current_special_wave) + " started! ")
 
 	var available_enemies: Array[String] = []
@@ -142,8 +142,8 @@ static func _try_create_special_wave() -> bool:
 		available_enemies.append_array(WAVES_INFO[i % WAVES_INFO.size()].common_enemies)
 		available_enemies.append_array(WAVES_INFO[i % WAVES_INFO.size()].boss_enemies)
 
-	for i in range(2):
-		for wave_direction in _WAVE_DIRECTIONS:
+	for i in range(_BOSSES_PER_SPECIAL_WAVE_PER_DIRECTION):
+		for wave_direction in WAVE_DIRECTIONS:
 			var enemy_type = available_enemies[randi() % available_enemies.size()]
 
 			var boss_enemy = _get_enemy(enemy_type, wave_direction, true)
@@ -156,7 +156,7 @@ static func _try_create_special_wave() -> bool:
 			boss_enemy.set_current_hp_and_mana()
 
 			# Adding items in certain special waves
-			if current_special_wave > 3:
+			if current_special_wave >= 3:
 				boss_enemy.update_item(Item.get_item(ITEMS_BY_SPECIAL_WAVE[randi() % ITEMS_BY_SPECIAL_WAVE.size()], 1, true), 4)
 				boss_enemy.update_item(Item.get_item(ITEMS_BY_SPECIAL_WAVE[randi() % ITEMS_BY_SPECIAL_WAVE.size()], 1, true), 5)
 			elif current_special_wave > 1:
@@ -176,10 +176,9 @@ static func _run_wave_spawn_async() -> void:
 
 	extra_stats_by_wave.accumulate_info(_get_extra_stats(1).get_info())
 
-
 static func _spawn_wave_enemies() -> void:
 	for i in range(ENEMIES_BY_ZONE):
-		for wave_direction in _WAVE_DIRECTIONS:
+		for wave_direction in WAVE_DIRECTIONS:
 			var enemy_type = ""
 			var is_boss = i == 0
 
@@ -204,11 +203,11 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 	cell = MapManager.get_safe_cell(cell)
 	enemy.global_position = MapManager.cell_to_world(cell)
 
-	enemy.level = current_normal_wave
-	enemy._boss_level = current_normal_wave if is_boss else 0
+	enemy.level = current_normal_wave + current_special_wave
+	enemy.boss_level = (enemy.level) if is_boss else 0
 
 	enemy.combat_stats.accumulate_info(extra_stats_by_wave.get_info())
-	if enemy._boss_level: enemy.combat_stats.accumulate_info(_get_extra_stats(1).get_info())
+	if enemy.boss_level: enemy.combat_stats.accumulate_info(_get_extra_stats(1).get_info())
 
 	for skill in enemy._skills:
 		if not skill: continue
@@ -216,6 +215,7 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 		# skill.learned_level = min(int(((current_normal_wave - 1) / float(WAVES_INFO.size()))) + 1, 3)
 
 	enemy.set_current_hp_and_mana()
+	# enemy.can_attack = false
 
 	return enemy
 
@@ -227,4 +227,4 @@ static func get_gold_earned_by_wave() -> int:
 	return current_normal_wave * Player.INITIAL_GOLD
 
 static func get_gold_earned_by_enemy() -> int:
-	return int(get_gold_earned_by_wave() / float(ENEMIES_BY_ZONE * _WAVE_DIRECTIONS.size()))
+	return int(get_gold_earned_by_wave() / float(ENEMIES_BY_ZONE * WAVE_DIRECTIONS.size()))

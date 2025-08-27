@@ -50,7 +50,7 @@ corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wjrb4"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_odnte"]
 bg_color = Color(0, 0.514293, 0.163191, 1)
 corner_radius_top_left = 1
 corner_radius_top_right = 1
@@ -153,7 +153,7 @@ offset_top = 1.0
 offset_right = 41.0
 offset_bottom = 3.0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_wjrb4")
+theme_override_styles/panel = SubResource("StyleBoxFlat_odnte")
 
 [node name="MyManaBarContainer" type="Control" parent="HUD/BarsContainer"]
 custom_minimum_size = Vector2(42, 4)

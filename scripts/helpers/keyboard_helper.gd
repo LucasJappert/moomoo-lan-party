@@ -35,7 +35,7 @@ static func key_pressed_server_side(_keycode: int, player: Entity) -> void:
 		pass
 
 	if _keycode == KEY_Q:
-		player.toogle_keep_ground()
+		player.toogle_hold_terrain()
 
 	if _keycode == KEY_SPACE and GameManager.MY_PLAYER:
 		EventBus.emit_new_target_view_selected(null, GameManager.MY_PLAYER)

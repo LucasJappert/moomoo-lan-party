@@ -40,6 +40,7 @@ func _load_playlist() -> void:
 			push_warning("Could not load music file: " + path)
 
 func _play_next() -> void:
+	if SoundsHelper.FORCE_MUTED: return
 	if _playlist.is_empty(): return
 
 	_player.stream = _playlist[_current_track_index]

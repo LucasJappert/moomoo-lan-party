@@ -43,6 +43,14 @@ func _post_ready(_entity: Entity):
 	bars_container.visible = false
 	_current_hp_bar.position = Vector2(1, 1)
 	_current_mana_bar.position = Vector2(1, 1)
+	if my_owner.is_ally_of_player():
+		var base := _current_hp_bar.get_theme_stylebox("panel", "Panel")
+		var sb := base.duplicate(true) as StyleBoxFlat # deep copy
+		sb.bg_color = Color.from_string("#00ab36ff", Color.WHITE)
+		# Si tu escena se instancia varias veces:
+		sb.resource_local_to_scene = true
+		_current_hp_bar.add_theme_stylebox_override("panel", sb)
+		
 
 func _process(_delta: float):
 	_try_update_label()
@@ -67,8 +75,8 @@ func _try_update_label():
 	# _label.text = str(my_owner.current_state)
 	# _label.text = str(my_owner.effects_helper.get_effects().size())
 	_label_container.visible = _label.text != ""
-		
-	# _label.text = str(GameManager.game_world.gui_scene._skill_slots_container.get_children().size())
+		 
+	# _label.text = str(my_owner.is_enemy_of_player())
 
 func update_health_bar():
 	if not my_owner: return

@@ -134,6 +134,7 @@ static var _translations := {
 	"Static": {LangTypes.SPANISH: "Static"},
 	"Temporal": {LangTypes.SPANISH: "Temporal"},
 	"Unknown": {LangTypes.SPANISH: "Desconocido"},
+	"Hp Regeneration Points": {LangTypes.SPANISH: "Puntos de Regeneración de Vida"},
 }
 
 ## ✅ Traducción basada en clave

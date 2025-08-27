@@ -3,7 +3,6 @@ extends Entity
 class_name Enemy
 
 const DAMAGE_MODIFIER: float = 0.5 # Used to calculate the damage done to the target
-static var _exp_when_dead: int = 0
 var monster_sounds_helper := MonsterSoundsHelper.new()
 
 var timer_500ms: Timer
@@ -31,11 +30,11 @@ func set_enemy_type(_enemy_type: String) -> void:
 	extra_info.key_type = _enemy_type
 
 func _on_every_timer_500ms() -> void:
-	var target: Entity = GlobalsEntityHelpers.get_nearest_enemy_inside_vision(self)
-	if not target:
-		if Moomoo.get_instance() in get_my_enemies(): target = Moomoo.get_instance()
-	
-	set_target_to_attack(target)
+	# var target: Entity = GlobalsEntityHelpers.get_nearest_enemy_inside_vision(self)
+	# if not target:
+	# 	if Moomoo.get_instance() in get_my_enemies(): target = Moomoo.get_instance()
+	# set_target_to_attack(target)
+	pass
 
 # region 	GETTERs
 func get_physical_attack_power() -> int:
@@ -48,14 +47,6 @@ static func get_instance_from_dict(dict: Dictionary) -> Enemy:
 	ObjectHelpers.from_dict(instance, dict)
 	return instance
 # endregion GETTERs
-
-static func get_enemy_exp_when_dead() -> int:
-	if _exp_when_dead > 0: return _exp_when_dead * EnemiesWavesController.current_normal_wave
-
-	var player_total_accumulated_exp: float = Player.get_total_accumulated_exp()
-	_exp_when_dead = int(player_total_accumulated_exp / EnemiesWavesController.TOTAL_ENEMIES_TO_CREATE * 0.05)
-
-	return _exp_when_dead * EnemiesWavesController.current_normal_wave
 
 func get_nearest_enemy_inside_vision() -> Entity:
 	var closest_player: Entity

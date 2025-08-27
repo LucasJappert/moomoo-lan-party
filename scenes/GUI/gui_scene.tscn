@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://dywrecu6pml77"]
+[gd_scene load_steps=22 format=3 uid="uid://dywrecu6pml77"]
 
 [ext_resource type="Texture2D" uid="uid://c7v0lqb66uppf" path="res://assets/atlas1.png" id="1_gbqeo"]
 [ext_resource type="Script" uid="uid://0x16271fub0a" path="res://scripts/GUI/gui_scene.gd" id="1_li5rb"]
@@ -194,6 +194,10 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b6l0f"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iuulx"]
+atlas = ExtResource("1_gbqeo")
+region = Rect2(928, 1984, 64, 64)
 
 [node name="GuiScene" type="CanvasLayer"]
 script = ExtResource("1_li5rb")
@@ -846,6 +850,27 @@ theme_override_font_sizes/font_size = 24
 text = "999.999"
 vertical_alignment = 1
 text_overrun_behavior = 3
+
+[node name="HoldTerrainButton" type="Button" parent="PanelBR"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -32.0
+offset_top = 191.0
+offset_right = 32.0
+offset_bottom = 255.0
+mouse_default_cursor_shape = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="PanelBR/HoldTerrainButton"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+offset_right = 64.0
+offset_bottom = 64.0
+mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="PanelBR/HoldTerrainButton/CenterContainer"]
+layout_mode = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_iuulx")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 offset_left = 1.0

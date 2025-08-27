@@ -17,7 +17,7 @@ script = ExtResource("2_4sfg8")
 [node name="CurrentHpBar" parent="HUD/BarsContainer/MyHealthBarContainer" index="1"]
 theme_override_styles/panel = SubResource("StyleBoxFlat_v8xvt")
 
-[node name="AreaHovered" parent="." index="8"]
+[node name="AreaHovered" parent="." index="5"]
 light_mask = 0
 collision_layer = 524288
 collision_mask = 0
