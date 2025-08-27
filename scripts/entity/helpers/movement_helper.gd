@@ -152,7 +152,7 @@ func _try_to_update_target_to_attack_of_my_player():
 
 	var nearest_enemy: Entity
 	var max_range := my_owner.vision_helper.radius_in_pixel
-	if my_owner.hold_terrain: max_range = my_owner.range_attack_helper.radius_in_pixel
+	if my_owner.hold_terrain: max_range = my_owner.vision_helper.radius_in_pixel
 	nearest_enemy = GlobalsEntityHelpers.get_nearest_entity(my_owner.global_position, my_owner.get_my_enemies(), max_range)
 
 	if nearest_enemy:

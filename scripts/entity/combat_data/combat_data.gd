@@ -323,7 +323,6 @@ func _server_verify_death(_killed_by: Entity) -> void:
 		_killed_by.reset_target_to_attack_from_nearest_enemy()
 
 func _try_to_give_experience_to_players(_exp: int) -> void:
-	if _exp == 0: return
 	if not _my_owner is Enemy: return
 
 	for player in GameManager.get_players():
@@ -408,8 +407,8 @@ func set_target_to_attack(_target: Entity) -> void: # Used only by the server
 	# if _target and _target.name == "Moomoo":
 	# 	print("Trying to set target to attack for Moomoo")
 
-	if not GlobalsEntityHelpers.is_target_in_attack_range(_my_owner, _target):
-		_my_owner.movement_helper.set_target_entity(_target, MovementHelper.AttackMoveType.PhysicalAttack)
+	# if not GlobalsEntityHelpers.is_target_in_attack_range(_my_owner, _target):
+	_my_owner.movement_helper.set_target_entity(_target, MovementHelper.AttackMoveType.PhysicalAttack)
 
 	if _target == target_to_attack: return
 
@@ -634,6 +633,14 @@ func _try_update_target_to_attack():
 	if _my_owner.is_my_player(): return
 	# if _my_owner.is_moving(): return
 	# if _my_owner.is_my_player(): return 
+
+	if _my_owner is Moomoo and not Moomoo.is_awake(): return
+
+	if _my_owner.is_ally_of_player():
+		var targets := GlobalsEntityHelpers.get_closest_entities(_my_owner.global_position, _my_owner.get_my_enemies(), _my_owner.vision_helper.redius_in_tiles, 10)
+		if targets.size() > 0: set_target_to_attack(targets[0])
+		return
+
 	# Solo para unidades del server cuando el moomoo esta dormido
 	if Moomoo.get_instance() and not Moomoo.is_awake() and _my_owner.is_enemy_of_player():
 		var player_enemies := GlobalsEntityHelpers.get_closest_entities(_my_owner.global_position, _my_owner.get_my_enemies(), _my_owner.vision_helper.redius_in_tiles, 10, [Moomoo.get_instance()])

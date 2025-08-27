@@ -51,7 +51,7 @@ static var last_find_path_time_in_sec: float = 0.0
 static func find_path(start: Vector2i, end: Vector2i, _owner: Entity) -> Array[Vector2i]:
 	find_path_counter += 1
 	var current_time: float = MainScene.get_elapsed_time_in_sec()
-	if current_time - last_find_path_time_in_sec > 1.0: # 1 segundo
+	if current_time - last_find_path_time_in_sec > 1.0 or last_find_path_time_in_sec > current_time: # 1 segundo
 		last_find_path_time_in_sec = current_time
 		find_path_counter = 0
 	if find_path_counter > 200:

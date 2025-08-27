@@ -18,8 +18,11 @@ func _ready():
 	pass
 
 func _verify_end_game(_entity_died: Entity, _killed_by: Entity) -> void:
+	if GameManager.GAME_IS_FINISHED: return
 	if not GameManager.GAME_RUNNING: return
 	if not (_entity_died.is_my_player() or _entity_died is Moomoo): return
+	
+	GameManager.GAME_IS_FINISHED = true
 
 	EventBus.emit_game_ended()
 	# Moomoo is enemy of player and is dead

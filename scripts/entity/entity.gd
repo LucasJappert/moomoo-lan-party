@@ -220,7 +220,7 @@ func _client_init() -> void:
 	SpritesHelper.set_entity_sprites(self)
 
 func global_die(_killed_by: Entity, _expired: bool = false) -> void:
-	if self is Player: GlobalsEntityHelpers.set_group_by_value(Moomoo.instance, GlobalsEntityHelpers.GROUP_ENEMY)
+	# if self is Player: GlobalsEntityHelpers.set_group_by_value(Moomoo.instance, GlobalsEntityHelpers.GROUP_ENEMY)
 	is_dying = true
 	if _killed_by: _killed_by.statistics.register_kill()
 

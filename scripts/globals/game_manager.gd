@@ -6,6 +6,7 @@ var music_helper: MusicHelper
 
 var entities: Dictionary[String, Entity] = {}
 static var GAME_RUNNING := false
+static var GAME_IS_FINISHED := false
 static var PLAYER_WIN := false
 
 var MY_PLAYER: Player
@@ -134,6 +135,7 @@ func start_game(hero_picked_type: String) -> void:
 
 func restart_game() -> void:
 	GAME_RUNNING = false
+	GAME_IS_FINISHED = false
 	MainScene.set_paused(false)
 	HeroPickerScene.load_scene()
 	TileHazardManager.clear()

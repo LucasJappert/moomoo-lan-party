@@ -29,10 +29,8 @@ static func load_scene(scene: Node):
 	GameManager.main_scene.layer_1.add_child(scene)
 
 # region 	GETTERs
-static func get_elapsed_time_in_sec() -> float:
-	return get_elapsed_time_in_ms() / 1000.0
-static func get_elapsed_time_in_ms() -> int:
-	return (Time.get_ticks_msec() - game_start_time - total_paused_time)
+static func get_elapsed_time_in_sec() -> float: return get_elapsed_time_in_ms() / 1000.0
+static func get_elapsed_time_in_ms() -> int: return (Time.get_ticks_msec() - game_start_time - total_paused_time)
 # endregion GETTERs
 
 # region 	SETTERs

@@ -5,9 +5,8 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Barras de summoners aliados en verde
-- Seguir viendo muchas pegadas a find_path al reiniciar game
-- Ver caso de que el moomoo se despierta cuando muere el pj en oleada especial con summons
+- Ver no movimiento player cuando hay target en area de vision (igual para summons)
+- Ver superposición de enemigos
 - Save game from the last completed round (filesystem-based saves to restore later).
 - Keep tuning items for special rounds.
 - Add cloud effect.

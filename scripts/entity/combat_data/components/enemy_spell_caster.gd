@@ -1,22 +1,24 @@
 class_name EnemySpellCaster
 
-var _enemy_owner: Entity
+var _owner: Entity
 var cast_timer: float = 0.0
 var next_cast_delay: float = 0.0
 const MIN_DELAY = 1
 const MAX_DELAY = 5
 
 func _init(enemy: Entity):
-	_enemy_owner = enemy
+	_owner = enemy
 	randomize()
 	_set_next_cast_delay()
 
 func _process(delta):
-	if not _enemy_owner: return
-	# if _enemy_owner._boss_level == 0: return
-	if _enemy_owner.is_dead(): return
-	if not _enemy_owner.can_attack: return
-	if _enemy_owner.is_spawning: return
+	if not _owner: return
+	# if _owner._boss_level == 0: return
+	if _owner.is_dead(): return
+	if not _owner.can_attack: return
+	if _owner.is_spawning: return
+	if _owner.replicated: return
+	if _owner is Moomoo and not Moomoo.is_awake(): return
 
 	cast_timer += delta
 	if cast_timer < next_cast_delay: return
@@ -31,12 +33,12 @@ func _set_next_cast_delay() -> void:
 	next_cast_delay = randf_range(MIN_DELAY, MAX_DELAY)
 
 func _try_cast_random_skill() -> bool:
-	if _enemy_owner.target_to_attack == null: return false
+	if _owner.target_to_attack == null: return false
 
-	var available_skills: Array[Skill] = _enemy_owner.get_skills().filter(func(skill):
+	var available_skills: Array[Skill] = _owner.get_skills().filter(func(skill):
 		if not skill: return false
 		if skill.get_learned_skill() == null: return false
-		if not skill.can_use(_enemy_owner): return false
+		if not skill.can_use(_owner): return false
 
 		return true
 	) as Array[Skill]
@@ -48,7 +50,7 @@ func _try_cast_random_skill() -> bool:
 
 	if learned_skill.instant_use:
 		for reg_skill in SkillBase.REGISTERED_SKILLS:
-			if reg_skill.try_use_skill_efficiently(_enemy_owner, _enemy_owner.target_to_attack, skill_to_cast): return true
+			if reg_skill.try_use_skill_efficiently(_owner, _owner.target_to_attack, skill_to_cast): return true
 		return false
 
 	if _try_cast_spell_to_an_ally(skill_to_cast): return true
@@ -60,7 +62,7 @@ func _try_cast_spell_to_an_enemy(skill_to_cast: Skill) -> bool:
 	var learned_skill = skill_to_cast.get_safe_learned_skill()
 	if not learned_skill.target_to_enemy: return false
 
-	return skill_to_cast.use(_enemy_owner, _enemy_owner.target_to_attack) # Apply to a player
+	return skill_to_cast.use(_owner, _owner.target_to_attack) # Apply to a player
 
 
 func _try_cast_spell_to_an_ally(skill_to_cast: Skill) -> bool:
@@ -74,14 +76,14 @@ func _try_cast_spell_to_an_ally(skill_to_cast: Skill) -> bool:
 
 func _try_cast_offensive_bonus_to_an_ally(skill_to_cast: Skill) -> bool:
 	if skill_to_cast.get_learned_skill().grants_attack_bonuses():
-		if not _enemy_owner.effects_helper.get_effect_by_name(skill_to_cast.get_learned_skill().my_name):
-			return skill_to_cast.use(_enemy_owner, _enemy_owner)
+		if not _owner.effects_helper.get_effect_by_name(skill_to_cast.get_learned_skill().my_name):
+			return skill_to_cast.use(_owner, _owner)
 
 	return false
 
 func _try_cast_defensive_bonus_to_an_ally(skill_to_cast: Skill) -> bool:
-	var near_allies = _enemy_owner.get_allies(true)
-	var closest_allies := GlobalsEntityHelpers.get_closest_entities(_enemy_owner.global_position, near_allies, 6)
+	var near_allies = _owner.get_allies(true)
+	var closest_allies := GlobalsEntityHelpers.get_closest_entities(_owner.global_position, near_allies, 6)
 	if closest_allies.is_empty(): return false
 
 	# Filtramos los que no recibieron daño hace mas de 5 segundos
@@ -98,6 +100,6 @@ func _try_cast_defensive_bonus_to_an_ally(skill_to_cast: Skill) -> bool:
 
 	for ally in closest_allies:
 		if ally.effects_helper.get_effect_by_name(skill_to_cast.get_learned_skill().my_name): continue
-		return skill_to_cast.use(_enemy_owner, ally)
+		return skill_to_cast.use(_owner, ally)
 
 	return false
