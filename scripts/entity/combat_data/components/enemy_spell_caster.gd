@@ -38,6 +38,7 @@ func _try_cast_random_skill() -> bool:
 	var available_skills: Array[Skill] = _owner.get_skills().filter(func(skill):
 		if not skill: return false
 		if skill.get_learned_skill() == null: return false
+		if skill.get_learned_skill().type == SkillType.PASSIVE: return false
 		if not skill.can_use(_owner): return false
 
 		return true
@@ -51,7 +52,7 @@ func _try_cast_random_skill() -> bool:
 	if learned_skill.instant_use:
 		for reg_skill in SkillBase.REGISTERED_SKILLS:
 			if reg_skill.try_use_skill_efficiently(_owner, _owner.target_to_attack, skill_to_cast): return true
-		return false
+		# return false
 
 	if _try_cast_spell_to_an_ally(skill_to_cast): return true
 

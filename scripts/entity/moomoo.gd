@@ -90,6 +90,7 @@ func wake_up() -> void:
 	GlobalsEntityHelpers.set_group(self)
 
 func _spawn_wave_up_effects() -> void:
+	SoundsHelper.play_sfx(MOOMOO_PROMOTION_WAV, 0, 2)
 	for i in range(10):
 		var noise := MapManager.TILE_SIZE_INT * 1
 		var pos := Vector2(randi_range(-noise, noise), randi_range(-noise, noise))
@@ -137,10 +138,10 @@ static func get_new_instance() -> Moomoo:
 	moomoo.name = "Moomoo"
 	moomoo.extra_info = ExtraInfo.new(LONG_NAME, get_rect_frames(Vector2i.ZERO), ALIAS)
 	moomoo.global_position = MapManager.cell_to_world(MapManager.get_safe_cell(SPAWN_POSITION))
-	moomoo.combat_stats.set_hp(50000)
-	moomoo.combat_stats.set_mana(50000)
-	moomoo.combat_stats.set_hp_regeneration_points(50)
-	moomoo.combat_stats.set_mana_regeneration_points(200)
+	moomoo.combat_stats.set_hp(80000)
+	moomoo.combat_stats.set_mana(500000)
+	moomoo.combat_stats.set_hp_regeneration_points(200)
+	moomoo.combat_stats.set_mana_regeneration_points(400)
 	moomoo.combat_stats.set_move_speed(2)
 	moomoo.combat_stats.set_attack_speed(1.2)
 	moomoo.combat_stats.set_attack_range(CombatStats.MIN_ATTACK_RANGE)
@@ -152,8 +153,8 @@ static func get_new_instance() -> Moomoo:
 	moomoo.combat_stats.set_intelligence(350)
 	moomoo.combat_stats.set_evasion(0.2)
 	moomoo.combat_stats.set_stun_chance(0.1, 2)
-	moomoo.combat_stats.set_physical_defense_points(200)
-	moomoo.combat_stats.set_magic_defense_points(200)
+	moomoo.combat_stats.set_physical_defense_points(400)
+	moomoo.combat_stats.set_magic_defense_points(400)
 	moomoo.combat_stats.set_life_steal_percent(0.1)
 
 	moomoo.set_current_hp_and_mana()
@@ -213,14 +214,14 @@ func _on_promotion(state: LifeState) -> void:
 		update_skill(SkillBase.get_new_learned_skill(SkillStunningStrike.NAME, 3), 1)
 		update_skill(SkillBase.get_new_learned_skill(SkillBloodFury.NAME, 3), 2)
 		update_skill(SkillBase.get_new_learned_skill(SkillCleaveStrike.NAME, 3), 3)
-		update_skill(SkillBase.get_new_learned_skill(SkillEarthshatter.NAME, 3), 4)
+		update_skill(SkillBase.get_new_learned_skill(SkillInfernalTouch.NAME, 3), 4)
 
 		update_item(Item.get_item(ItemTitanGuard.NAME, 1, true), 4)
 		update_item(Item.get_item(ItemSkeletonSummonersRing.NAME, 1, true), 5)
 		return
 	if state == LifeState.NEAR_DEATH:
 		InGameDialogsManager.show(InGameDialogsManager.boss_hp_25())
-		update_skill(SkillBase.get_new_learned_skill(SkillInfernalTouch.NAME, 3), 1)
+		update_skill(SkillBase.get_new_learned_skill(SkillEarthshatter.NAME, 3), 1)
 		update_skill(SkillBase.get_new_learned_skill(SkillPainEcho.NAME, 3), 2)
 		update_skill(SkillBase.get_new_learned_skill(SkillSilentAgony.NAME, 3), 3)
 		update_skill(SkillBase.get_new_learned_skill(SkillUnbreakable.NAME, 3), 4)

@@ -99,6 +99,7 @@ static func create_next_wave() -> void:
 
 static func _get_extra_stats(multiplier: int) -> CombatStats:
 	var result := CombatStats.new()
+	result.set_hp(randi_range(300, 500) * multiplier)
 	result.set_agility(randi_range(6, 9) * multiplier)
 	result.set_strength(randi_range(6, 9) * multiplier)
 	result.set_intelligence(randi_range(6, 9) * multiplier)
@@ -211,7 +212,7 @@ static func _get_enemy(enemy_type: String, wave_direction: Vector2, is_boss: boo
 
 	for skill in enemy._skills:
 		if not skill: continue
-		skill.learned_level = min(int(((current_normal_wave - 1) / float(4))) + 1, 3)
+		skill.learned_level = min(int((current_normal_wave / 2.0)) + 1, 3)
 		# skill.learned_level = min(int(((current_normal_wave - 1) / float(WAVES_INFO.size()))) + 1, 3)
 
 	enemy.set_current_hp_and_mana()

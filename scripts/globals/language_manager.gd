@@ -136,7 +136,7 @@ static var _translations := {
 	"Unknown": {LangTypes.SPANISH: "Desconocido"},
 	"Hp Regeneration Points": {LangTypes.SPANISH: "Puntos de Regeneración de Vida"},
 	"Hold terrain (Q)": {LangTypes.SPANISH: "Mantener terreno (Q)"},
-	"The player will not be able to move": {LangTypes.SPANISH: "El jugador no podrá moverse"},
+	"The hero will only move if the user makes a move": {LangTypes.SPANISH: "El héroe sólo se moverá si el usuario realiza un movimiento"},
 }
 
 ## ✅ Traducción basada en clave

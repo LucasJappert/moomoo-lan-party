@@ -43,6 +43,14 @@ static func _commons_initialize(player: Player, stats: CombatStats) -> void:
 	# stats.set_physical_attack_power(10)
 	# stats.set_attack_speed(5)
 
+	player.update_item(Item.get_item(ItemTrinityBoost.NAME, 1, true), 0)
+	player.update_item(Item.get_item(ItemSkeletonSummonersRing.NAME, 1, true), 1)
+	player.update_item(Item.get_item(ItemDeadeye.NAME, 1, true), 2)
+	player.update_item(Item.get_item(ItemBloodQuake.NAME, 1, true), 3)
+	player.update_item(Item.get_item(ItemCryoBlade.NAME, 1, true), 4)
+	player.update_item(Item.get_item(ItemCryoBlade.NAME, 1, true), 5)
+	# player.update_item(Item.get_item(ItemTitanGuard.NAME, 1, true), 5)
+
 
 static func get_rect_frames(pos: Vector2i) -> Array[Rect2]:
 	var result: Array[Rect2] = []

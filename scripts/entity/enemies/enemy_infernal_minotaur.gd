@@ -19,4 +19,5 @@ static func try_to_init_from_name(_name: String, _enemy: Enemy) -> void:
 		SkillBase.get_new_learned_skill(SkillLifesteal.NAME),
 		SkillBase.get_new_learned_skill(SkillAbsorbAndRelease.NAME),
 		SkillBase.get_new_learned_skill(SkillBloodFury.NAME),
+		SkillBase.get_new_learned_skill(SkillDeathBurst.NAME),
 	])

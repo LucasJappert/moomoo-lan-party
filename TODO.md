@@ -5,8 +5,8 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Grito de Moomoo cuando despierta
-- Aumentar hp de enemigos por oleada
+- Permitir que la camara siga al personaje
+- Revisar skill que explota
 - Ver problema de sonido de flechas y escarcha
 - Save game from the last completed round (filesystem-based saves to restore later).
 - Keep tuning items for special rounds.

@@ -155,7 +155,7 @@ func _on_mouse_entered_hold_terrain_button() -> void:
 	if not _bottom_target: return
 	MyTooltip.show_tooltip(
 		LanguageManager.translate("Hold terrain (Q)"),
-		LanguageManager.translate("The hero will not be able to move"))
+		LanguageManager.translate("The hero will only move if the user makes a move"))
 func _on_hold_terrain_button_pressed() -> void:
 	if not GameManager.MY_PLAYER: return
 	GameManager.MY_PLAYER.toogle_hold_terrain()

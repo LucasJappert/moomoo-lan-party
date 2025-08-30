@@ -111,9 +111,7 @@ func _process_on_server(_delta: float):
 
 	update_active_skills(_delta)
 
-	is_invulnerable = false
-	if get_active_skill(SkillUnbreakable.NAME):
-		is_invulnerable = true
+	verify_invulnerability()
 
 func server_execute_physical_damage(_target: Entity, _extra_projectile: bool) -> void:
 	if _my_owner.multiplayer.is_server() == false: return
