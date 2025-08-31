@@ -7,13 +7,13 @@ const ICON_SLOT = Vector2(12, 0)
 static func create_and_add_instance() -> void:
 	_ITEMS[NAME] = Item.new(NAME)
 	_ITEMS[NAME].region_rect = Rect2(_ATLAS_START_POS.x + FRAME_SIZE * ICON_SLOT.x, _ATLAS_START_POS.y + FRAME_SIZE * ICON_SLOT.y, FRAME_SIZE, FRAME_SIZE)
-	_ITEMS[NAME].damage_type = DamageType.MAGIC
+	_ITEMS[NAME].damage_type = DamageType.PURE
 	_ITEMS[NAME].float_dict["damage_per_second"] = 15
 	_ITEMS[NAME].duration_in_seconds = 5
 	_ITEMS[NAME].max_stacks = 10
 	_ITEMS[NAME].buy_price = 1500
-	_ITEMS[NAME].en_description = "Each physical attack invokes a forbidden pact, inflicting Burn or Poison for " + StringHelpers.format_float(_ITEMS[NAME].float_dict["damage_per_second"]) + " magic damage per second over " + StringHelpers.format_float(_ITEMS[NAME].duration_in_seconds) + " seconds (up to " + str(_ITEMS[NAME].max_stacks) + " stacks). No mana is consumed, but the user's soul pays the price—losing " + StringHelpers.format_float(_ITEMS[NAME].float_dict["damage_per_second"]) + " HP with every strike."
-	_ITEMS[NAME].es_description = "Cada ataque físico invoca un pacto prohibido, infligiendo Quemadura o Veneno que causa " + StringHelpers.format_float(_ITEMS[NAME].float_dict["damage_per_second"]) + " de daño mágico por segundo durante " + StringHelpers.format_float(_ITEMS[NAME].duration_in_seconds) + " segundos (acumulable hasta " + str(_ITEMS[NAME].max_stacks) + " veces). No se consume maná, pero el alma del usuario paga el precio: pierde " + StringHelpers.format_float(_ITEMS[NAME].float_dict["damage_per_second"]) + " de vida con cada golpe."
+	_ITEMS[NAME].en_description = "Each physical attack invokes a forbidden pact, inflicting Burn or Poison for " + StringHelpers.format_float(_ITEMS[NAME].float_dict["damage_per_second"]) + " pure damage per second over " + StringHelpers.format_float(_ITEMS[NAME].duration_in_seconds) + " seconds (up to " + str(_ITEMS[NAME].max_stacks) + " stacks). No mana is consumed, but the user's soul pays the price—losing " + StringHelpers.format_float(_ITEMS[NAME].float_dict["damage_per_second"]) + " HP with every strike."
+	_ITEMS[NAME].es_description = "Cada ataque físico invoca un pacto prohibido, infligiendo Quemadura o Veneno que causa " + StringHelpers.format_float(_ITEMS[NAME].float_dict["damage_per_second"]) + " de daño puro por segundo durante " + StringHelpers.format_float(_ITEMS[NAME].duration_in_seconds) + " segundos (acumulable hasta " + str(_ITEMS[NAME].max_stacks) + " veces). No se consume maná, pero el alma del usuario paga el precio: pierde " + StringHelpers.format_float(_ITEMS[NAME].float_dict["damage_per_second"]) + " de vida con cada golpe."
 
 
 # Primero restamos os 15 de hp del atacante (sin importar si el ataque sera evadido, cancelado, o lo que fuera)

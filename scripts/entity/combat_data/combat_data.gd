@@ -161,7 +161,8 @@ func server_receive_damage(_di: DamageInfo, _attacker: Entity) -> void:
 
 	if _check_evade(_di, my_stats): return # Evasion verification (only for physical damage)
 	
-	ItemSkillBase.actions_after_effective_hit(_attacker, _my_owner, _di)
+	ItemSkillBase.static_actions_after_evasion_and_before_defenses(_attacker, _my_owner, _di)
+	SkillInfernalTouch.internal_actions_after_evasion_and_before_defenses(_attacker, _my_owner, _di)
 
 	Statistics.try_register_damage(_attacker, _di)
 

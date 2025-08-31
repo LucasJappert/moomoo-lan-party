@@ -5,9 +5,6 @@
 📍 [Go to Roadmap](./roadmap.md)  
 📝 [Go to Changelog](./changelog.md)
 
-- Quitar foco cuando hacemos click en botones (con espacio se activan)
-- Permitir que la camara siga al personaje
-- Revisar skill que explota
 - Ver problema de sonido de flechas y escarcha
 - Save game from the last completed round (filesystem-based saves to restore later).
 - Keep tuning items for special rounds.

@@ -70,8 +70,6 @@ static func process(_delta: float) -> void:
 		if current_normal_wave >= WAVES_INFO.size() and current_special_wave >= (WAVES_INFO.size() / WAVES_PER_SPECIAL_WAVE):
 			if not Moomoo.get_instance(): return _stop_wave_process()
 			Moomoo.get_instance().wake_up()
-			# The Moomoo awakens and reveals itself against the player
-			print("The Moomoo awakens and reveals itself against the player")
 			return
 		if current_normal_wave > WAVES_INFO.size(): return
 
