@@ -3,7 +3,7 @@ class_name Player
 extends Entity
 
 static var last_damages_received: Array[DamageInfo] = []
-const INITIAL_GOLD: int = 800
+const INITIAL_GOLD: int = 80000
 const PLAYER_CELL_SPAWN: Vector2i = Vector2i(20, 12)
 static var _EXP_PER_LEVEL: Dictionary[int, int] = {}
 const MAX_LEVEL: int = 30

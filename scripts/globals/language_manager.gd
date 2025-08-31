@@ -137,6 +137,9 @@ static var _translations := {
 	"Hp Regeneration Points": {LangTypes.SPANISH: "Puntos de Regeneración de Vida"},
 	"Hold terrain (Q)": {LangTypes.SPANISH: "Mantener terreno (Q)"},
 	"The hero will only move if the user makes a move": {LangTypes.SPANISH: "El héroe sólo se moverá si el usuario realiza un movimiento"},
+	"Camera mode": {LangTypes.SPANISH: "Modo de cámara"},
+	"Follow the hero": {LangTypes.SPANISH: "Seguir al héroe"},
+	"Free": {LangTypes.SPANISH: "Libre"},
 }
 
 ## ✅ Traducción basada en clave

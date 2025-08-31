@@ -62,6 +62,7 @@ static var RED_BALL_COLOR := Color.from_string("#cd0000ff", Color.WHITE)
 
 # region Panel BOTTOM RIGHT
 @onready var _hold_terrain_button: Button = %HoldTerrainButton
+@onready var _camera_mode_button: Button = %CameraModeButton
 @onready var shop_interface: ShopInterface = %ShopInterface
 @onready var tutorial_button = %TutorialButton
 @onready var _mana_ball = $PanelBR/ManaBall
@@ -120,6 +121,12 @@ func _ready() -> void:
 	_hold_terrain_button.connect("mouse_exited", MyTooltip.hide_tooltip)
 	_hold_terrain_button.modulate = Color.GRAY
 
+	_camera_mode_button.connect("pressed", _on_camera_mode_button_pressed)
+	_camera_mode_button.connect("mouse_entered", _on_mouse_entered_camera_mode_button)
+	_camera_mode_button.connect("mouse_exited", MyTooltip.hide_tooltip)
+	_set_follow_player(true)
+
+
 	EventBus.connect_to_new_target_view_selected(_on_new_target_view_selected)
 	EventBus.connect_to_game_ended(_on_game_ended)
 	EventBus.connect_to_my_player_updated_hold_terrain(_on_my_player_updated_hold_terrain)
@@ -157,10 +164,23 @@ func _on_mouse_entered_hold_terrain_button() -> void:
 		LanguageManager.translate("Hold terrain (Q)"),
 		LanguageManager.translate("The hero will only move if the user makes a move"))
 func _on_hold_terrain_button_pressed() -> void:
+	_hold_terrain_button.release_focus()
 	if not GameManager.MY_PLAYER: return
 	GameManager.MY_PLAYER.toogle_hold_terrain()
 func _on_my_player_updated_hold_terrain(new_value: bool) -> void:
 	_hold_terrain_button.modulate = Color.WHITE if new_value else Color.GRAY
+
+func _on_camera_mode_button_pressed() -> void:
+	_camera_mode_button.release_focus()
+	_set_follow_player(!MyCamera.is_following_player())
+func _set_follow_player(on: bool) -> void:
+	_camera_mode_button.modulate = Color.WHITE if on else Color.GRAY
+	MyCamera.set_follow_player(on)
+func _on_mouse_entered_camera_mode_button() -> void:
+	MyTooltip.show_tooltip(
+		LanguageManager.translate("Camera mode"),
+		LanguageManager.translate("Follow the hero" if MyCamera.is_following_player() else "Free")
+	)
 
 func _on_mouse_entered_defense_value() -> void:
 	if not _bottom_target: return

@@ -24,14 +24,14 @@ class WaveInfo:
 		boss_enemies = p_boss_enemies
 
 static var WAVES_INFO = [
-	WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME]), # 1
-	WaveInfo.new([EnemyInfernalMinotaur.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME]), # 2
-	WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyNightArcher.LONG_NAME]), # 3
-	WaveInfo.new([EnemyBoneguard.LONG_NAME], [EnemyFrostboneArcher.LONG_NAME]), # 4
-	WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME]), # 5
-	WaveInfo.new([EnemyReflector.LONG_NAME, EnemyCrimsonWarlock.LONG_NAME], [EnemyCrimsonWarlock.LONG_NAME]), # 6
-	WaveInfo.new([EnemyBlowDigger.LONG_NAME], [EnemyRotbull.LONG_NAME]), # 7
-	WaveInfo.new([EnemyDeadShield.LONG_NAME], [EnemySilentShuriken.LONG_NAME]), # 8
+	# WaveInfo.new([EnemyWardenOfDecay.LONG_NAME], [EnemyMosswoodShaman.LONG_NAME]), # 1
+	# WaveInfo.new([EnemyInfernalMinotaur.LONG_NAME], [EnemyCinderflameWielder.LONG_NAME]), # 2
+	# WaveInfo.new([EnemyEmberFiend.LONG_NAME], [EnemyNightArcher.LONG_NAME]), # 3
+	# WaveInfo.new([EnemyBoneguard.LONG_NAME], [EnemyFrostboneArcher.LONG_NAME]), # 4
+	# WaveInfo.new([EnemyFrostRevenant.LONG_NAME], [EnemyFlameCultist.LONG_NAME]), # 5
+	# WaveInfo.new([EnemyReflector.LONG_NAME, EnemyCrimsonWarlock.LONG_NAME], [EnemyCrimsonWarlock.LONG_NAME]), # 6
+	# WaveInfo.new([EnemyBlowDigger.LONG_NAME], [EnemyRotbull.LONG_NAME]), # 7
+	# WaveInfo.new([EnemyDeadShield.LONG_NAME], [EnemySilentShuriken.LONG_NAME]), # 8
 ]
 static var TOTAL_ENEMIES_TO_CREATE: int = WAVES_INFO.size() * ENEMIES_BY_ZONE * WAVE_DIRECTIONS.size() + (4 * _BOSSES_PER_SPECIAL_WAVE_PER_DIRECTION)
 
